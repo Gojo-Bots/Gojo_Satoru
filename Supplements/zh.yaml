@@ -158,7 +158,7 @@ strings:
 
         只需输入 /lang ，并使用内联键盘为您自己或您的组选择语言。
 
-        您可以通过帮助 [Crowdin](//crowdin.com/project/alita_robot ) 帮助我们实现更多语言的机器人
+        您可以通过帮助 [Crowdin](https://crowdin.com/project/gojosatarou) 帮助我们实现更多语言的机器人
     locks:
       main: "锁"
       help: |-
