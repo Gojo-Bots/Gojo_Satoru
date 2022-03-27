@@ -15,7 +15,7 @@ A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group 
 
 ------>
 
-If you like the bot make sure to give a ⭐ __star__ ⭐ to theis respository and feel free to update and sending pull requests...
+If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to update and sending pull requests...
 
 ## Inspiration ✨
 `Not a particular inspiration inspired by many bots`
@@ -30,12 +30,10 @@ The Gojo Satarou is a powerful Group Management bot.
 
 Can be found on telegram as a management bot for groups.
 
-
-
-Join 🌟 [Hell Community](https://t.me/HellBot_Network) 🌟 if you counter any problem or face any bugs for help.
+**If you counter any problem or face any bugs for help join 🌟 [Hell Community](https://t.me/HellBot_Network) 🌟.**
 
 ## Features
-* **Modern**
+* Modern
 * Fast
 * Fully asynchronous
 * Fully open-source
