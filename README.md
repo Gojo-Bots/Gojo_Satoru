@@ -73,7 +73,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 [![DEPLOY](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/iamgojoof6eyes/Gojo_Satarou.git)
 
 
-<!---## Deploy To Railway
+## Deploy To Railway
 [![DEPLOY](https://railway.app/button.svg)](https://railway.app)
 ### How To Deploy On Railway
 *  **Make Sure You have an github account which is minimum 30 days old.**
@@ -85,7 +85,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 * Then 10-15 minutes. 
 * Mandaotry keys are [given below](#Variables)
 * All keys are listed [here](https://telegra.ph/Captain-03-23)
-* ***The bot can be used by provideing mandotry variables only..*** --->
+* ***The bot can be used by provideing mandotry variables only..*** 
 
 ## Deploy locally
 ### Using git
