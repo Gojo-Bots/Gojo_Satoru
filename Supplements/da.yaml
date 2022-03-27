@@ -158,7 +158,7 @@ strings:
 
         Just type /lang and use inline tastatur to choose a language for yourself or your group.
 
-        Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https: //crowdin.com/project/alita_robot)
+        Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https://crowdin.com/project/gojosatarou)
     locks:
       main: "Låse"
       help: |-
