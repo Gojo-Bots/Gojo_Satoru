@@ -24,7 +24,7 @@ async def gen_langs_kb():
         [
             (
                 "🌎 Help us with translations!",
-                "https://crowdin.com/project/Gojo_Satarou",
+                "https://crowdin.com/project/gojosatarou",
                 "url",
             ),
         ],
