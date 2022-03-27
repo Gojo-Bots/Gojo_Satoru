@@ -84,7 +84,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 * Now add the values and keys by creating values and keys ***Make sure to add keys __as per given below__ I'll advide you to just copy and paste it***
 * Then 10-15 minutes. 
 * Mandaotry keys are [given below](#Variables)
-* All keys are listed [here](https://telegra.ph/Captain-03-23)
+* All keys are listed [here](https://telegra.ph/Captain-03-27)
 * ***The bot can be used by provideing mandotry variables only..*** 
 
 ## Deploy locally
