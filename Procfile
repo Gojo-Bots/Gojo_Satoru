@@ -1,1 +1,1 @@
-worker: python3 -m Power
+worker: make run
