@@ -25,7 +25,7 @@ class Config:
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="HellBot_Network")
-    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="HellBot_Network")
+    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_updates")
     ENABLED_LOCALES = [str(i) for i in config("ENABLED_LOCALES", default="en").split()]
     VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
