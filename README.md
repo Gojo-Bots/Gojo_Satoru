@@ -40,7 +40,7 @@ Can be found on telegram as a management bot for groups.
 * Frequently updated
 * Multi Language Support
 
-Can be found on Telegram as @iamgojoof6eyes_bot
+Can be found on Telegram as [@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)
 
 Alita is currently available in 1 Language as of now:
 
