@@ -121,6 +121,8 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!
 
 `APP_ID` Get API_ID from my.telegram.org, used for pyrogram base.
 
+To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
+
 # Special Thanks ❤️
 
 [PSYREX](https://github.com/iamPSYREX)
