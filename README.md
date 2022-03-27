@@ -42,8 +42,29 @@ The Gojo Satarou is a powerful Group Management bot.
 
 Can be found on telegram as a management bot for groups.
 
+
+
 Join 🌟 [Hell Community](https://t.me/HellBot_Network) 🌟 if you counter any problem or face any bugs for help.
 
+## Features
+* **Modern**
+* Fast
+* Fully asynchronous
+* Fully open-source
+* Frequently updated
+* Multi Language Support
+
+Can be found on Telegram as @iamgojoof6eyes_bot
+
+Alita is currently available in 1 Language as of now:
+
+* US English
+
+More languages can be managed in the locales folder.
+
+We are still working on adding new languages.
+
+Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/gojosatarou)
 
 ## Bot
 
@@ -66,7 +87,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 [![DEPLOY](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/iamgojoof6eyes/Gojo_Satarou.git)
 
 
-## Deploy To Railway
+<!---## Deploy To Railway
 [![DEPLOY](https://railway.app/button.svg)](https://railway.app)
 ### How To Deploy On Railway
 *  **Make Sure You have an github account which is minimum 30 days old.**
@@ -78,8 +99,28 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 * Then 10-15 minutes. 
 * Mandaotry keys are [given below](#Variables)
 * All keys are listed [here](https://telegra.ph/Captain-03-23)
-* ***The bot can be used by provideing mandotry variables only..*** 
+* ***The bot can be used by provideing mandotry variables only..*** --->
 
+## Deploy locally
+### Using git
+
+* Install Python v3.7 or later from Python's Website
+* Install virtualenv using `python3 -m pip -U install virtualenv`.
+* Fork or Clone the project using `git clone https://github.com/iamgojoof6eyes/Gojo_Satarou.git`
+* Create Virtualenv using: `virtualenv venv`
+* Install the requirements using `python3 -m pip install -r requirements.txt`
+* Fill in all the variables in Development class, not Config class. Sudo, Dev, Whitelist users are optional!!
+* Change to virtualenv shell by using: `. venv/bin/activate (Linux) venv\Scripts\activate (Windows)`
+* Run the bot using `python3 -m Powers`
+
+### Usind docker
+
+Clone the repo and enter into it
+Install [Docker](https://www.docker.com/)
+Fill in the `sample.env` file and rename it to `main.env`.
+Build the docker image using: `docker build -t Gojo_Satarou:latest .` (The dot '.' at last is necessary!)
+Run the command `docker run --env-file main.env Gojo_Satarou`
+If all works well, bot should send message to the MESSAGE_DUMP Group!
 
 ## Variables
 `TOKEN` You can get your bot token at @BotFather
@@ -94,10 +135,8 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 
 `APP_ID` Get API_ID from my.telegram.org, used for pyrogram base.
 
-Click [here](https://telegra.ph/Captain-03-23) to see all variable
 
 
 
-# I'll be back with one more group management bot which will be far more better than this....until than use this bot
 
 
