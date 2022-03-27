@@ -158,7 +158,7 @@ strings:
 
         Just type /lang a použít vloženou klávesnici pro výběr jazyka pro sebe nebo pro vaši skupinu.
 
-        Můžete nám pomoci přinést více jazyků tím, že vám pomůže s [Crowdin](https: //crowdin.com/project/alita_robot)
+        Můžete nám pomoci přinést více jazyků tím, že vám pomůže s [Crowdin](https://crowdin.com/project/gojosatarou)
     locks:
       main: "Zámky"
       help: |-
