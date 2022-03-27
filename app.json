@@ -26,7 +26,7 @@
       "API_HASH": {
         "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
         "required": true,
-        "value": "testinghash123"
+        "value": "iamgojoof6eyes"
       },
       "DB_URI": {
         "description": "Your MongoDB connection string.",
