@@ -17,19 +17,7 @@ A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group 
 
 If you like the bot make sure to give a ⭐ __star__ ⭐ to theis respository and feel free to update and sending pull requests...
 
-## ⚡ Credit ⚡ 
-
-### Devs 😎
-
-[Captain Ezio](https://github.com/iamgojoof6eyes) `Creator & Dev`
-
-[Hêllẞøy](https://github.com/HellBoy-OP) `Dev`
-
-
-[PSYREX](https://github.com/iamPSYREX) `Logo and picture designer`
-
-
-### Inspiration ✨
+## Inspiration ✨
 `Not a particular inspiration inspired by many bots`
 
 
@@ -134,6 +122,11 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!
 `DB_URI` Your MongoDB connection string.
 
 `APP_ID` Get API_ID from my.telegram.org, used for pyrogram base.
+
+# Special Thanks ❤️
+
+[PSYREX](https://github.com/iamPSYREX)
+
 
 
 
