@@ -34,7 +34,7 @@ KICK_MEDIA = random.choice(KICK_GIFS)
 @Gojo.on_message(command("tban") & restrict_filter)
 async def tban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "Provide me an user id or username or atleast reply to user"))
+        await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
     try:
@@ -50,7 +50,7 @@ async def tban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "If I will ban this user....then who will going to manage me?"))
+        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         LOGGER.info(
             f"{m.from_user.id} trying to ban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -85,13 +85,13 @@ async def tban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "I am not going to ban an admin"))
+        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
         await m.stop_propagation()
 
     try:
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id, until_date=int(bantime))
-        txt = (tlang(m, "Successfully banned the user")).format(
+        txt = (tlang(m, "admin.ban.banned_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
             banned=(await mention_html(user_first_name, user_id)),
             chat_title=m.chat.title,
@@ -110,7 +110,7 @@ async def tban_usr(c: Gojo, m: Message):
         await m.reply_animation(reply_to_message_id = r_id, animation = BAN_MEDIA, caption = txt,  reply_markup=keyboard, parse_mode="html")
        # await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "You are not an admin here so stay in your limit bud...."))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
@@ -118,10 +118,10 @@ async def tban_usr(c: Gojo, m: Message):
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "I don't have rights to ban members.....")))
+        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "It's a general error contact support staff to know more...")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=SUPPORT_GROUP,
                 ef=ef,
             ),
@@ -134,7 +134,7 @@ async def tban_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("stban") & restrict_filter)
 async def stban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "Provide me an user id or username or atleast reply to user"))
+        await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
     try:
@@ -150,7 +150,7 @@ async def stban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "I am not going to ban one of my support staff"))
+        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         LOGGER.info(
             f"{m.from_user.id} trying to ban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -183,7 +183,7 @@ async def stban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "I am not going to ban an admin..."))
+        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
         await m.stop_propagation()
 
     try:
@@ -195,7 +195,7 @@ async def stban_usr(c: Gojo, m: Message):
             return
         return
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "Stay in your limits....."))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
@@ -203,7 +203,7 @@ async def stban_usr(c: Gojo, m: Message):
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "I don't have power to ban....")))
+        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
