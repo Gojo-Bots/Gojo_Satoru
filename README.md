@@ -129,7 +129,9 @@ To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
 
 
 
+# Powered by [HELL](https://github.com/The-HellBot)
 
+[![Hell Community](https://te.legra.ph/file/a780adeb9b406b169a889.jpg)](https://github.com/The-HellBot)
 
 
 
