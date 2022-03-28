@@ -516,7 +516,7 @@ strings:
     check_help: "Prosím, zkontrolujte nápovědu, jak tento příkaz použít."
     close_btn: Zavřeno
     commands_available: |-
-      Hej, tady! Jmenuji se Alita.
+      Hej, tady! Jmenuji se Gojo.
       Jsem zde, abych vám pomohl se správou vašich skupin!
       Příkazy k dispozici:
       × /start: Spustit bot
