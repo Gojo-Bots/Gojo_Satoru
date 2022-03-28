@@ -1,7 +1,9 @@
-# Gojo_Satarou
-![Gojo_Satarou](https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif)
+<h1 align="center">
+  <b> Gojo_Satarou </b>
+</h1>
+<h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1>
 
-A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group management bot for telegram.
+------
 
 <!------
 [![GitHub forks](https://img.shields.io/github/forks/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/fork)
@@ -15,7 +17,11 @@ A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group 
 
 ------>
 
-If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to update and sending pull requests...
+**A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group management bot for telegram.
+
+If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to update and sending pull requests**
+
+---------
 
 ## Inspiration ✨
 `Not a particular inspiration inspired by many bots`
@@ -24,6 +30,7 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 ```
 This bot is mixture of the many bots and have some extra plugins so it is quite better than both of bots.
 ```
+---------
 
 ## Group Management 
 The Gojo Satarou is a powerful Group Management bot. 
@@ -58,9 +65,9 @@ Help us bring more languages to the bot by contributing to the project on [Crowd
 
 I am available on telegram [Gojo Satarou](https://t.me/iamgojoof6eyes_bot)
 
-# Powered By [Hell Community](https://github.com/The-HellBot)
 
 
+---------
 
 # DEPLOYMENT 🚀
 ## Deploy To Heroku
@@ -123,11 +130,13 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!
 
 To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
 
+---------
+
 # Special Thanks ❤️
 
 [PSYREX](https://github.com/iamPSYREX)
 
-
+---------
 
 # Powered by [HELL](https://github.com/The-HellBot)
 
