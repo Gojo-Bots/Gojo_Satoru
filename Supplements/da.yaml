@@ -516,7 +516,7 @@ strings:
     check_help: "Kontrollér hjælpen til, hvordan du bruger denne kommando."
     close_btn: Luk
     commands_available: |-
-      Hey, der! Mit navn er Alita.
+      Hey, der! Mit navn er Gojo.
       Jeg er her for at hjælpe dig med at styre dine grupper!
       Kommandoer:
       × /start: Start the bot
