@@ -18,7 +18,6 @@
 ------>
 
 **A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group management bot for telegram.
-
 If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to update and sending pull requests**
 
 ---------
@@ -106,7 +105,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 * Change to virtualenv shell by using: `. venv/bin/activate (Linux) venv\Scripts\activate (Windows)`
 * Run the bot using `python3 -m Powers`
 
-### Usind docker
+### Using docker
 
 Clone the repo and enter into it
 Install [Docker](https://www.docker.com/)
