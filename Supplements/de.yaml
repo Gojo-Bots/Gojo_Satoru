@@ -516,7 +516,7 @@ strings:
     check_help: "Please check help on how to use this this command."
     close_btn: Close
     commands_available: |-
-      Hey There! My name is Alita.
+      Hey There! My name is Gojo.
       I'm here to help you manage your groups!
       Commands available:
       × /start: Start the bot
