@@ -110,7 +110,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 * Change to virtualenv shell by using: `. venv/bin/activate (Linux) venv\Scripts\activate (Windows)`
 * Run the bot using `python3 -m Powers`
 
-### Using docker
+<!---### Using docker
 
 Clone the repo and enter into it
 Install [Docker](https://www.docker.com/)
@@ -132,7 +132,7 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!
 
 `APP_ID` Get API_ID from my.telegram.org, used for pyrogram base.
 
-To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
+To get a list of all variable click [here](https://telegra.ph/Captain-03-27)--->
 
 ---------
 
