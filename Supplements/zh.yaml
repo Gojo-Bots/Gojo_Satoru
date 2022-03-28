@@ -50,7 +50,7 @@ strings:
 
         注:
         a) 目前仅支持文本!
-        b) Alita 必须是 admin 才能迎接和告别用户。
+        b) Gojo 必须是 admin 才能迎接和告别用户。
 
         管理命令:
         × /se十二个 <reply> : 设置定制欢迎消息。
@@ -137,7 +137,7 @@ strings:
       help: |-
         格式化
 
-        Alita 支持大量格式化选项，使您的消息更有表现力。 通过单击下面的按钮来进行查看 !
+        Gojo 支持大量格式化选项，使您的消息更有表现力。 通过单击下面的按钮来进行查看 !
     fun:
       main: "好玩"
       help: |-
@@ -158,7 +158,7 @@ strings:
 
         只需输入 /lang ，并使用内联键盘为您自己或您的组选择语言。
 
-        您可以通过帮助 [Crowdin](https://crowdin.com/project/gojosatarou) 帮助我们实现更多语言的机器人
+        您可以通过帮助 [Crowdin](//crowdin.com/project/Gojo_robot ) 帮助我们实现更多语言的机器人
     locks:
       main: "锁"
       help: |-
@@ -401,7 +401,7 @@ strings:
       %%% %
       如何</code>
       这将在发送第一条消息， "hello"或第二个消息之间进行随机选择。
-      使用此方法使 Alita 感到更加个性化! (仅在过滤器/注释中工作 )
+      使用此方法使 Gojo 感到更加个性化! (仅在过滤器/注释中工作 )
 
       示例欢迎消息: :
       - 每次新用户加入时，将显示此处显示的三个消息中的一个。
@@ -516,12 +516,12 @@ strings:
 
       所有基金将投入我的服务，如数据库，存储和托管!
 
-      您可以通过联系我的所有者来捐赠 : @DivideProjectsBot
+      您可以通过联系我的所有者来捐赠 : @iamgojoof6eyes
     back_btn: 回来了
     check_help: "请检查有关如何使用此命令的帮助。"
     close_btn: 关闭
     commands_available: |-
-      嘿那里 我的名字是 Alita.
+      嘿那里 我的名字是 Gojo.
       我来帮助您管理您的组!
       命令可用:
       × / 开始: 启动 bot
@@ -542,7 +542,7 @@ strings:
     changelang: |-
       在这里，您可以更改 bot的语言。
 
-      您可以通过帮助 [Crowdin](//crowdin.com/project/alita_robot ) 帮助我们实现更多语言的机器人
+      您可以通过帮助 [Crowdin](//crowdin.com/project/Gojo_robot ) 帮助我们实现更多语言的机器人
     correct_usage: |-
       <b>正确用法:</b>
       /lang 或 /setlang language-code
@@ -610,21 +610,21 @@ strings:
     commands_btn: 命令和帮助
     group: "我还活着 :3"
     info_page: |-
-      • @Alita_Robot
+      • @iamgojoof6eyes_bot
 
       <b>Version:</b> <i>{version}</i>
 
-      <b>Developers:</b> [Divkix](https://github.com/Divkix)
+      <b>Developers:</b> [Captain Ezio](https://github.com/iamgojoof6eyes
       <b>Owner:</b> [{Owner}](tg://user?id={ID})
     support_group: 支持
     language_btn: 语文
     pm_for_help: "在 PM 中联系我以获取可能的命令列表。"
     private: |-
-      嘿那里 我的名字是 Alita ✨.
+      嘿那里 我的名字是 Gojo ✨.
       我在这里帮助您管理您的组!
       点击 / 帮助了解如何充分利用我的全部潜能!
 
-      加入我的 [新闻频道](http://t.me/AlitaRobotUpdates) 以获取有关所有最新更新的信息。
+      加入我的 [新闻频道](https://t.me/gojo_updates) 以获取有关所有最新更新的信息。
     public_help: "按下面的按钮获得帮助 <i>{help_option}</i>"
     source_code: "源代码"
   utils:

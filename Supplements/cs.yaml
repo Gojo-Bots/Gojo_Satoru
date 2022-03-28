@@ -50,7 +50,7 @@ strings:
 
         Note:
         a) Currently it supports only text!
-        b) Alita must be an admin to greet and goodbye users.
+        b) Gojo must be an admin to greet and goodbye users.
 
         Admin Commands:
         × /setwelcome <reply> : Sets a custom welcome message.
@@ -137,7 +137,7 @@ strings:
       help: |-
         Formátování souboru
 
-        Alito podporuje velký počet voleb formátování, aby byly vaše zprávy výrazněji expresivní. Podívejte se kliknutím na tlačítka níže!
+        Gojo podporuje velký počet voleb formátování, aby byly vaše zprávy výrazněji expresivní. Podívejte se kliknutím na tlačítka níže!
     fun:
       main: "Zábava"
       help: |-
@@ -158,7 +158,7 @@ strings:
 
         Just type /lang a použít vloženou klávesnici pro výběr jazyka pro sebe nebo pro vaši skupinu.
 
-        Můžete nám pomoci přinést více jazyků tím, že vám pomůže s [Crowdin](https://crowdin.com/project/gojosatarou)
+        Můžete nám pomoci přinést více jazyků tím, že vám pomůže s [Crowdin](https: //crowdin.com/project/Gojo_robot)
     locks:
       main: "Zámky"
       help: |-
@@ -401,7 +401,7 @@ strings:
       %%%
       how are you</code>
       This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
+      Use this to make Gojo feel a bit more customised! (only works in filters/notes)
 
       Example welcome message::
       - Every time a new user joins, they'll be presented with one of the three messages shown here.
@@ -511,7 +511,7 @@ strings:
 
       Veškerý fond by byl vložen do mé služby, jako je databáze, úložiště a hostování!
 
-      Můžete darovat obraťte se na mého vlastníka zde: @DivideProjectsBot
+      Můžete darovat obraťte se na mého vlastníka zde: @iamgojoof6eyes
     back_btn: Zadní
     check_help: "Prosím, zkontrolujte nápovědu, jak tento příkaz použít."
     close_btn: Zavřeno
@@ -537,7 +537,7 @@ strings:
     changelang: |-
       Zde můžete změnit jazyk pro robot.
 
-      Pomůžete nám přinést více jazyků do více jazyků tím, že vám pomůže s [Crowdin](https: //crowdin.com/project/alita_robot)
+      Pomůžete nám přinést více jazyků do více jazyků tím, že vám pomůže s [Crowdin](https: //crowdin.com/project/Gojo_robot)
     correct_usage: |-
       <b>Správné použití:</b>
       /lang or /setlang language-code
@@ -605,21 +605,21 @@ strings:
     commands_btn: Příkazy a nápověda
     group: "Jsem naživu: 3"
     info_page: |-
-      @Alita_Robot
+      @iamgojoof6eyes_bot
 
       <b>Verze:</b> <i>{version}</i>
 
-      <b>Developers:</b> [Divkix](https: //github.com/Divkix)
+      <b>Developers:</b> [Captain Ezio](https: //github.com/iamgojoof6eyes)
       <b>Vlastník:</b> [{Owner}] (tg://user?id={ID})
     support_group: Podpora
     language_btn: Jazyk
     pm_for_help: "Kontaktujte mne v PÚ, abyste získali seznam možných příkazů."
     private: |-
-      Hej, tady! Moje jméno je Alita ✨.
+      Hej, tady! Moje jméno je Gojo ✨.
       Jsem tu, abych vám pomohl spravovat své skupiny!
       Hit/help zjistit více o tom, jak využít mě v mém plném potenciálu!
 
-      Připojte se k mému [ News Channel] (http://t.me/AlitaRobotUpdates), abyste získali informace o všech nejnovějších aktualizacích.
+      Připojte se k mému [ News Channel] (https://t.me/gojo_updates), abyste získali informace o všech nejnovějších aktualizacích.
     public_help: "Chcete-li získat nápovědu pro <i>{help_option}</i>, stiskněte tlačítko níže."
     source_code: "Zdrojový kód"
   utils:

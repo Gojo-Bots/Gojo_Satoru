@@ -50,7 +50,7 @@ strings:
 
         Note:
         a) Currently it supports only text!
-        b) Alita must be an admin to greet and goodbye users.
+        b) Gojo must be an admin to greet and goodbye users.
 
         Admin Commands:
         × /setwelcome <reply> : Sets a custom welcome message.
@@ -137,7 +137,7 @@ strings:
       help: |-
         Formatering af
 
-        Alita understøtter et stort antal formateringsvalg for at gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på knapperne nedenfor!
+        Gojo understøtter et stort antal formateringsvalg for at gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på knapperne nedenfor!
     fun:
       main: "Sjov"
       help: |-
@@ -158,7 +158,7 @@ strings:
 
         Just type /lang and use inline tastatur to choose a language for yourself or your group.
 
-        Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https://crowdin.com/project/gojosatarou)
+        Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https: //crowdin.com/project/Gojo_robot)
     locks:
       main: "Låse"
       help: |-
@@ -401,7 +401,7 @@ strings:
       %%%
       how are you</code>
       This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
+      Use this to make Gojo feel a bit more customised! (only works in filters/notes)
 
       Example welcome message::
       - Every time a new user joins, they'll be presented with one of the three messages shown here.
@@ -511,7 +511,7 @@ strings:
 
       Hele fonden vil blive lagt i mine serviceydelser, f.eks. database, storage og hosting!
 
-      Du kan donere ved at kontakte min ejer her: @DivideProjectsBot
+      Du kan donere ved at kontakte min ejer her: @iamgojoof6eyes
     back_btn: Tilbage
     check_help: "Kontrollér hjælpen til, hvordan du bruger denne kommando."
     close_btn: Luk
@@ -537,7 +537,7 @@ strings:
     changelang: |-
       Her kan du skifte sprog for botten.
 
-      Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https: //crowdin.com/project/alita_robot)
+      Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https: //crowdin.com/project/Gojo_robot)
     correct_usage: |-
       <b>Korrekt anvendelse:</b>
       /lang eller /setlang sprog-kode
@@ -607,21 +607,21 @@ strings:
     commands_btn: Kommandoer og hjælp
     group: "Jeg er i live: 3"
     info_page: |-
-      • @Alita_Robot
+      • @iamgojoof6eyes_bot
 
       <b>Version:</b> <i>{version}</i>
 
-      <b>Developers:</b> [Divkix](https://github.com/Divkix)
+      <b>Developers:</b> [Captain Ezio](https://github.com/iamgojoof6eyes
       <b>Owner:</b> [{Owner}](tg://user?id={ID})
     support_group: Support
     language_btn: Sprog
     pm_for_help: "Kontakt mig i PM for at få vist en liste med mulige kommandoer."
     private: |-
-      Hej med dig! Mit navn er Alita ✨.
+      Hej med dig! Mit navn er Gojo ✨.
       Jeg er her for at hjælpe dig med at styre dine grupper!
       Ram / hjælp til at finde ud af mere om, hvordan du bruger mig i mit fulde potentiale!
 
-      Deltag i min [ News Channel ] (http://t.me/AlitaRobotUpdates) for at få vist oplysninger om alle de seneste opdateringer.
+      Deltag i min [ News Channel ] (https://t.me/gojo_updates) for at få vist oplysninger om alle de seneste opdateringer.
     public_help: "Tryk på knappen nedenfor for at hente hjælp til <i>{help_option}</i>"
     source_code: "Kildekode"
   utils:
