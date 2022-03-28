@@ -1,7 +1,11 @@
 <h1 align="center">
   <b> Gojo_Satarou </b>
-</h1>
-<h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1>
+<!---</h1>
+<h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1> --->
+
+<h1 align="center"><img src="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg" /></h1>
+
+
 
 ------
 
@@ -62,7 +66,8 @@ Help us bring more languages to the bot by contributing to the project on [Crowd
 
 ![Gojo Starou](https://media.giphy.com/media/hbKBe6j3JLsNnb4h53/giphy.gif)
 
-I am available on telegram [Gojo Satarou](https://t.me/iamgojoof6eyes_bot)
+
+**I am available on telegram** ***[Gojo Satarou](https://t.me/iamgojoof6eyes_bot)***
 
 
 
