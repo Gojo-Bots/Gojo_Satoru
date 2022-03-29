@@ -56,9 +56,7 @@ Gojo is currently available in 1 Language as of now:
 
 * US English
 
-More languages can be managed in the locales folder.
-
-We are still working on adding new languages.
+More languages can be managed in the [Supplements](https://github.com/iamgojoof6eyes/Gojo_Satarou/tree/master/Supplements) folder.
 
 Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/gojosatarou)
 
