@@ -115,7 +115,7 @@ Install [Docker](https://www.docker.com/)
 Fill in the `sample.env` file and rename it to `main.env`.
 Build the docker image using: `docker build -t Gojo_Satarou:latest .` (The dot '.' at last is necessary!)
 Run the command `docker run --env-file main.env Gojo_Satarou`
-If all works well, bot should send message to the MESSAGE_DUMP Group!
+If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 ## Variables
 `TOKEN` You can get your bot token at @BotFather
@@ -130,7 +130,7 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!
 
 `APP_ID` Get API_ID from my.telegram.org, used for pyrogram base.
 
-To get a list of all variable click [here](https://telegra.ph/Captain-03-27)--->
+To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
 
 ---------
 
