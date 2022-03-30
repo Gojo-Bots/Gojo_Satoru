@@ -128,7 +128,6 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 `DB_URI` Your MongoDB connection string.
 
-`APP_ID` Get API_ID from my.telegram.org, used for pyrogram base.
 
 To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
 
