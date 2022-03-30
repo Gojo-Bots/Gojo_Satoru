@@ -7,7 +7,7 @@ from pyrogram.raw.all import layer
 
 from Powers import (
     API_HASH,
-    APP_ID,
+    API_ID,
     BOT_TOKEN,
     LOG_DATETIME,
     LOGFILE,
@@ -42,7 +42,7 @@ class Gojo(Client):
             "Gojo_Satarou",
             bot_token=BOT_TOKEN,
             plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
-            api_id=APP_ID,
+            api_id=API_ID,
             api_hash=API_HASH,
             workers=WORKERS,
         )
