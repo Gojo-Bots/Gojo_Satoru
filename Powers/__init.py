@@ -58,7 +58,7 @@ LOGGER.info("Source Code: https://github.com/iamgojoof6eyes/Gojo_Satarou\n")
 
 # Account Related
 BOT_TOKEN = Config.BOT_TOKEN
-APP_ID = Config.APP_ID
+API_ID = Config.API_ID
 API_HASH = Config.API_HASH
 
 # General Config
