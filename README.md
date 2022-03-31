@@ -48,17 +48,10 @@ Can be found on telegram as a management bot for groups.
 * Fully asynchronous
 * Fully open-source
 * Frequently updated
-* Multi Language Support
 
+  
 Can be found on Telegram as [@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)
 
-Gojo is currently available in 1 Language as of now:
-
-* US English
-
-More languages can be managed in the [Supplements](https://github.com/iamgojoof6eyes/Gojo_Satarou/tree/master/Supplements) folder.
-
-Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/gojosatarou)
 
 ## Bot
 
