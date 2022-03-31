@@ -36,7 +36,7 @@ class Gojo(Client):
     """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m Powers'"""
 
     def __init__(self):
-        name = self.__class__.__name__.lower()
+        name = self.__class__.Powers
 
         super().__init__(
             "Gojo_Satarou",
