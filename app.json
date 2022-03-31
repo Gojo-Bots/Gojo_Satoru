@@ -51,7 +51,7 @@
       "MESSAGE_DUMP": {
         "description": "Event logs channel where bot will send updates.",
         "required": true,
-        "value": "-657254745"
+        "value": "-1001713325956"
       },
       "VERSION": {
         "description": "A Version to be shown in bot.",
