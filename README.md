@@ -138,7 +138,7 @@ Run the command `docker run --env-file main.env Gojo_Satarou`
 If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 ## Variables
-`TOKEN` You can get your bot token at @BotFather
+`BOT_TOKEN` You can get your bot token at @BotFather
 
 `API_ID` You can get your api id [here](my.telegram.org)
 
