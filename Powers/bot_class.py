@@ -36,12 +36,12 @@ class Gojo(Client):
     """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m Powers'"""
 
     def __init__(self):
-        name = Powers
+        #name = Powers
 
         super().__init__(
             "Gojo_Satarou",
             bot_token=BOT_TOKEN,
-            plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
+            plugins=dict(root="Powers.plugins", exclude=NO_LOAD),
             api_id=API_ID,
             api_hash=API_HASH,
             workers=WORKERS,
