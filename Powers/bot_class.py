@@ -39,7 +39,7 @@ class Gojo(Client):
         name = self.__class__.__name__.lower()
 
         super().__init__(
-            "Gojo_Satarou",
+            "Gojo",
             bot_token=BOT_TOKEN,
             plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
             api_id=API_ID,
