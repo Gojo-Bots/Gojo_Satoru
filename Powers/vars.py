@@ -27,7 +27,6 @@ class Config:
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="HellBot_Network")
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_updates")
-    ENABLED_LOCALES = [str(i) for i in config("ENABLED_LOCALES", default="en").split()]
     VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
     BOT_USERNAME = ""
@@ -54,6 +53,5 @@ class Development:
     PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
-    ENABLED_LOCALES = ["ENABLED_LOCALES"]
     VERSION = "VERSION"
     WORKERS = 8
