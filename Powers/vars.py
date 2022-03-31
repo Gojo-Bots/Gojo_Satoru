@@ -1,11 +1,11 @@
 from os import getcwd
-import os
+
 
 from prettyconf import Configuration
 from prettyconf.loaders import EnvFile, Environment
 
-#env_file = f"{getcwd()}/.env"
-#config = Configuration(loaders=[Environment(), EnvFile(filename=env_file)])
+env_file = f"{getcwd()}/.env"
+config = Configuration(loaders=[Environment(), EnvFile(filename=env_file)])
 
 
 
@@ -13,23 +13,23 @@ class Config:
     """Config class for variables."""
 
     LOGGER = True
-    BOT_TOKEN = environ.get("BOT_TOKEN", default=None)
-    API_ID = int(environ.get("API_ID", default=None))
-    API_HASH = environ.get("API_HASH", default=None)
-    OWNER_ID = int(environ.get("OWNER_ID", default=1344569458))
-    MESSAGE_DUMP = int(environ.get("MESSAGE_DUMP", default=-100))
-    DEV_USERS = [int(i) for i in environ.get("DEV_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
-    SUDO_USERS = [int(i) for i in environ.get("SUDO_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
-    WHITELIST_USERS = [int(i) for i in environ.get("WHITELIST_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
-    DB_URI = environ.get("DB_URI", default="")
-    DB_NAME = environ.get("DB_NAME", default="Power_robot")
-    NO_LOAD = environ.get("NO_LOAD", default="").split()
-    PREFIX_HANDLER = environ.get("PREFIX_HANDLER", default="/").split()
-    SUPPORT_GROUP = environ.get("SUPPORT_GROUP", default="HellBot_Network")
-    SUPPORT_CHANNEL = environ.get("SUPPORT_CHANNEL", default="gojo_updates")
-    ENABLED_LOCALES = [str(i) for i in environ.get("ENABLED_LOCALES", default="en").split()]
-    VERSION = environ.get("VERSION", default="v2.0")
-    WORKERS = int(environ.get("WORKERS", default=16))
+    BOT_TOKEN = config("BOT_TOKEN", default=None)
+    API_ID = int(config("API_ID", default=None))
+    API_HASH = config("API_HASH", default=None)
+    OWNER_ID = int(config("OWNER_ID", default=1344569458))
+    MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=-100))
+    DEV_USERS = [int(i) for i in config("DEV_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
+    SUDO_USERS = [int(i) for i in config("SUDO_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
+    WHITELIST_USERS = [int(i) for i in config("WHITELIST_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
+    DB_URI = config("DB_URI", default="")
+    DB_NAME = config("DB_NAME", default="Power_robot")
+    NO_LOAD = config("NO_LOAD", default="").split()
+    PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
+    SUPPORT_GROUP = config("SUPPORT_GROUP", default="HellBot_Network")
+    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_updates")
+    ENABLED_LOCALES = [str(i) for i in config("ENABLED_LOCALES", default="en").split()]
+    VERSION = config("VERSION", default="v2.0")
+    WORKERS = int(config("WORKERS", default=16))
     BOT_USERNAME = ""
     BOT_ID = ""
     BOT_NAME = ""
