@@ -20,7 +20,6 @@ from Powers import (
 )
 from Powers.database import MongoDB
 from Powers.plugins import all_plugins
-from Powers.tr_engine import lang_dict
 from Powers.vars import Config
 
 INITIAL_LOCK = RLock()
@@ -59,9 +58,7 @@ class Gojo(Client):
 
         startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
-        # Load Languages
-        lang_status = len(lang_dict) >= 1
-        LOGGER.info(f"Loading Languages: {lang_status}\n")
+        
 
         # Show in Log that bot has started
         LOGGER.info(
