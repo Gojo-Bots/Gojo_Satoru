@@ -82,11 +82,6 @@
         "required": false,
         "value": "1432756163 1344569458 1355478165 1789859817 1777340882"
       },
-      "ENABLED_LOCALES": {
-        "description": "A space separated list of language which should be enabled in bot.",
-        "required": false,
-        "value": "en"
-      },
       "WORKERS": {
         "description": "Number of workers to run the bot.",
         "required": false,
