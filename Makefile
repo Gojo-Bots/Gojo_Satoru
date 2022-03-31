@@ -7,7 +7,7 @@ install:
 	@pip install -r requirements.txt
 
 run:
-	@python3 -m alita
+	@python3 -m Powers
 
 clean:
 	@rm -rf Powers/logs
