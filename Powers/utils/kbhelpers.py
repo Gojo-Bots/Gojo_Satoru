@@ -8,7 +8,7 @@ def ikb(rows=None):
     for row in rows:
         line = []
         for button in row:
-            button = btn(*button)  # InlineKeyboardButton
+            button = btn(button)  # InlineKeyboardButton
             line.append(button)
         lines.append(line)
     return InlineKeyboardMarkup(inline_keyboard=lines)
