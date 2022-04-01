@@ -9,7 +9,6 @@ from pyrogram.types import CallbackQuery, Message
 
 from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
 from Powers.database.disable_db import DISABLED_CMDS
-from Powers.tr_engine import tlang
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.vars import Config
 
@@ -169,7 +168,7 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if m.from_user.id in admin_group:
         return True
 
-    await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+    await m.reply_text(text="You cannot use an admin command!")
 
     return False
 
@@ -219,7 +218,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
         status = True
     else:
         status = False
-        await m.reply_text(tlang(m, "admin.no_restrict_perm"))
+        await m.reply_text(text="You don't have permissions to restrict members!")
 
     return status
 
@@ -242,7 +241,7 @@ async def promote_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text(tlang(m, "admin.promote.no_promote_perm"))
+        await m.reply_text(text="You don't have permission to promote members!")
 
     return status
 

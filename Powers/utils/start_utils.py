@@ -10,7 +10,6 @@ from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
 from Powers.database.rules_db import Rules
-from Powers.tr_engine import tlang
 from Powers.utils.cmd_senders import send_cmd
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.msg_types import Types
@@ -31,7 +30,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
         m = m.message
 
     cmds = sorted(list(HELP_COMMANDS.keys()))
-    kb = [(tlang(m, cmd), f"get_mod.{cmd.lower()}") for cmd in cmds]
+    kb = [(f"get_mod.{cmd.lower()}") for cmd in cmds]
 
     return [kb[i : i + 3] for i in range(0, len(kb), 3)]
 
@@ -42,21 +41,21 @@ async def gen_start_kb(q: Message or CallbackQuery):
         [
             [
                 (
-                    f"➕ {(tlang(q, 'start.add_chat_btn'))}",
+                    "➕ Add me to a chat!",
                     f"https://t.me/{Config.BOT_USERNAME}?startgroup=new",
                     "url",
                 ),
                 (
-                    f"{(tlang(q, 'start.support_group'))} 👥",
+                    "Support 👥",
                     f"https://t.me/{SUPPORT_GROUP}",
                     "url",
                 ),
             ],
-            [(f"📚 {(tlang(q, 'start.commands_btn'))}", "commands")],
+            [("📚 Commands & Help", "commands")],
             [
-                (f"🌐 {(tlang(q, 'start.language_btn'))}", "chlang"),
+                
                 (
-                    f"🗃️ {(tlang(q, 'start.source_code'))}",
+                    "🗃️ Source Code",
                     "https://github.com/iamgojoof6eyes/Gojo_Satarou",
                     "url",
                 ),
@@ -231,19 +230,23 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             HELP_COMMANDS[i]["buttons"]
             for i in HELP_COMMANDS
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
-        ) + [[("« " + (tlang(m, "general.back_btn")), "commands")]]
+        ) + [[("« " + "Back", "commands")]]
         help_msg = (
-            f"**{(tlang(m, (help_option_name['help_msg']).replace('.help', '.main')))}:**\n\n"
-            + tlang(m, help_option_value)
+            f"**{(help_option_name['help_msg']).replace('.help', '.main')}:**\n\n"
+            + help_option_value
         )
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )
     else:
-        help_msg = tlang(m, "general.commands_available")
+        help_msg = """Hey There! My name is Gojo.
+      I'm here to help you manage your groups!
+      Commands available:
+       × /start: Start the bot
+       × /help: Give's you this message."""
         help_kb = [
             *(await gen_cmds_kb(m)),
-            [(f"« {(tlang(m, 'general.back_btn'))}", "start_back")],
+            [("« Back", "start_back")],
         ]
 
     return help_msg, help_kb
