@@ -22,7 +22,6 @@ from Powers import (
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.users_db import Users
-from Powers.tr_engine import tlang
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -39,7 +38,7 @@ async def wiki(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used wiki cmd in {m.chat.id}")
 
     if len(m.text.split()) <= 1:
-        return await m.reply_text(tlang(m, "general.check_help"))
+        return await m.reply_text(text="Please check help on how to use this this command.")
 
     search = m.text.split(None, 1)[1]
     try:
@@ -98,27 +97,26 @@ async def gdpr_remove(_, m: Message):
 )
 async def get_lyrics(_, m: Message):
     if len(m.text.split()) <= 1:
-        await m.reply_text(tlang(m, "general.check_help"))
+        await m.reply_text(text="Please check help on how to use this this command.")
         return
 
     query = m.text.split(None, 1)[1]
     LOGGER.info(f"{m.from_user.id} used lyrics cmd in {m.chat.id}")
     song = ""
     if not query:
-        await m.edit_text(tlang(m, "utils.song.no_song_given"))
+        await m.edit_text(text="You haven't specified which song to look for!")
         return
-
+    song_name=query
     em = await m.reply_text(
-        (tlang(m, "utils.song.searching").format(song_name=query)),
-    )
+        text=f"Finding lyrics for <code>{song_name}<code>...")
     song = Song.find_song(query)
     if song:
         if song.lyrics:
             reply = song.format()
         else:
-            reply = tlang(m, "utils.song.no_lyrics_found")
+            reply = "Couldn't find any lyrics for that song!"
     else:
-        reply = tlang(m, "utils.song.song_not_found")
+        reply = "Song not found!"
     try:
         await em.edit_text(reply)
     except MessageTooLong:
@@ -138,11 +136,11 @@ async def id_info(c: Gojo, m: Message):
     LOGGER.info(f"{m.from_user.id} used id cmd in {m.chat.id}")
 
     if m.chat.type == "supergroup" and not m.reply_to_message:
-        await m.reply_text((tlang(m, "utils.id.group_id")).format(group_id=m.chat.id))
+        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
         return
 
     if m.chat.type == "private" and not m.reply_to_message:
-        await m.reply_text((tlang(m, "utils.id.my_id")).format(my_id=m.chat.id))
+        await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
         return
 
     user_id, _, _ = await extract_user(c, m)
@@ -150,20 +148,21 @@ async def id_info(c: Gojo, m: Message):
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_message.from_user
             user2 = m.reply_to_message.forward_from
+            orig_sender=(await mention_html(user2.first_name, user2.id)),
+            orig_id=f"<code>{user2.id}</code>",
+            fwd_sender=(await mention_html(user1.first_name, user1.id)),
+            fwd_id=f"<code>{user1.id}</code>",
             await m.reply_text(
-                (tlang(m, "utils.id.id_main")).format(
-                    orig_sender=(await mention_html(user2.first_name, user2.id)),
-                    orig_id=f"<code>{user2.id}</code>",
-                    fwd_sender=(await mention_html(user1.first_name, user1.id)),
-                    fwd_id=f"<code>{user1.id}</code>",
-                ),
+                text=f"""Original Sender - {orig_sender} (<code>{orig_id}</code>)
+        Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
                 parse_mode="HTML",
             )
         else:
             try:
                 user = await c.get_users(user_id)
             except PeerIdInvalid:
-                await m.reply_text(tlang(m, "utils.no_user_db"))
+                await m.reply_text(text="""Failed to get user
+      Peer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!""")
                 return
 
             await m.reply_text(
@@ -172,15 +171,11 @@ async def id_info(c: Gojo, m: Message):
             )
     elif m.chat.type == "private":
         await m.reply_text(
-            (tlang(m, "utils.id.my_id")).format(
-                my_id=f"<code>{m.chat.id}</code>",
-            ),
+            text=f"Your ID is <code>{m.chat.id}</code>."    
         )
     else:
         await m.reply_text(
-            (tlang(m, "utils.id.group_id")).format(
-                group_id=f"<code>{m.chat.id}</code>",
-            ),
+            text=f"This Group's ID is <code>{m.chat.id}</code>"
         )
     return
 
@@ -196,7 +191,7 @@ async def get_gifid(_, m: Message):
             parse_mode="html",
         )
     else:
-        await m.reply_text(tlang(m, "utils.gif_id.reply_gif"))
+        await m.reply_text(text="Please reply to a gif to get it's ID.")
     return
 
 
@@ -252,11 +247,11 @@ async def my_info(c: Gojo, m: Message):
     try:
         user_id, name, user_name = await extract_user(c, m)
     except PeerIdInvalid:
-        await m.reply_text(tlang(m, "utils.user_info.peer_id_error"))
+        await m.reply_text(text="I haven't seen this user, mind forwarding one of their messages so I can recognize them?")
         return
     except ValueError as ef:
         if "Peer id invalid" in str(ef):
-            await m.reply_text(tlang(m, "utils.user_info.id_not_found"))
+            await m.reply_text(text="User not found, please check the ID again")
         return
     try:
         user = Users.get_user_info(int(user_id))
@@ -274,45 +269,40 @@ async def my_info(c: Gojo, m: Message):
         user_name = user["username"]
         user_id = user["id"]
     except PeerIdInvalid:
-        await m.reply_text(tlang(m, "utils.no_user_db"))
+        await m.reply_text(text="""Failed to get user
+      Peer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!""")
         return
     except (RPCError, Exception) as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+           text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            <b>Error:</b> <code>{ef}</code>"""
         )
         return
 
     gbanned, reason_gban = gban_db.get_gban(user_id)
     LOGGER.info(f"{m.from_user.id} used info cmd for {user_id} in {m.chat.id}")
-
-    text = (tlang(m, "utils.user_info.info_text.main")).format(
-        user_id=user_id,
-        user_name=name,
-    )
+    user_id=user_id,
+    user_name=name,
+    text = f"""<b>Characteristics:</b>
+          <b>ID:</b> <code>{user_id}</code>
+          <b>First Name:</b> {user_name}"""
 
     if user_name:
-        text += (tlang(m, "utils.user_info.info_text.username")).format(
-            username=user_name,
-        )
-
-    text += (tlang(m, "utils.user_info.info_text.perma_link")).format(
-        perma_link=(await mention_html("Click Here", user_id)),
-    )
+        text += f"<b>Username:</b> @{user_name}"
+    perma_link=(await mention_html("Click Here", user_id))
+    text += f"<b>Permanent User Link:</b> {perma_link}"
 
     if gbanned:
         text += f"\nThis user is Globally banned beacuse: {reason_gban}\n"
 
     if user_id == OWNER_ID:
-        text += tlang(m, "utils.user_info.support_user.owner")
+        text += "This person is my Owner, I would never do anything against them!"
     elif user_id in DEV_USERS:
-        text += tlang(m, "utils.user_info.support_user.dev")
+        text += "This member is one of my Developers ⚡️"
     elif user_id in SUDO_USERS:
-        text += tlang(m, "utils.user_info.support_user.sudo")
+        text += "This user is one of my Sudos, he has powers which are approximately same to owner!"
     elif user_id in WHITELIST_USERS:
-        text += tlang(m, "utils.user_info.support_user.whitelist")
+        text += "This person is 'Whitelist User', they cannot be banned!"
 
     await m.reply_text(text, parse_mode="html", disable_web_page_preview=True)
     return
@@ -320,7 +310,7 @@ async def my_info(c: Gojo, m: Message):
 
 @Gojo.on_message(command("paste"))
 async def paste_it(_, m: Message):
-    replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
+    replymsg = await m.reply_text(text="Pasting...", quote=True)
     try:
         if m.reply_to_message:
             if m.reply_to_message.document:
@@ -336,8 +326,8 @@ async def paste_it(_, m: Message):
         r = await http.post(ur, json={"content": txt})
         url = f"https://hastebin.com/{r.json().get('key')}"
         await replymsg.edit_text(
-            (tlang(m, "utils.paste.pasted_nekobin")),
-            reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
+            text="Pasted to NekoBin!",
+            reply_markup=ikb([[("NekoBin"), url, "url"]]),
         )
         LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
     except Exception as e:

@@ -4,7 +4,6 @@ from pyrogram.types import CallbackQuery, Message
 from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
-from Powers.tr_engine import tlang
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 from Powers.vars import Config
@@ -22,7 +21,7 @@ async def get_rules(_, m: Message):
 
     if not rules:
         await m.reply_text(
-            (tlang(m, "rules.no_rules")),
+            text="The Admins for this group have not setup rules! That doesn't mean you can break the DECORUM of this group !",
             quote=True,
         )
         return
@@ -42,7 +41,7 @@ async def get_rules(_, m: Message):
             ],
         )
         await m.reply_text(
-            (tlang(m, "rules.pm_me")),
+            text="Click on the below button to see this group rules!",
             quote=True,
             reply_markup=pm_kb,
             reply_to_message_id=msg_id,
@@ -52,10 +51,8 @@ async def get_rules(_, m: Message):
     formated = rules
 
     await m.reply_text(
-        (tlang(m, "rules.get_rules")).format(
-            chat=f"<b>{m.chat.title}</b>",
-            rules=formated,
-        ),
+        text=f"""The rules for <b>{m.chat.title} are:</b>
+      {formated}""",
         disable_web_page_preview=True,
         reply_to_message_id=msg_id,
     )
@@ -81,7 +78,7 @@ async def set_rules(_, m: Message):
 
     db.set_rules(rules)
     LOGGER.info(f"{m.from_user.id} set rules in {m.chat.id}")
-    await m.reply_text(tlang(m, "rules.set_rules"))
+    await m.reply_text(text="Successfully set rules for this group.")
     return
 
 
@@ -98,23 +95,21 @@ async def priv_rules(_, m: Message):
         if option in ("on", "yes"):
             db.set_privrules(True)
             LOGGER.info(f"{m.from_user.id} enabled privaterules in {m.chat.id}")
-            msg = tlang(m, "rules.priv_rules.turned_on").format(chat_name=m.chat.title)
+            msg = f"Private Rules have been turned <b>on</b> for chat <b>{m.chat.title}</b>"
         elif option in ("off", "no"):
             db.set_privrules(False)
             LOGGER.info(f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
-            msg = tlang(m, "rules.priv_rules.turned_off").format(chat_name=m.chat.title)
+            msg = f"Private Rules have been turned <b>off</b> for chat <b>{m.chat.title}</b>"
         else:
-            msg = tlang(m, "rules.priv_rules.no_option")
+            msg = "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
         await m.reply_text(msg)
     elif len(m.text.split()) == 1:
         curr_pref = db.get_privrules()
-        msg = tlang(m, "rules.priv_rules.current_preference").format(
-            current_option=curr_pref,
-        )
+        msg = f"Current Preference for Private rules in this chat is: <b>{curr_pref}</b>"
         LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
-        await m.replt_text(tlang(m, "general.check_help"))
+        await m.reply_text(text="Please check help on how to use this this command.")
 
     return
 
@@ -127,11 +122,11 @@ async def clear_rules(_, m: Message):
 
     rules = db.get_rules()
     if not rules:
-        await m.reply_text(tlang(m, "rules.no_rules"))
+        await m.reply_text(text="The Admins for this group have not setup rules! That doesn't mean you can break the DECORUM of this group !")
         return
 
     await m.reply_text(
-        (tlang(m, "rules.clear_rules")),
+        text="Are you sure you want to clear rules?",
         reply_markup=ikb(
             [[("⚠️ Confirm", "clear_rules"), ("❌ Cancel", "close_admin")]],
         ),
@@ -142,7 +137,7 @@ async def clear_rules(_, m: Message):
 @Gojo.on_callback_query(filters.regex("^clear_rules$"))
 async def clearrules_callback(_, q: CallbackQuery):
     Rules(q.message.chat.id).clear_rules()
-    await q.message.edit_text(tlang(q, "rules.cleared"))
+    await q.message.edit_text(text="Successfully cleared rules for this group!")
     LOGGER.info(f"{q.from_user.id} cleared rules in {q.message.chat.id}")
     await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return

@@ -6,7 +6,6 @@ from pyrogram.types import ChatPermissions, Message
 from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
-from Powers.tr_engine import tlang
 from Powers.utils.custom_filters import command, restrict_filter
 
 
@@ -41,7 +40,7 @@ async def lock_perm(c: Gojo, m: Message):
     chat_id = m.chat.id
 
     if not lock_type:
-        await m.reply_text(tlang(m, "locks.locks_perm_sp"))
+        await m.reply_text(text="Specify a permission to lock!")
         return
 
     get_perm = m.chat.permissions
@@ -62,8 +61,8 @@ async def lock_perm(c: Gojo, m: Message):
         except ChatNotModified:
             pass
         except ChatAdminRequired:
-            await m.reply_text(tlang(m, "general.no_perm_admin"))
-        await m.reply_text("🔒 " + (tlang(m, "locks.lock_all")))
+            await m.reply_text(text="I don't have permission to do that")
+        await m.reply_text("🔒 " + "Locked <b>all</b> permission from this Chat!")
         await prevent_approved(m)
         return
 
@@ -112,7 +111,9 @@ async def lock_perm(c: Gojo, m: Message):
         perm = "pin"
 
     else:
-        await m.reply_text(tlang(m, "locks.invalid_lock"))
+        await m.reply_text(text=""" Invalid Lock Type!
+
+      Use /locktypes to get the lock types""")
         return
 
     try:
@@ -133,9 +134,9 @@ async def lock_perm(c: Gojo, m: Message):
     except ChatNotModified:
         pass
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "general.no_perm_admin"))
+        await m.reply_text(text="I don't have permission to do that")
     await m.reply_text(
-        "🔒 " + (tlang(m, "locks.locked_perm").format(perm=perm)),
+        "🔒 " + f"Locked <b>{perm}</b> for this Chat.",
     )
     await prevent_approved(m)
     return
@@ -143,7 +144,7 @@ async def lock_perm(c: Gojo, m: Message):
 
 @Gojo.on_message(command("locks") & restrict_filter)
 async def view_locks(_, m: Message):
-    chkmsg = await m.reply_text(tlang(m, "locks.check_perm_msg"))
+    chkmsg = await m.reply_text(text="Checking Chat permissions...")
     v_perm = m.chat.permissions
 
     async def convert_to_emoji(val: bool):
@@ -162,21 +163,24 @@ async def view_locks(_, m: Message):
 
     if v_perm is not None:
         try:
-            permission_view_str = (tlang(m, "locks.view_perm")).format(
-                vmsg=vmsg,
-                vmedia=vmedia,
-                vother=vother,
-                vwebprev=vwebprev,
-                vpolls=vpolls,
-                vinfo=vinfo,
-                vinvite=vinvite,
-                vpin=vpin,
-            )
+            permission_view_str = f"""<b>Chat Permissions:</b>
+
+      <b>Send Messages:</b> {vmsg}
+      <b>Send Media:</b> {vmedia}
+      <b>Send Stickers:</b> {vother}
+      <b>Send Animations:</b> {vother}
+      <b>Can Play Games:</b> {vother}
+      <b>Can Use Inline Bots:</b> {vother}
+      <b>Webpage Preview:</b> {vwebprev}
+      <b>Send Polls:</b> {vpolls}
+      <b>Change Info:</b> {vinfo}
+      <b>Invite Users:</b> {vinvite}
+      <b>Pin Messages:</b> {vpin}"""
             LOGGER.info(f"{m.from_user.id} used locks cmd in {m.chat.id}")
             await chkmsg.edit_text(permission_view_str)
 
         except RPCError as e_f:
-            await chkmsg.edit_text(tlang(m, "general.something_wrong"))
+            await chkmsg.edit_text(text="Something went wrong!")
             await m.reply_text(e_f)
     return
 
@@ -190,7 +194,7 @@ async def unlock_perm(c: Gojo, m: Message):
     chat_id = m.chat.id
 
     if not unlock_type:
-        await m.reply_text(tlang(m, "locks.unlocks_perm_sp"))
+        await m.reply_text(text="Specify a permission to unlock!")
         return
 
     if unlock_type == "all":
@@ -212,8 +216,8 @@ async def unlock_perm(c: Gojo, m: Message):
         except ChatNotModified:
             pass
         except ChatAdminRequired:
-            await m.reply_text(tlang(m, "general.no_perm_admin"))
-        await m.reply_text("🔓 " + (tlang(m, "locks.unlock_all")))
+            await m.reply_text(text="I don't have permission to do that")
+        await m.reply_text("🔓 " + "Unlocked <b>all</b> permission from this Chat!")
         await prevent_approved(m)
         return
 
@@ -273,7 +277,9 @@ async def unlock_perm(c: Gojo, m: Message):
         uperm = "pin"
 
     else:
-        await m.reply_text(tlang(m, "locks.invalid_lock"))
+        await m.reply_text(text="""Invalid Lock Type!
+
+      Use /locktypes to get the lock types""")
         return
 
     try:
@@ -296,9 +302,9 @@ async def unlock_perm(c: Gojo, m: Message):
     except ChatNotModified:
         pass
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "general.no_perm_admin"))
+        await m.reply_text(text="I don't have permission to do that")
     await m.reply_text(
-        "🔓 " + (tlang(m, "locks.unlocked_perm").format(uperm=uperm)),
+        "🔓 " + f"Unlocked <b>{uperm}</b> for this Chat.",
     )
     await prevent_approved(m)
     return

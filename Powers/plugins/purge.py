@@ -5,14 +5,13 @@ from pyrogram.types import Message
 
 from Powers import SUPPORT_GROUP
 from Powers.bot_class import Gojo
-from Powers.tr_engine import tlang
 from Powers.utils.custom_filters import admin_filter, command
 
 
 @Gojo.on_message(command("purge") & admin_filter)
 async def purge(c: Gojo, m: Message):
     if m.chat.type != "supergroup":
-        await m.reply_text(tlang(m, "purge.err_basic"))
+        await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
     if m.reply_to_message:
@@ -34,22 +33,20 @@ async def purge(c: Gojo, m: Message):
                 )
             await m.delete()
         except MessageDeleteForbidden:
-            await m.reply_text(tlang(m, "purge.old_msg_err"))
+            await m.reply_text(text="Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup.")
             return
         except RPCError as ef:
             await m.reply_text(
-                (tlang(m, "general.some_error")).format(
-                    SUPPORT_GROUP=SUPPORT_GROUP,
-                    ef=ef,
-                ),
+                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
             )
 
         count_del_msg = len(message_ids)
 
         z = await m.reply_text(
-            (tlang(m, "purge.purge_msg_count")).format(
-                msg_count=count_del_msg,
-            ),
+            text=f"Deleted <i>{count_del_msg}</i> messages"
+                
         )
         await sleep(3)
         await z.delete()
@@ -61,7 +58,7 @@ async def purge(c: Gojo, m: Message):
 @Gojo.on_message(command("spurge") & admin_filter)
 async def spurge(c: Gojo, m: Message):
     if m.chat.type != "supergroup":
-        await m.reply_text(tlang(m, "purge.err_basic"))
+        await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
     if m.reply_to_message:
@@ -83,14 +80,13 @@ async def spurge(c: Gojo, m: Message):
                 )
             await m.delete()
         except MessageDeleteForbidden:
-            await m.reply_text(tlang(m, "purge.old_msg_err"))
+            await m.reply_text(text="Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup.")
             return
         except RPCError as ef:
             await m.reply_text(
-                (tlang(m, "general.some_error")).format(
-                    SUPPORT_GROUP=SUPPORT_GROUP,
-                    ef=ef,
-                ),
+                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
             )
         return
     await m.reply_text("Reply to a message to start spurge !")
@@ -112,7 +108,7 @@ async def del_msg(c: Gojo, m: Message):
             message_ids=m.reply_to_message.message_id,
         )
     else:
-        await m.reply_text(tlang(m, "purge.what_del"))
+        await m.reply_text(text="What do you wanna delete?")
     return
 
 

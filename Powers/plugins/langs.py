@@ -6,7 +6,6 @@ from pyrogram.types import CallbackQuery, Message
 from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.lang_db import Langs
-from Powers.tr_engine import lang_dict, tlang
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 

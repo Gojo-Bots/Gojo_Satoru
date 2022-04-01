@@ -19,7 +19,6 @@ from pyrogram.types import (
 from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.bot_class import Gojo
 from Powers.utils.fun_strings import BAN_GIFS, KICK_GIFS
-from Powers.tr_engine import tlang
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -34,7 +33,7 @@ KICK_MEDIA = random.choice(KICK_GIFS)
 @Gojo.on_message(command("tban") & restrict_filter)
 async def tban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.ban.no_target"))
+        await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
     try:
@@ -50,7 +49,7 @@ async def tban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to ban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -85,17 +84,18 @@ async def tban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
+        await m.reply_text(text="This user is an admin, I cannot ban them!")
         await m.stop_propagation()
 
     try:
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+        banned=(await mention_html(user_first_name, user_id)),
+        chat_title=m.chat.title,
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
-        await m.chat.ban_member(user_id, until_date=int(bantime))
-        txt = (tlang(m, "admin.ban.banned_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            banned=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title,
+        await m.chat.ban_member(user_id, until_date=int(bantime),
+        text = f"{admin} banned {banned} in <b>{chat_title}</b>!"
         )
+        
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         keyboard = InlineKeyboardMarkup(
             [
@@ -110,21 +110,20 @@ async def tban_usr(c: Gojo, m: Message):
         await m.reply_animation(reply_to_message_id = r_id, animation = BAN_MEDIA, caption = txt,  reply_markup=keyboard, parse_mode="html")
        # await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            (f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>""")
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -134,7 +133,7 @@ async def tban_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("stban") & restrict_filter)
 async def stban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.ban.no_target"))
+        await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
     try:
@@ -150,7 +149,7 @@ async def stban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to ban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -183,7 +182,7 @@ async def stban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
+        await m.reply_text(text="This user is an admin, I cannot ban them!")
         await m.stop_propagation()
 
     try:
@@ -195,21 +194,20 @@ async def stban_usr(c: Gojo, m: Message):
             return
         return
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -219,7 +217,7 @@ async def stban_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("dtban") & restrict_filter)
 async def dtban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.ban.no_target"))
+        await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
     if not m.reply_to_message:
@@ -239,7 +237,7 @@ async def dtban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="I am not going to ban one of my support staff")
         LOGGER.info(
             f"{m.from_user.id} trying to ban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -272,18 +270,19 @@ async def dtban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
+        await m.reply_text(text="This user is an admin, I cannot ban them!")
         await m.stop_propagation()
 
     try:
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+        banned=(await mention_html(user_first_name, user_id)),
+        chat_title=m.chat.title,
         LOGGER.info(f"{m.from_user.id} dtbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id, until_date=int(bantime))
         await m.reply_to_message.delete()
-        txt = (tlang(m, "admin.ban.banned_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            banned=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title,
-        )
+        txt = f"{admin} banned {banned} in <b>{chat_title}</b>!"
+            
+        
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         keyboard = InlineKeyboardMarkup(
             [
@@ -298,21 +297,20 @@ async def dtban_usr(c: Gojo, m: Message):
         await c.send_animation(chat_id = m.chat.id, animation = BAN_MEDIA, caption = txt,  reply_markup=keyboard, parse_mode="html")
         # await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -322,7 +320,7 @@ async def dtban_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("kick") & restrict_filter)
 async def kick_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.kick.no_target"))
+        await m.reply_text(text="I can't kick nothing!")
         return
 
     reason = None
@@ -349,7 +347,7 @@ async def kick_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to kick {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -361,37 +359,35 @@ async def kick_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "kick")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
+        await m.reply_text(text="This user is an admin, I cannot kick them!")
         await m.stop_propagation()
 
     try:
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+        kicked=(await mention_html(user_first_name, user_id)),
+        chat_title=m.chat.title,
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id)
-        txt = (tlang(m, "admin.kick.kicked_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            kicked=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title,
-        )
+        txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
        # await m.reply_text(txt, reply_to_message_id=r_id)
         await m.reply_animation(reply_to_message_id = r_id, animation = KICK_MEDIA, caption = txt,  parse_mode="html")
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -402,7 +398,7 @@ async def kick_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("skick") & restrict_filter)
 async def skick_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.kick.no_target"))
+        await m.reply_text(text="I can't kick nothing!")
         return
 
     try:
@@ -419,7 +415,7 @@ async def skick_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to skick {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -431,7 +427,7 @@ async def skick_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "kick")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
+        await m.reply_text(text="This user is an admin, I cannot kick them!")
         await m.stop_propagation()
 
     try:
@@ -442,21 +438,20 @@ async def skick_usr(c: Gojo, m: Message):
             await m.reply_to_message.delete()
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
+        await m.reply_text(text="I don't have enough rights to kick this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -467,7 +462,7 @@ async def skick_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("dkick") & restrict_filter)
 async def dkick_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.kick.no_target"))
+        await m.reply_text(text="I can't ban nothing!")
         return
     if not m.reply_to_message:
         return await m.reply_text("Reply to a message to delete it and kick the user!")
@@ -486,7 +481,7 @@ async def dkick_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to dkick {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -498,38 +493,36 @@ async def dkick_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "kick")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
+        await m.reply_text(text="This user is an admin, I cannot kick them!")
         await m.stop_propagation()
 
     try:
         LOGGER.info(f"{m.from_user.id} dkicked {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
         await m.chat.ban_member(user_id)
-        txt = (tlang(m, "admin.kick.kicked_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            kicked=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title,
-        )
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+        kicked=(await mention_html(user_first_name, user_id)),
+        chat_title=m.chat.title,
+        txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await c.send_message(m.chat.id, txt)
         await c.send_animation(chat_id = m.chat.id, animation = KICK_MEDIA, caption = txt,  parse_mode="html")
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
+        await m.reply_text(text="I don't have enough rights to kick this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -540,7 +533,7 @@ async def dkick_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("unban") & restrict_filter)
 async def unban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.unban.no_target"))
+        await m.reply_text(text="I can't unban nothing!")
         await m.stop_propagation()
 
     if m.reply_to_message and not m.reply_to_message.from_user:
@@ -563,23 +556,21 @@ async def unban_usr(c: Gojo, m: Message):
 
     try:
         await m.chat.unban_member(user_id)
-        txt = (tlang(m, "admin.unban.unbanned_user")).format(
-            admin=m.from_user.mention,
-            unbanned=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title,
-        )
+        admin=m.from_user.mention,
+        unbanned=(await mention_html(user_first_name, user_id)),
+        chat_title=m.chat.title,
+        txt = f"{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await m.reply_text(txt)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "admin.unban.bot_no_right")))
+        await m.reply_text(text="I don't have enough rights to unban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+           text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -590,7 +581,7 @@ async def unban_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("sban") & restrict_filter)
 async def sban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.ban.no_target"))
+        await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
     if m.reply_to_message and not m.reply_to_message.from_user:
@@ -612,7 +603,7 @@ async def sban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to sban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -624,7 +615,7 @@ async def sban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
+        await m.reply_text(text="This user is an admin, I cannot ban them!")
         await m.stop_propagation()
 
     try:
@@ -634,21 +625,20 @@ async def sban_usr(c: Gojo, m: Message):
         if m.reply_to_message:
             await m.reply_to_message.delete()
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -658,7 +648,7 @@ async def sban_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("dban") & restrict_filter)
 async def dban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.ban.no_target"))
+        await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
     if not m.reply_to_message:
@@ -686,7 +676,7 @@ async def dban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to dban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -698,7 +688,7 @@ async def dban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
+        await m.reply_text(text="This user is an admin, I cannot ban them!")
         await m.stop_propagation()
 
     reason = None
@@ -709,11 +699,7 @@ async def dban_usr(c: Gojo, m: Message):
         LOGGER.info(f"{m.from_user.id} dbanned {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
         await m.chat.ban_member(user_id)
-        txt = (tlang(m, "admin.ban.banned_user")).format(
-            admin=m.from_user.mention,
-            banned=m.reply_to_message.from_user.mention,
-            chat_title=m.chat.title,
-        )
+        txt =f"{m.from_user.mention} banned {m.reply_to_message.from_user.mention} in <b>{m.chat.title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         keyboard = InlineKeyboardMarkup(
             [
@@ -727,21 +713,20 @@ async def dban_usr(c: Gojo, m: Message):
         )
         await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -751,7 +736,7 @@ async def dban_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("ban") & restrict_filter)
 async def ban_usr(c: Gojo, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(tlang(m, "admin.ban.no_target"))
+        await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
     if m.reply_to_message and not m.reply_to_message.from_user:
@@ -776,7 +761,7 @@ async def ban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to ban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
@@ -788,7 +773,7 @@ async def ban_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "ban")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
+        await m.reply_text(text="This user is an admin, I cannot ban them!")
         await m.stop_propagation()
 
     reason = None
@@ -804,11 +789,8 @@ async def ban_usr(c: Gojo, m: Message):
     try:
         LOGGER.info(f"{m.from_user.id} banned {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id)
-        txt = (tlang(m, "admin.ban.banned_user")).format(
-            admin=m.from_user.mention,
-            banned=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title,
-        )
+        banned=(await mention_html(user_first_name, user_id))
+        txt = f"{m.from_user.mention} banned {banned} in <b>{m.chat.title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         keyboard = InlineKeyboardMarkup(
             [
@@ -822,21 +804,20 @@ async def ban_usr(c: Gojo, m: Message):
         )
         await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
     except RightForbidden:
-        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -876,14 +857,13 @@ async def kickme(_, m: Message):
         await m.chat.ban_member(m.from_user.id)
         txt = "Why not let me help you!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        await m.reply_text(txt)
+        await m.reply_animation(animation=KICK_MEDIA, caption=txt)
         await m.chat.unban_member(m.from_user.id)
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
     return
 

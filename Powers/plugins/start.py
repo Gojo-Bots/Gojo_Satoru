@@ -4,7 +4,6 @@ from pyrogram.types import CallbackQuery, Message
 
 from Powers import HELP_COMMANDS, LOGGER
 from Powers.bot_class import Gojo
-from Powers.tr_engine import tlang
 from Powers.utils.custom_filters import command
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.start_utils import (
@@ -22,7 +21,13 @@ from Powers.vars import Config
 )
 async def donate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_text(tlang(m, "general.donate_owner"))
+    await m.reply_text(text="""Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner: @iamgojoof6eyes""")
     return
 
 
@@ -80,7 +85,11 @@ async def start(c: Gojo, m: Message):
             return
         try:
             await m.reply_text(
-                (tlang(m, "start.private")),
+                text="""Hey there! My name is Alita ✨.
+      I'm here to help you manage your groups!
+      Hit /help to find out more about how to use me in my full potential!
+
+      Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates.""",
                 reply_markup=(await gen_start_kb(m)),
                 quote=True,
                 disable_web_page_preview=True,
@@ -89,7 +98,7 @@ async def start(c: Gojo, m: Message):
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
     else:
         await m.reply_text(
-            (tlang(m, "start.group")),
+            text="I'm alive :3",
             quote=True,
         )
     return
@@ -99,7 +108,11 @@ async def start(c: Gojo, m: Message):
 async def start_back(_, q: CallbackQuery):
     try:
         await q.message.edit_text(
-            (tlang(q, "start.private")),
+            text="""Hey there! My name is Alita ✨.
+      I'm here to help you manage your groups!
+      Hit /help to find out more about how to use me in my full potential!
+
+      Join my [News Channel](http://t.me/gojo_updates) to get information on all the latest updates.""",
             reply_markup=(await gen_start_kb(q.message)),
             disable_web_page_preview=True,
         )
@@ -114,19 +127,27 @@ async def commands_menu(_, q: CallbackQuery):
     keyboard = ikb(
         [
             *(await gen_cmds_kb(q)),
-            [(f"« {(tlang(q, 'general.back_btn'))}", "start_back")],
+            [(f"« Back", "start_back")],
         ],
     )
     try:
         await q.message.edit_text(
-            (tlang(q, "general.commands_available")),
-            reply_markup=keyboard,
+            text="""Hey There! My name is Alita.
+            I'm here to help you manage your groups!
+            Commands available:
+            × /start: Start the bot
+            × /help: Give's you this message.""",
+        reply_markup=keyboard,
         )
     except MessageNotModified:
         pass
     except QueryIdInvalid:
         await q.message.reply_text(
-            (tlang(q, "general.commands_available")),
+            text="""Hey There! My name is Alita.
+            I'm here to help you manage your groups!
+            Commands available:
+            × /start: Start the bot
+            × /help: Give's you this message.""",
             reply_markup=keyboard,
         )
     await q.answer()
@@ -156,7 +177,7 @@ async def help_menu(_, m: Message):
             )
         else:
             await m.reply_text(
-                (tlang(m, "start.public_help").format(help_option=help_option)),
+                text=f"Press the button below to get help for <i>{help_option}</i>",
                 reply_markup=ikb(
                     [
                         [
@@ -174,16 +195,19 @@ async def help_menu(_, m: Message):
             keyboard = ikb(
                 [
                     *(await gen_cmds_kb(m)),
-                    [(f"« {(tlang(m, 'general.back_btn'))}", "start_back")],
+                    [("« Back", "start_back")],
                 ],
             )
-            msg = tlang(m, "general.commands_available")
+            msg = """Hey There! My name is Alita.
+      I'm here to help you manage your groups!
+      Commands available:
+       × /start: Start the bot
+       × /help: Give's you this message."""
         else:
             keyboard = ikb(
                 [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
             )
-            msg = tlang(m, "start.pm_for_help")
-
+            msg = "Contact me in PM to get the list of possible commands."
         await m.reply_text(
             msg,
             reply_markup=keyboard,
@@ -196,13 +220,10 @@ async def help_menu(_, m: Message):
 async def get_module_info(_, q: CallbackQuery):
     module = q.data.split(".", 1)[1]
 
-    help_msg = f"**{(tlang(q, str(module)))}:**\n\n" + tlang(
-        q,
-        HELP_COMMANDS[module]["help_msg"],
-    )
+    help_msg = f"**{str(module)}:**\n\n" + HELP_COMMANDS[module]["help_msg"],
 
     help_kb = HELP_COMMANDS[module]["buttons"] + [
-        [("« " + (tlang(q, "general.back_btn")), "commands")],
+        [("« " + "Back", "commands")],
     ]
     await q.message.edit_text(
         help_msg,

@@ -7,7 +7,6 @@ from pyrogram.types import Message
 
 from Powers import LOGGER, DEV_USERS
 from Powers.bot_class import Gojo
-from Powers.tr_engine import tlang
 from Powers.utils import fun_strings
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -18,7 +17,7 @@ from Powers.utils.extract_user import extract_user
 async def fun_shout(_, m: Message):
     if len(m.text.split()) == 1:
         await m.reply_text(
-            (tlang(m, "general.check_help")),
+            text="Please check help on how to use this this command.",
             quote=True,
         )
         return
@@ -157,7 +156,7 @@ async def weebify(_, m: Message):
         )
         return
     if not args:
-        await m.reply_text(tlang(m, "utils.weebify.weebify_what"))
+        await m.reply_text(text="What am I supposed to Weebify?")
         return
 
     # Use split to convert to list
@@ -172,7 +171,8 @@ async def weebify(_, m: Message):
             string = string.replace(normiecharacter, weebycharacter)
 
     await m.reply_text(
-        (tlang(m, "utils.weebify.weebified_string").format(string=string)),
+       text=f"""<b>Weebified String:</b>
+        <code>{string}</code>"""
     )
     LOGGER.info(f"{m.from_user.id} weebified '{args}' in {m.chat.id}")
     return

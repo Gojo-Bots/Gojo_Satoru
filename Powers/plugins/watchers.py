@@ -14,7 +14,6 @@ from Powers.database.blacklist_db import Blacklist
 from Powers.database.group_blacklist import BLACKLIST_CHATS
 from Powers.database.pins_db import Pins
 from Powers.database.warns_db import Warns, WarnSettings
-from Powers.tr_engine import tlang
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.parser import mention_html
 from Powers.utils.regex_utils import regex_searcher
@@ -59,7 +58,7 @@ async def bl_watcher(_, m: Message):
         if action == "kick":
             await m.chat.kick_member(m.from_user.id, int(time() + 45))
             await m.reply_text(
-                tlang(m, "blacklist.bl_watcher.action_kick").format(
+                text="Kicked {user} for sending a blacklisted word!".format(
                     user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
                 ),
             )
@@ -71,7 +70,7 @@ async def bl_watcher(_, m: Message):
                 )
             )
             await m.reply_text(
-                tlang(m, "blacklist.bl_watcher.action_ban").format(
+                text="Banned {user} for sending a blacklisted word!".format(
                     user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
                 ),
             )
@@ -83,7 +82,7 @@ async def bl_watcher(_, m: Message):
             )
 
             await m.reply_text(
-                tlang(m, "blacklist.bl_watcher.action_mute").format(
+                text="Muted {user} for sending a blacklisted word!".format(
                     user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
                 ),
             )
@@ -185,13 +184,11 @@ async def gban_watcher(c: Gojo, m: Message):
         try:
             await m.chat.ban_member(m.from_user.id)
             await m.delete(m.message_id)  # Delete users message!
+            user_gbanned=(await mention_html(m.from_user.first_name, m.from_user.id))
             await m.reply_text(
-                (tlang(m, "antispam.watcher_banned")).format(
-                    user_gbanned=(
-                        await mention_html(m.from_user.first_name, m.from_user.id)
-                    ),
-                    SUPPORT_GROUP=SUPPORT_GROUP,
-                ),
+                text=f"""This user ({user_gbanned}) has been banned globally!
+
+      To get unbanned, appeal at @{SUPPORT_GROUP}"""
             )
             LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id} due to antispam")
             return
@@ -204,10 +201,9 @@ async def gban_watcher(c: Gojo, m: Message):
         except RPCError as ef:
             await c.send_message(
                 MESSAGE_DUMP,
-                tlang(m, "antispam.gban.gban_error_log").format(
-                    chat_id=m.chat.id,
-                    ef=ef,
-                ),
+                text=f"""<b>Gban Watcher Error!</b>
+        <b>Chat:</b> <code>{m.chat.id}</code>
+        <b>Error:</b> <code>{ef}</code>"""
             )
     return
 

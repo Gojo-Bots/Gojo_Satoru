@@ -14,12 +14,11 @@ from pyrogram.errors import (
     RPCError,
 )
 from pyrogram.types import Message
-from speedtest import Speedtest
+
 
 from Powers import LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
-from Powers.tr_engine import tlang
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import HTTPx
@@ -32,7 +31,7 @@ from Powers.vars import Config
 async def ping(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
     start = time()
-    replymsg = await m.reply_text((tlang(m, "utils.ping.pinging")), quote=True)
+    replymsg = await m.reply_text(text="Pinging...", quote=True)
     delta_ping = time() - start
     await replymsg.edit_text(f"<b>Pong!</b>\n{delta_ping * 1000:.3f} ms")
     return
@@ -78,29 +77,6 @@ async def group_info(c: Gojo, m: Message):
     await replymsg.edit_text(msg)
     return
 
-
-@Gojo.on_message(command("speedtest", dev_cmd=True))
-async def test_speed(c: Gojo, m: Message):
-    await c.send_message(
-        MESSAGE_DUMP,
-        f"#SPEEDTEST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
-    )
-    sent = await m.reply_text(tlang(m, "dev.speedtest.start_speedtest"))
-    s = Speedtest()
-    bs = s.get_best_server()
-    dl = round(s.download() / 1024 / 1024, 2)
-    ul = round(s.upload() / 1024 / 1024, 2)
-    await sent.edit_text(
-        (tlang(m, "dev.speedtest.speedtest_txt")).format(
-            host=bs["sponsor"],
-            ping=int(bs["latency"]),
-            download=dl,
-            upload=ul,
-        ),
-    )
-    return
-
-
 @Gojo.on_message(command("neofetch", dev_cmd=True))
 async def neofetch_stats(_, m: Message):
     cmd = "neofetch --stdout"
@@ -131,7 +107,7 @@ async def neofetch_stats(_, m: Message):
 @Gojo.on_message(command(["eval", "py"], dev_cmd=True))
 async def evaluate_code(c: Gojo, m: Message):
     if len(m.text.split()) == 1:
-        await m.reply_text(tlang(m, "dev.execute_cmd_err"))
+        await m.reply_text(text="Please execute the code correctly!")
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
@@ -193,7 +169,7 @@ async def aexec(code, c, m):
 @Gojo.on_message(command(["exec", "sh"], dev_cmd=True))
 async def execution(_, m: Message):
     if len(m.text.split()) == 1:
-        await m.reply_text(tlang(m, "dev.execute_cmd_err"))
+        await m.reply_text(text="Please execute the code correctly!")
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
@@ -243,7 +219,8 @@ async def public_ip(c: Gojo, m: Message):
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     await m.reply_text(
-        (tlang(m, "dev.bot_ip")).format(ip=f"<code>{ip.text}</code>"),
+        text=f"""<b>Bot IP Address:</b>
+      <code>{ip.text}</code>""",
         quote=True,
     )
     return
@@ -251,13 +228,15 @@ async def public_ip(c: Gojo, m: Message):
 
 @Gojo.on_message(command("chatlist", dev_cmd=True))
 async def chats(c: Gojo, m: Message):
-    exmsg = await m.reply_text(tlang(m, "dev.chatlist.exporting"))
+    exmsg = await m.reply_text(text="Exporting Charlist...")
     await c.send_message(
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     all_chats = (Chats.list_chats_full()) or {}
-    chatfile = tlang(m, "dev.chatlist.header")
+    chatfile = """List of chats in my database.
+
+        <b>Chat name | Chat ID | Members count</b>"""
     P = 1
     for chat in all_chats:
         try:
@@ -287,7 +266,7 @@ async def chats(c: Gojo, m: Message):
         f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
-            caption=(tlang(m, "dev.chatlist.chats_in_db")),
+            caption="Here is the list of chats in my Database.",
         )
     await exmsg.delete()
     return
@@ -296,7 +275,7 @@ async def chats(c: Gojo, m: Message):
 @Gojo.on_message(command("uptime", dev_cmd=True))
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
-    await m.reply_text((tlang(m, "dev.uptime")).format(uptime=up), quote=True)
+    await m.reply_text(text=f"<b>Uptime:</b> <code>{up}</code>", quote=True)
     return
 
 

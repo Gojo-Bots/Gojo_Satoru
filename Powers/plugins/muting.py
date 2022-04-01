@@ -15,7 +15,6 @@ from pyrogram.types import (
 
 from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.bot_class import Gojo
-from Powers.tr_engine import tlang
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -46,7 +45,7 @@ async def tmute_usr(c: Gojo, m: Message):
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         return
 
     try:
@@ -55,7 +54,7 @@ async def tmute_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "mute")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
+        await m.reply_text(text="This user is an admin, I cannot mute them!")
         return
 
     r_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
@@ -89,10 +88,9 @@ async def tmute_usr(c: Gojo, m: Message):
             mutetime,
         )
         LOGGER.info(f"{m.from_user.id} tmuted {user_id} in {m.chat.id}")
-        txt = (tlang(m, "admin.mute.muted_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            muted=(await mention_html(user_first_name, user_id)),
-        )
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id))
+        muted=(await mention_html(user_first_name, user_id))
+        txt =f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
         keyboard = InlineKeyboardMarkup(
@@ -107,17 +105,16 @@ async def tmute_usr(c: Gojo, m: Message):
         )
         await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except UserNotParticipant:
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
 
@@ -148,7 +145,7 @@ async def dtmute_usr(c: Gojo, m: Message):
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text = "This user is in my support staff, cannot restrict them.")
         return
 
     try:
@@ -157,7 +154,7 @@ async def dtmute_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "mute")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
+        await m.reply_text(text = "This user is an admin, I cannot mute them!")
         return
 
     if m.reply_to_message and len(m.text.split()) >= 2:
@@ -189,10 +186,9 @@ async def dtmute_usr(c: Gojo, m: Message):
         )
         LOGGER.info(f"{m.from_user.id} dtmuted {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
-        txt = (tlang(m, "admin.mute.muted_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            muted=(await mention_html(user_first_name, user_id)),
-        )
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id))
+        muted=(await mention_html(user_first_name, user_id))
+        txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
         keyboard = InlineKeyboardMarkup(
@@ -207,17 +203,16 @@ async def dtmute_usr(c: Gojo, m: Message):
         )
         await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
+        await m.reply_text(text = "I don't have enough rights to ban this user.")
     except UserNotParticipant:
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text = f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
 
@@ -246,7 +241,7 @@ async def stmute_usr(c: Gojo, m: Message):
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text = "This user is in my support staff, cannot restrict them.")
         return
 
     try:
@@ -255,7 +250,7 @@ async def stmute_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "mute")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
+        await m.reply_text(text = "This user is an admin, I cannot mute them!")
         return
 
     if m.reply_to_message and len(m.text.split()) >= 2:
@@ -290,17 +285,16 @@ async def stmute_usr(c: Gojo, m: Message):
         if m.reply_to_message:
             await m.reply_to_message.delete()
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
+        await m.reply_text(text = "I don't have enough rights to ban this user.")
     except UserNotParticipant:
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text = f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
 
@@ -338,7 +332,7 @@ async def mute_usr(c: Gojo, m: Message):
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text = "This user is in my support staff, cannot restrict them.")
         return
 
     try:
@@ -347,7 +341,7 @@ async def mute_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "mute")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
+        await m.reply_text(text = "This user is an admin, I cannot mute them!")
         return
 
     try:
@@ -356,10 +350,9 @@ async def mute_usr(c: Gojo, m: Message):
             ChatPermissions(),
         )
         LOGGER.info(f"{m.from_user.id} muted {user_id} in {m.chat.id}")
-        txt = (tlang(m, "admin.mute.muted_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            muted=(await mention_html(user_first_name, user_id)),
-        )
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id))
+        muted=(await mention_html(user_first_name, user_id))
+        txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
         keyboard = InlineKeyboardMarkup(
@@ -374,17 +367,16 @@ async def mute_usr(c: Gojo, m: Message):
         )
         await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
+        await m.reply_text(text = "I don't have enough rights to ban this user.")
     except UserNotParticipant:
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text = f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
 
@@ -413,7 +405,7 @@ async def smute_usr(c: Gojo, m: Message):
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text = "This user is in my support staff, cannot restrict them.")
         return
 
     try:
@@ -422,7 +414,7 @@ async def smute_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "mute")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
+        await m.reply_text(text = "This user is an admin, I cannot mute them!")
         return
 
     try:
@@ -437,17 +429,16 @@ async def smute_usr(c: Gojo, m: Message):
             return
         return
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
+        await m.reply_text(text = "I don't have enough rights to ban this user.")
     except UserNotParticipant:
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text = f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
 
@@ -483,7 +474,7 @@ async def dmute_usr(c: Gojo, m: Message):
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text = "This user is in my support staff, cannot restrict them.")
         return
 
     try:
@@ -492,7 +483,7 @@ async def dmute_usr(c: Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "mute")
 
     if user_id in admins_group:
-        await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
+        await m.reply_text(text = "This user is an admin, I cannot mute them!")
         return
 
     try:
@@ -502,10 +493,9 @@ async def dmute_usr(c: Gojo, m: Message):
         )
         LOGGER.info(f"{m.from_user.id} dmuted {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
-        txt = (tlang(m, "admin.mute.muted_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            muted=(await mention_html(user_first_name, user_id)),
-        )
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id))
+        muted=(await mention_html(user_first_name, user_id))
+        txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
         keyboard = InlineKeyboardMarkup(
@@ -520,17 +510,16 @@ async def dmute_usr(c: Gojo, m: Message):
         )
         await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
+        await m.reply_text(text = "I don't have enough rights to ban this user.")
     except UserNotParticipant:
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text = f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
 
@@ -555,24 +544,22 @@ async def unmute_usr(c: Gojo, m: Message):
     try:
         await m.chat.unban_member(user_id)
         LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
+        admin=(await mention_html(m.from_user.first_name, m.from_user.id))
+        unmuted=(await mention_html(user_first_name, user_id))
         await m.reply_text(
-            (tlang(m, "admin.unmute.unmuted_user")).format(
-                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                unmuted=(await mention_html(user_first_name, user_id)),
-            ),
+            text=f"Admin {admin} unmuted {unmuted}!"
         )
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text = "I'm not admin or I don't have rights.")
     except UserNotParticipant:
         await m.reply_text("How can I unmute a user who is not a part of this chat?")
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.unmute.bot_no_right"))
+        await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text = f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
     return

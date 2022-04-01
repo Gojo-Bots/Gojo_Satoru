@@ -7,7 +7,6 @@ from pyrogram.types import CallbackQuery, Message
 from Powers import LOGGER, SUPPORT_GROUP
 from Powers.bot_class import Gojo
 from Powers.database.pins_db import Pins
-from Powers.tr_engine import tlang
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.string import build_keyboard, parse_button
@@ -43,20 +42,19 @@ async def pin_message(_, m: Message):
                     f"https://t.me/c/{link_chat_id}/{m.reply_to_message.message_id}"
                 )
             await m.reply_text(
-                tlang(m, "pin.pinned_msg").format(message_link=message_link),
+                text=f"I have Pinned [this message]({message_link})!",
                 disable_web_page_preview=True,
             )
 
         except ChatAdminRequired:
-            await m.reply_text(tlang(m, "admin.not_admin"))
+            await m.reply_text(text="I'm not admin or I don't have rights.")
         except RightForbidden:
-            await m.reply_text(tlang(m, "pin.no_rights_pin"))
+            await m.reply_text(text="I don't have enough rights to pin messages.")
         except RPCError as ef:
             await m.reply_text(
-                (tlang(m, "general.some_error")).format(
-                    SUPPORT_GROUP=SUPPORT_GROUP,
-                    ef=ef,
-                ),
+                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
             )
             LOGGER.error(ef)
     else:
@@ -73,20 +71,19 @@ async def unpin_message(c: Gojo, m: Message):
             LOGGER.info(
                 f"{m.from_user.id} unpinned msgid: {m.reply_to_message.message_id} in {m.chat.id}",
             )
-            await m.reply_text(tlang(m, "pin.unpinned_last_msg"))
+            await m.reply_text(text="Unpinned last message.")
         else:
             await c.unpin_chat_message(m.chat.id)
-            await m.reply_text(tlang(m, "Unpinned last pinned message!"))
+            await m.reply_text(text="Unpinned last pinned message!")
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
-        await m.reply_text(tlang(m, "pin.no_rights_unpin"))
+        await m.reply_text(text="I don't have enough rights to unpin messages.")
     except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
 
@@ -121,17 +118,16 @@ async def unpinall_calllback(c: Gojo, q: CallbackQuery):
     try:
         await c.unpin_all_chat_messages(q.message.chat.id)
         LOGGER.info(f"{q.from_user.id} unpinned all messages in {q.message.chat.id}")
-        await q.message.edit_text(tlang(q, "pin.unpinned_all_msg"))
+        await q.message.edit_text(text="Unpinned all messages in this chat.")
     except ChatAdminRequired:
-        await q.message.edit_text(tlang(q, "admin.notadmin"))
+        await q.message.edit_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
-        await q.message.edit_text(tlang(q, "pin.no_rights_unpin"))
+        await q.message.edit_text(text="I don't have enough rights to unpin messages.")
     except RPCError as ef:
         await q.message.edit_text(
-            (tlang(q, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
+           text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>"""
         )
         LOGGER.error(ef)
     return
@@ -144,9 +140,7 @@ async def anti_channel_pin(_, m: Message):
     if len(m.text.split()) == 1:
         status = pinsdb.get_settings()["antichannelpin"]
         await m.reply_text(
-            tlang(m, "pin.antichannelpin.current_status").format(
-                status=status,
-            ),
+            text=f"Current AntiChannelPin status: {status}"
         )
         return
 
@@ -154,13 +148,13 @@ async def anti_channel_pin(_, m: Message):
         if m.command[1] in ("yes", "on", "true"):
             pinsdb.antichannelpin_on()
             LOGGER.info(f"{m.from_user.id} enabled antichannelpin in {m.chat.id}")
-            msg = tlang(m, "pin.antichannelpin.turned_on")
+            msg = "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
         elif m.command[1] in ("no", "off", "false"):
             pinsdb.antichannelpin_off()
             LOGGER.info(f"{m.from_user.id} disabled antichannelpin in {m.chat.id}")
-            msg = tlang(m, "pin.antichannelpin.turned_off")
+            msg = "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
         else:
-            await m.reply_text(tlang(m, "general.check_help"))
+            await m.reply_text(text="Please check help on how to use this this command.")
             return
 
     await m.reply_text(msg)
@@ -198,9 +192,7 @@ async def clean_linked(_, m: Message):
     if len(m.text.split()) == 1:
         status = pinsdb.get_settings()["cleanlinked"]
         await m.reply_text(
-            tlang(m, "pin.antichannelpin.current_status").format(
-                status=status,
-            ),
+           text=f"Current AntiChannelPin status: {status}"
         )
         return
 
@@ -214,7 +206,7 @@ async def clean_linked(_, m: Message):
             LOGGER.info(f"{m.from_user.id} disabled CleanLinked in {m.chat.id}")
             msg = "Turned off CleanLinked! Messages from linked channel will not be deleted!"
         else:
-            await m.reply_text(tlang(m, "general.check_help"))
+            await m.reply_text(text="Please check help on how to use this this command.")
             return
 
     await m.reply_text(msg)

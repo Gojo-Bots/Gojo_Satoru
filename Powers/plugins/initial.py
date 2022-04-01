@@ -10,7 +10,6 @@ from Powers.database.chats_db import Chats
 from Powers.database.disable_db import Disabling
 from Powers.database.filters_db import Filters
 from Powers.database.greetings_db import Greetings
-from Powers.database.lang_db import Langs
 from Powers.database.notes_db import Notes, NotesSettings
 from Powers.database.pins_db import Pins
 from Powers.database.reporting_db import Reporting
@@ -85,7 +84,6 @@ async def initial_works(_, m: Message):
 
 async def migrate_chat(m: Message, new_chat: int) -> None:
     LOGGER.info(f"Migrating from {m.chat.id} to {new_chat}...")
-    langdb = Langs(m.chat.id)
     notedb = Notes()
     gdb = Greetings(m.chat.id)
     ruledb = Rules(m.chat.id)
@@ -102,7 +100,6 @@ async def migrate_chat(m: Message, new_chat: int) -> None:
     gdb.migrate_chat(new_chat)
     chatdb.migrate_chat(new_chat)
     userdb.migrate_chat(new_chat)
-    langdb.migrate_chat(new_chat)
     ruledb.migrate_chat(new_chat)
     bldb.migrate_chat(new_chat)
     notedb.migrate_chat(m.chat.id, new_chat)

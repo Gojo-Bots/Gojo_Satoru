@@ -6,7 +6,6 @@ from pyrogram.types import CallbackQuery, Message
 from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.blacklist_db import Blacklist
-from Powers.tr_engine import tlang
 from Powers.utils.custom_filters import command, owner_filter, restrict_filter
 from Powers.utils.kbhelpers import ikb
 
@@ -18,16 +17,12 @@ async def view_blacklist(_, m: Message):
     LOGGER.info(f"{m.from_user.id} checking blacklists in {m.chat.id}")
 
     chat_title = m.chat.title
-    blacklists_chat = (tlang(m, "blacklist.curr_blacklist_initial")).format(
-        chat_title=chat_title,
-    )
+    blacklists_chat = f"Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     all_blacklisted = db.get_blacklists()
 
     if not all_blacklisted:
         await m.reply_text(
-            (tlang(m, "blacklist.no_blacklist")).format(
-                chat_title=chat_title,
-            ),
+            text=f"There are no blacklisted messages in <b>{chat_title}</b>!"
         )
         return
 
@@ -44,7 +39,7 @@ async def add_blacklist(_, m: Message):
     db = Blacklist(m.chat.id)
 
     if len(m.text.split()) < 2:
-        await m.reply_text(tlang(m, "general.check_help"))
+        await m.reply_text(text="Please check help on how to use this this command.")
         return
 
     bl_words = ((m.text.split(None, 1)[1]).lower()).split()
@@ -63,11 +58,9 @@ async def add_blacklist(_, m: Message):
             + " already added in blacklist, skipped them!"
         )
     LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
+    trigger=", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
-        (tlang(m, "blacklist.added_blacklist")).format(
-            trigger=", ".join(f"<code>{i}</code>" for i in bl_words),
-        )
-        + (f"\n{rep_text}" if rep_text else ""),
+        text=f"Added <code>{trigger}</code> in blacklist words!" + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -100,7 +93,7 @@ async def rm_blacklist(_, m: Message):
     db = Blacklist(m.chat.id)
 
     if len(m.text.split()) < 2:
-        await m.reply_text(tlang(m, "general.check_help"))
+        await m.reply_text(text="Please check help on how to use this this command.")
         return
 
     chat_bl = db.get_blacklists()
@@ -122,11 +115,9 @@ async def rm_blacklist(_, m: Message):
         ) + " in blcklisted words, skipped them."
 
     LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
+    bl_words=", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
-        (tlang(m, "blacklist.rm_blacklist")).format(
-            bl_words=", ".join(f"<code>{i}</code>" for i in bl_words),
-        )
-        + (f"\n{rep_text}" if rep_text else ""),
+        text=f"Removed <b>{bl_words}</b> from blacklist words!" + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -155,16 +146,17 @@ async def set_bl_action(_, m: Message):
             f"{m.from_user.id} set blacklist action to '{action}' in {m.chat.id}",
         )
         await m.reply_text(
-            (tlang(m, "blacklist.action_set")).format(action=action),
+            text=f"Set action for blacklist for this to <b>{action}</b>"
         )
     elif len(m.text.split()) == 1:
         action = db.get_action()
         LOGGER.info(f"{m.from_user.id} checking blacklist action in {m.chat.id}")
         await m.reply_text(
-            (tlang(m, "blacklist.action_get")).format(action=action),
+           text= f"""The current action for blacklists in this chat is <i><b>{action}</b></i>
+      All blacklist modes delete the message containing blacklist word."""
         )
     else:
-        await m.reply_text(tlang(m, "general.check_help"))
+        await m.reply_text(text="Please check help on how to use this this command.")
 
     return
 

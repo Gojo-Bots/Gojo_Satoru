@@ -15,7 +15,6 @@ from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.database.users_db import Users
 from Powers.database.warns_db import Warns, WarnSettings
-from Powers.tr_engine import tlang
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import admin_filter, command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -53,7 +52,7 @@ async def warn(c: Gojo, m: Message):
         return
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        await m.reply_text(text="This user is in my support staff, cannot restrict them.")
         LOGGER.info(
             f"{m.from_user.id} trying to warn {user_id} (SUPPORT_STAFF) in {m.chat.id}",
         )
