@@ -629,7 +629,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "ujson"
-version = "4.3.0"
+version = "5.1.0"
 description = "Ultra fast JSON encoder and decoder for Python"
 category = "main"
 optional = false
