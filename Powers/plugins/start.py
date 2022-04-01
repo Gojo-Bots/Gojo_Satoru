@@ -85,7 +85,7 @@ async def start(c: Gojo, m: Message):
             return
         try:
             await m.reply_text(
-                text="""Hey there! My name is Alita ✨.
+                text="""Hey there! My name is Gojo ✨.
       I'm here to help you manage your groups!
       Hit /help to find out more about how to use me in my full potential!
 
@@ -108,7 +108,7 @@ async def start(c: Gojo, m: Message):
 async def start_back(_, q: CallbackQuery):
     try:
         await q.message.edit_text(
-            text="""Hey there! My name is Alita ✨.
+            text="""Hey there! My name is Gojo ✨.
       I'm here to help you manage your groups!
       Hit /help to find out more about how to use me in my full potential!
 
@@ -132,7 +132,7 @@ async def commands_menu(_, q: CallbackQuery):
     )
     try:
         await q.message.edit_text(
-            text="""Hey There! My name is Alita.
+            text="""Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
             × /start: Start the bot
@@ -143,7 +143,7 @@ async def commands_menu(_, q: CallbackQuery):
         pass
     except QueryIdInvalid:
         await q.message.reply_text(
-            text="""Hey There! My name is Alita.
+            text="""Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
             × /start: Start the bot
@@ -198,7 +198,7 @@ async def help_menu(_, m: Message):
                     [("« Back", "start_back")],
                 ],
             )
-            msg = """Hey There! My name is Alita.
+            msg = """Hey There! My name is Gojo.
       I'm here to help you manage your groups!
       Commands available:
        × /start: Start the bot
