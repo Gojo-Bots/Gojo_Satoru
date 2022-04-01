@@ -16,22 +16,22 @@
       "BOT_TOKEN": {
         "description": "Your telegram bot token, get from @Botfather in telegram.",
         "required": true,
-        "value": " "
+        "value": ""
       },
       "API_ID": {
         "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
         "required": true,
-        "value": "12345"
+        "value": ""
       },
       "API_HASH": {
         "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
         "required": true,
-        "value": "iamgojoof6eyes"
+        "value": ""
       },
       "DB_URI": {
         "description": "Your MongoDB connection string.",
         "required": true,
-        "value": "put it here"
+        "value": ""
       },
       "DB_NAME": {
         "description": "Your MongoDB database name.",
@@ -70,7 +70,7 @@
       },
       "SUPPORT_CHANNEL": {
         "description": "Channel where bot uodates will be posted!",
-        "value": ""
+        "value": "gojo_updates"
       },
       "SUDO_USERS": {
         "description": "A space separated list of user IDs who you want to assign as sudo users....Don't give comma or anything after 1 id just give and space then enter second id",
