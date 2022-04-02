@@ -1,3 +1,4 @@
+from random import choice
 from pyrogram.errors import (
     ChatAdminRequired,
     RightForbidden,
@@ -21,7 +22,10 @@ from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.vars import Config
+from Powers.utils.fun_strings import MUTE_GIFS
 
+
+MUTE_MEDIA = choice(MUTE_GIFS)
 
 @Gojo.on_message(command("tmute") & restrict_filter)
 async def tmute_usr(c: Gojo, m: Message):
@@ -103,7 +107,7 @@ async def tmute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+        await m.reply_animation(animation = MUTE_MEDIA, caption=txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -201,7 +205,7 @@ async def dtmute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await c.send_message(m.chat.id, txt, reply_markup=keyboard)
+        await c.send_animation(animation=MUTE_MEDIA, chat_id=m.chat.id, caption=txt, reply_markup=keyboard, unsave=True)
     except ChatAdminRequired:
         await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -365,7 +369,7 @@ async def mute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+        await m.reply_animation(animation=MUTE_MEDIA, caption=txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -508,7 +512,7 @@ async def dmute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await c.send_message(m.chat.id, txt, reply_markup=keyboard)
+        await c.send_animation(animation=MUTE_MEDIA,chat_id=m.chat.id, caption=txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(text = "I'm not admin or I don't have rights.")
     except RightForbidden:
