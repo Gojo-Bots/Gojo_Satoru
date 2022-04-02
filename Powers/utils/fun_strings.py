@@ -574,4 +574,13 @@ KICK_GIFS = ["https://tenor.com/bizBJ.gif",
              "https://tenor.com/NfK8.gif",
              "https://tenor.com/ymZn.gif",
              "https://tenor.com/77Lu.gif",
-             "https://tenor.com/bPD4I.gif",]
+             "https://tenor.com/bPD4I.gif",
+            "https://media.giphy.com/media/u2LJ0n4lx6jF6/giphy.gif",]
+
+MUTE_GIFS = ["https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
+             "https://media.giphy.com/media/HWl1atKEPAWcw/giphy.gif",
+             "https://media.giphy.com/media/1xkynOSsb8eFpbEood/giphy.gif",
+             "https://media.giphy.com/media/LmUAM5ImMNZd0nnkvn/giphy.gif",
+             "https://media.giphy.com/media/JNlXHSSioDe7YGTC7D/giphy.gif",
+             "https://media.giphy.com/media/t0iSe43jX8JH0Hb95a/giphy.gif",
+             "https://media.giphy.com/media/P4CXV70NTC0umRI61S/giphy.gif",]
