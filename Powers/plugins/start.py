@@ -180,8 +180,9 @@ async def help_menu(_, m: Message):
                 
             )
         else:
-            await m.reply_text(
-                text=f"Press the button below to get help for <i>{help_option}</i>",
+            await m.reply_animation(
+                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+                caption=f"Press the button below to get help for <i>{help_option}</i>",
                 reply_markup=ikb(
                     [
                         [
