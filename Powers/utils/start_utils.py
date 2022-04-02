@@ -25,7 +25,7 @@ notes_db = Notes()
 
 
 async def gen_cmds_kb(m: Message or CallbackQuery):
-    """Generate the keyboard for languages."""
+    """Generate the keyboard"""
     if isinstance(m, CallbackQuery):
         m = m.message
 
