@@ -588,13 +588,7 @@ category = "main"
 optional = false
 python-versions = ">=3.6"
 
-[[package]]
-name = "speedtest-cli"
-version = "2.1.3"
-description = "Command line interface for testing internet bandwidth using speedtest.net"
-category = "main"
-optional = false
-python-versions = "*"
+
 
 [[package]]
 name = "tgcrypto"
@@ -1232,10 +1226,6 @@ sniffio = [
 soupsieve = [
     {file = "soupsieve-2.3.1-py3-none-any.whl", hash = "sha256:1a3cca2617c6b38c0343ed661b1fa5de5637f257d4fe22bd9f1338010a1efefb"},
     {file = "soupsieve-2.3.1.tar.gz", hash = "sha256:b8d49b1cd4f037c7082a9683dfa1801aa2597fb11c3a1155b7a5b94829b4f1f9"},
-]
-speedtest-cli = [
-    {file = "speedtest-cli-2.1.3.tar.gz", hash = "sha256:5e2773233cedb5fa3d8120eb7f97bcc4974b5221b254d33ff16e2f1d413d90f0"},
-    {file = "speedtest_cli-2.1.3-py2.py3-none-any.whl", hash = "sha256:75ff32c91af9ac1ce2b905476d6e92bd9eb2c0783f9e7d1939d74605c7d0b9ea"},
 ]
 tgcrypto = [
     {file = "TgCrypto-1.2.3-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:266cfc47dde87e23421b2ee50cbb066ec4b8c294553f79742e3d694af5c0d118"},
