@@ -109,7 +109,7 @@ async def start(c: Gojo, m: Message):
 @Gojo.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_, q: CallbackQuery):
     try:
-        await q.edit_message_caption(
+        await q.message.edit_caption(
             caption="""Hey there! My name is Gojo ✨.
       I'm here to help you manage your groups!
       Hit /help to find out more about how to use me in my full potential!
@@ -133,7 +133,7 @@ async def commands_menu(_, q: CallbackQuery):
         ],
     )
     try:
-        await q.edit_message_caption(
+        await q.message.edit_caption(
             caption="""Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
@@ -230,7 +230,7 @@ async def get_module_info(_, q: CallbackQuery):
     help_kb = HELP_COMMANDS[module]["buttons"] + [
         [("« " + "Back", "commands")],
     ]
-    await q.edit_message_caption(
+    await q.message.edit_caption(
         caption=help_msg,
         parse_mode="markdown",
         reply_markup=ikb(help_kb),
