@@ -59,6 +59,11 @@ async def gen_start_kb(q: Message or CallbackQuery):
                     "https://github.com/iamgojoof6eyes/Gojo_Satarou",
                     "url",
                 ),
+                (
+                    "Owner ❤️",
+                    f"https://t.me/iamgojoof6eyes",
+                    "url",
+                ),
             ],
         ],
     )
