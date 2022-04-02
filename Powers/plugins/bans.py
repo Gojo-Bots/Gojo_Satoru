@@ -802,7 +802,7 @@ async def ban_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+        await m.reply_animation(animation=BAN_MEDIA, caption=txt, reply_markup=keyboard, reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
