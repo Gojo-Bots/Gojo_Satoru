@@ -21,7 +21,7 @@ from Powers.vars import Config
 )
 async def donate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_text(text="""Hey Thanks for your thought of donating me!
+    await m.reply_animation(animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",caption="""Hey Thanks for your thought of donating me!
       When you donate, all the fund goes towards my development which makes on fast and responsive.
       Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
 
@@ -75,8 +75,9 @@ async def start(c: Gojo, m: Message):
             if not help_msg:
                 return
 
-            await m.reply_text(
-                help_msg,
+            await m.reply_animation(
+                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+                caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
                 quote=True,
@@ -84,8 +85,9 @@ async def start(c: Gojo, m: Message):
             )
             return
         try:
-            await m.reply_text(
-                text="""Hey there! My name is Gojo ✨.
+            await m.reply_animation(
+                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+                caption="""Hey there! My name is Gojo ✨.
       I'm here to help you manage your groups!
       Hit /help to find out more about how to use me in my full potential!
 
@@ -107,8 +109,8 @@ async def start(c: Gojo, m: Message):
 @Gojo.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_, q: CallbackQuery):
     try:
-        await q.message.edit_text(
-            text="""Hey there! My name is Gojo ✨.
+        await q.edit_message_caption(
+            caption="""Hey there! My name is Gojo ✨.
       I'm here to help you manage your groups!
       Hit /help to find out more about how to use me in my full potential!
 
@@ -131,8 +133,8 @@ async def commands_menu(_, q: CallbackQuery):
         ],
     )
     try:
-        await q.message.edit_text(
-            text="""Hey There! My name is Gojo.
+        await q.edit_message_caption(
+            caption="""Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
             × /start: Start the bot
@@ -142,8 +144,9 @@ async def commands_menu(_, q: CallbackQuery):
     except MessageNotModified:
         pass
     except QueryIdInvalid:
-        await q.message.reply_text(
-            text="""Hey There! My name is Gojo.
+        await q.message.reply_animation(
+            animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+            caption="""Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
             × /start: Start the bot
@@ -168,8 +171,9 @@ async def help_menu(_, m: Message):
             f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
         if m.chat.type == "private":
-            await m.reply_text(
-                help_msg,
+            await m.reply_animation(
+                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+                caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
                 quote=True,
@@ -208,8 +212,9 @@ async def help_menu(_, m: Message):
                 [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
             )
             msg = "Contact me in PM to get the list of possible commands."
-        await m.reply_text(
-            msg,
+        await m.reply_animation(
+            animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+            caption=msg,
             reply_markup=keyboard,
         )
 
@@ -225,8 +230,8 @@ async def get_module_info(_, q: CallbackQuery):
     help_kb = HELP_COMMANDS[module]["buttons"] + [
         [("« " + "Back", "commands")],
     ]
-    await q.message.edit_text(
-        help_msg,
+    await q.edit_message_caption(
+        caption=help_msg,
         parse_mode="markdown",
         reply_markup=ikb(help_kb),
     )
