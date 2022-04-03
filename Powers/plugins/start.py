@@ -87,11 +87,11 @@ async def start(c: Gojo, m: Message):
         try:
             await m.reply_animation(
                 animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
-                caption="""Hey there! My name is Gojo ✨.
-      I'm here to help you manage your groups!
-      Hit /help to find out more about how to use me in my full potential!
+                caption=f"""Hey {m.from_user.first_name}! My self Gojo 😎.
+                I'm here to help you manage your groups!
+                Hit /help to find out more about how to use me in my full potential!
 
-      Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates.""",
+                Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates.""",
                 reply_markup=(await gen_start_kb(m)),
                 quote=True,
                 
