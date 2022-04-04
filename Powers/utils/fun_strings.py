@@ -513,7 +513,7 @@ TOSS = (
 
 
 
-DECIDE = ("Yes.", "No.", "Maybe.")
+DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?", "No one give a damn about it")
 
 INSULT_STRINGS = [
     "`Owww ... Such a stupid idiot.`",
@@ -561,7 +561,11 @@ BAN_GIFS = ["https://tenor.com/bMiwt.gif",
             "https://tenor.com/bjZai.gif",
             "https://media.giphy.com/media/fe4dDMD2cAU5RfEaCU/giphy.gif",
             "https://tenor.com/bndta.gif",
-            "https://tenor.com/bkyIr.gif",]
+            "https://tenor.com/bkyIr.gif",
+            "https://media.giphy.com/media/UBqgQxKnUJqb8oZ2zc/giphy.gif",
+            "https://media.giphy.com/media/tanIENriCOil3ndF3V/giphy.gif",
+            "https://media.giphy.com/media/fwX4RUzdkdx9XUGow4/giphy.gif",
+            "https://media.giphy.com/media/XVLfZCU6jDvMYqF1xS/giphy.gif",]
 
 KICK_GIFS = ["https://tenor.com/bizBJ.gif",
              "https://tenor.com/bizBJ.gif",
@@ -574,8 +578,13 @@ KICK_GIFS = ["https://tenor.com/bizBJ.gif",
              "https://tenor.com/NfK8.gif",
              "https://tenor.com/ymZn.gif",
              "https://tenor.com/77Lu.gif",
-             "https://tenor.com/bPD4I.gif",
-            "https://media.giphy.com/media/u2LJ0n4lx6jF6/giphy.gif",]
+             "https://tenor.com/bPD4I.gif", 
+             "https://media.giphy.com/media/u2LJ0n4lx6jF6/giphy.gif",
+             "https://media.giphy.com/media/eDR7j2vjCFOUMJ9rT2/giphy.gif",
+             "https://media.giphy.com/media/ERNKP5G7ihZNW6VW4Q/giphy.gif",
+             "https://media.giphy.com/media/1r6xks2F0iHfbNvt4p/giphy.gif",
+             "https://media.giphy.com/media/M7j1rkxm0X5z30Hyrs/giphy.gif",
+             "https://media.giphy.com/media/rad9oJzU4hVafD8ZnT/giphy.gif",]
 
 MUTE_GIFS = ["https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
              "https://media.giphy.com/media/HWl1atKEPAWcw/giphy.gif",
@@ -583,4 +592,9 @@ MUTE_GIFS = ["https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
              "https://media.giphy.com/media/LmUAM5ImMNZd0nnkvn/giphy.gif",
              "https://media.giphy.com/media/JNlXHSSioDe7YGTC7D/giphy.gif",
              "https://media.giphy.com/media/t0iSe43jX8JH0Hb95a/giphy.gif",
-             "https://media.giphy.com/media/P4CXV70NTC0umRI61S/giphy.gif",]
+             "https://media.giphy.com/media/P4CXV70NTC0umRI61S/giphy.gif",
+             "https://media.giphy.com/media/Z0WPxDF7zpIHVPrYUN/giphy.gif",
+             "https://media.giphy.com/media/gJS1pGTbXlSCWUe2pg/giphy.gif",
+             "https://media.giphy.com/media/SIoetMN7j96O5perEV/giphy.gif",
+             "https://media.giphy.com/media/PBZrH2uy9E5rPruuCX/giphy.gif",
+             "https://media.giphy.com/media/PtIm7eUGKYIZbknqsO/giphy.gif",]
