@@ -565,7 +565,8 @@ BAN_GIFS = ["https://tenor.com/bMiwt.gif",
             "https://media.giphy.com/media/UBqgQxKnUJqb8oZ2zc/giphy.gif",
             "https://media.giphy.com/media/tanIENriCOil3ndF3V/giphy.gif",
             "https://media.giphy.com/media/fwX4RUzdkdx9XUGow4/giphy.gif",
-            "https://media.giphy.com/media/XVLfZCU6jDvMYqF1xS/giphy.gif",]
+            "https://media.giphy.com/media/XVLfZCU6jDvMYqF1xS/giphy.gif",
+            "https://media.giphy.com/media/CI4aCJUjJDJEj3Jgo4/giphy-downsized-large.gif"]
 
 KICK_GIFS = ["https://tenor.com/bizBJ.gif",
              "https://tenor.com/bizBJ.gif",
