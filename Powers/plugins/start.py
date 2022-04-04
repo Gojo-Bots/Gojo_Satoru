@@ -21,13 +21,15 @@ from Powers.vars import Config
 )
 async def donate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_animation(animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",caption="""Hey Thanks for your thought of donating me!
-      When you donate, all the fund goes towards my development which makes on fast and responsive.
-      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+    await m.reply_animation(animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+                            caption="""
+                            Hey Thanks for your thought of donating me!
+                            When you donate, all the fund goes towards my development which makes on fast and responsive.
+                            Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
 
-      All the fund would be put into my services such as database, storage and hosting!
+                            All the fund would be put into my services such as database, storage and hosting!
 
-      You can donate by contacting my owner: @iamgojoof6eyes""")
+                            You can donate by contacting my owner: @iamgojoof6eyes""")
     return
 
 
@@ -87,7 +89,8 @@ async def start(c: Gojo, m: Message):
         try:
             await m.reply_animation(
                 animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
-                caption=f"""Hey {m.from_user.first_name}! My self Gojo 😎.
+                caption=f"""
+                Hey {m.from_user.first_name}! My self Gojo 😎.
                 I'm here to help you manage your groups!
                 Hit /help to find out more about how to use me in my full potential!
 
@@ -110,11 +113,12 @@ async def start(c: Gojo, m: Message):
 async def start_back(_, q: CallbackQuery):
     try:
         await q.message.edit_caption(
-            caption="""Hey there! My name is Gojo ✨.
-      I'm here to help you manage your groups!
-      Hit /help to find out more about how to use me in my full potential!
+            caption="""
+            Hey there! My name is Gojo ✨.
+            I'm here to help you manage your groups!
+            Hit /help to find out more about how to use me in my full potential!
 
-      Join my [News Channel](http://t.me/gojo_updates) to get information on all the latest updates.""",
+            Join my [News Channel](http://t.me/gojo_updates) to get information on all the latest updates.""",
             reply_markup=(await gen_start_kb(q.message)),
             
         )
@@ -134,7 +138,8 @@ async def commands_menu(_, q: CallbackQuery):
     )
     try:
         await q.message.edit_caption(
-            caption="""Hey There! My name is Gojo.
+            caption="""
+            Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
             × /start: Start the bot
@@ -146,7 +151,8 @@ async def commands_menu(_, q: CallbackQuery):
     except QueryIdInvalid:
         await q.message.reply_animation(
             animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
-            caption="""Hey There! My name is Gojo.
+            caption="""
+            Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
             × /start: Start the bot
@@ -203,11 +209,12 @@ async def help_menu(_, m: Message):
                     [("« Back", "start_back")],
                 ],
             )
-            msg = """Hey There! My name is Gojo.
-      I'm here to help you manage your groups!
-      Commands available:
-       × /start: Start the bot
-       × /help: Give's you this message."""
+            msg = """
+            Hey There! My name is Gojo.
+            I'm here to help you manage your groups!
+            Commands available:
+            × /start: Start the bot
+            × /help: Give's you this message."""
         else:
             keyboard = ikb(
                 [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
