@@ -94,7 +94,7 @@ async def get_formatting_info(_, q: CallbackQuery):
       %%%
       how are you</code>
       This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
+      Use this to make Gojo feel a bit more customised! (only works in filters/notes)
 
       Example welcome message::
       - Every time a new user joins, they'll be presented with one of the three messages shown here.
@@ -117,7 +117,7 @@ async def send_mod_help(_, q: CallbackQuery):
     await q.message.edit_text(
         text="""Formatting
 
-        Alita supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!""",
+        Gojo supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!""",
         reply_markup=(await gen_formatting_kb(q.message)),
     )
     await q.answer()
