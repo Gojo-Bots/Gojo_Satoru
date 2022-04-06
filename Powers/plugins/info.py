@@ -2,7 +2,7 @@ import os
 
 from pyrogram.types import Message
 
-from Powers import (DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF)
+from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 
@@ -101,8 +101,12 @@ async def info_func(_, message: Message):
 
     try:
         info_caption, photo_id = await get_user_info(user)
+        LOGGER.info(f"{message.from_user.id} fetched user info of {user} in {message.chat.id}")
     except Exception as e:
-        return await m.edit(str(e))
+        await m.edit(str(e))
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return 
 
     if not photo_id:
         return await m.edit(
@@ -142,12 +146,14 @@ async def chat_info_func(_, message: Message):
         await message.reply_photo(
             photo, caption=info_caption, quote=False
         )
-
+        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {message.chat.id} in {message.chat.id}")
         await m.delete()
         os.remove(photo)
     except Exception as e:
         await m.edit(e)
-
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        
 __PLUGIN__ = "info"
 _DISABLE_CMDS_ = [
     "info",
