@@ -153,3 +153,6 @@ _DISABLE_CMDS_ = [
     "info",
     "chinfo",
 ] 
+
+__HELP__ = """/info - To get info about the user
+/chinfo - To get info about the chat"""
