@@ -879,3 +879,20 @@ __alt_name__ = [
     "kick",
     "tban",
 ]
+
+__HELP__ = """Someone annoying entered your group?
+Want to ban/restriction him/her?
+This is the plugin for you, easily kick, ban and unban members in a group.
+**Admin only:**
+× /kick: Kick the user replied or tagged.
+× /skick: Kick the user replied or tagged and delete your messsage.
+× /dkick: Kick the user replied and delete their message.
+× /ban: Bans the user replied to or tagged.
+× /sban: Bans the user replied or tagged and delete your messsage.
+× /dban: Bans the user replied and delete their message.
+× /tban <userhandle> x(m/h/d): Bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+× /stban <userhandle> x(m/h/d): Silently bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+× /dtban <userhandle> x(m/h/d): Silently bans a user for x time and delete the replied message. (via reply). m = minutes, h = hours, d = days.
+× /unban: Unbans the user replied to or tagged.
+**Example:**
+`/ban @username`: this bans a user in the chat."""

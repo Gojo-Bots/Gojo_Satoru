@@ -367,3 +367,21 @@ async def warnlimit(_, m: Message):
 __PLUGIN__ = "warnings"
 
 __alt_name__ = ["warn", "warning", "warns"]
+
+__HELP__ = """Keep your members in check with warnings; stop them getting out of control!
+
+If you're looking for automated warnings, go read about the blacklist module.
+
+Admin commands:
+- /warn `<reason>`: Warn a user.
+- /dwarn `<reason>`: Warn a user by reply, and delete their message.
+- /swarn `<reason>`: Silently warn a user, and delete your message.
+- /warns: See a user's warnings.
+- /rmwarn: Remove a user's latest warning.
+- /resetwarn: Reset all of a user's warnings to 0.
+- /warnings: Get the chat's warning settings.
+- /warnmode `<ban/kick/mute>`: Set the chat's warn mode.
+- /warnlimit `<number>`: Set the number of warnings before users are punished.
+
+Examples:
+`/warn @user`: this warns a user in the chat."""

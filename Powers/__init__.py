@@ -104,6 +104,7 @@ async def load_cmds(all_plugins):
 
         plugin_name = imported_module.__PLUGIN__.lower()
         plugin_dict_name = f"plugins.{plugin_name}.main"
+        plugin_help = imported_module.__HELP__
 
         if plugin_dict_name in HELP_COMMANDS:
             raise Exception(
@@ -117,7 +118,7 @@ async def load_cmds(all_plugins):
             "buttons": [],
             "disablable": [],
             "alt_cmds": [],
-            "help_msg": f"plugins.{plugin_name}.help",
+            "help_msg": plugin_help,
         }
 
         if hasattr(imported_module, "__buttons__"):

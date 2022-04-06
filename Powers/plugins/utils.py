@@ -381,3 +381,17 @@ _DISABLE_CMDS_ = [
     "info",
 ]
 __alt_name__ = ["util", "misc", "tools"]
+
+__HELP__ = """Some utils provided by bot to make your tasks easy!
+
+× /id: Get the current group id. If used by replying to a message, get that user's id.
+× /info: Get information about a user.
+× /gifid: Reply to a gif to me to tell you its file ID.
+× /wiki: `<query>`: wiki your query.
+× /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
+× /github `<username>`: Search for the user using github api!
+× /lyrics `<song>`: Get the lyrics of the song you specify!
+× /weebify `<text>` or `<reply to message>`: To weebify the text.
+
+**Example:**
+`/info @username`: this fetches the information about a user from the database."""

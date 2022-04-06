@@ -337,3 +337,5 @@ async def chat_broadcast(c: Gojo, m: Message):
 
 
 _DISABLE_CMDS_ = ["ping"]
+
+__HELP__ = """To check the ping of the bot just type `/ping`"""

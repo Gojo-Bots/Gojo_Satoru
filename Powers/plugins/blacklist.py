@@ -208,3 +208,19 @@ async def rm_allbl_callback(_, q: CallbackQuery):
 __PLUGIN__ = "blacklist"
 
 __alt_name__ = ["blacklists", "blaction"]
+
+__HELP__ = """Want to restrict certain words or sentences in your group?
+Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, that message will immediately be deleted.
+A good combo is sometimes to pair this up with warn filters!
+**NOTE:** blacklists do not affect group admins.
+× /blacklist: View the current blacklisted words.
+**Admin only:**
+× /addblacklist `<triggers>`: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
+× /unblacklist `<triggers>`: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
+× /blaction `<action>`: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
+Default is 'none', which will delete the users message on typing a blacklist word.
+**Owner Only**
+× /rmallblacklist: Removes all the blacklists from the current chat.
+**Note:** Can only add or remove one blacklist at a time!
+**Example:**
+`/addblacklist hello`: this adds the word 'hello' as blacklist in the chat."""

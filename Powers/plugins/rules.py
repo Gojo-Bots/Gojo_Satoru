@@ -146,3 +146,12 @@ async def clearrules_callback(_, q: CallbackQuery):
 __PLUGIN__ = "rules"
 
 __alt_name__ = ["rule"]
+
+__HELP__ = """Set rules for you chat so that members know what to do and what not to do in your group!
+
+× /rules: get the rules for current chat.
+
+**Admin only:**
+× /setrules `<rules>`: Set the rules for this chat, also works as a reply to a message.
+× /clearrules: Clear the rules for this chat.
+× /privrules `<on/yes/no/off>`: Turns on/off the option to send the rules to PM of user or group."""

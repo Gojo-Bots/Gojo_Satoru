@@ -299,3 +299,29 @@ __PLUGIN__ = "filters"
 _DISABLE_CMDS_ = ["filters"]
 
 __alt_name__ = ["filters", "autoreply"]
+
+__HELP__ = """• /filters: List all active filters saved in the chat.
+
+**Admin only:**
+• /filter "`<keyword>`" `<reply message>`: Add a filter to this chat. The bot will now reply that message whenever 'keyword'
+is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker.
+
+If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How are you doin?
+**Example:**
+`/filter "filtername" Reply Text`
+
+Aliases for filters can be too set, just put '|' between the filternames you want.
+**Example:**
+`/filter "filtername1|filtername2" Reply Text`
+Using the you can make a single filter work on 2 filternames without manually adding another one.
+
+• /stop `<filter keyword>`: Stop that filter.
+**Note:** For filters with aliases, if you stop one alias, the filter will stop working on other aliases too.
+**For Example:** If you stop the "filtername1" from above example, the bot will not respond to "filtername2".
+
+**Chat creator only:**
+• /removeallfilters: Remove all chat filters at once.
+
+**Note:**
+Currently there is a limit of 50 filters and 120 aliases per chat.
+All filter keywords are in lowercase."""

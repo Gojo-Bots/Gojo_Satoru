@@ -477,3 +477,25 @@ async def goodbye(c: Gojo, m: Message):
 
 __PLUGIN__ = "greetings"
 __alt_name__ = ["welcome", "goodbye", "cleanservice"]
+
+__HELP__ = """Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
+
+Note:
+a) Currently it supports only text!
+b) Alita must be an admin to greet and goodbye users.
+
+Admin Commands:
+× /setwelcome <reply> : Sets a custom welcome message.
+× /setgoodbye <reply> : Sets a custom goodbye message.
+× /resetwelcome : Resets to bot default welcome message.
+× /resetgoodbye : Resets to bot default goodbye message.
+× /welcome <on/off> | noformat : enable/disable | Shows the current welcome message | settings.
+× /goodbye <on/off> | noformat : enable/disable | Shows the current goodbye message | settings.
+× /cleanwelcome <on/off> : Shows or sets the current clean welcome settings.
+× /cleangoodbye <on/off> : Shows or sets the current clean goodbye settings.
+
+── **Cleaner** ──:
+× /cleanservice <on/off> : Use it to clean all service messages automatically or to view current status.
+
+── **Format** ──
+Check /markdownhelp for help related to formatting!"""

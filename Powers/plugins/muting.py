@@ -598,3 +598,18 @@ __alt_name__ = [
     "tmute",
     "unmute",
 ]
+
+__HELP__ = """Want someone to keep quite for a while in the group?
+Mute plugin is here to help, mute or unmute any user easily!
+
+**Admin only:**
+× /mute: Mute the user replied to or mentioned.
+× /smute: silences a user without notifying. Can also be used as a reply, muting the replied to user.
+× /dmute: Mute a user by reply, and delete their message.
+× /tmute <userhandle> x(m/h/d): mutes a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+× /stmute <userhandle> x(m/h/d): mutes a user for x time without notifying. (via handle, or reply). m = minutes, h = hours, d = days.
+× /dtmute <userhandle> x(m/h/d): Mute the replied user, and delete the replied message. (via reply). m = minutes, h = hours, d = days.
+× /unmute: Unmutes the user mentioned or replied to.
+
+**Example:**
+`/mute @username`; this mutes a user."""

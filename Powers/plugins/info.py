@@ -1,5 +1,7 @@
 import os
 
+from traceback import format_exc
+
 from pyrogram.types import Message
 
 from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
@@ -159,3 +161,6 @@ _DISABLE_CMDS_ = [
     "info",
     "chinfo",
 ]
+
+__HELP__ = """/info - to get info about an user
+/chinfo - to get info about a group or channel"""
