@@ -1,14 +1,9 @@
 import os
-
 from traceback import format_exc
-
 from pyrogram.types import Message
-
 from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
-
-
 async def get_user_info(user_id, already=False):
     if not already:
         user = await Gojo.get_users(user)
@@ -54,8 +49,6 @@ async def get_user_info(user_id, already=False):
     }
     caption = body
     return [caption, photo_id]
-
-
 async def get_chat_info(chat_id, already=False):
     if not already:
         chat = await Gojo.get_chat(chat)
@@ -88,62 +81,46 @@ async def get_chat_info(chat_id, already=False):
     }
     caption = body
     return [caption, photo_id]
-
-
 @Gojo.on_message(command("info"))
 async def info_func(_, message: Message):
     if message.reply_to_message:
+        user = message.reply_to_message.from_user.id
         user_id = message.reply_to_message.from_user.id
     elif not message.reply_to_message and len(message.command) == 1:
+        user = message.from_user.id
         user_id = message.from_user.id
     elif not message.reply_to_message and len(message.command) != 1:
+        user = message.text.split(None, 1)[1]
         user_id = message.text.split(None, 1)[1]
 
     m = await message.reply_text("Processing...")
 
     try:
+        info_caption, photo_id = await get_user_info(user)
+        LOGGER.info(f"{message.from_user.id} fetched user info of {user} in {message.chat.id}")
         info_caption, photo_id = await get_user_info(user_id)
         LOGGER.info(f"{message.from_user.id} fetched user info of {user_id} in {message.chat.id}")
     except Exception as e:
         await m.edit(str(e))
         LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return 
-
-    if not photo_id:
-        return await m.edit(
-            info_caption, disable_web_page_preview=True
-        )
-    photo = await Gojo.download_media(photo_id)
-
-    await message.reply_photo(
-        photo, caption=info_caption, quote=False
-    )
-    await m.delete()
-    os.remove(photo)
-
-
-@Gojo.on_message(command("chinfo"))
-async def chat_info_func(_, message: Message):
-    try:
-        if len(message.command) > 2:
-            return await message.reply_text(
-                "**Usage:**cinfo <chat id/username>"
+@@ -132,13 +132,13 @@ async def chat_info_func(_, message: Message):
             )
 
         if len(message.command) == 1:
+            chat = message.chat.id
             chat_id = message.chat.id
         elif len(message.command) == 2:
+            chat = message.text.split(None, 1)[1]
             chat_id = message.text.split(None, 1)[1]
 
         m = await message.reply_text("Processing your order.....")
 
+        info_caption, photo_id = await get_chat_info(chat)
         info_caption, photo_id = await get_chat_info(chat_id)
         if not photo_id:
             return await m.edit(
                 info_caption, disable_web_page_preview=True
             )
-
         photo = await Gojo.download_media(photo_id)
         await message.reply_photo(
             photo, caption=info_caption, quote=False
@@ -161,6 +138,5 @@ _DISABLE_CMDS_ = [
     "info",
     "chinfo",
 ]
-
 __HELP__ = """/info - to get info about an user
 /chinfo - to get info about a group or channel"""
