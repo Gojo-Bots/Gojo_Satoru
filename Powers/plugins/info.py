@@ -93,17 +93,17 @@ async def get_chat_info(chat_id, already=False):
 @Gojo.on_message(command("info"))
 async def info_func(_, message: Message):
     if message.reply_to_message:
-        user = message.reply_to_message.from_user.id
+        user_id = message.reply_to_message.from_user.id
     elif not message.reply_to_message and len(message.command) == 1:
-        user = message.from_user.id
+        user_id = message.from_user.id
     elif not message.reply_to_message and len(message.command) != 1:
-        user = message.text.split(None, 1)[1]
+        user_id = message.text.split(None, 1)[1]
 
     m = await message.reply_text("Processing...")
 
     try:
-        info_caption, photo_id = await get_user_info(user)
-        LOGGER.info(f"{message.from_user.id} fetched user info of {user} in {message.chat.id}")
+        info_caption, photo_id = await get_user_info(user_id)
+        LOGGER.info(f"{message.from_user.id} fetched user info of {user_id} in {message.chat.id}")
     except Exception as e:
         await m.edit(str(e))
         LOGGER.error(e)
@@ -132,13 +132,13 @@ async def chat_info_func(_, message: Message):
             )
 
         if len(message.command) == 1:
-            chat = message.chat.id
+            chat_id = message.chat.id
         elif len(message.command) == 2:
-            chat = message.text.split(None, 1)[1]
+            chat_id = message.text.split(None, 1)[1]
 
         m = await message.reply_text("Processing your order.....")
 
-        info_caption, photo_id = await get_chat_info(chat)
+        info_caption, photo_id = await get_chat_info(chat_id)
         if not photo_id:
             return await m.edit(
                 info_caption, disable_web_page_preview=True
