@@ -1,10 +1,13 @@
 import os
-from traceback import format_exc
+
 from pyrogram.types import Message
-from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
+
+from Powers import (DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF)
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
-async def get_user_info(user_id, already=False):
+
+
+async def get_user_info(user, already=False):
     if not already:
         user = await Gojo.get_users(user)
     if not user.first_name:
@@ -19,7 +22,7 @@ async def get_user_info(user_id, already=False):
     if user_id in SUPPORT_STAFF:
         if user_id in DEV_USERS:
             omp = "User is in devs' list"
-            
+
         elif user_id in SUDO_USERS:
             omp = "User is in sudo users' list"
         elif user_id in WHITELIST_USERS:
@@ -49,7 +52,9 @@ async def get_user_info(user_id, already=False):
     }
     caption = body
     return [caption, photo_id]
-async def get_chat_info(chat_id, already=False):
+
+
+async def get_chat_info(chat, already=False):
     if not already:
         chat = await Gojo.get_chat(chat)
     chat_id = chat.id
@@ -81,62 +86,70 @@ async def get_chat_info(chat_id, already=False):
     }
     caption = body
     return [caption, photo_id]
+
+
 @Gojo.on_message(command("info"))
 async def info_func(_, message: Message):
     if message.reply_to_message:
         user = message.reply_to_message.from_user.id
-        user_id = message.reply_to_message.from_user.id
     elif not message.reply_to_message and len(message.command) == 1:
         user = message.from_user.id
-        user_id = message.from_user.id
     elif not message.reply_to_message and len(message.command) != 1:
         user = message.text.split(None, 1)[1]
-        user_id = message.text.split(None, 1)[1]
 
     m = await message.reply_text("Processing...")
 
     try:
         info_caption, photo_id = await get_user_info(user)
-        LOGGER.info(f"{message.from_user.id} fetched user info of {user} in {message.chat.id}")
-        info_caption, photo_id = await get_user_info(user_id)
-        LOGGER.info(f"{message.from_user.id} fetched user info of {user_id} in {message.chat.id}")
     except Exception as e:
-        await m.edit(str(e))
-        LOGGER.error(e)
-@@ -132,13 +132,13 @@ async def chat_info_func(_, message: Message):
+        return await m.edit(str(e))
+
+    if not photo_id:
+        return await m.edit(
+            info_caption, disable_web_page_preview=True
+        )
+    photo = await Gojo.download_media(photo_id)
+
+    await message.reply_photo(
+        photo, caption=info_caption, quote=False
+    )
+    await m.delete()
+    os.remove(photo)
+
+
+@Gojo.on_message(command("chinfo"))
+async def chat_info_func(_, message: Message):
+    try:
+        if len(message.command) > 2:
+            return await message.reply_text(
+                "**Usage:**cinfo <chat id/username>"
             )
 
         if len(message.command) == 1:
             chat = message.chat.id
-            chat_id = message.chat.id
         elif len(message.command) == 2:
             chat = message.text.split(None, 1)[1]
-            chat_id = message.text.split(None, 1)[1]
 
         m = await message.reply_text("Processing your order.....")
 
         info_caption, photo_id = await get_chat_info(chat)
-        info_caption, photo_id = await get_chat_info(chat_id)
         if not photo_id:
             return await m.edit(
                 info_caption, disable_web_page_preview=True
             )
+
         photo = await Gojo.download_media(photo_id)
         await message.reply_photo(
             photo, caption=info_caption, quote=False
         )
-        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {message.chat.id} in {message.chat.id}")
+
         await m.delete()
         os.remove(photo)
     except Exception as e:
         await m.edit(e)
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        
+
 __PLUGIN__ = "info"
 _DISABLE_CMDS_ = [
     "info",
     "chinfo",
-]
-__HELP__ = """/info - to get info about an user
-/chinfo - to get info about a group or channel"""
+] 
