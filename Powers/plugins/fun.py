@@ -198,6 +198,7 @@ _DISABLE_CMDS_ = [
 
 __HELP__ = """× /runs: reply a random string from an array of replies.
 × /slap: slap a user, or get slapped if not a reply.
+× /insult: to insult a user, or get insulted if not a reply
 × /shrug : get shrug XD.
 × /decide : Randomly answers yes/no/maybe
 × /toss : Tosses A coin
