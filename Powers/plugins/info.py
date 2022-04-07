@@ -48,7 +48,7 @@ async def get_user_info(user, already=False):
         "Bot" : is_bot,
         "Fake" : is_fake,
         "Status" : status,
-        "Last seen" : last_date,
+        "Last seen" : [last_date],
     }
     caption = body
     return [caption, photo_id]
