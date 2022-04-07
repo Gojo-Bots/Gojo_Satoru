@@ -154,7 +154,7 @@ To add your very own plugin just use the format given below and go through the [
   ```python
   from traceback import 
   
-  from Powers.utils.custom_filters import 
+  from Powers.utils.custom_filters import command # Import more funcs if you need
   from Powers import LOGGER
   from Powers.bot_class import Gojo
   
