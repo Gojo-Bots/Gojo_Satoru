@@ -148,7 +148,7 @@ async def chat_info_func(_, message: Message):
         await m.edit(e)
 
 __PLUGIN__ = "info"
-_DISABLE_CMDS_ = [
+__alt_name__ = [
     "info",
     "chinfo",
 ] 
