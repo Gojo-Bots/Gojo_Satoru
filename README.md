@@ -24,8 +24,8 @@
 **A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group management bot for telegram.
 If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to update and sending pull requests**
 
----------
-
+---------  
+  
 ## Inspiration ✨
 `Not a particular inspiration inspired by many bots`
 
@@ -146,6 +146,36 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
 
 ---------
+  
+# Adding your own plugin
+
+To add your very own plugin just use the format given below and go through the [utils](https://github.com/iamgojoof6eyes/Gojo_Satarou/blob/master/Powers/utils) and [custom_filters](https://github.com/iamgojoof6eyes/Gojo_Satarou/blob/master/Powers/utils/custom_filters.py)
+  
+  ```python
+  from traceback import 
+  
+  from Powers.utils.custom_filters import 
+  from Powers import LOGGER
+  from Powers.bot_class import Gojo
+  
+  @Gojo.on_message(command("<your command>")) # Pass additional filters if you need
+  async def <def name>(<arguments to take>):
+    <your code>
+      
+    '''use logger to add log info using LOGGER.info(<string>) in the platfrom on which bot is running 
+      and error as LOGGER.error(<string>) and after LOGGER.error() use        
+      LOGGER.error(format_exc())'''
+      
+  __PLUGIN__ = <name of plugin> # Pass the name of your plugin as string
+  _DISABLE_CMDS_ = [<command>] # This command can be used by normal users as well as admins 
+  __alt_name__ = [<command>] # This command can only be used by admins
+      
+  __HELP__ = <string> # To tell about you plugin and commands you must use it
+ 
+  # See any plugin to get more information about how to make a plugin
+  ```
+  
+--------  
 
 # Special Thanks ❤️
 
