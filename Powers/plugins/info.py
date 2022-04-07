@@ -2,7 +2,7 @@ import os
 
 from pyrogram.types import Message
 
-from Powers import (DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF)
+from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 
@@ -36,7 +36,6 @@ async def get_user_info(user, already=False):
         last_date = user.last_online_date
     else:
         last_date = "User is currently online"
-    mention = user.mention()
     body = {
         "ID": user_id,
         "DC": dc_id,
