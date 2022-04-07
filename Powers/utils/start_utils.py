@@ -237,8 +237,8 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
         ) + [[("« " + "Back", "commands")]]
         help_msg = (
-            f"**{(help_option_name['help_msg'])}:**\n\n"
-            + help_option_value
+            f"**{(help_option_value)}:**\n\n"
+            
         )
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
