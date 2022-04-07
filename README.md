@@ -174,7 +174,8 @@ To add your very own plugin just use the format given below and go through the [
  
   # See any plugin to get more information about how to make a plugin
   ```
-  
+  # Add plugins in [plugin](https://github.com/iamgojoof6eyes/Gojo_Satarou/tree/master/Powers/plugins) section
+      
 --------  
 
 # Special Thanks ❤️
