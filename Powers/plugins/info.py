@@ -15,7 +15,7 @@ async def get_user_info(user, already=False):
     user_id = user.id
     username = user.username
     first_name = user.first_name
-    mention = user.mention("first_name")
+    mention = user.mention(f"{first_name}")
     dc_id = user.dc_id
     photo_id = user.photo.big_file_id if user.photo else None
     is_support = user_id in SUPPORT_STAFF
@@ -96,7 +96,7 @@ async def info_func(_, message: Message):
     elif not message.reply_to_message and len(message.command) != 1:
         user = message.text.split(None, 1)[1]
 
-    m = await message.reply_text("Processing...")
+    m = await message.reply_text(f"Fetching user info of user {user}...")
 
     try:
         info_caption, photo_id = await get_user_info(user)
@@ -121,7 +121,7 @@ async def chat_info_func(_, message: Message):
     try:
         if len(message.command) > 2:
             return await message.reply_text(
-                "**Usage:**cinfo <chat id/username>"
+                "**Usage:**chinfo <chat id/username>"
             )
 
         if len(message.command) == 1:
@@ -129,7 +129,7 @@ async def chat_info_func(_, message: Message):
         elif len(message.command) == 2:
             chat = message.text.split(None, 1)[1]
 
-        m = await message.reply_text("Processing your order.....")
+        m = await message.reply_text(f"Fetching chat info of chat {chat}.....")
 
         info_caption, photo_id = await get_chat_info(chat)
         if not photo_id:
