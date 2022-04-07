@@ -8,7 +8,7 @@ from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
 from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
-from Powers.database.disable_db import DISABLED_CMDS
+from Powers.database.disable_db import Disabling
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.vars import Config
 
@@ -24,8 +24,16 @@ def command(
     sudo_cmd: bool = False,
 ):
     async def func(flt, _, m: Message):
+        if not m:
+            return
 
-        if m and not m.from_user:
+        if m["edit_date"]:
+            return # reaction
+
+        if m["chat"] and m["chat"]["type"] == "channel":
+            return
+
+        if not m.from_user:
             return False
 
         if m.from_user.is_bot:
@@ -73,16 +81,17 @@ def command(
                 except ValueError:
                     # i.e. PM
                     user_status = "creator"
-                if str(matches.group(1)) in disable_list and user_status not in (
+                ddb = Disabling(m["chat"]["id"])
+                if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
                     "creator",
                     "administrator",
                 ):
-                    try:
-                        if status == "del":
+                    if bool(ddb.get_action() == "del"):
+                        try:
                             await m.delete()
-                    except RPCError:
-                        pass
-                    return False
+                        except RPCError:
+                            pass
+                            return False
             if matches.group(3) == "":
                 return True
             try:
