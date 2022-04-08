@@ -5,7 +5,7 @@ from pyrogram import filters
 from pyrogram.types import Message
 
 from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
-from Powers.bot_class import Gojo
+from Powers.bot_class import Gojo as app
 from Powers.utils.custom_filters import command
 
 
