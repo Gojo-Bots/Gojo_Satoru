@@ -9,7 +9,7 @@ from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 
 
-async def info(user, already=False):
+async def user_info(user, already=False):
     if not already:
         user = await Gojo.get_users(user)
     if not user.first_name:
@@ -101,7 +101,7 @@ async def info_func(_, message: Message):
     m = await message.reply_text(f"Fetching user info of user {user}...")
 
     try:
-        info_caption, photo_id = await info(user)
+        info_caption, photo_id = await user_info(user)
         LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user} in {m.chat.id}")
     except Exception as e:
         LOGGER.error(e)
