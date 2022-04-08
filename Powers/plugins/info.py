@@ -9,6 +9,32 @@ from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 
 
+escape = "\n"
+empty = " "
+
+bold = lambda x: f"**{x}:** "
+bold_ul = lambda x: f"**--{x}:**-- "
+
+single_func = lambda x: f"`{x}`{escape}"
+
+
+def change(
+        title: str,
+        body: dict,
+        indent: int = 2,
+        underline: bool = False,
+) -> str:
+    text = (bold_ul(title) + escape) if underline else bold(title) + escape
+
+    for key, value in body.items():
+        text += (
+                indent * empty
+                + bold(key)
+                + ((value[0] + escape) if isinstance(value, list) else single_func(value))
+        )
+    return text
+
+
 async def user_info(user, already=False):
     if not already:
         user = await Gojo.get_users(user)
@@ -50,7 +76,7 @@ async def user_info(user, already=False):
         "Status" : status,
         "Last seen" : [last_date],
     }
-    caption = body
+    caption = change("User info", body)
     return [caption, photo_id]
 
 
@@ -84,7 +110,7 @@ async def chat_info(chat, already=False):
         "Restricted": is_restricted,
         "Description": [description],
     }
-    caption = body
+    caption = change("Chat info", body)
     return [caption, photo_id]
 
 
