@@ -246,10 +246,10 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
         )
     else:
         help_msg = """Hey There! My name is Gojo.
-      I'm here to help you manage your groups!
-      Commands available:
-       × /start: Start the bot
-       × /help: Give's you this message."""
+I'm here to help you manage your groups!
+Commands available:
+× /start: Start the bot
+× /help: Give's you this message."""
         help_kb = [
             *(await gen_cmds_kb(m)),
             [("« Back", "start_back")],
