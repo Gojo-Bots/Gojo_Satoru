@@ -1,6 +1,7 @@
 import os
 from traceback import format_exc
 
+from pyrogram import filters
 from pyrogram.types import Message
 
 from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
