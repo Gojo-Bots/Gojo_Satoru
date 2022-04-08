@@ -237,7 +237,8 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
         ) + [[("« " + "Back", "commands")]]
         help_msg = (
-            f"**{(help_option_value)}:**"
+            f"**{(plugin_name)}:**\n\n"
+            + help_option_value
             
         )
         LOGGER.info(
