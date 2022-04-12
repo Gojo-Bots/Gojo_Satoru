@@ -152,11 +152,13 @@ To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
 To add your very own plugin just use the format given below and go through the [utils](https://github.com/iamgojoof6eyes/Gojo_Satarou/blob/master/Powers/utils) and [custom_filters](https://github.com/iamgojoof6eyes/Gojo_Satarou/blob/master/Powers/utils/custom_filters.py)
   
   ```python
-  from traceback import 
+  from traceback import format_exc
   
-  from Powers.utils.custom_filters import command # Import more funcs if you need
+  from Powers.utils.custom_filters import command 
   from Powers import LOGGER
-  from Powers.bot_class import Gojo
+  from Powers.bot_class import Gojo 
+  # All the import provided above is mandotry in case you don't want to use logger remove the first and third import 
+  # Import more funcs and module as per your need
   
   @Gojo.on_message(command("<your command>")) # Pass additional filters if you need
   async def <def name>(<arguments to take>):
