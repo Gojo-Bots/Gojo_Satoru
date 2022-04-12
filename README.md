@@ -27,7 +27,7 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 ---------  
   
 ## Inspiration ✨
-`Not a particular inspiration inspired by many bots`
+`Not a particular inspiration, inspired by many bots`
 
 
 ```
@@ -40,7 +40,7 @@ The Gojo Satarou is a powerful Group Management bot.
 
 Can be found on telegram as a management bot for groups.
 
-**If you counter any problem or face any bugs for help join 🌟 [Hell Community](https://t.me/HellBot_Network) 🌟.**
+**If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://t.me/gojo_updates) 🌟 and then join the gc and ask your problem.**
 
 ## Features
 * Modern
@@ -68,7 +68,7 @@ Can be found on Telegram as [@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)
 ## Deploy To Heroku
 **Make Sure you have Heroku account**
 
-If you don't have heroku account what are you waiting for click [here](https://id.heroku.com/login) to make one or just deploy on railway app gudie is given below
+If you don't have heroku account what are you waiting for click [here](https://id.heroku.com/login) to make one or just deploy on other platform gudie is given below
 
 Just click on the button it will redirect you to Heroku website and deploy your bot there....enjoy 😉
 
@@ -106,7 +106,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
   * ``Mandaotry`` keys are [given below](#Variables)
   * ``All keys`` are listed [here](https://telegra.ph/Captain-03-27)
   * ***The bot can be used by provideing mandotry variables only..*** 
-  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your the bot repo add the key and values provided [below](#Variables) and wait for few minutes***
+  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
 
 --------  
 
@@ -132,7 +132,7 @@ Run the command `docker run --env-file main.env Gojo_Satarou`
 If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 ## Variables
-`BOT_TOKEN` You can get your bot token at @BotFather
+`BOT_TOKEN` You can get your bot token at [@BotFather](https://t.me/BotFather)
 
 `API_ID` You can get your api id [here](my.telegram.org)
 
@@ -140,7 +140,7 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 `PREFIX_HANDLER` Your bot handler which will activate commands
 
-`DB_URI` Your MongoDB connection string.
+`DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
 
 
 To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
