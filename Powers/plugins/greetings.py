@@ -5,7 +5,7 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
 
-from Powers import OWNER_ID
+from Powers import OWNER_ID, DEV_USERS
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
@@ -260,6 +260,11 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
                 "Wew My Owner has also joined the chat!",
             )
             return
+        elif user.id in DEV_USERS and user.id != OWNER_ID:
+            await c.send_message(
+                member.chat.id,
+                "OwO My Dev has also joined the group!",
+            )
         if banned_users:
             await member.chat.ban_member(user.id)
             await c.send_message(
@@ -363,9 +368,14 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
         if user.id == OWNER_ID:
             await c.send_message(
                 member.chat.id,
-                "Will miss you :)",
+                "Will miss you master :(",
             )
             return
+        if user.id in DEV_USERS and user.id != OWNER_ID:
+            await c.send_message(
+                member.chat.id,
+                "Will miss you :)",
+            )
         try:
             ooo = await c.send_message(
                 member.chat.id,
@@ -482,7 +492,7 @@ __HELP__ = """Customize your group's welcome / goodbye messages that can be pers
 
 Note:
 a) Currently it supports only text!
-b) Alita must be an admin to greet and goodbye users.
+b) Gojo must be an admin to greet and goodbye users.
 
 Admin Commands:
 × /setwelcome <reply> : Sets a custom welcome message.
