@@ -254,17 +254,12 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
     try:
         if user.id == Config.BOT_ID:
             return
-        if user.id == OWNER_ID:
+        if user.id in DEV_USERS:
             await c.send_message(
                 member.chat.id,
-                "Wew My Owner has also joined the chat!",
+                "OwO My ***DEV*** has also joined the chat!",
             )
             return
-        elif user.id in DEV_USERS and user.id != OWNER_ID:
-            await c.send_message(
-                member.chat.id,
-                "OwO My Dev has also joined the group!",
-            )
         if banned_users:
             await member.chat.ban_member(user.id)
             await c.send_message(
@@ -365,17 +360,12 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
                 await c.delete_messages(member.chat.id, int(ifff))
             except RPCError:
                 pass
-        if user.id == OWNER_ID:
+        if user.id in DEV_USERS:
             await c.send_message(
                 member.chat.id,
                 "Will miss you master :(",
             )
             return
-        if user.id in DEV_USERS and user.id != OWNER_ID:
-            await c.send_message(
-                member.chat.id,
-                "Will miss you :)",
-            )
         try:
             ooo = await c.send_message(
                 member.chat.id,
