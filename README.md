@@ -169,14 +169,18 @@ To add your very own plugin just use the format given below and go through the [
       LOGGER.error(format_exc())'''
       
   __PLUGIN__ = <name of plugin> # Pass the name of your plugin as string
-  _DISABLE_CMDS_ = [<command>] # Use this if you want that the command can't be used in supergroups
-  __alt_name__ = [<command>] # Use this for the command that can be used in groups as well as supergroup
+  _DISABLE_CMDS_ = [<command as string>] # Use this if you want that the command can't be used in supergroups
+  __alt_name__ = [<command as string>] # Use this for the command that can be used in groups as well as supergroup
       
   __HELP__ = <string> # To tell about you plugin and commands you must use it
+  
  
-  # See any plugin to get more information about how to make a plugin
+  # See any plugin to get more information about how to make a plugin 
+  
+ 
   ```
   # Add plugins in [plugin](https://github.com/iamgojoof6eyes/Gojo_Satarou/tree/master/Powers/plugins) section
+  ##  **Note** : Don't use <> this bracket while writing the code...
       
 --------  
 
