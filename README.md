@@ -31,7 +31,7 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 
 
 ```
-This bot is mixture of the many bots and have some extra plugins so it is quite better than both of bots.
+This bot is mixture of the many bots and have some extra plugins so it is quite better than other bots.
 ```
 ---------
 
