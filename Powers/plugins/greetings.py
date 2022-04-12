@@ -5,7 +5,7 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
 
-from Powers import OWNER_ID, DEV_USERS
+from Powers import DEV_USERS
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
