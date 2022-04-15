@@ -55,7 +55,7 @@ async def user_info(user, already=False):
         elif user_id in WHITELIST_USERS:
             omp = "User is in whitelist users' list"
         else:
-            omp = "User is not even in SUPPORT_STAFF....."
+            omp = "Hmmm.......Who is that again?"
     is_bot = user.is_bot
     is_fake = user.is_fake
     status = user.status
