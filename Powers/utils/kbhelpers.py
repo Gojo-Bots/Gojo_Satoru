@@ -1,6 +1,9 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
+def btn(text, value, type="callback_data"):
+    return InlineKeyboardButton(text, **{type: value})
+
 def ikb(rows=None):
     if rows is None:
         rows = []
@@ -14,5 +17,4 @@ def ikb(rows=None):
     return InlineKeyboardMarkup(inline_keyboard=lines)
 
 
-def btn(text, value, type="callback_data"):
-    return InlineKeyboardButton(text, **{type: value})
+
