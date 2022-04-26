@@ -95,7 +95,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 ## Deploy To Okteto
   [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/iamgojoof6eyes/Gojo_Satarou)
 
-### How To Deploy On Okteto
+<!---### How To Deploy On Okteto
   * **Make sure you have an github account.**
   * [Fork](https://github.com/iamgojoof6eyes/Gojo_Satarou/fork) the repo and give a star to repo
   * Click on [deploy](https://cloud.okteto.com/deploy?repository=https://github.com/iamgojoof6eyes/Gojo_Satarou) button provided above...
@@ -106,7 +106,7 @@ Just click on the button it will redirect you to Heroku website and deploy your 
   * ``Mandaotry`` keys are [given below](#Variables)
   * ``All keys`` are listed [here](https://telegra.ph/Captain-03-27)
   * ***The bot can be used by provideing mandotry variables only..*** 
-  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
+  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***---->
 
 --------  
 
