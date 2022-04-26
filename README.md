@@ -92,10 +92,10 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 
 --------  
   
-## Deploy To Okteto
+<!---## Deploy To Okteto
   [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/iamgojoof6eyes/Gojo_Satarou)
 
-<!---### How To Deploy On Okteto
+### How To Deploy On Okteto
   * **Make sure you have an github account.**
   * [Fork](https://github.com/iamgojoof6eyes/Gojo_Satarou/fork) the repo and give a star to repo
   * Click on [deploy](https://cloud.okteto.com/deploy?repository=https://github.com/iamgojoof6eyes/Gojo_Satarou) button provided above...
