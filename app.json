@@ -46,7 +46,7 @@
       "SUPPORT_GROUP": {
         "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
         "required": true,
-        "value": "HellBot_Network"
+        "value": "gojo_update"
       },
       "MESSAGE_DUMP": {
         "description": "Event logs channel where bot will send updates.",
