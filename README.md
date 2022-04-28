@@ -43,6 +43,8 @@ Can be found on telegram as a management bot for groups.
 **If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://t.me/gojo_updates) 🌟 and then join the gc and ask your problem.**
 
 ## Features
+  <h1 align="center"><img src="https://media.giphy.com/media/hbKBe6j3JLsNnb4h53/giphy.gif" /></h1>
+  
 * Modern
 * Fast
 * Fully asynchronous
@@ -50,17 +52,7 @@ Can be found on telegram as a management bot for groups.
 * Frequently updated
 
   
-Can be found on Telegram as [@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)
-
-
-## Bot
-
-![Gojo Starou](https://media.giphy.com/media/hbKBe6j3JLsNnb4h53/giphy.gif)
-
-
-**I am available on telegram** ***[Gojo Satarou](https://t.me/iamgojoof6eyes_bot)***
-
-
+***Can be found on Telegram as __[@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)__***
 
 ---------
 
