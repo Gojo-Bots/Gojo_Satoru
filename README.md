@@ -114,14 +114,21 @@ Just click on the button it will redirect you to Heroku website and deploy your 
 * Change to virtualenv shell by using: `. venv/bin/activate (Linux) venv\Scripts\activate (Windows)`
 * Run the bot using `python3 -m Powers`
 
-### Using docker
+<!---### Using docker
 
-Clone the repo and enter into it
-Install [Docker](https://www.docker.com/)
-Fill in the `sample.env` file and rename it to `main.env`.
-Build the docker image using: `docker build -t gojo_satarou:latest .` (The dot '.' at last is necessary!)
-Run the command `docker run --env-file main.env gojo_satarou`
-If all works well, bot should send message to the MESSAGE_DUMP Group!
+* Clone the repo and enter into it
+* Install [Docker](https://www.docker.com/)
+* Fill in the `sample.env` file and rename it to `main.env`.
+* Now follow the steps:
+  To build the docker image **(The dot '.' at last is necessary!)**:
+```
+docker build -t gojo_satarou:latest .
+```
+  To run copy and paste the following commang
+```
+docker run --env-file main.env gojo_satarou
+```
+If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 ## Variables
 `BOT_TOKEN` You can get your bot token at [@BotFather](https://t.me/BotFather)
