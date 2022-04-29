@@ -1,4 +1,4 @@
-
+FROM ghcr.io/divideprojects/docker-python-base:latest AS build
 
 # Build virtualenv as separate step: Only re-execute this step when pyproject.toml or poetry.lock changes
 FROM build AS build-venv
