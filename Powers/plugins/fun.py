@@ -10,7 +10,7 @@ from Powers.bot_class import Gojo
 from Powers.utils import fun_strings
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-
+from Powers.utils.fun_strings import YESWNO as YES and NOWYES as NO
 
 
 @Gojo.on_message(command("shout"))
@@ -110,7 +110,20 @@ async def insult(c : Gojo , m: Message):
         await reply_text(Insult_omp)
         LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
     
-
+@Gojo.on_message(command("yes"))
+async def yesw(c : Gojo , m: MEssage):
+    reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
+    await reply_text(YES)
+    LOGGER.info(f"{m.from_user.id} said YES or may be NO in {m.chat.id}")
+    return
+        
+    
+@Gojo.on_message(command("no"))
+async def now(c : Gojo , m: MEssage):
+    reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
+    await reply_text(NO)
+    LOGGER.info(f"{m.from_user.id} said NO or may be YES in {m.chat.id}")
+    return
 
 @Gojo.on_message(command("shrug"))
 async def fun_shrug(_, m: Message):
@@ -202,6 +215,8 @@ __HELP__ = """× /runs: reply a random string from an array of replies.
 × /shrug : get shrug XD.
 × /decide : Randomly answers yes/no/maybe
 × /toss : Tosses A coin
+× /yes : check urself :V
+× /no : check urself :V
 × /bluetext : check urself :V
 × /roll : Roll a dice.
 × /react : Random Reaction
