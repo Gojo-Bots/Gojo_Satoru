@@ -599,3 +599,23 @@ MUTE_GIFS = ["https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
              "https://media.giphy.com/media/SIoetMN7j96O5perEV/giphy.gif",
              "https://media.giphy.com/media/PBZrH2uy9E5rPruuCX/giphy.gif",
              "https://media.giphy.com/media/PtIm7eUGKYIZbknqsO/giphy.gif",]
+
+NOWYES = ["""
+YES          YES              YESYES
+YESYES   YES         YES          YES
+YES  YES YES       YES               YES
+YES    YESYES     YES                YES
+YES      YESYE         YES         YES
+YES          YES               YESYES
+          """]
+
+YESWNO =["""
+NO       NO   NONONO            NONO
+ NO     NO    NO                      NO         NO
+   NONO       NO                       NO
+      NO           NONO                      NO
+      NO           NO                 NO          NO
+      NO           NO                    NO        NO
+      NO           NONONO           NONO
+"""]
+
