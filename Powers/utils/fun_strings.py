@@ -290,6 +290,8 @@ ITEMS = (
     "Kubikiribōchō",
     "rasengan",
     "spherical flying kat",
+    "angry bird",
+    "your ego",
 )
 
 THROW = (
