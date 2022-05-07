@@ -191,7 +191,18 @@ To add your very own plugin just use the format given below and go through the [
 
 # Special Thanks ❤️
 
-[PSYREX](https://github.com/iamPSYREX)
+<!---[![PSYREX](https://avatars.githubusercontent.com/u/90316018?v=4)](https://github.com/iamPSYREX)
+
+# [PSYREX](https://github.com/iamPSYREX)--->
+      
+<p align='center'>
+  <a href="https://github.com/iamPSYREX"><img src="https://avatars.githubusercontent.com/u/90316018?v=4" alt="PSYREX"></a></br></br>
+   
+</p>
+
+<h1 align="center"><i><a href="https://github.com/iamPSYREX">PSYREX</a></i></h1>
+
+
 
 ---------
 
