@@ -22,7 +22,7 @@
 ----->
 
 **A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group management bot for telegram.
-If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to update and sending pull requests**
+If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to updating and sending pull requests**
 
 ---------  
   
@@ -160,7 +160,7 @@ To add your very own plugin just use the format given below and go through the [
   # Import more funcs and module as per your need
   
   @Gojo.on_message(command("<your command>")) # Pass additional filters if you need
-  async def <def name>(<arguments to take>):
+  async def <function name>(<arguments to take>):
     <your code>
       
     '''use logger to add log info using LOGGER.info(<string>) in the platfrom on which bot is running 
