@@ -1,5 +1,6 @@
 import os
 from traceback import format_exc
+from datetime import datetime
 
 from pyrogram import filters
 from pyrogram.types import Message
@@ -58,11 +59,29 @@ async def user_info(user, already=False):
             omp = "Hmmm.......Who is that again?"
     is_bot = user.is_bot
     is_fake = user.is_fake
+    
     status = user.status
-    if status == "offline":
-        last_date = user.last_online_date
+        
+        
+    if is_bot is True:
+        last_date = "Targeted user is a bot"
+    elif status == "recently":
+        last_date = "Recently"
+    elif status == "within_week":
+        last_date = "Within the last week"
+    elif status == "within_month":
+        last_date = "Within the last month"
+    elif status == "long_time_ago":
+        last_date = "A long time ago or may be I am blocked by the user  :("
+    elif status == "online":
+        last_date = "Currently Online"
+    elif status == "offline":
+        last_date = datetime.fromtimestamp(user.status.date).strftime(
+            "%a, %d %b %Y, %H:%M:%S"
+        )  
     else:
         last_date = "User is currently online"
+        
     body = {
         "ID": user_id,
         "DC": dc_id,
@@ -73,11 +92,38 @@ async def user_info(user, already=False):
         "Support user type": [omp],
         "Bot" : is_bot,
         "Fake" : is_fake,
-        "Status" : status,
         "Last seen" : [last_date],
     }
     caption = change("User info", body)
     return [caption, photo_id]
+
+@Gojo.on_message(command("info") & ~filters.edited)
+async def info_func(_, message: Message):
+    if message.reply_to_message:
+        user = message.reply_to_message.from_user.id
+    elif not message.reply_to_message and len(message.command) == 1:
+        user = message.from_user.id
+    elif not message.reply_to_message and len(message.command) != 1:
+        user = message.text.split(None, 1)[1]
+
+    m = await message.reply_text(f"Fetching user info of user {user}...")
+
+    try:
+        info_caption, photo_id = await user_info(user)
+        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user} in {m.chat.id}")
+    except Exception as e:
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return await m.edit(str(e))
+
+    if not photo_id:
+        return await m.edit(info_caption, disable_web_page_preview=True)
+    photo = await Gojo.download_media(photo_id)
+
+    await message.reply_photo(photo, caption=info_caption, quote=False)
+    await m.delete()
+    os.remove(photo)
+    LOGGER.info(f"{message.from_user.id} fetched user info of user {user} in {m.chat.id}")
 
 
 async def chat_info(chat, already=False):
@@ -113,35 +159,6 @@ async def chat_info(chat, already=False):
     caption = change("Chat info", body)
     return [caption, photo_id]
 
-
-
-@Gojo.on_message(command("info") & ~filters.edited)
-async def info_func(_, message: Message):
-    if message.reply_to_message:
-        user = message.reply_to_message.from_user.id
-    elif not message.reply_to_message and len(message.command) == 1:
-        user = message.from_user.id
-    elif not message.reply_to_message and len(message.command) != 1:
-        user = message.text.split(None, 1)[1]
-
-    m = await message.reply_text(f"Fetching user info of user {user}...")
-
-    try:
-        info_caption, photo_id = await user_info(user)
-        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user} in {m.chat.id}")
-    except Exception as e:
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return await m.edit(str(e))
-
-    if not photo_id:
-        return await m.edit(info_caption, disable_web_page_preview=True)
-    photo = await Gojo.download_media(photo_id)
-
-    await message.reply_photo(photo, caption=info_caption, quote=False)
-    await m.delete()
-    os.remove(photo)
-    LOGGER.info(f"{message.from_user.id} fetched user info of user {user} in {m.chat.id}")
 
 
 @Gojo.on_message(command("chinfo") & ~filters.edited)
