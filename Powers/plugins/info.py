@@ -36,7 +36,7 @@ def change(
     return text
 
 
-async def user_info(user, already=False):
+async def user_info(user: User, already=False):
     if not already:
         user = await Gojo.get_users(user)
     if not user.first_name:
