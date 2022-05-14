@@ -1,9 +1,11 @@
 <h1 align="center">
   <b> Gojo_Satarou </b>
 <!---</h1>
-<h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1> --->
+<h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1>
 
-<h1 align="center"><img src="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg" /></h1>
+<h1 align="center"><img src="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg" /></h1>  --->
+  
+<h1 align="center"><img src="https://te.legra.ph/file/633bd27c1607fe98920b6.jpg" /></h1>
 
 
 
