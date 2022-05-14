@@ -20,16 +20,19 @@ from Powers.vars import Config
     command("donate") & (filters.group | filters.private),
 )
 async def donate(_, m: Message):
+    cpt="""
+    Hey Thanks for your thought of donating me!
+    When you donate, all the fund goes towards my development which makes on fast and responsive.
+    Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+    All the fund would be put into my services such as database, storage and hosting!
+
+    You can donate by contacting my owner: [Captain Ezio](@iamgojoof6eyes)
+     """
+
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_animation(animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
-                            caption="""
-                            Hey Thanks for your thought of donating me!
-                            When you donate, all the fund goes towards my development which makes on fast and responsive.
-                            Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
-
-                            All the fund would be put into my services such as database, storage and hosting!
-
-                            You can donate by contacting my owner: @iamgojoof6eyes""")
+    await m.reply_photo(photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+                            caption=cpt)
     return
 
 
@@ -77,8 +80,8 @@ async def start(c: Gojo, m: Message):
             if not help_msg:
                 return
 
-            await m.reply_animation(
-                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+            await m.reply_photo(
+                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
                 caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
@@ -87,14 +90,16 @@ async def start(c: Gojo, m: Message):
             )
             return
         try:
-            await m.reply_animation(
-                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
-                caption=f"""
-                Hey {m.from_user.first_name}! My self Gojo 😎.
-                I'm here to help you manage your groups!
-                Hit /help to find out more about how to use me in my full potential!
+            cpt=f""" 
+            Hey {m.from_user.first_name}! My self Gojo 😎.
+            I'm here to help you manage your groups!
+            Hit /help to find out more about how to use me in my full potential!
 
-                Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates.""",
+            Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates."""
+            
+            await m.reply_photo(
+                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+                caption=cpt,
                 reply_markup=(await gen_start_kb(m)),
                 quote=True,
                 
@@ -112,13 +117,15 @@ async def start(c: Gojo, m: Message):
 @Gojo.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_, q: CallbackQuery):
     try:
-        await q.message.edit_caption(
-            caption="""
-            Hey there! My name is Gojo ✨.
-            I'm here to help you manage your groups!
-            Hit /help to find out more about how to use me in my full potential!
+        cpt="""
+        Hey there! My name is Gojo ✨.
+        I'm here to help you manage your groups!
+        Hit /help to find out more about how to use me in my full potential!
 
-            Join my [News Channel](http://t.me/gojo_updates) to get information on all the latest updates.""",
+        Join my [News Channel](http://t.me/gojo_updates) to get information on all the latest updates."""
+
+        await q.message.edit_caption(
+            caption=cpt,
             reply_markup=(await gen_start_kb(q.message)),
             
         )
@@ -137,28 +144,25 @@ async def commands_menu(_, q: CallbackQuery):
         ],
     )
     try:
+        cpt="""
+        Hey There! My name is Gojo.
+        I'm here to help you manage your groups!
+        Commands available:
+        * /start: Start the bot
+        * /help: Give's you this message."""
+
         await q.message.edit_caption(
-            caption="""
-            Hey There! My name is Gojo.
-            I'm here to help you manage your groups!
-            Commands available:
-            × /start: Start the bot
-            × /help: Give's you this message.""",
+            caption=cpt,
         reply_markup=keyboard,
         )
     except MessageNotModified:
         pass
     except QueryIdInvalid:
-        await q.message.reply_animation(
-            animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
-            caption="""
-            Hey There! My name is Gojo.
-            I'm here to help you manage your groups!
-            Commands available:
-            × /start: Start the bot
-            × /help: Give's you this message.""",
-            reply_markup=keyboard,
-        )
+        await q.message.reply_photo(
+            photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+            caption=cpt,
+            reply_markup=keyboard)
+        
     await q.answer()
     return
 
@@ -177,8 +181,8 @@ async def help_menu(_, m: Message):
             f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
         if m.chat.type == "private":
-            await m.reply_animation(
-                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+            await m.reply_photo(
+                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
                 caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
@@ -186,8 +190,8 @@ async def help_menu(_, m: Message):
                 
             )
         else:
-            await m.reply_animation(
-                animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+            await m.reply_photo(
+                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
                 caption=f"Press the button below to get help for <i>{help_option}</i>",
                 reply_markup=ikb(
                     [
@@ -213,15 +217,15 @@ async def help_menu(_, m: Message):
             Hey There! My name is Gojo.
             I'm here to help you manage your groups!
             Commands available:
-            × /start: Start the bot
-            × /help: Give's you this message."""
+            * /start: Start the bot
+            * /help: Give's you this message."""
         else:
             keyboard = ikb(
                 [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
             )
             msg = "Contact me in PM to get the list of possible commands."
-        await m.reply_animation(
-            animation="https://media.giphy.com/media/p1ocgMPg7WIpoxHUfc/giphy.gif",
+        await m.reply_photo(
+            photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
             caption=msg,
             reply_markup=keyboard,
         )
