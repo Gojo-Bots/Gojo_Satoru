@@ -39,7 +39,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
     return ikb(
         [
-            [
+            [    
                 (
                     "➕ Add me to a chat!",
                     f"https://t.me/{Config.BOT_USERNAME}?startgroup=new",
@@ -62,6 +62,13 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 (
                     "Owner ❤️",
                     f"https://t.me/iamgojoof6eyes",
+                    "url",
+                ),
+            ],
+            [
+                (
+                    "Join for GFx work",
+                    "https://t.me/psy_Logos",
                     "url",
                 ),
             ],
@@ -245,11 +252,13 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )
     else:
-        help_msg = """Hey There! My name is Gojo.
-I'm here to help you manage your groups!
-Commands available:
-× /start: Start the bot
-× /help: Give's you this message."""
+        help_msg = """
+        Hey There! My name is Gojo.
+        I'm here to help you manage your groups!
+        Commands available:
+        × /start: Start the bot
+        × /help: Give's you this message.
+        """
         help_kb = [
             *(await gen_cmds_kb(m)),
             [("« Back", "start_back")],
