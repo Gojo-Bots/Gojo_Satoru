@@ -571,7 +571,6 @@ BAN_GIFS = ["https://tenor.com/bMiwt.gif",
             "https://media.giphy.com/media/CI4aCJUjJDJEj3Jgo4/giphy-downsized-large.gif"]
 
 KICK_GIFS = ["https://tenor.com/bizBJ.gif",
-             "https://tenor.com/bizBJ.gif",
              "https://tenor.com/bjPvj.gif",
              "https://tenor.com/bJMx3.gif",
              "https://tenor.com/bJCGL.gif",
@@ -581,13 +580,18 @@ KICK_GIFS = ["https://tenor.com/bizBJ.gif",
              "https://tenor.com/NfK8.gif",
              "https://tenor.com/ymZn.gif",
              "https://tenor.com/77Lu.gif",
-             "https://tenor.com/bPD4I.gif", 
+             "https://tenor.com/bPD4I.gif",
+             "https://tenor.com/bOGXo.gif",
+             "https://tenor.com/bDLqs.gif",
              "https://media.giphy.com/media/u2LJ0n4lx6jF6/giphy.gif",
              "https://media.giphy.com/media/eDR7j2vjCFOUMJ9rT2/giphy.gif",
              "https://media.giphy.com/media/ERNKP5G7ihZNW6VW4Q/giphy.gif",
              "https://media.giphy.com/media/1r6xks2F0iHfbNvt4p/giphy.gif",
              "https://media.giphy.com/media/M7j1rkxm0X5z30Hyrs/giphy.gif",
-             "https://media.giphy.com/media/rad9oJzU4hVafD8ZnT/giphy.gif",]
+             "https://media.giphy.com/media/rad9oJzU4hVafD8ZnT/giphy.gif",
+             "https://media.giphy.com/media/TcliN5WDKBbnUQ15H3/giphy.gif",
+             "https://media.giphy.com/media/y9pfUqY3uaT1MPXxYM/giphy.gif",]
+             
 
 MUTE_GIFS = ["https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
              "https://media.giphy.com/media/HWl1atKEPAWcw/giphy.gif",
