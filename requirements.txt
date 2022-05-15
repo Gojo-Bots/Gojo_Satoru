@@ -28,7 +28,7 @@ pyyaml==6.0; python_version >= "3.6"
 regex==2021.11.10
 requests==2.27.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 rfc3986==1.5.0; python_version >= "3.6"
-search_engine_parser
+search_engine_parser==0.6.6; python_full_version >= "3.6"
 six==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 sniffio==1.2.0; python_full_version >= "3.6.2" and python_version >= "3.6"
 soupsieve==2.3.1; python_version >= "3.6" and python_full_version > "3.0.0"
