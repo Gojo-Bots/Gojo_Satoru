@@ -63,6 +63,16 @@
         "required": true,
         "value": "/ ! $"
       },
+      "ARQ_API_URL": {
+          "description": "Leave it as it is....",
+          "required": true,
+          "value": "https://arq.hamker.in"
+      },
+      "ARQ_API_KEY": {
+          "description": "Get this from @ARQRobot.",
+          "required": true,
+          "value":""
+      },
       "DEV_USERS": {
         "description": "ID of users who are Devs of your bot (can use /py etc.)...Don't give comma or anything after 1 id just give and space then enter second id. If you are a noob and would come and bother Hell support then keep the current ID's here at they are and add yours.",
         "required": false,

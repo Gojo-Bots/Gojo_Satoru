@@ -21,7 +21,7 @@ from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
-from Powers.utils.http_helper import HTTPx
+from Powers.utils.http_helper import *
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_markdown
 from Powers.vars import Config
@@ -54,28 +54,6 @@ async def send_log(c: Gojo, m: Message):
     await replymsg.delete()
     return
 
-
-@Gojo.on_message(command("ginfo", sudo_cmd=True))
-async def group_info(c: Gojo, m: Message):
-    if len(m.text.split()) != 2:
-        await m.reply_text(
-            f"It works like this: <code>{Config.PREFIX_HANDLER} chat_id</code>",
-        )
-        return
-
-    chat_id = m.text.split(None, 1)[1]
-
-    replymsg = await m.reply_text("Fetching info about group...!")
-    grp_data = await c.get_chat(chat_id)
-    msg = (
-        f"Information for group: {chat_id}\n\n"
-        f"Group Name: {grp_data['title']}\n"
-        f"Members Count: {grp_data['members_count']}\n"
-        f"Type: {grp_data['type']}\n"
-        f"Group ID: {grp_data['id']}"
-    )
-    await replymsg.edit_text(msg)
-    return
 
 @Gojo.on_message(command("neofetch", dev_cmd=True))
 async def neofetch_stats(_, m: Message):
@@ -208,21 +186,6 @@ async def execution(_, m: Message):
                 reply_to_message_id=reply_to_id,
             )
         await sm.delete()
-    return
-
-
-@Gojo.on_message(command("ip", dev_cmd=True))
-async def public_ip(c: Gojo, m: Message):
-    ip = await HTTPx.get("https://api.ipify.org")
-    await c.send_message(
-        MESSAGE_DUMP,
-        f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
-    )
-    await m.reply_text(
-        text=f"""<b>Bot IP Address:</b>
-      <code>{ip.text}</code>""",
-        quote=True,
-    )
     return
 
 

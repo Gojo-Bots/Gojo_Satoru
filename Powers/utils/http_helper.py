@@ -1,14 +1,48 @@
-from httpx import AsyncClient, Timeout
+from asyncio import gather
+from bot_class import aiohttpsession as session
 
-timeout = Timeout(40, pool=None)
-http = AsyncClient(http2=True, timeout=timeout)
+async def get(url: str, *args, **kwargs):
+    async with session.get(url, *args, **kwargs) as resp:
+        try:
+            data = await resp.json()
+        except Exception:
+            data = await resp.text()
+    return data
 
 
-class HTTPx:
-    """class for helping get the data from url using aiohttp."""
+async def head(url: str, *args, **kwargs):
+    async with session.head(url, *args, **kwargs) as resp:
+        try:
+            data = await resp.json()
+        except Exception:
+            data = await resp.text()
+    return data
 
-    @staticmethod
-    async def get(link: str):
-        """Get JSON data from the provided link."""
-        async with AsyncClient() as sess:
-            return await sess.get(link)
+
+async def post(url: str, *args, **kwargs):
+    async with session.post(url, *args, **kwargs) as resp:
+        try:
+            data = await resp.json()
+        except Exception:
+            data = await resp.text()
+    return data
+
+
+async def multiget(url: str, times: int, *args, **kwargs):
+    return await gather(*[get(url, *args, **kwargs) for _ in range(times)])
+
+
+async def multihead(url: str, times: int, *args, **kwargs):
+    return await gather(*[head(url, *args, **kwargs) for _ in range(times)])
+
+
+async def multipost(url: str, times: int, *args, **kwargs):
+    return await gather(*[post(url, *args, **kwargs) for _ in range(times)])
+
+
+async def resp_get(url: str, *args, **kwargs):
+    return await session.get(url, *args, **kwargs)
+
+
+async def resp_post(url: str, *args, **kwargs):
+    return await session.post(url, *args, **kwargs)

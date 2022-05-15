@@ -29,6 +29,8 @@ class Config:
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_updates")
     VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
+    ARQ_API_URL = config("ARQ_API_URL", default="https://arq.hamker.in")
+    ARQ_API_KEY = config("ARQ_API_KEY", default=None)
     BOT_USERNAME = ""
     BOT_ID = ""
     BOT_NAME = ""
@@ -55,3 +57,5 @@ class Development:
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     VERSION = "VERSION"
     WORKERS = 8
+    ARQ_API_URL = "ARQ API url here"
+    ARQ_API_KEY = "ARQ API key here"

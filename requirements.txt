@@ -1,4 +1,5 @@
-aiofiles==0.8.0; python_version >= "3.6" and python_version < "4.0"
+aiofiles
+aiohttp
 anyio==3.5.0; python_full_version >= "3.6.2" and python_version >= "3.6"
 asyncio==3.4.3
 beautifulsoup4==4.10.0; python_full_version > "3.0.0"
@@ -8,11 +9,11 @@ charset-normalizer==2.0.12; python_full_version >= "3.6.0" and python_version >=
 dnspython==2.2.1; python_version >= "3.6" and python_version < "4.0"
 google==3.0.0
 gpytranslate==1.4.0; python_version >= "3.6"
+gTTS
 h11==0.12.0; python_version >= "3.6"
 h2==4.1.0; python_version >= "3.6" and python_full_version >= "3.6.1"
 hpack==4.0.0; python_version >= "3.6" and python_full_version >= "3.6.1"
 httpcore==0.13.7; python_version >= "3.6"
-httpx==0.22.0; python_version >= "3.7"
 hyperframe==6.0.1; python_version >= "3.6" and python_full_version >= "3.6.1"
 idna==3.3; python_version >= "3.6" and (python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.5") and python_full_version >= "3.6.2"
 lxml==4.8.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
@@ -21,15 +22,16 @@ pyaes==1.6.1; python_version >= "3.6" and python_version < "4.0"
 pymongo==3.12.3
 pyrogram==2.0.19; python_version >= "3.7"
 pysocks==1.7.1; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.6" and python_version < "4.0" and python_full_version >= "3.4.0"
+python-arq
 python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
 pyyaml==6.0; python_version >= "3.6"
 regex==2021.11.10
 requests==2.27.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 rfc3986==1.5.0; python_version >= "3.6"
+search_engine_parser
 six==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 sniffio==1.2.0; python_full_version >= "3.6.2" and python_version >= "3.6"
 soupsieve==2.3.1; python_version >= "3.6" and python_full_version > "3.0.0"
-speedtest-cli==2.1.3
 tgcrypto==1.2.3; python_version >= "3.6" and python_version < "4.0"
 tswift==0.7.0
 typing-extensions==4.1.1; python_full_version >= "3.6.2" and python_version >= "3.6" and python_version < "3.8"

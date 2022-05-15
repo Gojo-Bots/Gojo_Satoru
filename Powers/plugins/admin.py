@@ -555,21 +555,21 @@ __alt_name__ = [
 __HELP__ = """Lazy to promote or demote someone for admins? Want to see basic information about chat?
 All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be done easily using the bot.
 **User Commands:**
-× /adminlist: List all the admins in the Group.
+* /adminlist: List all the admins in the Group.
 **Admin only:**
-× /invitelink: Gets chat invitelink.
-× /promote: Promotes the user replied to or tagged (supports with title).
-× /fullpromote: Fully Promotes the user replied to or tagged (supports with title).
-× /demote: Demotes the user replied to or tagged.
-× /admincache: Reloads the List of all the admins in the Group.
-× /zombies: Bans all the deleted accounts. (owner only)
-× /title: sets a custom title for an admin that the bot promoted.
-× /disable <commandname>: Stop users from using "commandname" in this group.
-× /enable <item name>: Allow users from using "commandname" in this group.
-× /disableable: List all disableable commands.
-× /disabledel <yes/off>: Delete disabled commands when used by non-admins.
-× /disabled: List the disabled commands in this chat.
-× /enableall: enable all disabled commands.
+* /invitelink: Gets chat invitelink.
+* /promote: Promotes the user replied to or tagged (supports with title).
+* /fullpromote: Fully Promotes the user replied to or tagged (supports with title).
+* /demote: Demotes the user replied to or tagged.
+* /admincache: Reloads the List of all the admins in the Group.
+* /zombies: Bans all the deleted accounts. (owner only)
+* /title: sets a custom title for an admin that the bot promoted.
+* /disable <commandname>: Stop users from using "commandname" in this group.
+* /enable <item name>: Allow users from using "commandname" in this group.
+* /disableable: List all disableable commands.
+* /disabledel <yes/off>: Delete disabled commands when used by non-admins.
+* /disabled: List the disabled commands in this chat.
+* /enableall: enable all disabled commands.
 
 **Example:**
 `/promote @username`: this promotes a user to admin."""

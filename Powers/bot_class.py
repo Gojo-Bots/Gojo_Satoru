@@ -1,6 +1,9 @@
 from platform import python_version
 from threading import RLock
 from time import gmtime, strftime, time
+from aiohttp import ClientSession
+from Python_ARQ import ARQ
+import asyncio
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
@@ -16,6 +19,8 @@ from Powers import (
     NO_LOAD,
     UPTIME,
     WORKERS,
+    ARQ_API_URL,
+    ARQ_API_KEY,
     load_cmds,
 )
 from Powers.database import MongoDB
@@ -29,7 +34,9 @@ if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
     raise Exception(
         "Please enter a vaild Supergroup ID, A Supergroup ID starts with -100",
     )
-
+    
+aiohttpsession = ClientSession()
+arq = ARQ(ARQ_API_URL, ARQ_API_KEY, aiohttpsession)
 
 class Gojo(Client):
     """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m Powers'"""
