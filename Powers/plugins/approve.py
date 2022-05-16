@@ -234,9 +234,8 @@ _DISABLE_CMDS_ = ["approval"]
 __alt_name__ = ["approved"]
 
 
-__HELP__ = """Sometimes, you might trust a user not to send unwanted content.
-Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+__HELP__ = """
+`Apporve`
 **Admin commands:**
 * /approval: Check a user's approval status in this chat.
 * /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.

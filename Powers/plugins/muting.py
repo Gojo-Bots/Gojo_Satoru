@@ -599,7 +599,10 @@ __alt_name__ = [
     "unmute",
 ]
 
-__HELP__ = """Want someone to keep quite for a while in the group?
+__HELP__ = """
+`Muting`
+
+Want someone to keep quite for a while in the group?
 Mute plugin is here to help, mute or unmute any user easily!
 
 **Admin only:**

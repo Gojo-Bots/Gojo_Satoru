@@ -170,8 +170,9 @@ To add your very own plugin just use the format given below and go through the [
       LOGGER.error(format_exc())'''
       
   __PLUGIN__ = <name of plugin> # Pass the name of your plugin as string
-  _DISABLE_CMDS_ = [<command as string>] # Use this if you want that the command can't be used in supergroups
-  __alt_name__ = [<command as string>] # Use this for the command that can be used in groups as well as supergroup
+  _DISABLE_CMDS_ = [<command as string>] # Enter the commands if you want that they can be disabled if needed.
+
+  __alt_name__ = [<command as string>] # Alternative name of the plugin
       
   __HELP__ = <string> # To tell about you plugin and commands you must use it
   

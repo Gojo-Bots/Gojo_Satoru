@@ -209,9 +209,8 @@ __PLUGIN__ = "blacklist"
 
 __alt_name__ = ["blacklists", "blaction"]
 
-__HELP__ = """Want to restrict certain words or sentences in your group?
-Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, that message will immediately be deleted.
-A good combo is sometimes to pair this up with warn filters!
+__HELP__ = """
+`Blacklist`
 **NOTE:** blacklists do not affect group admins.
 * /blacklist: View the current blacklisted words.
 **Admin only:**
