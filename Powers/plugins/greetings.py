@@ -478,7 +478,10 @@ async def goodbye(c: Gojo, m: Message):
 __PLUGIN__ = "greetings"
 __alt_name__ = ["welcome", "goodbye", "cleanservice"]
 
-__HELP__ = """Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
+__HELP__ = """
+`Greetings`
+
+Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
 
 Note:
 a) Currently it supports only text!

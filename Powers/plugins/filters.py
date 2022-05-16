@@ -300,7 +300,9 @@ _DISABLE_CMDS_ = ["filters"]
 
 __alt_name__ = ["filters", "autoreply"]
 
-__HELP__ = """• /filters: List all active filters saved in the chat.
+__HELP__ = """
+`Filters`
+• /filters: List all active filters saved in the chat.
 
 **Admin only:**
 • /filter "`<keyword>`" `<reply message>`: Add a filter to this chat. The bot will now reply that message whenever 'keyword'

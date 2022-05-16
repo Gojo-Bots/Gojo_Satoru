@@ -116,7 +116,9 @@ __PLUGIN__ = "purges"
 
 __alt_name__ = ["purge", "del", "spurge"]
 
-__HELP__ = """Want to delete messages in you group?
+__HELP__ = """
+`Purge`
+
 * /purge: Deletes messages upto replied message.
 * /spurge: Deletes messages upto replied message without a success message.
 * /del: Deletes a single message, used as a reply to message."""

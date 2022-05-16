@@ -327,7 +327,10 @@ __PLUGIN__ = "locks"
 
 __alt_name__ = ["grouplock", "lock", "grouplocks"]
 
-__HELP__ = """ Use this to lock group permissions.
+__HELP__ = """ 
+`Locks`
+
+Use this to lock group permissions.
 Allows you to lock and unlock permission types in the chat.
 
 **Usage:**
