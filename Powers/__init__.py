@@ -60,8 +60,6 @@ LOGGER.info("Source Code: https://github.com/iamgojoof6eyes/Gojo_Satarou\n")
 BOT_TOKEN = Config.BOT_TOKEN
 API_ID = Config.API_ID
 API_HASH = Config.API_HASH
-ARQ_API_URL = Config.ARQ_API_URL
-ARQ_API_KEY = Config.ARQ_API_KEY
 
 # General Config
 MESSAGE_DUMP = Config.MESSAGE_DUMP
