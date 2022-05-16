@@ -1,7 +1,6 @@
 import os
 from traceback import format_exc
 from datetime import datetime
-from psutil import users
 
 from pyrogram import filters
 from pyrogram.types import Message
@@ -37,7 +36,7 @@ def change(
     return text
 
 
-async def user_info(user, already=False):
+async def user_info(user: User, already=False):
     if not already:
         user = await Gojo.get_users(user)
     if not user.first_name:
@@ -198,8 +197,5 @@ __alt_name__ = [
     "chinfo",
 ] 
 
-__HELP__ = """
-`Information`
-
-*/info - To get info about the user
-*/chinfo - To get info about the chat"""
+__HELP__ = """/info - To get info about the user
+/chinfo - To get info about the chat"""

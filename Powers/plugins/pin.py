@@ -94,7 +94,7 @@ async def unpin_message(c: Gojo, m: Message):
 async def unpinall_message(_, m: Message):
     await m.reply_text(
         "Do you really want to unpin all messages in this chat?",
-        reply_markup=ikb([[("Yes", "unpin all in this chat"), ("No", "close_admin")]]),
+        reply_markup=ikb([[("Yes", "unpin_all_in_this_chat"), ("No", "close_admin")]]),
     )
     return
 
@@ -236,10 +236,7 @@ __PLUGIN__ = "pins"
 
 __alt_name__ = ["pin", "unpin"]
 
-__HELP__ = """
-`Pin`
-
-Here you find find all help related to groups pins and how to manage them via me.
+__HELP__ = """Here you find find all help related to groups pins and how to manage them via me.
 
 **Admin Cmds:**
 * /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.

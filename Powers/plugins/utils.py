@@ -335,10 +335,7 @@ _DISABLE_CMDS_ = [
 ]
 __alt_name__ = ["util", "misc", "tools"]
 
-__HELP__ = """
-`Utils`
-
-Some utils provided by bot to make your tasks easy!
+__HELP__ = """Some utils provided by bot to make your tasks easy!
 
 * /id: Get the current group id. If used by replying to a message, get that user's id.
 * /info: Get information about a user.

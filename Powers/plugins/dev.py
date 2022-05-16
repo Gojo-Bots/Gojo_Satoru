@@ -22,6 +22,7 @@ from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
+from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_markdown
 from Powers.vars import Config
 

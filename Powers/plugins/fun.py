@@ -10,7 +10,7 @@ from Powers.bot_class import Gojo
 from Powers.utils import fun_strings
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.utils.fun_strings import YESWNO as YES, NOWYES as NO
+from Powers.utils.fun_strings import YESWNO as YES and NOWYES as NO
 
 
 @Gojo.on_message(command("shout"))
@@ -209,10 +209,7 @@ _DISABLE_CMDS_ = [
     "shrug",
 ]
 
-__HELP__ = """
-`Fun`
-
-* /runs: reply a random string from an array of replies.
+__HELP__ = """* /runs: reply a random string from an array of replies.
 * /slap: slap a user, or get slapped if not a reply.
 * /insult: to insult a user, or get insulted if not a reply
 * /shrug : get shrug XD.

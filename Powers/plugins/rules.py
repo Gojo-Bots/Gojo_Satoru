@@ -147,10 +147,7 @@ __PLUGIN__ = "rules"
 
 __alt_name__ = ["rule"]
 
-__HELP__ = """
-`Rules`
-
-Set rules for you chat so that members know what to do and what not to do in your group!
+__HELP__ = """Set rules for you chat so that members know what to do and what not to do in your group!
 
 * /rules: get the rules for current chat.
 

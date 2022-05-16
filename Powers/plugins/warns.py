@@ -368,10 +368,7 @@ __PLUGIN__ = "warnings"
 
 __alt_name__ = ["warn", "warning", "warns"]
 
-__HELP__ = """
-`Warns`
-
-Keep your members in check with warnings; stop them getting out of control!
+__HELP__ = """Keep your members in check with warnings; stop them getting out of control!
 
 If you're looking for automated warnings, go read about the blacklist module.
 

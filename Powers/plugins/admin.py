@@ -552,8 +552,8 @@ __alt_name__ = [
     "zombies",
 ]
 
-__HELP__ = """
-`Admin` 
+__HELP__ = """Lazy to promote or demote someone for admins? Want to see basic information about chat?
+All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be done easily using the bot.
 **User Commands:**
 * /adminlist: List all the admins in the Group.
 **Admin only:**

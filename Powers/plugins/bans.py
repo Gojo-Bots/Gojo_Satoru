@@ -880,8 +880,9 @@ __alt_name__ = [
     "tban",
 ]
 
-__HELP__ = """
-`Bans`
+__HELP__ = """Someone annoying entered your group?
+Want to ban/restriction him/her?
+This is the plugin for you, easily kick, ban and unban members in a group.
 **Admin only:**
 * /kick: Kick the user replied or tagged.
 * /skick: Kick the user replied or tagged and delete your messsage.

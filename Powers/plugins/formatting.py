@@ -135,7 +135,6 @@ __buttons__ = [
     [("Random Content", "formatting.random_content")],
 ]
 
-__HELP__ = """
-`Formatting`
+__HELP__ = """Formatting
 
 Gojo supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!"""
