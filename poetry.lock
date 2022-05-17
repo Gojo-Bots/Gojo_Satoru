@@ -569,7 +569,7 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 beautifulsoup4 = "*"
-aiohttp = ">=3.7.4"
+aiohttp = "*"
 
 [[package]]
 name = "six"
