@@ -34,7 +34,7 @@ trio = ["trio (>=0.16)"]
 
 [[package]]
 name = "astroid"
-version = "2.11.5""
+version = "2.11.5"
 description = "An abstract syntax tree for Python with inference support."
 category = "dev"
 optional = false
@@ -568,8 +568,8 @@ optional =false
 python-versions = ">=3.6"
 
 [package.dependencies]
-beautifulsoup4 = ">=4.9.1"
-aiohttp = ">=3.7.4"
+beautifulsoup4 = "*"
+aiohttp = "*"
 lxml = "*"
 
 [[package]]
