@@ -567,6 +567,9 @@ category = "main"
 optional =false
 python-versions = ">=3.6"
 
+[package.dependencies]
+beautifulsoup4 = "*"
+
 [[package]]
 name = "six"
 version = "1.16.0"
