@@ -8,7 +8,7 @@ from aiohttp import ClientSession
 from tswift import Song
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
-
+from trackback import format_exc
 
 from gpytranslate import Translator
 from pyrogram import filters
@@ -32,7 +32,6 @@ gban_db = GBan()
 
 @Gojo.on_message(command("wiki"))
 async def wiki(_, m: Message):
-    LOGGER.info(f"{m.from_user.id} used wiki cmd in {m.chat.id}")
 
     if len(m.text.split()) <= 1:
         return await m.reply_text(text="Please check help on how to use this this command.")
@@ -98,7 +97,6 @@ async def get_lyrics(_, m: Message):
         return
 
     query = m.text.split(None, 1)[1]
-    LOGGER.info(f"{m.from_user.id} used lyrics cmd in {m.chat.id}")
     song = ""
     if not query:
         await m.edit_text(text="You haven't specified which song to look for!")
@@ -130,7 +128,6 @@ async def get_lyrics(_, m: Message):
     command("id") & (filters.group | filters.private),
 )
 async def id_info(c: Gojo, m: Message):
-    LOGGER.info(f"{m.from_user.id} used id cmd in {m.chat.id}")
 
     if m.chat.type == "supergroup" and not m.reply_to_message:
         await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
@@ -216,6 +213,8 @@ async def github(_, message):
         await message.reply_text(result, disable_web_page_preview=True)
     except Exception as e:
         await message.reply_text(str(e))
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
 
 #paste here
 session = ClientSession()
@@ -329,8 +328,6 @@ _DISABLE_CMDS_ = [
     "lyrics",
     "tr",
     "github",
-    "git",
-    "info",
 ]
 __alt_name__ = ["util", "misc", "tools"]
 
