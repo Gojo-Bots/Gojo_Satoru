@@ -1,5 +1,5 @@
 from asyncio import gather
-from bot_class import aiohttpsession as session
+from Powers.bot_class import aiohttpsession as session
 
 async def get(url: str, *args, **kwargs):
     async with session.get(url, *args, **kwargs) as resp:
