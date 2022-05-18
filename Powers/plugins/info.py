@@ -1,7 +1,6 @@
 import os
 from traceback import format_exc
 from datetime import datetime
-from psutil import users
 
 from pyrogram import filters
 from pyrogram.types import Message
