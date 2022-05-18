@@ -97,34 +97,6 @@ async def user_info(user, already=False):
     caption = change("User info", body)
     return [caption, photo_id]
 
-@Gojo.on_message(command("info") & ~filters.edited)
-async def info_func(_, message: Message):
-    if message.reply_to_message:
-        user = message.reply_to_message.from_user.id
-    elif not message.reply_to_message and len(message.command) == 1:
-        user = message.from_user.id
-    elif not message.reply_to_message and len(message.command) != 1:
-        user = message.text.split(None, 1)[1]
-
-    m = await message.reply_text(f"Fetching user info of user {user}...")
-
-    try:
-        info_caption, photo_id = await user_info(user)
-        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user} in {m.chat.id}")
-    except Exception as e:
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return await m.edit(str(e))
-
-    if not photo_id:
-        return await m.edit(info_caption, disable_web_page_preview=True)
-    photo = await Gojo.download_media(photo_id)
-
-    await message.reply_photo(photo, caption=info_caption, quote=False)
-    await m.delete()
-    os.remove(photo)
-    LOGGER.info(f"{message.from_user.id} fetched user info of user {user} in {m.chat.id}")
-
 
 async def chat_info(chat, already=False):
     if not already:
@@ -158,6 +130,35 @@ async def chat_info(chat, already=False):
     }
     caption = change("Chat info", body)
     return [caption, photo_id]
+
+
+@Gojo.on_message(command("info") & ~filters.edited)
+async def info_func(_, message: Message):
+    if message.reply_to_message:
+        user = message.reply_to_message.from_user.id
+    elif not message.reply_to_message and len(message.command) == 1:
+        user = message.from_user.id
+    elif not message.reply_to_message and len(message.command) != 1:
+        user = message.text.split(None, 1)[1]
+
+    m = await message.reply_text(f"Fetching user info of user {user}...")
+
+    try:
+        info_caption, photo_id = await user_info(user)
+        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user} in {m.chat.id}")
+    except Exception as e:
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return await m.edit(str(e))
+
+    if not photo_id:
+        return await m.edit(info_caption, disable_web_page_preview=True)
+    photo = await Gojo.download_media(photo_id)
+
+    await message.reply_photo(photo, caption=info_caption, quote=False)
+    await m.delete()
+    os.remove(photo)
+    LOGGER.info(f"{message.from_user.id} fetched user info of user {user} in {m.chat.id}")
 
 
 
