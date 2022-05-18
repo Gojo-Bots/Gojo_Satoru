@@ -569,8 +569,8 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 aiohttp = "*"
-beautifulsoup4 = "4.9.1"
-lxml = "4.6.3"
+beautifulsoup4 = ">=4.9.1"
+lxml = ">=4.6.3"
 
 [[package]]
 name = "six"
