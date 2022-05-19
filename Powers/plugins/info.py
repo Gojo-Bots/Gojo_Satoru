@@ -2,7 +2,6 @@ import os
 from traceback import format_exc
 from datetime import datetime
 
-from pyrogram import filters
 from pyrogram.types import Message
 
 from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
@@ -132,7 +131,7 @@ async def chat_info(chat, already=False):
     return [caption, photo_id]
 
 
-@Gojo.on_message(command("info") & ~filters.edited)
+@Gojo.on_message(command("info"))
 async def info_func(_, message: Message):
     if message.reply_to_message:
         user = message.reply_to_message.from_user.id
@@ -162,7 +161,7 @@ async def info_func(_, message: Message):
 
 
 
-@Gojo.on_message(command("chinfo") & ~filters.edited)
+@Gojo.on_message(command("chinfo"))
 async def chat_info_func(_, message: Message):
     try:
         if len(message.command) > 2:
