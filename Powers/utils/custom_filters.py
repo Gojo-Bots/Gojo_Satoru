@@ -27,10 +27,10 @@ def command(
         if not m:
             return
 
-        if m["edit_date"]:
+        if m.get("edit_date"):
             return # reaction
 
-        if m["chat"] and m["chat"]["type"] == "channel":
+        if m.get("chat") and m.get("chat").get("type") == "channel":
             return
 
         if not m.from_user:
@@ -75,7 +75,7 @@ def command(
                 except ValueError:
                     # i.e. PM
                     user_status = "creator"
-                ddb = Disabling(m["chat"]["id"])
+                ddb = Disabling(m.get("chat").get("id"))
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
                     "creator",
                     "administrator",
