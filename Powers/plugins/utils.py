@@ -8,7 +8,7 @@ from aiohttp import ClientSession
 from tswift import Song
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
-from trackback import format_exc
+from traceback import format_exc
 
 from gpytranslate import Translator
 from pyrogram import filters
