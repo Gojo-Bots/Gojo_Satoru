@@ -27,7 +27,7 @@
 If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to updating and sending pull requests**
 
 ---------  
-  
+
 ## Inspiration ✨
 `Not a particular inspiration, inspired by many bots`
 

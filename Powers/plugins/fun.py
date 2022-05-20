@@ -1,6 +1,6 @@
 from html import escape
-from secrets import choice
-import random
+from random import choice
+
 
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
@@ -105,7 +105,7 @@ async def insult(c : Gojo , m: Message):
         await m.reply_text("Sorry! I can't insult my devs....")
         return LOGGER.info(f"{m.from_user.id} tried to insult {user_first_name} in {m.chat.id}")
     else:    
-        Insult_omp = random.choice(fun_strings.INSULT_STRINGS)
+        Insult_omp = choice(fun_strings.INSULT_STRINGS)
         reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
         await reply_text(Insult_omp)
         LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")

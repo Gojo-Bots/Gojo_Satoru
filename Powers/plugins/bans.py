@@ -1,5 +1,5 @@
 from traceback import format_exc
-import random
+from random import choice
 
 from pyrogram.errors import (
     ChatAdminRequired,
@@ -27,8 +27,8 @@ from Powers.utils.string import extract_time
 from Powers.vars import Config
 
 
-BAN_MEDIA = random.choice(BAN_GIFS)
-KICK_MEDIA = random.choice(KICK_GIFS)
+BAN_MEDIA = choice(BAN_GIFS)
+KICK_MEDIA = choice(KICK_GIFS)
 
 @Gojo.on_message(command("tban") & restrict_filter)
 async def tban_usr(c: Gojo, m: Message):

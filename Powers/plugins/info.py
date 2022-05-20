@@ -7,6 +7,7 @@ from pyrogram.types import Message
 from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
+from Powers.utils.extract_user import extract_user
 
 
 escape = "\n"
@@ -132,14 +133,21 @@ async def chat_info(chat, already=False):
 
 
 @Gojo.on_message(command("info"))
-async def info_func(_, message: Message):
-    if message.reply_to_message:
-        user = message.reply_to_message.from_user.id
-    elif not message.reply_to_message and len(message.command) == 1:
-        user = message.from_user.id
-    elif not message.reply_to_message and len(message.command) != 1:
-        user = message.text.split(None, 1)[1]
+async def info_func(c: Gojo, message: Message):
+    if len(message.text.split()) == 1 and not message.reply_to_message:
+        await message.reply_text(text="I can't info fecth of nothing!")
+        await message.stop_propagation()
+    elif len(message.text.split()) > 2 and not message.reply_to_message:
+        await message.reply_text("You are not providing proper arguments.......do /help info to know how to use this command")
 
+    try:
+        user, _ , _= extract_user(c , message)
+    except Exception:
+        return
+    
+    if not user:
+        message.reply_text("Can't find user to fetch info!")
+    
     m = await message.reply_text(f"Fetching user info of user {user}...")
 
     try:
@@ -166,7 +174,7 @@ async def chat_info_func(_, message: Message):
     try:
         if len(message.command) > 2:
             return await message.reply_text(
-                "**Usage:**/chat_info [USERNAME|ID]"
+                "**Usage:**/chinfo [USERNAME|ID]"
             )
 
         if len(message.command) == 1:
