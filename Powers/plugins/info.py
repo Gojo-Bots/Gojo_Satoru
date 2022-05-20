@@ -138,7 +138,8 @@ async def info_func(c: Gojo, message: Message):
         await message.reply_text(text="I can't info fecth of nothing!")
         await message.stop_propagation()
     elif len(message.text.split()) > 2 and not message.reply_to_message:
-        await message.reply_text("You are not providing proper arguments.......do /help info to know how to use this command")
+        await message.reply_text("You are not providing proper arguments.......**Usage:**/info [USERNAME|ID]")
+        await message.stop_propagation()
 
     try:
         user, _ , _= extract_user(c , message)
@@ -171,16 +172,19 @@ async def info_func(c: Gojo, message: Message):
 
 @Gojo.on_message(command("chinfo"))
 async def chat_info_func(_, message: Message):
+    splited = message.text.split()
     try:
-        if len(message.command) > 2:
+        if len(splited) == 1:
+            return message.reply_text("I can't fetch nothing......")
+
+        elif len(splited) > 2:
             return await message.reply_text(
                 "**Usage:**/chinfo [USERNAME|ID]"
             )
-
-        if len(message.command) == 1:
-            chat = message.chat.id
-        elif len(message.command) == 2:
-            chat = message.text.split(None, 1)[1]
+        
+        else:
+            chat = splited[1]
+        
 
         m = await message.reply_text(f"Fetching chat info of chat {chat}.....")
 
