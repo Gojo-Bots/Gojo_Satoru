@@ -27,10 +27,10 @@ def command(
         if not m:
             return
 
-        if m.get("edit_date"):
+        if m.edit_date:
             return # reaction
 
-        if m.get("chat") and m.get("chat").get("type") == "channel":
+        if m.chat and m.chat.type == "channel":
             return
 
         if not m.from_user:
