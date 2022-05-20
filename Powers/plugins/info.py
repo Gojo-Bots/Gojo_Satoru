@@ -142,9 +142,9 @@ async def info_func(c: Gojo, message: Message):
         await message.stop_propagation()
 
     try:
-        user, _ , _= extract_user(c , message)
-    except Exception:
-        return
+        user, _ , _= await extract_user(c , message)
+    except Exception as e:
+        return await message.reply_text(f"Got an error while running extract_user function error is {e}")
     
     if not user:
         message.reply_text("Can't find user to fetch info!")
