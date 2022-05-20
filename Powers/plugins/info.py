@@ -175,7 +175,7 @@ async def chat_info_func(_, message: Message):
     splited = message.text.split()
     try:
         if len(splited) == 1:
-            return message.reply_text("I can't fetch nothing......")
+            return await message.reply_text("I can't fetch nothing......")
 
         elif len(splited) > 2:
             return await message.reply_text(
