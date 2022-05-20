@@ -6,6 +6,8 @@ from typing import List, Union
 from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
+from pyrogram import enums
+
 
 from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
 from Powers.database.disable_db import Disabling
@@ -27,10 +29,12 @@ def command(
         if not m:
             return
 
-        if m.edit_date:
+        date = m.edit_date
+        if date:
             return # reaction
 
-        if m.chat and m.chat.type == "channel":
+        chattype = bool(m.chat and m.chat.type in {enums.ChatType.CHANNEL})
+        if chattype:
             return
 
         if not m.from_user:
