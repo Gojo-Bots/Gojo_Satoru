@@ -210,7 +210,8 @@ __PLUGIN__ = "blacklist"
 __alt_name__ = ["blacklists", "blaction"]
 
 __HELP__ = """
-`Blacklist`
+***Blacklist***
+
 **NOTE:** blacklists do not affect group admins.
 * /blacklist: View the current blacklisted words.
 **Admin only:**

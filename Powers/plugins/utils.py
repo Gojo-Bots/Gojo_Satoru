@@ -25,6 +25,7 @@ from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_html
+from Powers.utils.extract_user import extract_user
 from Powers.vars import Config
 
 gban_db = GBan()
@@ -332,7 +333,7 @@ _DISABLE_CMDS_ = [
 __alt_name__ = ["util", "misc", "tools"]
 
 __HELP__ = """
-`Utils`
+***Utils***
 
 Some utils provided by bot to make your tasks easy!
 

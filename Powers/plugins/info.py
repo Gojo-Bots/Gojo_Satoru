@@ -210,7 +210,7 @@ __alt_name__ = [
 ] 
 
 __HELP__ = """
-`Information`
+***Information***
 
-*/info - To get info about the user
-*/chinfo - To get info about the chat"""
+* /info - To get info about the user
+* /chinfo - To get info about the chat"""

@@ -301,7 +301,8 @@ _DISABLE_CMDS_ = ["filters"]
 __alt_name__ = ["filters", "autoreply"]
 
 __HELP__ = """
-`Filters`
+***Filters***
+
 • /filters: List all active filters saved in the chat.
 
 **Admin only:**

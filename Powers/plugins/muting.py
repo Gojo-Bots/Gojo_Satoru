@@ -600,10 +600,7 @@ __alt_name__ = [
 ]
 
 __HELP__ = """
-`Muting`
-
-Want someone to keep quite for a while in the group?
-Mute plugin is here to help, mute or unmute any user easily!
+***Muting***
 
 **Admin only:**
 * /mute: Mute the user replied to or mentioned.

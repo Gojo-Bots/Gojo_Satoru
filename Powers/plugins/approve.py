@@ -235,7 +235,8 @@ __alt_name__ = ["approved"]
 
 
 __HELP__ = """
-`Apporve`
+***Apporve***
+
 **Admin commands:**
 * /approval: Check a user's approval status in this chat.
 * /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.

@@ -881,7 +881,8 @@ __alt_name__ = [
 ]
 
 __HELP__ = """
-`Bans`
+***Bans***
+
 **Admin only:**
 * /kick: Kick the user replied or tagged.
 * /skick: Kick the user replied or tagged and delete your messsage.

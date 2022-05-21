@@ -237,7 +237,7 @@ __PLUGIN__ = "pins"
 __alt_name__ = ["pin", "unpin"]
 
 __HELP__ = """
-`Pin`
+***Pin***
 
 Here you find find all help related to groups pins and how to manage them via me.
 

@@ -553,7 +553,8 @@ __alt_name__ = [
 ]
 
 __HELP__ = """
-`Admin` 
+****Admin***
+
 **User Commands:**
 * /adminlist: List all the admins in the Group.
 **Admin only:**

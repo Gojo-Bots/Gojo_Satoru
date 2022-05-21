@@ -136,6 +136,6 @@ __buttons__ = [
 ]
 
 __HELP__ = """
-`Formatting`
+***Formatting***
 
 Gojo supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!"""
