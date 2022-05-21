@@ -37,7 +37,7 @@ def command(
         if chattype:
             return
 
-        if not m.from_user:
+        if m and not m.from_user:
             return False
 
         if m.from_user.is_bot:

@@ -1,4 +1,4 @@
-from pyrogram import filters
+from pyrogram import filters, enums
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import CallbackQuery, Message
 
@@ -61,7 +61,8 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Gojo, m: Message):
-    if m.chat.type == "private":
+    chattype = bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE})
+    if chattype:
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
@@ -180,7 +181,8 @@ async def help_menu(_, m: Message):
         LOGGER.info(
             f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
-        if m.chat.type == "private":
+        chattype = bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE})
+        if chattype:
             await m.reply_photo(
                 photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
                 caption=help_msg,
@@ -206,7 +208,8 @@ async def help_menu(_, m: Message):
                 ),
             )
     else:
-        if m.chat.type == "private":
+        chattype = bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE})
+        if chattype:
             keyboard = ikb(
                 [
                     *(await gen_cmds_kb(m)),
