@@ -9,6 +9,7 @@ from Powers.bot_class import Gojo
 from Powers.database.reporting_db import Reporting
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
+from Powers.utils.chat_type import chattype
 from Powers.utils.parser import mention_html
 
 
@@ -19,7 +20,8 @@ async def report_setting(_, m: Message):
     args = m.text.split()
     db = Reporting(m.chat.id)
 
-    if m.chat.type == "private":
+    chat_type = chattype(_,m)
+    if chat_type == "private":
         if len(args) >= 2:
             option = args[1].lower()
             if option in ("yes", "on", "true"):
@@ -63,7 +65,8 @@ async def report_setting(_, m: Message):
 
 @Gojo.on_message(command("report") & filters.group)
 async def report_watcher(c: Gojo, m: Message):
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         return
 
     if not m.from_user:

@@ -5,12 +5,14 @@ from pyrogram.types import Message
 
 from Powers import SUPPORT_GROUP
 from Powers.bot_class import Gojo
+from Powers.utils.chat_type import chattype
 from Powers.utils.custom_filters import admin_filter, command
 
 
 @Gojo.on_message(command("purge") & admin_filter)
 async def purge(c: Gojo, m: Message):
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
@@ -57,7 +59,8 @@ async def purge(c: Gojo, m: Message):
 
 @Gojo.on_message(command("spurge") & admin_filter)
 async def spurge(c: Gojo, m: Message):
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
@@ -98,7 +101,8 @@ async def spurge(c: Gojo, m: Message):
     group=9,
 )
 async def del_msg(c: Gojo, m: Message):
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         return
 
     if m.reply_to_message:

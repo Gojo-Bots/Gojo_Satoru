@@ -6,6 +6,7 @@ from Powers import HELP_COMMANDS, LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.kbhelpers import ikb
+from Powers.utils.chat_type import chattype
 from Powers.utils.start_utils import (
     gen_cmds_kb,
     gen_start_kb,

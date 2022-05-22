@@ -10,6 +10,7 @@ from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
 from Powers.utils.custom_filters import admin_filter, bot_admin_filter, command
+from Powers.utils.chat_type import chattype
 from Powers.utils.msg_types import Types, get_wlcm_type
 from Powers.utils.parser import escape_markdown, mention_html
 from Powers.utils.string import (
@@ -53,7 +54,8 @@ async def escape_mentions_using_curly_brackets_wl(
             ),
             mention=await (mention_html(escape(user.first_name), user.id)),
             chatname=escape(m.chat.title)
-            if m.chat.type != "private"
+            chat_type = chattype(_, m)
+            if chat_type != "private"
             else escape(user.first_name),
             id=user.id,
         )

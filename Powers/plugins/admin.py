@@ -19,6 +19,7 @@ from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
 from Powers.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
+from Powers.utils.chat_type import chattype
 from Powers.utils.custom_filters import (
     DEV_LEVEL,
     admin_filter,
@@ -34,7 +35,8 @@ from Powers.vars import Config
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_, m)
+    if chat_type != "supergroup" or chat_type != "group":
         return await m.reply_text(
             text="This command is made to be used in groups only!",
         )
@@ -120,8 +122,8 @@ async def zombie_clean(c: Gojo, m: Message):
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
-
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_, m)
+    if chat_type != "supergroup" or chat_type != "group":
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )

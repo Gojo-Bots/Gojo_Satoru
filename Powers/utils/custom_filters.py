@@ -12,6 +12,7 @@ from pyrogram import enums
 from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
 from Powers.database.disable_db import Disabling
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
+from Powers.utils.chat_type import chattype
 from Powers.vars import Config
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
@@ -70,7 +71,7 @@ def command(
             m.command = [matches.group(1)]
             if matches.group(1) not in flt.commands:
                 return False
-            if m.chat.type == "supergroup":
+            if bool(m.chat and m.chat.type in {enums.ChatType.SUPERGROUP}):
                 try:
                     user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
@@ -117,7 +118,8 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -150,7 +152,8 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -185,7 +188,7 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if bool(m.chat and m.chat.type in {enums.ChatType.SUPERGROUP}):
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -212,7 +215,8 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -235,7 +239,7 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if bool(m.chat and m.chat.type in {enums.ChatType.SUPERGROUP}):
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -258,7 +262,8 @@ async def changeinfo_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    chat_type = chattype(_,m)
+    if chat_type != "supergroup" or chat_type != "group":
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
@@ -286,7 +291,7 @@ async def can_pin_message_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if not bool(m.chat and m.chat.type in {enums.ChatType.SUPERGROUP}):
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 

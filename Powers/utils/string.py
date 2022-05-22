@@ -6,6 +6,7 @@ from typing import List
 from pyrogram.types import InlineKeyboardButton, Message
 
 from Powers.utils.parser import escape_markdown
+from Powers.utils.chat_type import chattype
 
 BTN_URL_REGEX = compile_re(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
@@ -141,7 +142,8 @@ async def escape_mentions_using_curly_brackets(
                 else [escape(m.from_user.first_name)],
             ),
             chatname=escape(m.chat.title)
-            if m.chat.type != "private"
+            chat_type = chattype(_,m)
+            if chat_type != "supergroup" or chat_type != "group"
             else escape(m.from_user.first_name),
             id=m.from_user.id,
         )
