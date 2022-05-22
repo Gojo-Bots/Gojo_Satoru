@@ -224,7 +224,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
             can_pin_messages=bot.can_pin_messages,
             can_promote_members=bot.can_promote_members,
             can_manage_chat=bot.can_manage_chat,
-            can_manage_voice_chats=bot.can_manage_voice_chats,
+            can_manage_video_chats=bot.can_manage_video_chats,
         )
 
         title = ""
@@ -332,7 +332,7 @@ async def promote_usr(c: Gojo, m: Message):
             can_restrict_members=bot.can_restrict_members,
             can_pin_messages=bot.can_pin_messages,
             can_manage_chat=bot.can_manage_chat,
-            can_manage_voice_chats=bot.can_manage_voice_chats,
+            can_manage_video_chats=bot.can_manage_video_chats,
         )
 
         title = ""  # Deafult title
