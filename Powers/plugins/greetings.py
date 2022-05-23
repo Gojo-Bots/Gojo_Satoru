@@ -36,6 +36,7 @@ async def escape_mentions_using_curly_brackets_wl(
     else:
         user = m.old_chat_member.user if m.old_chat_member else m.from_user
     if teks:
+        chat_type = chattype(m)
         teks = teks.format(
             first=escape(user.first_name),
             last=escape(user.last_name or user.first_name),
@@ -54,7 +55,6 @@ async def escape_mentions_using_curly_brackets_wl(
             ),
             mention=await (mention_html(escape(user.first_name), user.id)),
             chatname=escape(m.chat.title)
-            chat_type = chattype(_, m)
             if chat_type != "private"
             else escape(user.first_name),
             id=user.id,

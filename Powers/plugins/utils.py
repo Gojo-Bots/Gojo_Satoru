@@ -131,8 +131,8 @@ async def get_lyrics(_, m: Message):
 )
 async def id_info(c: Gojo, m: Message):
 
-    chat_type = chattype(_,m)
-    if chat_type == "supergroup" or chat_type == "group" and not m.reply_to_message:
+    chat_type = chattype(m)
+    if chat_type == "supreme group" and not m.reply_to_message:
         await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
         return
 
