@@ -119,7 +119,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
         m = m.message
 
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -153,7 +153,7 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
         m = m.message
 
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -216,7 +216,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
         m = m.message
 
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -263,7 +263,7 @@ async def changeinfo_check_func(_, __, m):
         m = m.message
 
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 

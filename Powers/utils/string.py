@@ -143,7 +143,7 @@ async def escape_mentions_using_curly_brackets(
                 else [escape(m.from_user.first_name)],
             ),
             chatname=escape(m.chat.title)
-            if chat_type != "supreme group"
+            if chat_type != "supergroup"
             else escape(m.from_user.first_name),
             id=m.from_user.id,
         )

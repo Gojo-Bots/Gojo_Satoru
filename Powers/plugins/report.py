@@ -66,7 +66,7 @@ async def report_setting(_, m: Message):
 @Gojo.on_message(command("report") & filters.group)
 async def report_watcher(c: Gojo, m: Message):
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         return
 
     if not m.from_user:

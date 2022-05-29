@@ -12,7 +12,7 @@ from Powers.utils.custom_filters import admin_filter, command
 @Gojo.on_message(command("purge") & admin_filter)
 async def purge(c: Gojo, m: Message):
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
@@ -60,7 +60,7 @@ async def purge(c: Gojo, m: Message):
 @Gojo.on_message(command("spurge") & admin_filter)
 async def spurge(c: Gojo, m: Message):
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
@@ -102,7 +102,7 @@ async def spurge(c: Gojo, m: Message):
 )
 async def del_msg(c: Gojo, m: Message):
     chat_type = chattype(m)
-    if chat_type != "supreme group":
+    if chat_type != "supergroup":
         return
 
     if m.reply_to_message:

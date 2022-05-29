@@ -8,6 +8,7 @@ from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
+from Powers.utils.chat_type import c_type
 
 
 escape = "\n"
@@ -104,7 +105,7 @@ async def chat_info(chat, already=False):
     chat_id = chat.id
     username = chat.username
     title = chat.title
-    type_ = chat.type
+    type_ = c_type(chat)
     is_scam = chat.is_scam
     is_fake = chat.is_fake
     description = chat.description
