@@ -1,10 +1,11 @@
-from pyrogram import filters, enums
+from pyrogram import filters
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import CallbackQuery, Message
 
 from Powers import HELP_COMMANDS, LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
+from Powers.utils.chat_type import chattype
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.chat_type import chattype
 from Powers.utils.start_utils import (
@@ -28,7 +29,7 @@ async def donate(_, m: Message):
 
     All the fund would be put into my services such as database, storage and hosting!
 
-    You can donate by contacting my owner: [Captain Ezio](@iamgojoof6eyes)
+    You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes)
      """
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
@@ -62,8 +63,8 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Gojo, m: Message):
-    chattype = bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE})
-    if chattype:
+    chattype = chattype(m)
+    if chattype == "private":
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
@@ -93,7 +94,7 @@ async def start(c: Gojo, m: Message):
             return
         try:
             cpt=f""" 
-            Hey {m.from_user.first_name}! My self Gojo 😎.
+            Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! My self Gojo ✨.
             I'm here to help you manage your groups!
             Hit /help to find out more about how to use me in my full potential!
 
@@ -119,8 +120,8 @@ async def start(c: Gojo, m: Message):
 @Gojo.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_, q: CallbackQuery):
     try:
-        cpt="""
-        Hey there! My name is Gojo ✨.
+        cpt=f"""
+        Hey [{q.from_user.first_name}](http://t.me/{q.from_user.username})! My name is Gojo ✨.
         I'm here to help you manage your groups!
         Hit /help to find out more about how to use me in my full potential!
 
@@ -146,8 +147,8 @@ async def commands_menu(_, q: CallbackQuery):
         ],
     )
     try:
-        cpt="""
-        Hey There! My name is Gojo.
+        cpt=f"""
+        Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! My name is Gojo✨.
         I'm here to help you manage your groups!
         Commands available:
         * /start: Start the bot
@@ -182,8 +183,8 @@ async def help_menu(_, m: Message):
         LOGGER.info(
             f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
-        chattype = bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE})
-        if chattype:
+        chattype = chattype(m)
+        if chattype == "private":
             await m.reply_photo(
                 photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
                 caption=help_msg,
@@ -209,16 +210,16 @@ async def help_menu(_, m: Message):
                 ),
             )
     else:
-        chattype = bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE})
-        if chattype:
+        chattype = chattype(m)
+        if chattype == "privaate":
             keyboard = ikb(
                 [
                     *(await gen_cmds_kb(m)),
                     [("« Back", "start_back")],
                 ],
             )
-            msg = """
-            Hey There! My name is Gojo.
+            msg =f"""
+            Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is Gojo✨.
             I'm here to help you manage your groups!
             Commands available:
             * /start: Start the bot
