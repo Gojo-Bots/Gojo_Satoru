@@ -22,7 +22,7 @@ from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.vars import Config
-from Powers.utils.fun_strings import MUTE_GIFS
+from Powers.utils.extras import MUTE_GIFS
 
 
 MUTE_MEDIA = choice(MUTE_GIFS)

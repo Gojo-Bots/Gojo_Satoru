@@ -51,11 +51,11 @@ async def user_info(user, already=False):
     is_support = user_id in SUPPORT_STAFF
     if user_id in SUPPORT_STAFF:
         if user_id in DEV_USERS:
-            omp = "User is in devs' list"
+            omp = "User is dev"
         elif user_id in SUDO_USERS:
-            omp = "User is in sudo users' list"
+            omp = "User is sudoer"
         elif user_id in WHITELIST_USERS:
-            omp = "User is in whitelist users' list"
+            omp = "User is in whitelist"
         else:
             omp = "Hmmm.......Who is that again?"
     is_bot = user.is_bot
@@ -139,13 +139,13 @@ async def info_func(c: Gojo, message: Message):
         await message.reply_text(text="I can't info fecth of nothing!")
         await message.stop_propagation()
     elif len(message.text.split()) > 2 and not message.reply_to_message:
-        await message.reply_text("You are not providing proper arguments.......**Usage:**/info [USERNAME|ID]")
+        await message.reply_text("You are not providing proper arguments.......**Usage:**/info [USERNAME|ID]....Example /info @iamgojoof6eyes")
         await message.stop_propagation()
 
     try:
         user, _ , _= await extract_user(c , message)
     except Exception as e:
-        return await message.reply_text(f"Got an error while running extract_user function error is {e}")
+        return await message.reply_text(f"Got an error while running extract_user function error is {e}.....Give this message in supoort group")
     
     if not user:
         message.reply_text("Can't find user to fetch info!")

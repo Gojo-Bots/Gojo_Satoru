@@ -1,3 +1,5 @@
+from random import choice
+
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import CallbackQuery, Message
@@ -7,6 +9,7 @@ from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.chat_type import chattype
 from Powers.utils.kbhelpers import ikb
+from Powers.utils.extras import StartPic
 from Powers.utils.chat_type import chattype
 from Powers.utils.start_utils import (
     gen_cmds_kb,
@@ -17,6 +20,7 @@ from Powers.utils.start_utils import (
 )
 from Powers.vars import Config
 
+StartPic = choice(StartPic)
 
 @Gojo.on_message(
     command("donate") & (filters.group | filters.private),
@@ -33,7 +37,7 @@ async def donate(_, m: Message):
      """
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_photo(photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+    await m.reply_photo(photo=StartPic,
                             caption=cpt)
     return
 
@@ -84,7 +88,7 @@ async def start(c: Gojo, m: Message):
                 return
 
             await m.reply_photo(
-                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+                photo=StartPic,
                 caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
@@ -101,7 +105,7 @@ async def start(c: Gojo, m: Message):
             Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates."""
             
             await m.reply_photo(
-                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+                photo=StartPic,
                 caption=cpt,
                 reply_markup=(await gen_start_kb(m)),
                 quote=True,
@@ -162,7 +166,7 @@ async def commands_menu(_, q: CallbackQuery):
         pass
     except QueryIdInvalid:
         await q.message.reply_photo(
-            photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+            photo=StartPic,
             caption=cpt,
             reply_markup=keyboard)
         
@@ -186,7 +190,7 @@ async def help_menu(_, m: Message):
         chattype = chattype(m)
         if chattype == "private":
             await m.reply_photo(
-                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+                photo=StartPic,
                 caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
@@ -195,7 +199,7 @@ async def help_menu(_, m: Message):
             )
         else:
             await m.reply_photo(
-                photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+                photo=StartPic,
                 caption=f"Press the button below to get help for <i>{help_option}</i>",
                 reply_markup=ikb(
                     [
@@ -230,7 +234,7 @@ async def help_menu(_, m: Message):
             )
             msg = "Contact me in PM to get the list of possible commands."
         await m.reply_photo(
-            photo="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+            photo=StartPic,
             caption=msg,
             reply_markup=keyboard,
         )

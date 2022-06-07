@@ -18,7 +18,7 @@ from pyrogram.types import (
 
 from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.bot_class import Gojo
-from Powers.utils.fun_strings import BAN_GIFS, KICK_GIFS
+from Powers.utils.extras import BAN_GIFS, KICK_GIFS
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user

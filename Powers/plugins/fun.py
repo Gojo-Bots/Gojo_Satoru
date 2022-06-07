@@ -7,10 +7,10 @@ from pyrogram.types import Message
 
 from Powers import LOGGER, DEV_USERS
 from Powers.bot_class import Gojo
-from Powers.utils import fun_strings
+from Powers.utils import extras
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.utils.fun_strings import YESWNO as YES, NOWYES as NO
+from Powers.utils.extras import YESWNO as YES, NOWYES as NO
 
 
 @Gojo.on_message(command("shout"))
@@ -40,7 +40,7 @@ async def fun_shout(_, m: Message):
 
 @Gojo.on_message(command("runs"))
 async def fun_run(_, m: Message):
-    await m.reply_text(choice(fun_strings.RUN_STRINGS))
+    await m.reply_text(choice(extras.RUN_STRINGS))
     LOGGER.info(f"{m.from_user.id} runed in {m.chat.id}")
     return
 
@@ -58,9 +58,9 @@ async def fun_slap(c: Gojo, m: Message):
         return
 
     if user_id == me.id:
-        temp = choice(fun_strings.SLAP_GOJO_TEMPLATES)
+        temp = choice(extras.SLAP_GOJO_TEMPLATES)
     else:
-        temp = choice(fun_strings.SLAP_TEMPLATES)
+        temp = choice(extras.SLAP_TEMPLATES)
 
     if user_id:
         user1 = curr_user
@@ -70,9 +70,9 @@ async def fun_slap(c: Gojo, m: Message):
         user1 = me.first_name
         user2 = curr_user
 
-    item = choice(fun_strings.ITEMS)
-    hit = choice(fun_strings.HIT)
-    throw = choice(fun_strings.THROW)
+    item = choice(extras.ITEMS)
+    hit = choice(extras.HIT)
+    throw = choice(extras.THROW)
 
     reply = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
     await reply_text(reply)
@@ -91,7 +91,7 @@ async def fun_roll(_, m: Message):
 @Gojo.on_message(command("toss"))
 async def fun_toss(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(choice(fun_strings.TOSS))
+    await reply_text(choice(extras.TOSS))
     LOGGER.info(f"{m.from_user.id} tossed in {m.chat.id}")
     return
 
@@ -105,7 +105,7 @@ async def insult(c : Gojo , m: Message):
         await m.reply_text("Sorry! I can't insult my devs....")
         return LOGGER.info(f"{m.from_user.id} tried to insult {user_first_name} in {m.chat.id}")
     else:    
-        Insult_omp = choice(fun_strings.INSULT_STRINGS)
+        Insult_omp = choice(extras.INSULT_STRINGS)
         reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
         await reply_text(Insult_omp)
         LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
@@ -148,7 +148,7 @@ async def fun_bluetext(_, m: Message):
 @Gojo.on_message(command("decide"))
 async def fun_decide(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(choice(fun_strings.DECIDE))
+    await reply_text(choice(extras.DECIDE))
     LOGGER.info(f"{m.from_user.id} decided in {m.chat.id}")
     return
 
@@ -156,7 +156,7 @@ async def fun_decide(_, m: Message):
 @Gojo.on_message(command("react"))
 async def fun_table(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(choice(fun_strings.REACTIONS))
+    await reply_text(choice(extras.REACTIONS))
     LOGGER.info(f"{m.from_user.id} reacted in {m.chat.id}")
     return
 
