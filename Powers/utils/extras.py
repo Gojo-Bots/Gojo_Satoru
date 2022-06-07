@@ -548,7 +548,9 @@ INSULT_STRINGS = [
     "`You’re so ugly that when you cry, the tears roll down the back of your head…just to avoid your face.`",
     "`If you’re talking behind my back then you’re in a perfect position to kiss my a**!.`",
     "`Awww! how cute.....me not you`",
-    "`You are so ugly that if one direction sees you, they will change their direction to another...`",
+    "`You are so ugly that if one direction sees you, they will change their direction to another...`"
+    "`You left your brain to God go and take it...`"
+    "`If you think you are an idiot..............then you are absolutely right...`",
 ]
 
 
