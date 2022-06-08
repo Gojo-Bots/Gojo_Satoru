@@ -26,7 +26,6 @@ async def chattype(m: Message):
 
 async def c_type(chat_id):
     c = Gojo.get_chat(chat_id)
-    mem = Gojo.get_chat_members_count(chat_id)
     
     if c.type == ChatType.BOT:
         ct = "bot"

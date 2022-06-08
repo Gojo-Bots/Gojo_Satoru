@@ -139,7 +139,7 @@ async def fun_shrug(_, m: Message):
 async def fun_bluetext(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(
-        "/BLUE /TEXT\n/MUST /CLICK\n/I /AM /A /STUPID /ANIMAL /THAT /IS /ATTRACTED /TO /COLORS",
+        "|| /BLUE /TEXT\n/MUST /CLICK\n/I /AM /A /STUPID /ANIMAL /THAT /IS /ATTRACTED /TO /COLORS ||",
     )
     LOGGER.info(f"{m.from_user.id} bluetexted in {m.chat.id}")
     return
