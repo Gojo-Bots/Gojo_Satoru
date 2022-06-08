@@ -6,6 +6,8 @@ from pyrogram.types import Message
 
 
 async def chattype(m: Message):
+    # To get chat type with message 
+
     if bool(m.chat and m.chat.type in {ChatType.CHANNEL}):
         ct = "channel"
     
@@ -25,6 +27,8 @@ async def chattype(m: Message):
     return ct
 
 async def c_type(chat_id):
+    # To get chat type with chat id
+
     c = Gojo.get_chat(chat_id)
     
     if c.type == ChatType.BOT:
