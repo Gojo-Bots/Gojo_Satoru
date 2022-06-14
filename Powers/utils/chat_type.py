@@ -7,28 +7,28 @@ from pyrogram.types import Message
 
 async def chattype(m: Message):
     # To get chat type with message 
+    if m.chat:
+        if m.chat.type == ChatType.CHANNEL:
+            ct = "channel"
+        
+        if m.chat.type == ChatType.PRIVATE:
+            ct = "private"
 
-    if bool(m.chat and m.chat.type in {ChatType.CHANNEL}):
-        ct = "channel"
-    
-    if bool(m.chat and m.chat.type in {ChatType.PRIVATE}):
-        ct = "private"
+        if m.chat.type == ChatType.GROUP:
+            ct="group"
 
-    if bool(m.chat and m.chat.type in {ChatType.GROUP}):
-        ct="group"
+        if m.chat.type == ChatType.SUPERGROUP:
+            ct = "supergroup"
 
-    if bool(m.chat and m.chat.type in {ChatType.SUPERGROUP}):
-        ct = "supergroup"
-
-    if bool(m.chat and m.chat.type in {ChatType.BOT}):
-        ct ="bot"
+        if m.chat.type in ChatType.BOT:
+            ct ="bot"
 
 
-    return ct
+        return ct
 
 async def c_type(chat_id):
     # To get chat type with chat id
-
+    
     c = Gojo.get_chat(chat_id)
     
     if c.type == ChatType.BOT:
