@@ -29,7 +29,7 @@ RUN_STRINGS = (
 
 SLAP_GOJO_TEMPLATES = (
     "Slap me one more time and I'll mute you.",
-    "Don't again dare to slap me asshole.",
+    "Don't again dare to slap me ||A-S-S-H-0-L-E||.",
 )
 
 SLAP_TEMPLATES = (
@@ -506,6 +506,7 @@ REACTIONS = (
     "(ﾉ≧∀≦)ﾉ ‥…━━━★",
     "╰( ͡° ͜ʖ ͡° )つ──☆*:・ﾟ",
     "(∩ᄑ_ᄑ)⊃━☆ﾟ*･｡*･:≡( ε:)",
+    "OwO",
 )
 
 TOSS = (
@@ -532,7 +533,7 @@ INSULT_STRINGS = [
     "`I would ask you how old you are but I know you can't count that high.`",
     "`As an outsider, what do you think of the human race?`",
     "`Ordinarily people live and learn. You just live.`",
-    "`Keep talking, someday you'll say something intelligent!.......(I doubt it though)`",
+    "`Keep talking, someday you'll say something intelligent!`.......||I doubt it though||",
     "`Everyone has the right to be stupid but you are abusing the privilege.`",
     "`I'm sorry I hurt your feelings when I called you stupid. I thought you already knew that.`",
     "`You should try tasting cyanide.`",
