@@ -633,4 +633,5 @@ NO       NO   NONONO            NONO
 
 StartPic =[
     "https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
+    "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg",
 ]
