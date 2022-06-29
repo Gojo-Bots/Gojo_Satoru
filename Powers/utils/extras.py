@@ -634,4 +634,12 @@ NO       NO   NONONO            NONO
 StartPic =[
     "https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
     "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg",
+    "https://te.legra.ph/file/a740afb182b761db668ba.jpg",
+    "https://te.legra.ph/file/acb741a0f44faf1708a37.jpg",
+    "https://te.legra.ph/file/68d18ae5b2a4b67e793a4.jpg",
+    "https://te.legra.ph/file/43780c4a5c3071af3de3c.jpg",
+    "https://te.legra.ph/file/2f27c940f5e912c01aa63.jpg",
+    "https://te.legra.ph/file/83c61271b95fdf421a9a0.jpg",
+    "https://te.legra.ph/file/cd6aa9cbe621c7c3a12ea.jpg",
+    "https://te.legra.ph/file/122cf568eef282ad3472a.jpg",
 ]
