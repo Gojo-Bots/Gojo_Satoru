@@ -11,17 +11,17 @@
 
 ------
 
-<!---
+
 [![GitHub forks](https://img.shields.io/github/forks/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/fork)
 [![GitHub stars](https://img.shields.io/github/stars/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/stargazers)
 ![Repo Size](https://img.shields.io/github/repo-size/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green?&style=flat-square)
-[![GitHub license](https://img.shields.io/github/license/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/master/LICENSE)
+<!----[![GitHub license](https://img.shields.io/github/license/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/main/LICENSE)----->
 [![Python](https://img.shields.io/badge/Python-v3.10-blue)](https://www.python.org/)
 ![Branch](https://img.shields.io/badge/Branch-Master-orange)
 ![GitHub language count](https://img.shields.io/github/languages/count/iamgojoof6eyes/Gojo_Satarou?color=Pink&label=Language&style=flat-square)
 
------>
+
 
 **A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group management bot for telegram.
 If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to updating and sending pull requests**
