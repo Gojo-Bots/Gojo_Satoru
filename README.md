@@ -40,7 +40,7 @@ This bot is mixture of the many bots and have some extra plugins so it is quite 
 ## Group Management 
 The Gojo Satarou is a powerful Group Management bot. 
 
-Can be found on telegram as a management bot for group management as [@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)
+Can be found on telegram as a management bot for group management as [@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes_bot) ***Note: The bot is not currently working due to some issues and I don't think I have that much extra time to solve it....If you think you can help me in fixing it just ib me on tg [@iamgojoof6eyes](https://t.me/iamgojoof6eyes)***
 
 **If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://t.me/gojo_updates) 🌟 and then join the gc and ask your problem.**
 
