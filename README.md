@@ -100,11 +100,11 @@ Can be found on telegram as a management bot for group management as [@iamgojoof
   * ``Mandaotry`` keys are [given below](#Variables)
   * ``All keys`` are listed [here](https://telegra.ph/Captain-03-27)
   * ***The bot can be used by provideing mandotry variables only..*** 
-  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***---->
+  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
 
 --------  
 
-## Deploy locally
+## Deploy locally---->
 ### Using git
 
 * Install Python v3.7 or later from Python's Website
