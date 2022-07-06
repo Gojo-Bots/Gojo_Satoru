@@ -642,4 +642,12 @@ StartPic =[
     "https://te.legra.ph/file/83c61271b95fdf421a9a0.jpg",
     "https://te.legra.ph/file/cd6aa9cbe621c7c3a12ea.jpg",
     "https://te.legra.ph/file/122cf568eef282ad3472a.jpg",
+    "https://te.legra.ph/file/e32b2063a06deb34fc901.jpg",
+    "https://te.legra.ph/file/9ee77ea6bbe6f4ad13b65.jpg",
+    "https://te.legra.ph/file/23e0a389fb5df7900c686.jpg",
+    "https://te.legra.ph/file/fc0557000a350267adc0d.jpg",
+    "https://te.legra.ph/file/b3a46c16fa72f24dfec9f.jpg",
+    "https://te.legra.ph/file/6f80fcd24f20e950d9ed0.jpg",
+    "https://te.legra.ph/file/322466833973279848e60.jpg",
+    "https://te.legra.ph/file/cd381fd6f9960555664f6.jpg",
 ]
