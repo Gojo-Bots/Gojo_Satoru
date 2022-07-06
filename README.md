@@ -16,7 +16,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/stargazers)
 ![Repo Size](https://img.shields.io/github/repo-size/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green?&style=flat-square)
-<!----[![GitHub license](https://img.shields.io/github/license/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/main/LICENSE)----->
+[![GitHub license](https://img.shields.io/github/license/iamgojoof6eyes/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/iamgojoof6eyes/Gojo_Satarou/main/LICENSE)
 [![Python](https://img.shields.io/badge/Python-v3.10-blue)](https://www.python.org/)
 ![Branch](https://img.shields.io/badge/Branch-Master-orange)
 ![GitHub language count](https://img.shields.io/github/languages/count/iamgojoof6eyes/Gojo_Satarou?color=Pink&label=Language&style=flat-square)
@@ -37,15 +37,16 @@ This bot is mixture of the many bots and have some extra plugins so it is quite 
 ```
 ---------
 
-## Group Management 
-The Gojo Satarou is a powerful Group Management bot. 
-
-Can be found on telegram as a management bot for group management as [@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes_bot) ***Note: The bot is not currently working due to some issues and I don't think I have that much extra time to solve it....If you think you can help me in fixing it just ib me on tg [@iamgojoof6eyes](https://t.me/iamgojoof6eyes)***
-
-**If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://t.me/gojo_updates) 🌟 and then join the gc and ask your problem.**
+## About 
+  
+  <h1 align="center"><img src="https://media.giphy.com/media/hbKBe6j3JLsNnb4h53/giphy.gif" /></h1>
+  
+  
+The Gojo Satarou is a powerful Group Management bot with awesome plugins and features.
+ 
+  **If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://t.me/gojo_updates) 🌟 and then join the gc and ask your problem.**
 
 ## Features
-  <h1 align="center"><img src="https://media.giphy.com/media/hbKBe6j3JLsNnb4h53/giphy.gif" /></h1>
   
 * Modern
 * Fast
@@ -55,6 +56,8 @@ Can be found on telegram as a management bot for group management as [@iamgojoof
 
   
 ***Can be found on Telegram as __[@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)__***
+  
+ ⚠️ ***Note: The bot is not currently working due to some issues and I don't think I have that much extra time to solve it....If you think you can help me in fixing it just ib me on tg [@iamgojoof6eyes](https://t.me/iamgojoof6eyes)***
 
 ---------
 
