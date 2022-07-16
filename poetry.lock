@@ -561,7 +561,7 @@ idna2008 = ["idna"]
 
 [[package]]
 name= "search-engine-parser"
-version = "0.6.6"
+version = "0.6.7"
 description = "search-engine-parser help to query with popular search engines."
 category = "main"
 optional =false
@@ -1267,8 +1267,8 @@ rfc3986 = [
     {file = "rfc3986-1.5.0.tar.gz", hash = "sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835"},
 ]
 search-engine-parser = [
-    {file = "search_engine_parser-0.6.6-py3-none-any.whl", hash = "sha256:4ccd2aa05068601db0bed4727ef921bdd53fb84d125bf8c6f75624f67714e564"},
-    {file = "search-engine-parser-0.6.6.tar.gz", hash = "sha256:025f9c95a30ef47fc4515ad537f7e41397b3913d5e7a6510a3ebf527e9a0642f"},
+    {file = "search_engine_parser-0.6.7-py3-none-any.whl", hash = "sha256:c0bd6af898f7fce4d6069ba928a5482b3154ff85a8debe66b557bb0885208b31"},
+    {file = "search-engine-parser-0.6.7.tar.gz", hash = "sha256:643a0d6834b4db63957eac0c3d650281bba77b7e7771fcd34843ccea548af996"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
