@@ -20,7 +20,7 @@ from Powers.utils.start_utils import (
 )
 from Powers.vars import Config
 
-StartPic = choice(StartPic)
+
 
 @Gojo.on_message(
     command("donate") & (filters.group | filters.private),
@@ -35,6 +35,7 @@ async def donate(_, m: Message):
 
     You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes)
      """
+    StartPic = choice(StartPic)
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
     await m.reply_photo(photo=StartPic,
@@ -87,6 +88,8 @@ async def start(c: Gojo, m: Message):
             if not help_msg:
                 return
 
+            StartPic = choice(StartPic)
+
             await m.reply_photo(
                 photo=StartPic,
                 caption=help_msg,
@@ -104,6 +107,8 @@ async def start(c: Gojo, m: Message):
 
             Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates."""
             
+            StartPic = choice(StartPic)
+
             await m.reply_photo(
                 photo=StartPic,
                 caption=cpt,
@@ -189,6 +194,7 @@ async def help_menu(_, m: Message):
         )
         chat_type = await chattype(m)
         if chat_type == "private":
+            StartPic = choice(StartPic)
             await m.reply_photo(
                 photo=StartPic,
                 caption=help_msg,
@@ -198,6 +204,7 @@ async def help_menu(_, m: Message):
                 
             )
         else:
+            StartPic = choice(StartPic)
             await m.reply_photo(
                 photo=StartPic,
                 caption=f"Press the button below to get help for <i>{help_option}</i>",
@@ -233,6 +240,7 @@ async def help_menu(_, m: Message):
                 [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
             )
             msg = "Contact me in PM to get the list of possible commands."
+        StartPic = choice(StartPic)
         await m.reply_photo(
             photo=StartPic,
             caption=msg,

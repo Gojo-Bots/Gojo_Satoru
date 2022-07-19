@@ -20,8 +20,6 @@ async def chattype(m: Message):
     if m.chat.type == ChatType.SUPERGROUP:
         ct = "supergroup"
 
-    if m.chat.type == ChatType.BOT:
-        ct ="bot"
 
 
     return ct
@@ -30,9 +28,6 @@ async def c_type(chat_id):
     # To get chat type with chat id
     
     c = await Gojo.get_chat(chat_id)
-    
-    if c.type == ChatType.BOT:
-        ct = "bot"
     
     if c.type == ChatType.CHANNEL:
         ct = "channel"
