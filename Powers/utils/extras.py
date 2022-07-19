@@ -650,4 +650,5 @@ StartPic =[
     "https://te.legra.ph/file/6f80fcd24f20e950d9ed0.jpg",
     "https://te.legra.ph/file/322466833973279848e60.jpg",
     "https://te.legra.ph/file/cd381fd6f9960555664f6.jpg",
+    "https://te.legra.ph/file/c74c4f4be365971311510.jpg",
 ]
