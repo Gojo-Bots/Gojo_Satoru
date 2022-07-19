@@ -113,7 +113,7 @@ async def insult(c : Gojo , m: Message):
 @Gojo.on_message(command("yes"))
 async def yesw(c : Gojo , m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    rtext = YES[1]
+    rtext = YES[0]
     await reply_text(rtext)
     LOGGER.info(f"{m.from_user.id} said YES or may be NO in {m.chat.id}")
     return
@@ -122,7 +122,7 @@ async def yesw(c : Gojo , m: Message):
 @Gojo.on_message(command("no"))
 async def now(c : Gojo , m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    rtext = NO[1]
+    rtext = NO[0]
     await reply_text(rtext)
     LOGGER.info(f"{m.from_user.id} said NO or may be YES in {m.chat.id}")
     return
