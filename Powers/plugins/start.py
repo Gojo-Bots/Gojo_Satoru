@@ -67,7 +67,7 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Gojo, m: Message):
-    chat_type = await chattype(m)
+    chat_type = await await chattype(m)
     if chat_type == "private":
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
@@ -187,7 +187,7 @@ async def help_menu(_, m: Message):
         LOGGER.info(
             f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
-        chat_type = chattype(m)
+        chat_type = await chattype(m)
         if chat_type == "private":
             await m.reply_photo(
                 photo=StartPic,
@@ -214,7 +214,7 @@ async def help_menu(_, m: Message):
                 ),
             )
     else:
-        chat_type = chattype(m)
+        chat_type = await chattype(m)
         if chat_type == "privaate":
             keyboard = ikb(
                 [

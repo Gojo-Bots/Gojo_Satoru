@@ -36,7 +36,7 @@ async def escape_mentions_using_curly_brackets_wl(
     else:
         user = m.old_chat_member.user if m.old_chat_member else m.from_user
     if teks:
-        chat_type = chattype(m)
+        chat_type = await chattype(m)
         teks = teks.format(
             first=escape(user.first_name),
             last=escape(user.last_name or user.first_name),

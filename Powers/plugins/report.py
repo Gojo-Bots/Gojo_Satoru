@@ -20,7 +20,7 @@ async def report_setting(_, m: Message):
     args = m.text.split()
     db = Reporting(m.chat.id)
 
-    chat_type = chattype(m)
+    chat_type = await chattype(m)
     if chat_type == "private":
         if len(args) >= 2:
             option = args[1].lower()
@@ -65,7 +65,7 @@ async def report_setting(_, m: Message):
 
 @Gojo.on_message(command("report") & filters.group)
 async def report_watcher(c: Gojo, m: Message):
-    chat_type = chattype(m)
+    chat_type = await chattype(m)
     if chat_type != "supergroup":
         return
 

@@ -118,7 +118,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    chat_type = chattype(m)
+    chat_type = await chattype(m)
     if chat_type != "supergroup":
         return False
 
@@ -152,7 +152,7 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    chat_type = chattype(m)
+    chat_type = await chattype(m)
     if chat_type != "supergroup":
         return False
 
@@ -215,7 +215,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    chat_type = chattype(m)
+    chat_type = await chattype(m)
     if chat_type != "supergroup":
         return False
 
@@ -262,7 +262,7 @@ async def changeinfo_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    chat_type = chattype(m)
+    chat_type = await chattype(m)
     if chat_type != "supergroup":
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
