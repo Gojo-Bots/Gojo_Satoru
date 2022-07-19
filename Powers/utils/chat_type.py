@@ -20,7 +20,7 @@ async def chattype(m: Message):
     if m.chat.type == ChatType.SUPERGROUP:
         ct = "supergroup"
 
-    if m.chat.type in ChatType.BOT:
+    if m.chat.type == ChatType.BOT:
         ct ="bot"
 
 
