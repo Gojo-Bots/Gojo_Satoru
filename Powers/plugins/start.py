@@ -35,10 +35,10 @@ async def donate(_, m: Message):
 
     You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes)
      """
-    global StartPic = choice(StartPic)
+    
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_photo(photo=StartPic,
+    await m.reply_photo(photo=choice(StartPic),
                             caption=cpt)
     return
 
@@ -67,9 +67,8 @@ async def close_admin_callback(_, q: CallbackQuery):
 @Gojo.on_message(
     command("start") & (filters.group | filters.private),
 )
-StartPic = choice(StartPic)
+
 async def start(c: Gojo, m: Message):
-    global StartPic
     chat_type = await chattype(m)
     if chat_type == "private":
         if len(m.text.split()) > 1:
@@ -93,7 +92,7 @@ async def start(c: Gojo, m: Message):
             
 
             await m.reply_photo(
-                photo=StartPic,
+                photo=choice(StartPic),
                 caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
@@ -109,10 +108,10 @@ async def start(c: Gojo, m: Message):
 
             Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates."""
             
-            StartPic = choice(StartPic)
+            
 
             await m.reply_photo(
-                photo=StartPic,
+                photo=choice(StartPic),
                 caption=cpt,
                 reply_markup=(await gen_start_kb(m)),
                 quote=True,
@@ -173,7 +172,7 @@ async def commands_menu(_, q: CallbackQuery):
         pass
     except QueryIdInvalid:
         await q.message.reply_photo(
-            photo=StartPic,
+            photo=choice(StartPic),
             caption=cpt,
             reply_markup=keyboard)
         
@@ -182,9 +181,7 @@ async def commands_menu(_, q: CallbackQuery):
 
 
 @Gojo.on_message(command("help"))
-StartPic = choice(StartPic)
 async def help_menu(_, m: Message):
-    global StartPic
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
@@ -200,7 +197,7 @@ async def help_menu(_, m: Message):
         if chat_type == "private":
             
             await m.reply_photo(
-                photo=StartPic,
+                photo=choice(StartPic),
                 caption=help_msg,
                 parse_mode="markdown",
                 reply_markup=ikb(help_kb),
@@ -210,7 +207,7 @@ async def help_menu(_, m: Message):
         else:
             
             await m.reply_photo(
-                photo=StartPic,
+                photo=choice(StartPic),
                 caption=f"Press the button below to get help for <i>{help_option}</i>",
                 reply_markup=ikb(
                     [
@@ -244,9 +241,9 @@ async def help_menu(_, m: Message):
                 [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
             )
             msg = "Contact me in PM to get the list of possible commands."
-        StartPic = choice(StartPic)
+        
         await m.reply_photo(
-            photo=StartPic,
+            photo=choice(StartPic),
             caption=msg,
             reply_markup=keyboard,
         )
