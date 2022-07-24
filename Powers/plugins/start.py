@@ -67,8 +67,9 @@ async def close_admin_callback(_, q: CallbackQuery):
 @Gojo.on_message(
     command("start") & (filters.group | filters.private),
 )
+StartPic = choice(StartPic)
 async def start(c: Gojo, m: Message):
-    global StartPic = choice(StartPic)
+    global StartPic
     chat_type = await chattype(m)
     if chat_type == "private":
         if len(m.text.split()) > 1:
@@ -181,8 +182,9 @@ async def commands_menu(_, q: CallbackQuery):
 
 
 @Gojo.on_message(command("help"))
+StartPic = choice(StartPic)
 async def help_menu(_, m: Message):
-    global StartPic = choice(StartPic)
+    global StartPic
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
