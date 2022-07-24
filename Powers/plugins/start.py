@@ -35,7 +35,7 @@ async def donate(_, m: Message):
 
     You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes)
      """
-    StartPic = choice(StartPic)
+    global StartPic = choice(StartPic)
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
     await m.reply_photo(photo=StartPic,
@@ -68,7 +68,7 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Gojo, m: Message):
-    StartPic = choice(StartPic)
+    global StartPic = choice(StartPic)
     chat_type = await chattype(m)
     if chat_type == "private":
         if len(m.text.split()) > 1:
@@ -182,7 +182,7 @@ async def commands_menu(_, q: CallbackQuery):
 
 @Gojo.on_message(command("help"))
 async def help_menu(_, m: Message):
-    StartPic = choice(StartPic)
+    global StartPic = choice(StartPic)
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
