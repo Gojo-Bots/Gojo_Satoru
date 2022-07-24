@@ -128,7 +128,7 @@ async def start(c: Gojo, m: Message):
         ])
         await m.reply_photo(
             photo=choice(StartPic),
-            text="I'm alive :3",
+            caption="I'm alive :3",
             reply_markup=kb,
             quote=True,
         )
