@@ -4,6 +4,7 @@ from typing import List
 
 from cachetools import TTLCache
 from pyrogram.types import CallbackQuery
+from pyrogram import enums
 from pyrogram.types.messages_and_media.message import Message
 
 from Powers import LOGGER
@@ -40,7 +41,7 @@ async def admin_cache_reload(m: Message or CallbackQuery, status=None) -> List[i
                 (("@" + z.user.username) if z.user.username else z.user.first_name),
                 z.is_anonymous,
             )
-            async for z in m.chat.iter_members(filter="administrators")
+            async for z in m.get_chat_members(filter=enums.ChatMembersFilter.ADMINISTRATORS)
             if not z.user.is_deleted
         ]
         ADMIN_CACHE[m.chat.id] = admin_list
