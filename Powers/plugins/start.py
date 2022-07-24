@@ -68,6 +68,7 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Gojo, m: Message):
+    StartPic = choice(StartPic)
     chat_type = await chattype(m)
     if chat_type == "private":
         if len(m.text.split()) > 1:
@@ -88,7 +89,7 @@ async def start(c: Gojo, m: Message):
             if not help_msg:
                 return
 
-            StartPic = choice(StartPic)
+            
 
             await m.reply_photo(
                 photo=StartPic,
@@ -181,6 +182,7 @@ async def commands_menu(_, q: CallbackQuery):
 
 @Gojo.on_message(command("help"))
 async def help_menu(_, m: Message):
+    StartPic = choice(StartPic)
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
@@ -194,7 +196,7 @@ async def help_menu(_, m: Message):
         )
         chat_type = await chattype(m)
         if chat_type == "private":
-            StartPic = choice(StartPic)
+            
             await m.reply_photo(
                 photo=StartPic,
                 caption=help_msg,
@@ -204,7 +206,7 @@ async def help_menu(_, m: Message):
                 
             )
         else:
-            StartPic = choice(StartPic)
+            
             await m.reply_photo(
                 photo=StartPic,
                 caption=f"Press the button below to get help for <i>{help_option}</i>",
