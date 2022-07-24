@@ -711,7 +711,7 @@ async def dban_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await c.send_message(m.chat.id, txt, reply_markup=keyboard)
+        await c.send_animation(m.chat.id, animation = BAN_MEDIA,caption=txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:

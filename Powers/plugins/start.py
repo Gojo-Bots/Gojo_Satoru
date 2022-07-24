@@ -120,8 +120,16 @@ async def start(c: Gojo, m: Message):
         except UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
     else:
-        await m.reply_text(
+        kb = ikb([
+            [("Connect me to pm",
+            f"https://t.me/{Config.BOT_USERNAME}?start={Config.BOT_TOKEN}",
+            "url",
+            )]
+        ])
+        await m.reply_photo(
+            photo=choice(StartPic),
             text="I'm alive :3",
+            reply_markup=kb,
             quote=True,
         )
     return

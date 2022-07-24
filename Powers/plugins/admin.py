@@ -103,7 +103,7 @@ async def zombie_clean(c: Gojo, m: Message):
     zombie = 0
 
     wait = await m.reply_text("Searching ... and banning ...")
-    async for member in c.iter_chat_members(m.chat.id):
+    async for member in c.get_chat_members(m.chat.id):
         if member.user.is_deleted:
             zombie += 1
             try:
