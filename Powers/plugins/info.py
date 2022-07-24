@@ -39,7 +39,7 @@ def change(
 
 async def user_info(user, already=False):
     if not already:
-        user = await Gojo.get_users(user)
+        user = await Gojo.get_users(user_ids=user)
     if not user.first_name:
         return ["Deleted account", None]
     user_id = user.id
@@ -214,4 +214,5 @@ __HELP__ = """
 ***Information***
 
 * /info - To get info about the user
-* /chinfo - To get info about the chat"""
+* /chinfo - To get info about the chat
+"""
