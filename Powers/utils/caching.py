@@ -34,14 +34,15 @@ async def admin_cache_reload(m: Message or CallbackQuery, status=None) -> List[i
         except KeyError:
             # Because it might be first time when admn_list is being reloaded
             pass
-
+        
+        chat = m.chat.id
         admin_list = [
             (
                 z.user.id,
                 (("@" + z.user.username) if z.user.username else z.user.first_name),
                 z.is_anonymous,
             )
-            chat = m.chat.id
+            
             async for z in chat.get_chat_members(filter=enums.ChatMembersFilter.ADMINISTRATORS)
             if not z.user.is_deleted
         ]
