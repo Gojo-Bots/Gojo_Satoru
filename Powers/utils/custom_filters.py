@@ -80,7 +80,7 @@ def command(
                 except ValueError:
                     # i.e. PM
                     user_status = "creator"
-                ddb = Disabling(m.get("chat").get("id"))
+                ddb = Disabling(m.chat.id)
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
                     "creator",
                     "administrator",
