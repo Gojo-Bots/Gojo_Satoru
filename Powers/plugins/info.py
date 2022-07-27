@@ -67,15 +67,15 @@ async def user_info(user, already=False):
     if is_bot is True:
         last_date = "Targeted user is a bot"
     elif status == "recently":
-        last_date = "Recently"
+        last_date = "Last seen Recently"
     elif status == "within_week":
-        last_date = "Within the last week"
+        last_date = "Last seen within the last week"
     elif status == "within_month":
-        last_date = "Within the last month"
+        last_date = "Last seen within the last month"
     elif status == "long_time_ago":
-        last_date = "A long time ago or may be I am blocked by the user  :("
+        last_date = "Last seen a long time ago or may be I am blocked by the user  :("
     elif status == "online":
-        last_date = "Currently Online"
+        last_date = "User is currently Online"
     elif status == "offline":
         last_date = datetime.fromtimestamp(user.status.date).strftime(
             "%a, %d %b %Y, %H:%M:%S"
