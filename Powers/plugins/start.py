@@ -122,7 +122,7 @@ async def start(c: Gojo, m: Message):
     else:
         kb = ikb([
             [("Connect me to pm",
-            f"https://t.me/{Config.BOT_USERNAME}?start={Config.BOT_TOKEN}",
+            f"https://t.me/{Config.BOT_USERNAME}?start=start",
             "url",
             )]
         ])
