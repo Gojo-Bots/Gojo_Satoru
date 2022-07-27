@@ -122,13 +122,13 @@ async def start(c: Gojo, m: Message):
     else:
         kb = ikb([
             [("Connect me to pm",
-            f"https://t.me/{Config.BOT_USERNAME}?start={Config.BOT_TOKEN}",
+            f"https://t.me/{Config.BOT_USERNAME}?start=start",
             "url",
             )]
         ])
         await m.reply_photo(
             photo=choice(StartPic),
-            text="I'm alive :3",
+            caption="I'm alive :3",
             reply_markup=kb,
             quote=True,
         )
