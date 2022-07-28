@@ -6,10 +6,13 @@ from pyrogram.types import Message
 
 from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
 from Powers.bot_class import Gojo
+from Powers.database.antispam_db import GBan
+from Powers.database.users_db import Users
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers.utils.chat_type import c_type
 
+gban_db=GBan()
 
 escape = "\n"
 empty = " "
@@ -37,11 +40,22 @@ def change(
     return text
 
 
-async def user_info(user, already=False):
+async def user_info(c: Gojo, user, already=False):
     if not already:
-        user = await Gojo.get_users(user_ids=user)
+        try:
+            user = Users.get_user_info(int(user_id))  # Try to fetch user info form database if available give key error if user is not present
+        except KeyError:
+            user = await Gojo.get_users(user_ids=user) # Fetch user info in traditional way if not available in db
     if not user.first_name:
         return ["Deleted account", None]
+    gbanned, reason_gban = gban_db.get_gban(user_id)
+    if gbanned:
+        gban=True
+        reason = f"The user is gbanned because{reason_gban}"
+    else:
+        gban=False
+        reason = "User is not gbanned"
+
     user_id = user.id
     username = user.username
     first_name = user.first_name
@@ -92,6 +106,8 @@ async def user_info(user, already=False):
         "Support": is_support,
         "Support user type": [omp],
         "Bot" : is_bot,
+        "Gbanned": gban,
+        "Gban reason":[reason],
         "Fake" : is_fake,
         "Last seen" : [last_date],
     }
@@ -99,13 +115,13 @@ async def user_info(user, already=False):
     return [caption, photo_id]
 
 
-async def chat_info(chat, already=False):
+async def chat_info(c: Gojo, chat, already=False):
     if not already:
         chat = await Gojo.get_chat(chat)
     chat_id = chat.id
     username = chat.username
     title = chat.title
-    type_ = c_type(chat)
+    type_ = c_type(c, chat_id=chat)
     is_scam = chat.is_scam
     is_fake = chat.is_fake
     description = chat.description
@@ -156,7 +172,7 @@ async def info_func(c: Gojo, message: Message):
     m = await message.reply_text(f"Fetching user info of user {user.username}...")
 
     try:
-        info_caption, photo_id = await user_info(user)
+        info_caption, photo_id = await user_info(c , user=user)
         LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user.username} in {m.chat.id}")
     except Exception as e:
         LOGGER.error(e)
@@ -175,7 +191,7 @@ async def info_func(c: Gojo, message: Message):
 
 
 @Gojo.on_message(command("chinfo"))
-async def chat_info_func(_, message: Message):
+async def chat_info_func(c: Gojo, message: Message):
     splited = message.text.split()
     try:
         if len(splited) == 1:
@@ -192,7 +208,7 @@ async def chat_info_func(_, message: Message):
 
         m = await message.reply_text(f"Fetching chat info of chat {chat}.....")
 
-        info_caption, photo_id = await chat_info(chat)
+        info_caption, photo_id = await chat_info(c, chat=chat)
         if not photo_id:
             return await m.edit(info_caption, disable_web_page_preview=True)
 

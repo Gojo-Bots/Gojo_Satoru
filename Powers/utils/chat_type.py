@@ -24,7 +24,7 @@ async def chattype(m: Message):
 
     return ct
 
-async def c_type(chat_id):
+async def c_type(c: Gojo, chat_id):
     # To get chat type with chat id
     
     c = await Gojo.get_chat(chat_id)
