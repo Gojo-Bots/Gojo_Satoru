@@ -142,19 +142,22 @@ async def info_func(c: Gojo, message: Message):
         await message.reply_text("You are not providing proper arguments.......**Usage:**/info [USERNAME|ID]....Example /info @iamgojoof6eyes")
         await message.stop_propagation()
 
-    try:
-        user, _ , _= await extract_user(c , message)
-    except Exception as e:
-        return await message.reply_text(f"Got an error while running extract_user function error is {e}.....Give this message in supoort group")
+    if m.reply_to_message and not m.reply_to_message.from_user:
+        user = message.reply_to_message.from_user.id
+    else:
+        try:
+            user, _ , _= await extract_user(c , message)
+        except Exception as e:
+            return await message.reply_text(f"Got an error while running extract_user function error is {e}.....Give this message in supoort group")
     
     if not user:
         message.reply_text("Can't find user to fetch info!")
     
-    m = await message.reply_text(f"Fetching user info of user {user}...")
+    m = await message.reply_text(f"Fetching user info of user {user.username}...")
 
     try:
         info_caption, photo_id = await user_info(user)
-        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user} in {m.chat.id}")
+        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user.username} in {m.chat.id}")
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -167,7 +170,7 @@ async def info_func(c: Gojo, message: Message):
     await message.reply_photo(photo, caption=info_caption, quote=False)
     await m.delete()
     os.remove(photo)
-    LOGGER.info(f"{message.from_user.id} fetched user info of user {user} in {m.chat.id}")
+    LOGGER.info(f"{message.from_user.id} fetched user info of user {user.username} in {m.chat.id}")
 
 
 
@@ -176,7 +179,7 @@ async def chat_info_func(_, message: Message):
     splited = message.text.split()
     try:
         if len(splited) == 1:
-            return await message.reply_text("I can't fetch nothing......")
+            chat = message.chat.id
 
         elif len(splited) > 2:
             return await message.reply_text(
@@ -195,7 +198,7 @@ async def chat_info_func(_, message: Message):
 
         photo = await Gojo.download_media(photo_id)
         await message.reply_photo(photo, caption=info_caption, quote=False)
-        LOGGER.info(f"{message.from_user.id} fetched chat info of user {chat} in {m.chat.id}")
+        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {chat.title} in {m.chat.id}")
 
         await m.delete()
         os.remove(photo)
