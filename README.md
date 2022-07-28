@@ -26,6 +26,8 @@
 **A python and [pyrogram](https://github.com/iamgojoof6eyes/pyrogram) based group management bot for telegram.
 If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to updating and sending pull requests**
 
+
+
 ---------  
 
 ## Inspiration ✨
@@ -59,7 +61,17 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
   
  ⚠️ ***Note: The bot is not currently working due to some issues and I don't think I have that much extra time to solve it....If you think you can help me in fixing it just ib me on tg [@iamgojoof6eyes](https://t.me/iamgojoof6eyes)***
 
+-------
+
+## License
+[![GPLv3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+<br>Licensed Under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3</a>
+
+
+
 ---------
+
+
 
 # DEPLOYMENT 🚀
 ## Deploy To Heroku
