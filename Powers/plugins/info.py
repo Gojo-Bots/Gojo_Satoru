@@ -206,7 +206,7 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = splited[1]
         
 
-        m = await message.reply_text(f"Fetching chat info of chat {chat}.....")
+        m = await message.reply_text(f"Fetching chat info of chat **{chat.title}**.....")
 
         info_caption, photo_id = await chat_info(c, chat=chat)
         if not photo_id:
