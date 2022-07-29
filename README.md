@@ -201,24 +201,22 @@ To add your very own plugin just use the format given below and go through the [
       
 --------  
       
-<!---# Contributors
+# Contributors
       
 ![Contributors](https://contrib.rocks/image?repo=iamgojoof6eyes/Gojo_Satarou)
 
---------->
+
+---------
 
 # Special Thanks ❤️
-
-<!---[![PSYREX](https://avatars.githubusercontent.com/u/90316018?v=4)](https://github.com/iamPSYREX)
-
-# [PSYREX](https://github.com/iamPSYREX)--->
       
-<p align='center'>
-  <a href="https://github.com/iamPSYREX"><img src="https://avatars.githubusercontent.com/u/90316018?v=4" alt="PSYREX"></a></br></br>
+<p align='left'>
+  <a href="https://github.com/iamPSYREX"><img src="https://avatars.githubusercontent.com/u/90316018?v=4" width="300" 
+     height="300 alt="PSYREX"></a></br></br>
    
 </p>
 
-<h1 align="center"><i><a href="https://github.com/iamPSYREX">PSYREX</a></i></h1>
+# [PSYREX](https://github.com/iamPSYREX)
 
 
 
@@ -226,7 +224,10 @@ To add your very own plugin just use the format given below and go through the [
 
 # Powered by [HELL](https://github.com/The-HellBot)
 
-[![Hell Community](https://te.legra.ph/file/a780adeb9b406b169a889.jpg)](https://github.com/The-HellBot)
 
-
+<p align='left'>
+  <a href="https://github.com/The-HellBot"><img src="https://te.legra.ph/file/a780adeb9b406b169a889.jpg" width="500" 
+     height="500 alt="Hell Bot"></a></br></br>
+   
+</p>
 
