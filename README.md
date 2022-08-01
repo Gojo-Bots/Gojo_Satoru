@@ -46,7 +46,7 @@ This bot is mixture of the many bots and have some extra plugins so it is quite 
   
 The Gojo Satarou is a powerful Group Management bot with awesome plugins and features.
  
-  **If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://t.me/gojo_updates) 🌟 and then join the gc and ask your problem.**
+  **If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://telegram.dog/gojo_updates) 🌟 and then join the gc and ask your problem.**
 
 ## Features
   
@@ -57,9 +57,9 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 * Frequently updated
 
   
-***Can be found on Telegram as __[@iamgojoof6eyes_bot](https://t.me/iamgojoof6eyes)__***
+***Can be found on Telegram as __[@iamgojoof6eyes_bot](https://telegram.dog/iamgojoof6eyes_bot)__***
   
- ⚠️ ***Note: The bot is not currently working due to some issues and I don't think I have that much extra time to solve it....If you think you can help me in fixing it just ib me on tg [@iamgojoof6eyes](https://t.me/iamgojoof6eyes)***
+ ⚠️ ***Note: The bot is not currently working due to some issues and I don't think I have that much extra time to solve it....If you think you can help me in fixing it just ib me on tg [@iamgojoof6eyes](https://telegram.dog/iamgojoof6eyes)***
 
 -------
 
