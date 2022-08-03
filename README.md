@@ -203,7 +203,7 @@ To add your very own plugin just use the format given below and go through the [
       
 # Contributors
       
-![Contributors](https://contrib.rocks/image?repo=iamgojoof6eyes/Gojo_Satarou)
+[![Contributors](https://contrib.rocks/image?repo=iamgojoof6eyes/Gojo_Satarou)](https://github.com/iamgojoof6eyes/Gojo_Satarou/graphs/contributors)
 
 
 ---------
