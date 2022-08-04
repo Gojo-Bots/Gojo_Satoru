@@ -158,7 +158,7 @@ async def info_func(c: Gojo, message: Message):
         await message.reply_text("You are not providing proper arguments.......**Usage:**/info [USERNAME|ID]....Example /info @iamgojoof6eyes")
         await message.stop_propagation()
 
-    if m.reply_to_message and not m.reply_to_message.from_user:
+    if message.reply_to_message and not message.reply_to_message.from_user:
         user = message.reply_to_message.from_user.id
     else:
         try:
@@ -206,7 +206,7 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = splited[1]
         
 
-        m = await message.reply_text(f"Fetching chat info of chat **{chat.title}**.....")
+        m = await message.reply_text(f"Fetching chat info of chat **{message.chat.title}**.....")
 
         info_caption, photo_id = await chat_info(c, chat=chat)
         if not photo_id:
@@ -219,7 +219,9 @@ async def chat_info_func(c: Gojo, message: Message):
         await m.delete()
         os.remove(photo)
     except Exception as e:
-        await m.edit(e)
+        await message.edit(chat_id=message.chat.id,                                                    
+                           message_id=message.id,
+                           e)
         LOGGER.error(e)
         LOGGER.error(format_exc())
 
