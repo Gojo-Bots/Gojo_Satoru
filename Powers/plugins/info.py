@@ -221,7 +221,7 @@ async def chat_info_func(c: Gojo, message: Message):
     except Exception as e:
         await message.edit(chat_id=message.chat.id,                                                    
                            message_id=message.id,
-                           e)
+                           text=e)
         LOGGER.error(e)
         LOGGER.error(format_exc())
 
