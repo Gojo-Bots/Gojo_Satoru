@@ -64,7 +64,7 @@
         "value": "/ ! $"
       },
       "DEV_USERS": {
-        "description": "ID of users who are Devs of your bot (can use /py etc.)...Don't give comma or anything after 1 id just give and space then enter second id. If you are a noob and would come and bother Hell support then keep the current ID's here at they are and add yours.",
+        "description": "ID of users who are Devs of your bot. Use space to seprate values",
         "required": false,
         "value": "1432756163 1344569458 1355478165 1789859817 1777340882"
       },
@@ -73,12 +73,12 @@
         "value": "gojo_updates"
       },
       "SUDO_USERS": {
-        "description": "A space separated list of user IDs who you want to assign as sudo users....Don't give comma or anything after 1 id just give and space then enter second id",
+        "description": "A space separated list of user IDs who you want to assign as sudo users.",
         "required": false,
         "value": "1432756163 1344569458 1355478165 1789859817 1777340882"
       },
       "WHITELIST_USERS": {
-        "description": "A space separated list of user IDs whitelisted, cannot be restricted...Don't give comma or anything after 1 id just give and space then enter second id",
+        "description": "A space separated list of user IDs whitelisted, cannot be restricted.",
         "required": false,
         "value": "1432756163 1344569458 1355478165 1789859817 1777340882"
       },

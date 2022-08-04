@@ -149,7 +149,7 @@ async def chat_info(c: Gojo, chat, already=False):
     return [caption, photo_id]
 
 
-@Gojo.on_message(command("info"))
+@Gojo.on_message(command(["info","whois"]))
 async def info_func(c: Gojo, message: Message):
     if len(message.text.split()) == 1 and not message.reply_to_message:
         await message.reply_text(text="I can't info fecth of nothing!")
@@ -190,7 +190,7 @@ async def info_func(c: Gojo, message: Message):
 
 
 
-@Gojo.on_message(command("chinfo"))
+@Gojo.on_message(command(["chinfo","chatinfo","chat_info"]))
 async def chat_info_func(c: Gojo, message: Message):
     splited = message.text.split()
     try:
