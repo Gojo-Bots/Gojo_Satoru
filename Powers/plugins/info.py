@@ -219,7 +219,7 @@ async def chat_info_func(c: Gojo, message: Message):
         await m.delete()
         os.remove(photo)
     except Exception as e:
-        await message.edit_text(text=e)
+        await message.reply_text(text=e)
         LOGGER.error(e)
         LOGGER.error(format_exc())
 
