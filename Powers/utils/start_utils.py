@@ -30,7 +30,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
         m = m.message
 
     cmds = sorted(list(HELP_COMMANDS.keys()))
-    kb = [f"get_mod.{cmd.lower()}" for cmd in cmds]
+    kb = [cmd.lower() for cmd in cmds]
 
     return [kb[i : i + 3] for i in range(0, len(kb), 3)]
 
@@ -253,11 +253,11 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
         )
     else:
         help_msg = """
-        Hey There! My name is Gojo.
-        I'm here to help you manage your groups!
-        Commands available:
-        * /start: Start the bot
-        * /help: Give's you this message.
+Hey There! My name is Gojo.
+I'm here to help you manage your groups!
+Commands available:
+* /start: Start the bot
+* /help: Give's you this message.
         """
         help_kb = [
             *(await gen_cmds_kb(m)),
