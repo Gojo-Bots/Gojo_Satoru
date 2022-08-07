@@ -43,13 +43,16 @@ def change(
 async def user_info(c: Gojo, user, already=False):
     if not already:
         try:
-            user = await Users.get_user_info(int(user_id))  # Try to fetch user info form database if available give key error if user is not present
+            user = Users.get_user_info(int(user))  # Try to fetch user info form database if available give key error if user is not present
+            user = user["_id"]
+            user = await c.get_users(user_ids=user)
         except KeyError:
-            LOGGER.warning(f"Calling api to fetch info about user {user_id}")
+            LOGGER.warning(f"Calling api to fetch info about user {user}")
             user = await c.get_users(user_ids=user) # Fetch user info in traditional way if not available in db
+
     if not user.first_name:
         return ["Deleted account", None]
-    gbanned, reason_gban = gban_db.get_gban(user_id)
+    gbanned, reason_gban = gban_db.get_gban(user)
     if gbanned:
         gban=True
         reason = f"The user is gbanned because {reason_gban}"
@@ -160,11 +163,11 @@ async def info_func(c: Gojo, message: Message):
     if not user:
         message.reply_text("Can't find user to fetch info!")
     
-    m = await message.reply_text(f"Fetching user info of user {user.username}...")
+    m = await message.reply_text(f"Fetching user info of user {message.from_user.id}...")
 
     try:
         info_caption, photo_id = await user_info(c , user=user)
-        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user.username} in {m.chat.id}")
+        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {message.from_user.id} in {message.chat.id}")
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -205,7 +208,7 @@ async def chat_info_func(c: Gojo, message: Message):
 
         photo = await Gojo.download_media(photo_id)
         await message.reply_photo(photo, caption=info_caption, quote=False)
-        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {chat.title} in {m.chat.id}")
+        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}")
 
         await m.delete()
         os.remove(photo)
