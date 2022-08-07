@@ -101,12 +101,12 @@ async def load_cmds(all_plugins):
             LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
 
-        imported_module = imp_mod("Powers.plugins." + single)
+        imported_module = imp_mod(f"Powers.plugins.{single}")
         if not hasattr(imported_module, "__PLUGIN__"):
             continue
 
         plugin_name = imported_module.__PLUGIN__.lower()
-        plugin_dict_name = f"plugins.{plugin_name}.main"
+        plugin_dict_name = f"plugins.{plugin_name}"
         plugin_help = imported_module.__HELP__
 
         if plugin_dict_name in HELP_COMMANDS:

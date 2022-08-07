@@ -43,15 +43,16 @@ def change(
 async def user_info(c: Gojo, user, already=False):
     if not already:
         try:
-            user = Users.get_user_info(int(user_id))  # Try to fetch user info form database if available give key error if user is not present
+            user = await Users.get_user_info(int(user_id))  # Try to fetch user info form database if available give key error if user is not present
         except KeyError:
-            user = await Gojo.get_users(user_ids=user) # Fetch user info in traditional way if not available in db
+            LOGGER.warning(f"Calling api to fetch info about user {user_id}")
+            user = await c.get_users(user_ids=user) # Fetch user info in traditional way if not available in db
     if not user.first_name:
         return ["Deleted account", None]
     gbanned, reason_gban = gban_db.get_gban(user_id)
     if gbanned:
         gban=True
-        reason = f"The user is gbanned because{reason_gban}"
+        reason = f"The user is gbanned because {reason_gban}"
     else:
         gban=False
         reason = "User is not gbanned"
@@ -101,7 +102,7 @@ async def user_info(c: Gojo, user, already=False):
         "ID": user_id,
         "DC": dc_id,
         "Name": [first_name],
-        "Username": [("@" + username) if username else None],
+        "Username": [("@" + username) if username else "NA"],
         "Mention": [mention],
         "Support": is_support,
         "Support user type": [omp],
@@ -117,7 +118,7 @@ async def user_info(c: Gojo, user, already=False):
 
 async def chat_info(c: Gojo, chat, already=False):
     if not already:
-        chat = await Gojo.get_chat(chat)
+        chat = await c.get_chat(chat)
     chat_id = chat.id
     username = chat.username
     title = chat.title
@@ -151,20 +152,10 @@ async def chat_info(c: Gojo, chat, already=False):
 
 @Gojo.on_message(command(["info","whois"]))
 async def info_func(c: Gojo, message: Message):
-    if len(message.text.split()) == 1 and not message.reply_to_message:
-        await message.reply_text(text="I can't info fecth of nothing!")
-        await message.stop_propagation()
-    elif len(message.text.split()) > 2 and not message.reply_to_message:
-        await message.reply_text("You are not providing proper arguments.......**Usage:**/info [USERNAME|ID]....Example /info @iamgojoof6eyes")
-        await message.stop_propagation()
-
-    if message.reply_to_message and not message.reply_to_message.from_user:
-        user = message.reply_to_message.from_user.id
-    else:
-        try:
-            user, _ , _= await extract_user(c , message)
-        except Exception as e:
-            return await message.reply_text(f"Got an error while running extract_user function error is {e}.....Give this message in supoort group")
+    try:
+        user, _ , _= await extract_user(c , message)
+    except Exception as e:
+        return await message.reply_text(f"Got an error while running extract_user function error is {e}.....Give this message in supoort group")
     
     if not user:
         message.reply_text("Can't find user to fetch info!")
@@ -192,18 +183,18 @@ async def info_func(c: Gojo, message: Message):
 
 @Gojo.on_message(command(["chinfo","chatinfo","chat_info"]))
 async def chat_info_func(c: Gojo, message: Message):
-    splited = message.text.split()
+    splited = message.text.split() 
     try:
         if len(splited) == 1:
             chat = message.chat.id
 
-        elif len(splited) > 2:
-            return await message.reply_text(
-                "**Usage:**/chinfo [USERNAME|ID]"
-            )
-        
         else:
             chat = splited[1]
+        
+        try:
+            chat = int(chat)
+        except ValueError:
+            return await message.reply_text("**Usage:**/chinfo [USERNAME|ID]")
         
 
         m = await message.reply_text(f"Fetching chat info of chat **{message.chat.title}**.....")
