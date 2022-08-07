@@ -44,9 +44,12 @@ async def user_info(c: Gojo, user, already=False):
     if not already:
         try:
             user = Users.get_user_info(int(user))  # Try to fetch user info form database if available give key error if user is not present
+            user = user["_id"]
+            user = await c.get_users(user_ids=user)
         except KeyError:
             LOGGER.warning(f"Calling api to fetch info about user {user}")
             user = await c.get_users(user_ids=user) # Fetch user info in traditional way if not available in db
+
     if not user.first_name:
         return ["Deleted account", None]
     gbanned, reason_gban = gban_db.get_gban(user_id)
