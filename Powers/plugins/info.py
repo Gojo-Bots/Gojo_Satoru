@@ -160,11 +160,11 @@ async def info_func(c: Gojo, message: Message):
     if not user:
         message.reply_text("Can't find user to fetch info!")
     
-    m = await message.reply_text(f"Fetching user info of user {user.username}...")
+    m = await message.reply_text(f"Fetching user info of user {message.from_user.id}...")
 
     try:
         info_caption, photo_id = await user_info(c , user=user)
-        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {user.username} in {m.chat.id}")
+        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {message.from_user.id} in {message.chat.id}")
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -205,7 +205,7 @@ async def chat_info_func(c: Gojo, message: Message):
 
         photo = await Gojo.download_media(photo_id)
         await message.reply_photo(photo, caption=info_caption, quote=False)
-        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {chat.title} in {m.chat.id}")
+        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}")
 
         await m.delete()
         os.remove(photo)
