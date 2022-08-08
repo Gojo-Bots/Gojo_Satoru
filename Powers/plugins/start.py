@@ -123,7 +123,7 @@ Join my [News Channel](https://t.me/gojo_updates) to get information on all the 
         kb = ikb([
             [("Connect me to pm",
             f"https://t.me/{Config.BOT_USERNAME}?start=start",
-            "url",
+            "url"
             )]
         ])
         await m.reply_photo(
@@ -145,7 +145,7 @@ Hit /help to find out more about how to use me in my full potential!
 
 Join my [News Channel](http://t.me/gojo_updates) to get information on all the latest updates."""
 
-        await q.message.edit_caption(
+        await q.edit_message_caption(
             caption=cpt,
             reply_markup=(await gen_start_kb(q.message)),
             
@@ -172,7 +172,7 @@ Commands available:
 * /start: Start the bot
 * /help: Give's you this message."""
 
-        await q.message.edit_caption(
+        await q.edit_message_caption(
             caption=cpt,
         reply_markup=keyboard,
         )
@@ -268,7 +268,7 @@ async def get_module_info(_, q: CallbackQuery):
     help_kb = HELP_COMMANDS[module]["buttons"] + [
         [("« " + "Back", "commands")],
     ]
-    await q.message.edit_caption(
+    await q.edit_message_caption(
         caption=help_msg,
         parse_mode="markdown",
         reply_markup=ikb(help_kb),
