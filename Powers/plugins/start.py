@@ -231,7 +231,7 @@ async def help_menu(_, m: Message):
             )
     else:
         chat_type = await chattype(m)
-        if chat_type == "privaate":
+        if chat_type == "private":
             keyboard = ikb(
                 [
                     *(await gen_cmds_kb(m)),
