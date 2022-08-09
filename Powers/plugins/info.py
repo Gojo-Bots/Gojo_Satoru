@@ -14,30 +14,6 @@ from Powers.utils.chat_type import c_type
 
 gban_db=GBan()
 
-escape = "\n"
-empty = " "
-
-bold = lambda x: f"**{x}:** "
-bold_ul = lambda x: f"**--{x}:**-- "
-
-single_func = lambda x: f"`{x}`{escape}"
-
-
-def change(
-        title: str,
-        body: dict,
-        indent: int = 2,
-        underline: bool = False,
-) -> str:
-    text = (bold_ul(title) + escape) if underline else bold(title) + escape
-
-    for key, value in body.items():
-        text += (
-                indent * empty
-                + bold(key)
-                + ((value[0] + escape) if isinstance(value, list) else single_func(value))
-        )
-    return text
 
 
 async def user_info(c: Gojo, user, already=False):
@@ -52,6 +28,7 @@ async def user_info(c: Gojo, user, already=False):
 
     if not user.first_name:
         return ["Deleted account", None]
+    
     gbanned, reason_gban = gban_db.get_gban(user)
     if gbanned:
         gban=True
@@ -63,8 +40,11 @@ async def user_info(c: Gojo, user, already=False):
     user_id = user.id
     username = user.username
     first_name = user.first_name
+    last_name = user.last_name
     mention = user.mention(f"{first_name}")
     dc_id = user.dc_id
+    is_verified = user.is_verified
+    is_restricted = user.is_restricted
     photo_id = user.photo.big_file_id if user.photo else None
     is_support = user_id in SUPPORT_STAFF
     if user_id in SUPPORT_STAFF:
@@ -78,7 +58,6 @@ async def user_info(c: Gojo, user, already=False):
             omp = "Hmmm.......Who is that again?"
     is_bot = user.is_bot
     is_fake = user.is_fake
-    
     status = user.status
         
         
@@ -101,22 +80,29 @@ async def user_info(c: Gojo, user, already=False):
     else:
         last_date = "User is currently online"
         
-    body = {
-        "ID": user_id,
-        "DC": dc_id,
-        "Name": [first_name],
-        "Username": [("@" + username) if username else "NA"],
-        "Mention": [mention],
-        "Support": is_support,
-        "Support user type": [omp],
-        "Bot" : is_bot,
-        "Gbanned": gban,
-        "Gban reason":[reason],
-        "Fake" : is_fake,
-        "Last seen" : [last_date],
-    }
-    caption = change("User info", body)
-    return [caption, photo_id]
+    caption = f"""
+<b><i><u>⚡ Extracted User info From Telegram ⚡</b></i></u>
+
+<b>🆔️ User ID</b>: <code>{user_id}</code>
+<b>📎 Link To Profile</b>: <a href='tg://user?id={user_id}'>Click Here🚪</a>
+<b>🗣️ Mention</b>: {mention}
+<b>🗣️ First Name</b>: <code>{first_name}</code>
+<b>🗣️ Second Name</b>: <code>{last_name}</code>
+<b>🔍 Username</b>: {("@" + username) if username else "NA"}
+<b>🥸 Support</b>: {is_support}
+<b>🤓 Support user type</b>: <code>{omp}</code>
+<b>💣 Gbanned</b>: {gban}
+<b>🤭 Gban reason</b>: <code>{reason}</code>
+<b>🌐 DC ID</b>: {dc_id}
+<b>🧐 RESTRICTED</b>: {is_restricted}
+<b>✅ VERIFIED</b>: {is_verified}
+<b>🧐 FAKE</b> : {is_fake}
+<b>🤖 BOT</b>: {is_bot}
+<b>👀 Last seen</b>: <code>{last_date}</code>
+
+"""
+     
+    return caption, photo_id
 
 
 async def chat_info(c: Gojo, chat, already=False):
@@ -131,26 +117,41 @@ async def chat_info(c: Gojo, chat, already=False):
     description = chat.description
     members = chat.members_count
     is_restricted = chat.is_restricted
-    link = f"[Link](t.me/{username})" if username else None
+    if is_restricted:
+        reasons = chat.restrictions
+    else:
+        reasons = "Chat is not restricted..."
+    invite_link = chat.invite_link
     dc_id = chat.dc_id
     photo_id = chat.photo.big_file_id if chat.photo else None
     can_save = chat.has_protected_content
-    body = {
-        "ID": chat_id,
-        "DC": dc_id,
-        "Type": type_,
-        "Name": [title],
-        "Username": [("@" + username) if username else None],
-        "Mention": [link],
-        "Members": members,
-        "Scam": is_scam,
-        "Fake" : is_fake,
-        "Can save content" : can_save,
-        "Restricted": is_restricted,
-        "Description": [description],
-    }
-    caption = change("Chat info", body)
-    return [caption, photo_id]
+    sticker_set = chat.sticker_set_name
+    linked_chat = chat.linked_chat
+    reactions = chat.available_reactions
+  
+    caption = f"""
+🔰 <b>CHAT INFO</b> 🔰
+
+<b>🆔 ID</b>: <code>{chat_id}</code>
+<b>🚀 Chat Title</b>: {title}
+<b>✨ Chat Type</b>: {type_}
+<b>🌐 DataCentre ID</b>: {dc_id}
+<b> Username</b>: {("@" + username) if username else "NA"}
+<b>🧐 Scam</b>: {is_scam}
+<b>🤨 Fake</b>: {is_fake}
+<b> Restricted</b>: {is_restricted}
+<b> Reasons</b>: {reasons}
+<b>👨🏿‍💻 Description: <code>{description}</code>
+<b>👪 Total members</b>: {members}
+<b>📎 Link to the chat</b>: <a href={invite_link}>Click Here🚪</a>
+<b>🚫 Can Save Content</b>: {can_save}
+<b>😋 Sticker set</b>: {sticker_set}
+<b> Linked Chat</b>: {linked_chat if linked_chat else "Not Linked"}
+<b> Reactions</b>: {reactions}
+
+"""
+
+    return caption, photo_id
 
 
 @Gojo.on_message(command(["info","whois"]))
