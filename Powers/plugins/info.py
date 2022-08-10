@@ -136,18 +136,18 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>🚀 Chat Title</b>: {title}
 <b>✨ Chat Type</b>: {type_}
 <b>🌐 DataCentre ID</b>: {dc_id}
-<b> Username</b>: {("@" + username) if username else "NA"}
+<b>🔍 Username</b>: {("@" + username) if username else "NA"}
 <b>🧐 Scam</b>: {is_scam}
 <b>🤨 Fake</b>: {is_fake}
-<b> Restricted</b>: {is_restricted}
-<b> Reasons</b>: {reasons}
+<b>🧐 Restricted</b>: {is_restricted}
+<b>🤭 Reasons</b>: {reasons}
 <b>👨🏿‍💻 Description: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>📎 Link to the chat</b>: <a href={invite_link}>Click Here🚪</a>
 <b>🚫 Can Save Content</b>: {can_save}
 <b>😋 Sticker set</b>: {sticker_set}
-<b> Linked Chat</b>: {linked_chat if linked_chat else "Not Linked"}
-<b> Reactions</b>: {reactions}
+<b>🔗 Linked Chat</b>: {linked_chat if linked_chat else "Not Linked"}
+<b>🔥 Reactions</b>: {reactions}
 
 """
 
