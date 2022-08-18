@@ -35,5 +35,5 @@ jobs:
           commit_user_name: Captain Ezio
           commit_user_email: iamgojoof6eyes@gmail.com
           commit_options: '--no-verify'
-          commit_message: 'auto'
+          commit_message: 'Looks good'
           commit_author: Captain Ezio <iamgojoof6eyes@gmail.com>
