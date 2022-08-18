@@ -33,10 +33,6 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 ## Inspiration ✨
 `Not a particular inspiration, inspired by many bots`
 
-
-```
-This bot is mixture of the many bots and have some extra plugins so it is quite better than other bots.
-```
 ---------
 
 ## About 
@@ -210,15 +206,17 @@ To add your very own plugin just use the format given below and go through the [
 
 # Special Thanks ❤️
       
-<p align='left'>
+<!----<p align='left'>
   <a href="https://github.com/iamPSYREX"><img src="https://avatars.githubusercontent.com/u/90316018?v=4" width="300" 
      height="300 alt="PSYREX"></a></br></br>
    
-</p>
+</p>--->
 
-# [PSYREX](https://github.com/iamPSYREX)
+* [PSYREX](https://github.com/iamPSYREX) `for logos`
 
+* [PyKeyboard](https://github.com/pystorage/pykeyboard) `for pagination`
 
+* [Pyrogram](https://github.com/pyrogram/pyrogram) `base code`
 
 ---------
 
