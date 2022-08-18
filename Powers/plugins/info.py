@@ -15,7 +15,7 @@ from Powers.utils.chat_type import c_type
 
 gban_db=GBan()
 
-async def admin_bot_count(c: Gojo, chat):
+async def count(c: Gojo, chat):
     administrator = []
     async for admin in c.get_chat_members(chat_id=chat, filter = enums.ChatMembersFilter.ADMINISTRATORS):
         total_admin = administrator.append(admin)     
@@ -23,13 +23,17 @@ async def admin_bot_count(c: Gojo, chat):
     async for tbot in c.get_chat_members(chat_id=chat, filter= enums.ChatMembersFilter.BOTS):
         total_bot = bot.append(tbot)
     bot_admin = 0
+    ban = []
+    async for banned in c.get_chat_members(chat, filter=enums.ChatMembersFilter.BANNED):
+        total_banned = ban.append(banned)
     for x in total_admin:
         for y in total_bot:
             if x == y:
                 bot_admin += 1
     total_admin = len(total_admin)
     total_bot = len(total_bot)
-    return total_bot, total_admin, bot_admin
+    total_banned = len(total_banned)
+    return total_bot, total_admin, bot_admin, total_banned
 
 async def user_info(c: Gojo, user, already=False):
     if not already:
@@ -126,7 +130,7 @@ async def chat_info(c: Gojo, chat, already=False):
     online_mem = c.get_chat_online_count(chat)
     chat_id = chat.id
     username = chat.username
-    total_bot, total_admin, total_bot_admin = await admin_bot_count(c,chat)
+    total_bot, total_admin, total_bot_admin, total_banned = await count(c,chat)
     title = chat.title
     type_ = c_type(c, chat_id=chat)
     is_scam = chat.is_scam
@@ -156,6 +160,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
 <b>⚜️ Administrators</b>: {total_admin}
 <b>🤖 Bots</b>: {total_bot}
+<b>🚫 Banned</b>: {total_banned}
 <b>⚜️ Admin 🤖 Bots</b>: {total_bot_admin}
 <b>👨‍💻 Currently online</b>: {online_mem}
 <b>🧐 Scam</b>: {is_scam}

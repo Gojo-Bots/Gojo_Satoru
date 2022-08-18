@@ -1,6 +1,7 @@
 from traceback import format_exc
 
 from pyrogram import filters
+from pyrogram.enums import ChatMembersFilter as cmf
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
@@ -79,7 +80,7 @@ async def report_watcher(c: Gojo, m: Message):
         reported_msg_id = m.reply_to_message.message_id
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
-        admin_list = await c.get_chat_members(m.chat.id, filter="administrators")
+        admin_list = await c.get_chat_members(m.chat.id, filter=cmf.ADMINISTRATORS)
 
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
