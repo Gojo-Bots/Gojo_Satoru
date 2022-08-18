@@ -447,7 +447,7 @@ version = "0.1.5"
 description = "Pyrogram keyboard for pagination."
 category = "main"
 optional = false
-python-version = ">=3.6.2"
+python-version = "*"
 
 [[package]]
 name = "pylint"
