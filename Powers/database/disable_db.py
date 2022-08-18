@@ -1,8 +1,8 @@
-from threading import RLock
 from time import time
-
 from Powers import LOGGER
+from threading import RLock
 from Powers.database import MongoDB
+
 
 INSERTION_LOCK = RLock()
 DISABLED_CMDS = {}
@@ -74,8 +74,8 @@ class Disabling(MongoDB):
             collection = MongoDB(Disabling.db_name)
             curr = collection.find_all()
             return sum(
-                len(chat["commands"] if chat["commands"] else [])
-                for chat in curr)
+                len(chat["commands"] if chat["commands"] else []) for chat in curr
+            )
 
     @staticmethod
     def count_disabling_chats():
@@ -96,10 +96,7 @@ class Disabling(MongoDB):
                 }
             return self.update(
                 {"_id": self.chat_id},
-                {
-                    "_id": self.chat_id,
-                    "action": action
-                },
+                {"_id": self.chat_id, "action": action},
             )
 
     def get_action(self):
@@ -121,8 +118,8 @@ class Disabling(MongoDB):
             collection = MongoDB(Disabling.db_name)
             all_data = collection.find_all({"action": action})
             return sum(
-                len(i["commands"] if i["commands"] else []) >= 1
-                for i in all_data)
+                len(i["commands"] if i["commands"] else []) >= 1 for i in all_data
+            )
 
     def rm_all_disabled(self):
         with INSERTION_LOCK:
@@ -149,13 +146,9 @@ class Disabling(MongoDB):
                     "commands": [],
                     "action": "none",
                 }
-                DISABLED_CMDS[self.chat_id] = {
-                    "commands": [],
-                    "action": "none"
-                }
+                DISABLED_CMDS[self.chat_id] = {"commands": [], "action": "none"}
                 self.insert_one(new_data)
-                LOGGER.info(
-                    f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
             DISABLED_CMDS[self.chat_id] = chat_data
         return chat_data

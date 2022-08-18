@@ -1,24 +1,20 @@
 from html import escape
 from secrets import choice
+from Powers.vars import Config
 from traceback import format_exc
-
-from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, Message
-
-from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
 from Powers.bot_class import Gojo
+from pyrogram.errors import RPCError
+from Powers.utils.kbhelpers import ikb
+from Powers.utils.msg_types import Types
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
 from Powers.database.rules_db import Rules
 from Powers.utils.cmd_senders import send_cmd
-from Powers.utils.kbhelpers import ikb
-from Powers.utils.msg_types import Types
+from pyrogram.types import Message, CallbackQuery
+from Powers import LOGGER, HELP_COMMANDS, SUPPORT_GROUP
 from Powers.utils.string import (
-    build_keyboard,
-    escape_mentions_using_curly_brackets,
-    parse_button,
-)
-from Powers.vars import Config
+    parse_button, build_keyboard, escape_mentions_using_curly_brackets)
+
 
 # Initialize
 notes_db = Notes()
@@ -39,7 +35,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
     return ikb(
         [
-            [    
+            [
                 (
                     "➕ Add me to a chat!",
                     f"https://t.me/{Config.BOT_USERNAME}?startgroup=new",
@@ -53,7 +49,6 @@ async def gen_start_kb(q: Message or CallbackQuery):
             ],
             [("📚 Commands & Help", "commands")],
             [
-                
                 (
                     "🗃️ Source Code",
                     "https://github.com/iamgojoof6eyes/Gojo_Satarou",
@@ -243,11 +238,7 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             for i in HELP_COMMANDS
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
         ) + [[("« " + "Back", "commands")]]
-        help_msg = (
-            f"**{(help_option_value)}:**"
-             
-            
-        )
+        help_msg = f"**{(help_option_value)}:**"
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )

@@ -1,12 +1,10 @@
 from os import getcwd
-
-
 from prettyconf import Configuration
 from prettyconf.loaders import EnvFile, Environment
 
+
 env_file = f"{getcwd()}/.env"
 config = Configuration(loaders=[Environment(), EnvFile(filename=env_file)])
-
 
 
 class Config:
@@ -18,9 +16,27 @@ class Config:
     API_HASH = config("API_HASH", default=None)
     OWNER_ID = int(config("OWNER_ID", default=1344569458))
     MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=-100))
-    DEV_USERS = [int(i) for i in config("DEV_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
-    SUDO_USERS = [int(i) for i in config("SUDO_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
-    WHITELIST_USERS = [int(i) for i in config("WHITELIST_USERS", default="1432756163 1344569458 1355478165 1789859817 1777340882").split(" ")]
+    DEV_USERS = [
+        int(i)
+        for i in config(
+            "DEV_USERS",
+            default="1432756163 1344569458 1355478165 1789859817 1777340882",
+        ).split(" ")
+    ]
+    SUDO_USERS = [
+        int(i)
+        for i in config(
+            "SUDO_USERS",
+            default="1432756163 1344569458 1355478165 1789859817 1777340882",
+        ).split(" ")
+    ]
+    WHITELIST_USERS = [
+        int(i)
+        for i in config(
+            "WHITELIST_USERS",
+            default="1432756163 1344569458 1355478165 1789859817 1777340882",
+        ).split(" ")
+    ]
     DB_URI = config("DB_URI", default="")
     DB_NAME = config("DB_NAME", default="gojo_satarou")
     NO_LOAD = config("NO_LOAD", default="").split()
@@ -55,4 +71,3 @@ class Development:
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     VERSION = "VERSION"
     WORKERS = 8
-

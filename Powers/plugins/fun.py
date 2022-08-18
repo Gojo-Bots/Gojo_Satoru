@@ -1,16 +1,13 @@
 from html import escape
 from random import choice
-
-
-from pyrogram.errors import MessageTooLong
-from pyrogram.types import Message
-
-from Powers import LOGGER, DEV_USERS
-from Powers.bot_class import Gojo
 from Powers.utils import extras
+from Powers.bot_class import Gojo
+from pyrogram.types import Message
+from Powers import LOGGER, DEV_USERS
+from pyrogram.errors import MessageTooLong
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.utils.extras import YESWNO as YES, NOWYES as NO
+from Powers.utils.extras import NOWYES as NO, YESWNO as YES
 
 
 @Gojo.on_message(command("shout"))
@@ -95,37 +92,44 @@ async def fun_toss(_, m: Message):
     LOGGER.info(f"{m.from_user.id} tossed in {m.chat.id}")
     return
 
+
 @Gojo.on_message(command("insult"))
-async def insult(c : Gojo , m: Message):
+async def insult(c: Gojo, m: Message):
     try:
         user_id, user_first_name, _ = await extract_user(c, m)
-    except:
+    except BaseException:
         return
     if user_id in DEV_USERS:
         await m.reply_text("Sorry! I can't insult my devs....")
-        return LOGGER.info(f"{m.from_user.id} tried to insult {user_first_name} in {m.chat.id}")
-    else:    
+        return LOGGER.info(
+            f"{m.from_user.id} tried to insult {user_first_name} in {m.chat.id}"
+        )
+    else:
         Insult_omp = choice(extras.INSULT_STRINGS)
-        reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
+        reply_text = (
+            m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
+        )
         await reply_text(Insult_omp)
         LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
-    
+
+
 @Gojo.on_message(command("yes"))
-async def yesw(c : Gojo , m: Message):
+async def yesw(c: Gojo, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     rtext = YES[0]
     await reply_text(rtext)
     LOGGER.info(f"{m.from_user.id} said YES or may be NO in {m.chat.id}")
     return
-        
-    
+
+
 @Gojo.on_message(command("no"))
-async def now(c : Gojo , m: Message):
+async def now(c: Gojo, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     rtext = NO[0]
     await reply_text(rtext)
     LOGGER.info(f"{m.from_user.id} said NO or may be YES in {m.chat.id}")
     return
+
 
 @Gojo.on_message(command("shrug"))
 async def fun_shrug(_, m: Message):
@@ -188,7 +192,7 @@ async def weebify(_, m: Message):
             string = string.replace(normiecharacter, weebycharacter)
 
     await m.reply_text(
-       text=f"""<b>Weebified String:</b>
+        text=f"""<b>Weebified String:</b>
         <code>{string}</code>"""
     )
     LOGGER.info(f"{m.from_user.id} weebified '{args}' in {m.chat.id}")

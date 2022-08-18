@@ -1,23 +1,19 @@
-from secrets import choice
-from traceback import format_exc
-
-from pyrogram import filters
-from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
-
 from Powers import LOGGER
-from Powers.bot_class import Gojo
-from Powers.database.notes_db import Notes, NotesSettings
-from Powers.utils.cmd_senders import send_cmd
-from Powers.utils.custom_filters import admin_filter, command, owner_filter
-from Powers.utils.kbhelpers import ikb
-from Powers.utils.msg_types import Types, get_note_type
-from Powers.utils.string import (
-    build_keyboard,
-    escape_mentions_using_curly_brackets,
-    parse_button,
-)
+from secrets import choice
+from pyrogram import filters
 from Powers.vars import Config
+from traceback import format_exc
+from Powers.bot_class import Gojo
+from pyrogram.errors import RPCError
+from Powers.utils.kbhelpers import ikb
+from Powers.utils.cmd_senders import send_cmd
+from Powers.utils.msg_types import Types, get_note_type
+from Powers.database.notes_db import Notes, NotesSettings
+from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup
+from Powers.utils.custom_filters import command, admin_filter, owner_filter
+from Powers.utils.string import (
+    parse_button, build_keyboard, escape_mentions_using_curly_brackets)
+
 
 # Initialise
 db = Notes()

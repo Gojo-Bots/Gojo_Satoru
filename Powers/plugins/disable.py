@@ -1,22 +1,12 @@
 from html import escape
-
 from pyrogram import filters
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
-
-from Powers import HELP_COMMANDS, LOGGER
 from Powers.bot_class import Gojo
+from Powers import LOGGER, HELP_COMMANDS
 from Powers.database.disable_db import Disabling
+from pyrogram.types import (
+    Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup)
 from Powers.utils.custom_filters import (
-    admin_filter,
-    can_change_filter,
-    command,
-    owner_filter,
-)
+    command, admin_filter, owner_filter, can_change_filter)
 
 
 @Gojo.on_message(command("disable") & can_change_filter)

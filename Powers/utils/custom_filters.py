@@ -1,19 +1,16 @@
-from re import compile as compile_re
-from re import escape
 from shlex import split
-from typing import List, Union
-
-from pyrogram.errors import RPCError, UserNotParticipant
-from pyrogram.filters import create
-from pyrogram.types import CallbackQuery, Message
 from pyrogram import enums
-
-
-from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
-from Powers.database.disable_db import Disabling
-from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
-from Powers.utils.chat_type import chattype
 from Powers.vars import Config
+from typing import List, Union
+from pyrogram.filters import create
+from Powers.utils.chat_type import chattype
+from re import escape, compile as compile_re
+from Powers.database.disable_db import Disabling
+from pyrogram.types import Message, CallbackQuery
+from Powers import OWNER_ID, DEV_USERS, SUDO_USERS
+from pyrogram.errors import RPCError, UserNotParticipant
+from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
+
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
 DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
@@ -32,7 +29,7 @@ def command(
 
         date = m.edit_date
         if date:
-            return # reaction
+            return  # reaction
 
         chattype = bool(m.chat and m.chat.type in {enums.ChatType.CHANNEL})
         if chattype:
@@ -101,7 +98,7 @@ def command(
             return True
         return False
 
-    commands = commands if type(commands) is list else [commands]
+    commands = commands if isinstance(commands, list) else [commands]
     commands = {c if case_sensitive else c.lower() for c in commands}
 
     return create(

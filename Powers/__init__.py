@@ -1,11 +1,12 @@
-from datetime import datetime
-from importlib import import_module as imp_mod
-from logging import INFO, WARNING, FileHandler, StreamHandler, basicConfig, getLogger
-from os import environ, mkdir, path
-from sys import exit as sysexit
-from sys import stdout, version_info
 from time import time
+from datetime import datetime
 from traceback import format_exc
+from os import path, mkdir, environ
+from importlib import import_module as imp_mod
+from sys import exit as sysexit, stdout, version_info
+from logging import (
+    INFO, WARNING, FileHandler, StreamHandler, getLogger, basicConfig)
+
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -74,7 +75,7 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 Defult_dev = "1432756163 1344569458 1355478165 1789859817 1777340882".split()
 Defult = set(Defult_dev)
-DEV_USERS = DEV_USER|Defult
+DEV_USERS = DEV_USER | Defult
 DEV_USERS = list(DEV_USERS)
 SUPPORT_STAFF = list(
     set([int(OWNER_ID)] + SUDO_USERS + DEV + WHITELIST_USERS + Defult_dev),

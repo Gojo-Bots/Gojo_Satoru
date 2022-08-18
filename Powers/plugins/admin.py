@@ -1,35 +1,24 @@
-from asyncio import sleep
-from html import escape
 from os import remove
-from traceback import format_exc
-
+from html import escape
+from asyncio import sleep
 from pyrogram import filters
-from pyrogram.errors import (
-    ChatAdminInviteRequired,
-    ChatAdminRequired,
-    FloodWait,
-    RightForbidden,
-    RPCError,
-    UserAdminInvalid,
-)
-from pyrogram.types import Message
-
-from Powers import DEV_USERS, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from Powers.vars import Config
+from traceback import format_exc
 from Powers.bot_class import Gojo
+from pyrogram.types import Message
+from Powers.utils.chat_type import chattype
+from Powers.utils.parser import mention_html
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
-from Powers.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
-from Powers.utils.chat_type import chattype
-from Powers.utils.custom_filters import (
-    DEV_LEVEL,
-    admin_filter,
-    command,
-    owner_filter,
-    promote_filter,
-)
 from Powers.utils.extract_user import extract_user
-from Powers.utils.parser import mention_html
-from Powers.vars import Config
+from Powers import LOGGER, OWNER_ID, DEV_USERS, SUPPORT_GROUP, SUPPORT_STAFF
+from Powers.utils.caching import (
+    ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload)
+from Powers.utils.custom_filters import (
+    DEV_LEVEL, command, admin_filter, owner_filter, promote_filter)
+from pyrogram.errors import (
+    RPCError, FloodWait, RightForbidden, UserAdminInvalid, ChatAdminRequired,
+    ChatAdminInviteRequired)
 
 
 @Gojo.on_message(command("adminlist"))
@@ -47,8 +36,8 @@ async def adminlist_show(_, m: Message):
         except KeyError:
             admin_list = await admin_cache_reload(m, "adminlist")
             note = "<i>Note:</i> These are up-to-date values!"
-            
-        adminstr = f"Admins in <b>{m.chat.title}</b>:"+ "\n\n"
+
+        adminstr = f"Admins in <b>{m.chat.title}</b>:" + "\n\n"
 
         bot_admins = [i for i in admin_list if (i[1].lower()).endswith("bot")]
         user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
@@ -178,7 +167,9 @@ async def fullpromote_usr(c: Gojo, m: Message):
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(text="I can't promote nothing! Give me an username or user id or atleast reply to that user")
+        await m.reply_text(
+            text="I can't promote nothing! Give me an username or user id or atleast reply to that user"
+        )
         return
 
     try:
@@ -245,7 +236,6 @@ async def fullpromote_usr(c: Gojo, m: Message):
         LOGGER.info(
             f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
         )
-        
 
         await m.reply_text(
             ("{promoter} promoted {promoted} in chat <b>{chat_title}</b>!").format(
@@ -257,7 +247,8 @@ async def fullpromote_usr(c: Gojo, m: Message):
             ),
         )
 
-        # If user is approved, disapprove them as they willbe promoted and get even more rights
+        # If user is approved, disapprove them as they willbe promoted and get
+        # even more rights
         if Approve(m.chat.id).check_approve(user_id):
             Approve(m.chat.id).remove_approve(user_id)
 
@@ -273,9 +264,11 @@ async def fullpromote_usr(c: Gojo, m: Message):
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights......")
     except RightForbidden:
-        await m.reply_text(text = "I don't have enough rights to promote this user.")
+        await m.reply_text(text="I don't have enough rights to promote this user.")
     except UserAdminInvalid:
-        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
+        await m.reply_text(
+            text="Cannot act on this user, maybe I wasn't the one who changed their permissions."
+        )
     except RPCError as e:
         await m.reply_text(
             text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{e}</code>"
@@ -291,7 +284,9 @@ async def promote_usr(c: Gojo, m: Message):
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text(text="I can't promote nothing!......reply to user to promote him/her....")
+        await m.reply_text(
+            text="I can't promote nothing!......reply to user to promote him/her...."
+        )
         return
 
     try:
@@ -343,7 +338,7 @@ async def promote_usr(c: Gojo, m: Message):
         if title and len(title) > 16:
             title = title[0:16]  # trim title to 16 characters
         if not title:
-            title="Itadori"
+            title = "Itadori"
 
         try:
             await c.set_administrator_title(m.chat.id, user_id, title)
@@ -364,7 +359,8 @@ async def promote_usr(c: Gojo, m: Message):
             ),
         )
 
-        # If user is approved, disapprove them as they willbe promoted and get even more rights
+        # If user is approved, disapprove them as they willbe promoted and get
+        # even more rights
         if Approve(m.chat.id).check_approve(user_id):
             Approve(m.chat.id).remove_approve(user_id)
 
@@ -382,7 +378,9 @@ async def promote_usr(c: Gojo, m: Message):
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to promote this user.")
     except UserAdminInvalid:
-        await m.reply_text(text="Cannot act on this user, maybe I wasn't the one who changed their permissions.")
+        await m.reply_text(
+            text="Cannot act on this user, maybe I wasn't the one who changed their permissions."
+        )
     except RPCError as e:
         await m.reply_text(
             text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{e}</code>"
@@ -406,7 +404,6 @@ async def get_invitelink(c: Gojo, m: Message):
         link = await c.export_chat_invite_link(m.chat.id)
         await m.reply_text(
             text=f"Invite Link for Chat <b>{m.chat.id}</b>: {link}",
-                
             disable_web_page_preview=True,
         )
         LOGGER.info(f"{m.from_user.id} exported invite link in {m.chat.id}")
@@ -418,7 +415,7 @@ async def get_invitelink(c: Gojo, m: Message):
         await m.reply_text(text="You don't have permissions to invite users.")
     except RPCError as ef:
         await m.reply_text(
-            text = f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>"
+            text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>"
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())

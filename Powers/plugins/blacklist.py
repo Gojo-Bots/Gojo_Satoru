@@ -1,13 +1,11 @@
 from html import escape
-
-from pyrogram import filters
-from pyrogram.types import CallbackQuery, Message
-
 from Powers import LOGGER
+from pyrogram import filters
 from Powers.bot_class import Gojo
+from Powers.utils.kbhelpers import ikb
+from pyrogram.types import Message, CallbackQuery
 from Powers.database.blacklist_db import Blacklist
 from Powers.utils.custom_filters import command, owner_filter, restrict_filter
-from Powers.utils.kbhelpers import ikb
 
 
 @Gojo.on_message(command("blacklist") & filters.group)
@@ -58,9 +56,10 @@ async def add_blacklist(_, m: Message):
             + " already added in blacklist, skipped them!"
         )
     LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
-    trigger=", ".join(f"<code>{i}</code>" for i in bl_words)
+    trigger = ", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
-        text=f"Added <code>{trigger}</code> in blacklist words!" + (f"\n{rep_text}" if rep_text else ""),
+        text=f"Added <code>{trigger}</code> in blacklist words!"
+        + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -115,9 +114,10 @@ async def rm_blacklist(_, m: Message):
         ) + " in blcklisted words, skipped them."
 
     LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
-    bl_words=", ".join(f"<code>{i}</code>" for i in bl_words)
+    bl_words = ", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
-        text=f"Removed <b>{bl_words}</b> from blacklist words!" + (f"\n{rep_text}" if rep_text else ""),
+        text=f"Removed <b>{bl_words}</b> from blacklist words!"
+        + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -145,14 +145,12 @@ async def set_bl_action(_, m: Message):
         LOGGER.info(
             f"{m.from_user.id} set blacklist action to '{action}' in {m.chat.id}",
         )
-        await m.reply_text(
-            text=f"Set action for blacklist for this to <b>{action}</b>"
-        )
+        await m.reply_text(text=f"Set action for blacklist for this to <b>{action}</b>")
     elif len(m.text.split()) == 1:
         action = db.get_action()
         LOGGER.info(f"{m.from_user.id} checking blacklist action in {m.chat.id}")
         await m.reply_text(
-           text= f"""The current action for blacklists in this chat is <i><b>{action}</b></i>
+            text=f"""The current action for blacklists in this chat is <i><b>{action}</b></i>
       All blacklist modes delete the message containing blacklist word."""
         )
     else:

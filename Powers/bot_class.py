@@ -1,28 +1,17 @@
-from platform import python_version
-from threading import RLock
-from time import gmtime, strftime, time
-from aiohttp import ClientSession
 import asyncio
-
-from pyrogram import Client, __version__
-from pyrogram.raw.all import layer
-
-from Powers import (
-    API_HASH,
-    API_ID,
-    BOT_TOKEN,
-    LOG_DATETIME,
-    LOGFILE,
-    LOGGER,
-    MESSAGE_DUMP,
-    NO_LOAD,
-    UPTIME,
-    WORKERS,
-    load_cmds,
-)
-from Powers.database import MongoDB
-from Powers.plugins import all_plugins
+from threading import RLock
 from Powers.vars import Config
+from aiohttp import ClientSession
+from pyrogram.raw.all import layer
+from Powers.database import MongoDB
+from platform import python_version
+from Powers.plugins import all_plugins
+from time import time, gmtime, strftime
+from pyrogram import Client, __version__
+from Powers import (
+    API_ID, LOGGER, UPTIME, LOGFILE, NO_LOAD, WORKERS, API_HASH, BOT_TOKEN,
+    LOG_DATETIME, MESSAGE_DUMP, load_cmds)
+
 
 INITIAL_LOCK = RLock()
 
@@ -31,14 +20,15 @@ if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
     raise Exception(
         "Please enter a vaild Supergroup ID, A Supergroup ID starts with -100",
     )
-    
+
 aiohttpsession = ClientSession()
+
 
 class Gojo(Client):
     """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m Powers'"""
 
     def __init__(self):
-        #name = Powers
+        # name = Powers
 
         super().__init__(
             "Gojo_Satarou",
@@ -60,8 +50,6 @@ class Gojo(Client):
         Config.BOT_USERNAME = meh.username
 
         startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
-
-        
 
         # Show in Log that bot has started
         LOGGER.info(

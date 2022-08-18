@@ -1,15 +1,13 @@
-from html import escape as escape_html
-
-from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
-from pyrogram.filters import regex
-from pyrogram.types import CallbackQuery, Message
-
-from Powers import LOGGER, SUPPORT_GROUP
 from Powers.bot_class import Gojo
-from Powers.database.pins_db import Pins
-from Powers.utils.custom_filters import admin_filter, command
+from pyrogram.filters import regex
 from Powers.utils.kbhelpers import ikb
-from Powers.utils.string import build_keyboard, parse_button
+from html import escape as escape_html
+from Powers import LOGGER, SUPPORT_GROUP
+from Powers.database.pins_db import Pins
+from pyrogram.types import Message, CallbackQuery
+from Powers.utils.string import parse_button, build_keyboard
+from Powers.utils.custom_filters import command, admin_filter
+from pyrogram.errors import RPCError, RightForbidden, ChatAdminRequired
 
 
 @Gojo.on_message(command("pin") & admin_filter)
@@ -125,7 +123,7 @@ async def unpinall_calllback(c: Gojo, q: CallbackQuery):
         await q.message.edit_text(text="I don't have enough rights to unpin messages.")
     except RPCError as ef:
         await q.message.edit_text(
-           text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report to @{SUPPORT_GROUP}
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -139,9 +137,7 @@ async def anti_channel_pin(_, m: Message):
 
     if len(m.text.split()) == 1:
         status = pinsdb.get_settings()["antichannelpin"]
-        await m.reply_text(
-            text=f"Current AntiChannelPin status: {status}"
-        )
+        await m.reply_text(text=f"Current AntiChannelPin status: {status}")
         return
 
     if len(m.text.split()) == 2:
@@ -154,7 +150,9 @@ async def anti_channel_pin(_, m: Message):
             LOGGER.info(f"{m.from_user.id} disabled antichannelpin in {m.chat.id}")
             msg = "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
         else:
-            await m.reply_text(text="Please check help on how to use this this command.")
+            await m.reply_text(
+                text="Please check help on how to use this this command."
+            )
             return
 
     await m.reply_text(msg)
@@ -191,9 +189,7 @@ async def clean_linked(_, m: Message):
 
     if len(m.text.split()) == 1:
         status = pinsdb.get_settings()["cleanlinked"]
-        await m.reply_text(
-           text=f"Current AntiChannelPin status: {status}"
-        )
+        await m.reply_text(text=f"Current AntiChannelPin status: {status}")
         return
 
     if len(m.text.split()) == 2:
@@ -206,7 +202,9 @@ async def clean_linked(_, m: Message):
             LOGGER.info(f"{m.from_user.id} disabled CleanLinked in {m.chat.id}")
             msg = "Turned off CleanLinked! Messages from linked channel will not be deleted!"
         else:
-            await m.reply_text(text="Please check help on how to use this this command.")
+            await m.reply_text(
+                text="Please check help on how to use this this command."
+            )
             return
 
     await m.reply_text(msg)

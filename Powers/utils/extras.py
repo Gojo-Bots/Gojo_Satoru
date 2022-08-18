@@ -1,6 +1,5 @@
 RUN_STRINGS = (
-    "Now you see me, now you don't."
-    "ε=ε=ε=ε=┌(;￣▽￣)┘",
+    "Now you see me, now you don't." "ε=ε=ε=ε=┌(;￣▽￣)┘",
     "Get back here!",
     "REEEEEEEEEEEEEEEEEE!!!!!!!",
     "Look out for the wall!",
@@ -94,7 +93,7 @@ SLAP_TEMPLATES = (
     "( ・_・)ノΞ●~*  {user2}\nDieeeee!!.",
     "( ・∀・)ｒ鹵~<≪巛;ﾟДﾟ)ﾉ\n*Bug sprays {user2}*.",
     "( ﾟДﾟ)ﾉ占~<巛巛巛.\n-{user2} You pest!",
-    "( う-´)づ︻╦̵̵̿╤── \(˚☐˚”)/ {user2}.",
+    "( う-´)づ︻╦̵̵̿╤── \\(˚☐˚”)/ {user2}.",
     "{user1} {hits} {user2} with a {item}.",
     "{user1} {hits} {user2} in the face with a {item}.",
     "{user1} {hits} {user2} around a bit with a {item}.",
@@ -131,12 +130,12 @@ SLAP_TEMPLATES = (
     "You know what’s worse than Dad jokes? {user2}!",
     "{user1} took all of {user2}'s cookies.",
     "{user2} wa mou.......Shindeiru! - {user1}.",
-    "{user2} lost his race piece!",  #No game no life reference
-    "Shut up {user2}, you are just {user2}.",  #No game no life reference
-    "{user1} hits {user2} with Aka si anse!",  #No game no life reference
-    "@NeoTheKitty scratches {user2}",  #Pixels pet cat - @NeoTheKitty 
-    "Majin buu ate {user2}",  #Dbz
-    "Goblin slayer slays {user2}",  #Goblin Slayer
+    "{user2} lost his race piece!",  # No game no life reference
+    "Shut up {user2}, you are just {user2}.",  # No game no life reference
+    "{user1} hits {user2} with Aka si anse!",  # No game no life reference
+    "@NeoTheKitty scratches {user2}",  # Pixels pet cat - @NeoTheKitty
+    "Majin buu ate {user2}",  # Dbz
+    "Goblin slayer slays {user2}",  # Goblin Slayer
     "{user2} was shot by {user1}.",
     "{user2} walked into a cactus while trying to escape {user1}.",
     "{user2} drowned whilst trying to escape {user1}.",
@@ -515,7 +514,6 @@ TOSS = (
 )
 
 
-
 DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?", "No one give a damn about it")
 
 INSULT_STRINGS = [
@@ -555,73 +553,81 @@ INSULT_STRINGS = [
 ]
 
 
+BAN_GIFS = [
+    "https://tenor.com/bMiwt.gif",
+    "https://tenor.com/bqhVe.gif",
+    "https://tenor.com/bsHe5.gif",
+    "https://j.gifs.com/y5Pr8z.gif",
+    "https://tenor.com/bfvQv.gif",
+    "https://j.gifs.com/lO0lv6.gif",
+    "https://tenor.com/bGMhb.gif",
+    "https://tenor.com/bjZai.gif",
+    "https://media.giphy.com/media/fe4dDMD2cAU5RfEaCU/giphy.gif",
+    "https://tenor.com/bndta.gif",
+    "https://tenor.com/bkyIr.gif",
+    "https://media.giphy.com/media/UBqgQxKnUJqb8oZ2zc/giphy.gif",
+    "https://media.giphy.com/media/tanIENriCOil3ndF3V/giphy.gif",
+    "https://media.giphy.com/media/fwX4RUzdkdx9XUGow4/giphy.gif",
+    "https://media.giphy.com/media/XVLfZCU6jDvMYqF1xS/giphy.gif",
+    "https://media.giphy.com/media/BSAZJvFOOR0VqREKMg/giphy.gif",
+    "https://media.giphy.com/media/CI4aCJUjJDJEj3Jgo4/giphy-downsized-large.gif",
+]
 
-BAN_GIFS = ["https://tenor.com/bMiwt.gif", 
-            "https://tenor.com/bqhVe.gif", 
-            "https://tenor.com/bsHe5.gif",
-            "https://j.gifs.com/y5Pr8z.gif",
-            "https://tenor.com/bfvQv.gif",
-            "https://j.gifs.com/lO0lv6.gif",
-            "https://tenor.com/bGMhb.gif",
-            "https://tenor.com/bjZai.gif",
-            "https://media.giphy.com/media/fe4dDMD2cAU5RfEaCU/giphy.gif",
-            "https://tenor.com/bndta.gif",
-            "https://tenor.com/bkyIr.gif",
-            "https://media.giphy.com/media/UBqgQxKnUJqb8oZ2zc/giphy.gif",
-            "https://media.giphy.com/media/tanIENriCOil3ndF3V/giphy.gif",
-            "https://media.giphy.com/media/fwX4RUzdkdx9XUGow4/giphy.gif",
-            "https://media.giphy.com/media/XVLfZCU6jDvMYqF1xS/giphy.gif",
-            "https://media.giphy.com/media/BSAZJvFOOR0VqREKMg/giphy.gif",
-            "https://media.giphy.com/media/CI4aCJUjJDJEj3Jgo4/giphy-downsized-large.gif",]
+KICK_GIFS = [
+    "https://tenor.com/bizBJ.gif",
+    "https://tenor.com/bjPvj.gif",
+    "https://tenor.com/bJMx3.gif",
+    "https://tenor.com/bJCGL.gif",
+    "https://tenor.com/bsIMJ.gif",
+    "https://tenor.com/buURG.gif",
+    "https://tenor.com/bNOj9.gif",
+    "https://tenor.com/NfK8.gif",
+    "https://tenor.com/ymZn.gif",
+    "https://tenor.com/77Lu.gif",
+    "https://tenor.com/bPD4I.gif",
+    "https://tenor.com/bOGXo.gif",
+    "https://tenor.com/bDLqs.gif",
+    "https://media.giphy.com/media/u2LJ0n4lx6jF6/giphy.gif",
+    "https://media.giphy.com/media/BSAZJvFOOR0VqREKMg/giphy.gif",
+    "https://media.giphy.com/media/eDR7j2vjCFOUMJ9rT2/giphy.gif",
+    "https://media.giphy.com/media/ERNKP5G7ihZNW6VW4Q/giphy.gif",
+    "https://media.giphy.com/media/1r6xks2F0iHfbNvt4p/giphy.gif",
+    "https://media.giphy.com/media/M7j1rkxm0X5z30Hyrs/giphy.gif",
+    "https://media.giphy.com/media/rad9oJzU4hVafD8ZnT/giphy.gif",
+    "https://media.giphy.com/media/TcliN5WDKBbnUQ15H3/giphy.gif",
+    "https://media.giphy.com/media/y9pfUqY3uaT1MPXxYM/giphy.gif",
+]
 
-KICK_GIFS = ["https://tenor.com/bizBJ.gif",
-             "https://tenor.com/bjPvj.gif",
-             "https://tenor.com/bJMx3.gif",
-             "https://tenor.com/bJCGL.gif",
-             "https://tenor.com/bsIMJ.gif",
-             "https://tenor.com/buURG.gif",
-             "https://tenor.com/bNOj9.gif",
-             "https://tenor.com/NfK8.gif",
-             "https://tenor.com/ymZn.gif",
-             "https://tenor.com/77Lu.gif",
-             "https://tenor.com/bPD4I.gif",
-             "https://tenor.com/bOGXo.gif",
-             "https://tenor.com/bDLqs.gif",
-             "https://media.giphy.com/media/u2LJ0n4lx6jF6/giphy.gif",
-             "https://media.giphy.com/media/BSAZJvFOOR0VqREKMg/giphy.gif",
-             "https://media.giphy.com/media/eDR7j2vjCFOUMJ9rT2/giphy.gif",
-             "https://media.giphy.com/media/ERNKP5G7ihZNW6VW4Q/giphy.gif",
-             "https://media.giphy.com/media/1r6xks2F0iHfbNvt4p/giphy.gif",
-             "https://media.giphy.com/media/M7j1rkxm0X5z30Hyrs/giphy.gif",
-             "https://media.giphy.com/media/rad9oJzU4hVafD8ZnT/giphy.gif",
-             "https://media.giphy.com/media/TcliN5WDKBbnUQ15H3/giphy.gif",
-             "https://media.giphy.com/media/y9pfUqY3uaT1MPXxYM/giphy.gif",]
-             
 
-MUTE_GIFS = ["https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
-             "https://media.giphy.com/media/HWl1atKEPAWcw/giphy.gif",
-             "https://media.giphy.com/media/1xkynOSsb8eFpbEood/giphy.gif",
-             "https://media.giphy.com/media/LmUAM5ImMNZd0nnkvn/giphy.gif",
-             "https://media.giphy.com/media/JNlXHSSioDe7YGTC7D/giphy.gif",
-             "https://media.giphy.com/media/t0iSe43jX8JH0Hb95a/giphy.gif",
-             "https://media.giphy.com/media/P4CXV70NTC0umRI61S/giphy.gif",
-             "https://media.giphy.com/media/Z0WPxDF7zpIHVPrYUN/giphy.gif",
-             "https://media.giphy.com/media/gJS1pGTbXlSCWUe2pg/giphy.gif",
-             "https://media.giphy.com/media/SIoetMN7j96O5perEV/giphy.gif",
-             "https://media.giphy.com/media/PBZrH2uy9E5rPruuCX/giphy.gif",
-             "https://media.giphy.com/media/Cew2qzlug9t3ACYrD5/giphy.gif",
-             "https://media.giphy.com/media/PtIm7eUGKYIZbknqsO/giphy.gif",]
+MUTE_GIFS = [
+    "https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
+    "https://media.giphy.com/media/HWl1atKEPAWcw/giphy.gif",
+    "https://media.giphy.com/media/1xkynOSsb8eFpbEood/giphy.gif",
+    "https://media.giphy.com/media/LmUAM5ImMNZd0nnkvn/giphy.gif",
+    "https://media.giphy.com/media/JNlXHSSioDe7YGTC7D/giphy.gif",
+    "https://media.giphy.com/media/t0iSe43jX8JH0Hb95a/giphy.gif",
+    "https://media.giphy.com/media/P4CXV70NTC0umRI61S/giphy.gif",
+    "https://media.giphy.com/media/Z0WPxDF7zpIHVPrYUN/giphy.gif",
+    "https://media.giphy.com/media/gJS1pGTbXlSCWUe2pg/giphy.gif",
+    "https://media.giphy.com/media/SIoetMN7j96O5perEV/giphy.gif",
+    "https://media.giphy.com/media/PBZrH2uy9E5rPruuCX/giphy.gif",
+    "https://media.giphy.com/media/Cew2qzlug9t3ACYrD5/giphy.gif",
+    "https://media.giphy.com/media/PtIm7eUGKYIZbknqsO/giphy.gif",
+]
 
-NOWYES = ["""
+NOWYES = [
+    """
 YES          YES              YESYES
 YESYES   YES         YES          YES
 YES  YES YES       YES               YES
 YES    YESYES     YES                YES
 YES      YESYE         YES         YES
 YES          YES               YESYES
-          """]
+          """
+]
 
-YESWNO =["""
+YESWNO = [
+    """
 NO       NO   NONONO            NONO
  NO     NO    NO                      NO         NO
    NONO       NO                       NO
@@ -629,9 +635,10 @@ NO       NO   NONONO            NONO
       NO           NO                 NO          NO
       NO           NO                    NO        NO
       NO           NONONO           NONO
-"""]
+"""
+]
 
-StartPic =[
+StartPic = [
     "https://te.legra.ph/file/4bf3b88115068d41efadd.jpg",
     "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg",
     "https://te.legra.ph/file/a740afb182b761db668ba.jpg",

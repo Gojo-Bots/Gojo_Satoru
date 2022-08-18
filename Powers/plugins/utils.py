@@ -1,41 +1,38 @@
-from io import BytesIO
-from os import remove
 import re
 import aiofiles
-from search_engine_parser import GoogleSearch
-from datetime import datetime
-from aiohttp import ClientSession
-from tswift import Song
-from wikipedia import summary
-from wikipedia.exceptions import DisambiguationError, PageError
-from traceback import format_exc
-
-from gpytranslate import Translator
-from pyrogram import filters
-from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
-from pyrogram.types import Message,InlineKeyboardButton, InlineKeyboardMarkup
-
-
 from Powers import *
+from os import remove
+from io import BytesIO
+from tswift import Song
+from pyrogram import filters
+from datetime import datetime
+from wikipedia import summary
+from Powers.vars import Config
+from traceback import format_exc
 from Powers.bot_class import Gojo
-from Powers.database.users_db import Users
-from Powers.utils.clean_file import remove_markdown_and_html
-from Powers.utils.custom_filters import command
-from Powers.utils.chat_type import chattype
+from aiohttp import ClientSession
+from gpytranslate import Translator
 from Powers.utils.http_helper import *
 from Powers.utils.kbhelpers import ikb
+from Powers.database.users_db import Users
+from Powers.utils.chat_type import chattype
 from Powers.utils.parser import mention_html
+from search_engine_parser import GoogleSearch
+from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.vars import Config
-
-
+from Powers.utils.clean_file import remove_markdown_and_html
+from wikipedia.exceptions import PageError, DisambiguationError
+from pyrogram.errors import RPCError, PeerIdInvalid, MessageTooLong
+from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
 
 @Gojo.on_message(command("wiki"))
 async def wiki(_, m: Message):
 
     if len(m.text.split()) <= 1:
-        return await m.reply_text(text="Please check help on how to use this this command.")
+        return await m.reply_text(
+            text="Please check help on how to use this this command."
+        )
 
     search = m.text.split(None, 1)[1]
     try:
@@ -102,9 +99,8 @@ async def get_lyrics(_, m: Message):
     if not query:
         await m.edit_text(text="You haven't specified which song to look for!")
         return
-    song_name=query
-    em = await m.reply_text(
-        text=f"Finding lyrics for <code>{song_name}<code>...")
+    song_name = query
+    em = await m.reply_text(text=f"Finding lyrics for <code>{song_name}<code>...")
     song = Song.find_song(query)
     if song:
         if song.lyrics:
@@ -144,10 +140,10 @@ async def id_info(c: Gojo, m: Message):
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_message.from_user
             user2 = m.reply_to_message.forward_from
-            orig_sender=(await mention_html(user2.first_name, user2.id)),
-            orig_id=f"<code>{user2.id}</code>",
-            fwd_sender=(await mention_html(user1.first_name, user1.id)),
-            fwd_id=f"<code>{user1.id}</code>",
+            orig_sender = ((await mention_html(user2.first_name, user2.id)),)
+            orig_id = (f"<code>{user2.id}</code>",)
+            fwd_sender = ((await mention_html(user1.first_name, user1.id)),)
+            fwd_id = (f"<code>{user1.id}</code>",)
             await m.reply_text(
                 text=f"""Original Sender - {orig_sender} (<code>{orig_id}</code>)
         Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
@@ -157,8 +153,10 @@ async def id_info(c: Gojo, m: Message):
             try:
                 user = await c.get_users(user_id)
             except PeerIdInvalid:
-                await m.reply_text(text="""Failed to get user
-      Peer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!""")
+                await m.reply_text(
+                    text="""Failed to get user
+      Peer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!"""
+                )
                 return
 
             await m.reply_text(
@@ -166,13 +164,9 @@ async def id_info(c: Gojo, m: Message):
                 parse_mode="HTML",
             )
     elif chat_type == "private":
-        await m.reply_text(
-            text=f"Your ID is <code>{m.chat.id}</code>."    
-        )
+        await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
     else:
-        await m.reply_text(
-            text=f"This Group's ID is <code>{m.chat.id}</code>"
-        )
+        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
     return
 
 
@@ -218,10 +212,12 @@ async def github(_, message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
 
-#paste here
+
+# paste here
 session = ClientSession()
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
 BASE = "https://batbin.me/"
+
 
 async def post(url: str, *args, **kwargs):
     async with session.post(url, *args, **kwargs) as resp:
@@ -230,6 +226,7 @@ async def post(url: str, *args, **kwargs):
         except Exception:
             data = await resp.text()
     return data
+
 
 async def paste(content: str):
     resp = await post(f"{BASE}api/v2/paste", data=content)
@@ -242,7 +239,7 @@ async def paste(content: str):
 async def paste_func(_, message: Message):
     if not message.reply_to_message:
         return await message.reply_text("Reply To A Message With `/paste`")
-   
+
     r = message.reply_to_message
 
     if not r.text and not r.document:
@@ -285,13 +282,18 @@ async def paste_func(_, message: Message):
             )
         await m.delete()
     except Exception:
-        await m.edit("Here is the link of the document....", reply_markup=InlineKeyboardMarkup(kb))
+        await m.edit(
+            "Here is the link of the document....",
+            reply_markup=InlineKeyboardMarkup(kb),
+        )
 
 
 @Gojo.on_message(command("tr"))
 async def tr(_, message):
     trl = Translator()
-    if message.reply_to_message and (message.reply_to_message.text or message.reply_to_message.caption):
+    if message.reply_to_message and (
+        message.reply_to_message.text or message.reply_to_message.caption
+    ):
         if len(message.text.split()) == 1:
             target_lang = "en"
         else:
@@ -317,8 +319,6 @@ async def tr(_, message):
     return await message.reply_text(
         f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )
-
-
 
 
 __PLUGIN__ = "utils"

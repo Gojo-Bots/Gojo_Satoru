@@ -1,12 +1,11 @@
-from traceback import format_exc
-
-from pyrogram.errors import PeerIdInvalid, RPCError
-from pyrogram.types import Message
-
 from Powers import LOGGER
+from traceback import format_exc
 from Powers.bot_class import Gojo
-from Powers.database.group_blacklist import GroupBlacklist
+from pyrogram.types import Message
 from Powers.utils.custom_filters import command
+from pyrogram.errors import RPCError, PeerIdInvalid
+from Powers.database.group_blacklist import GroupBlacklist
+
 
 # initialise database
 db = GroupBlacklist()

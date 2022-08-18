@@ -1,12 +1,11 @@
-from pyrogram import filters
-from pyrogram.types import CallbackQuery, Message
-
 from Powers import LOGGER
-from Powers.bot_class import Gojo
-from Powers.database.rules_db import Rules
-from Powers.utils.custom_filters import admin_filter, command
-from Powers.utils.kbhelpers import ikb
+from pyrogram import filters
 from Powers.vars import Config
+from Powers.bot_class import Gojo
+from Powers.utils.kbhelpers import ikb
+from Powers.database.rules_db import Rules
+from pyrogram.types import Message, CallbackQuery
+from Powers.utils.custom_filters import command, admin_filter
 
 
 @Gojo.on_message(command("rules") & filters.group)
@@ -105,7 +104,9 @@ async def priv_rules(_, m: Message):
         await m.reply_text(msg)
     elif len(m.text.split()) == 1:
         curr_pref = db.get_privrules()
-        msg = f"Current Preference for Private rules in this chat is: <b>{curr_pref}</b>"
+        msg = (
+            f"Current Preference for Private rules in this chat is: <b>{curr_pref}</b>"
+        )
         LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
@@ -122,7 +123,9 @@ async def clear_rules(_, m: Message):
 
     rules = db.get_rules()
     if not rules:
-        await m.reply_text(text="The Admins for this group have not setup rules! That doesn't mean you can break the DECORUM of this group !")
+        await m.reply_text(
+            text="The Admins for this group have not setup rules! That doesn't mean you can break the DECORUM of this group !"
+        )
         return
 
     await m.reply_text(

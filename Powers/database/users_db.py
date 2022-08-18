@@ -1,8 +1,8 @@
-from threading import RLock
 from time import time
-
 from Powers import LOGGER
+from threading import RLock
 from Powers.database import MongoDB
+
 
 INSERTION_LOCK = RLock()
 
@@ -53,7 +53,8 @@ class Users(MongoDB):
             if isinstance(user_id, int):
                 curr = collection.find_one({"_id": user_id})
             elif isinstance(user_id, str):
-                # user_id[1:] because we don't want the '@' in the username search!
+                # user_id[1:] because we don't want the '@' in the username
+                # search!
                 curr = collection.find_one({"username": user_id[1:]})
             else:
                 curr = None

@@ -1,12 +1,10 @@
-from asyncio import sleep
-
-from pyrogram.errors import ChatAdminRequired, ChatNotModified, RPCError
-from pyrogram.types import ChatPermissions, Message
-
 from Powers import LOGGER
+from asyncio import sleep
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
+from pyrogram.types import Message, ChatPermissions
 from Powers.utils.custom_filters import command, restrict_filter
+from pyrogram.errors import RPCError, ChatNotModified, ChatAdminRequired
 
 
 @Gojo.on_message(command("locktypes"))
@@ -111,9 +109,11 @@ async def lock_perm(c: Gojo, m: Message):
         perm = "pin"
 
     else:
-        await m.reply_text(text=""" Invalid Lock Type!
+        await m.reply_text(
+            text=""" Invalid Lock Type!
 
-      Use /locktypes to get the lock types""")
+      Use /locktypes to get the lock types"""
+        )
         return
 
     try:
@@ -277,9 +277,11 @@ async def unlock_perm(c: Gojo, m: Message):
         uperm = "pin"
 
     else:
-        await m.reply_text(text="""Invalid Lock Type!
+        await m.reply_text(
+            text="""Invalid Lock Type!
 
-      Use /locktypes to get the lock types""")
+      Use /locktypes to get the lock types"""
+        )
         return
 
     try:
@@ -327,7 +329,7 @@ __PLUGIN__ = "locks"
 
 __alt_name__ = ["grouplock", "lock", "grouplocks"]
 
-__HELP__ = """ 
+__HELP__ = """
 ***Locks***
 
 Use this to lock group permissions.

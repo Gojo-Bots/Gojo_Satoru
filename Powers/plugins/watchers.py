@@ -1,22 +1,21 @@
-from re import escape as re_escape
 from time import time
-from traceback import format_exc
-
 from pyrogram import filters
-from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
-from pyrogram.types import ChatPermissions, Message
-
-from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
+from traceback import format_exc
 from Powers.bot_class import Gojo
-from Powers.database.antispam_db import ANTISPAM_BANNED, GBan
+from re import escape as re_escape
+from Powers.database.pins_db import Pins
+from Powers.utils.parser import mention_html
 from Powers.database.approve_db import Approve
 from Powers.database.blacklist_db import Blacklist
-from Powers.database.group_blacklist import BLACKLIST_CHATS
-from Powers.database.pins_db import Pins
-from Powers.database.warns_db import Warns, WarnSettings
-from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
-from Powers.utils.parser import mention_html
 from Powers.utils.regex_utils import regex_searcher
+from pyrogram.types import Message, ChatPermissions
+from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
+from Powers.database.warns_db import Warns, WarnSettings
+from Powers.database.group_blacklist import BLACKLIST_CHATS
+from Powers.database.antispam_db import ANTISPAM_BANNED, GBan
+from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
+from pyrogram.errors import RPCError, UserAdminInvalid, ChatAdminRequired
+
 
 # Initialise
 gban_db = GBan()
@@ -184,7 +183,7 @@ async def gban_watcher(c: Gojo, m: Message):
         try:
             await m.chat.ban_member(m.from_user.id)
             await m.delete(m.message_id)  # Delete users message!
-            user_gbanned=(await mention_html(m.from_user.first_name, m.from_user.id))
+            user_gbanned = await mention_html(m.from_user.first_name, m.from_user.id)
             await m.reply_text(
                 text=f"""This user ({user_gbanned}) has been banned globally!
 
@@ -203,7 +202,7 @@ async def gban_watcher(c: Gojo, m: Message):
                 MESSAGE_DUMP,
                 text=f"""<b>Gban Watcher Error!</b>
         <b>Chat:</b> <code>{m.chat.id}</code>
-        <b>Error:</b> <code>{ef}</code>"""
+        <b>Error:</b> <code>{ef}</code>""",
             )
     return
 

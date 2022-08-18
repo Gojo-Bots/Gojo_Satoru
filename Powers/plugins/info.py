@@ -1,26 +1,31 @@
 import os
-from traceback import format_exc
-from datetime import datetime
-
-from pyrogram.types import Message
 from pyrogram import enums
-
-from Powers import DEV_USERS, SUDO_USERS, WHITELIST_USERS, SUPPORT_STAFF, LOGGER
+from datetime import datetime
+from traceback import format_exc
 from Powers.bot_class import Gojo
-from Powers.database.antispam_db import GBan
+from pyrogram.types import Message
+from Powers.utils.chat_type import c_type
 from Powers.database.users_db import Users
+from Powers.database.antispam_db import GBan
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.utils.chat_type import c_type
+from Powers import (
+    LOGGER, DEV_USERS, SUDO_USERS, SUPPORT_STAFF, WHITELIST_USERS)
 
-gban_db=GBan()
+
+gban_db = GBan()
+
 
 async def count(c: Gojo, chat):
     administrator = []
-    async for admin in c.get_chat_members(chat_id=chat, filter = enums.ChatMembersFilter.ADMINISTRATORS):
-        total_admin = administrator.append(admin)     
+    async for admin in c.get_chat_members(
+        chat_id=chat, filter=enums.ChatMembersFilter.ADMINISTRATORS
+    ):
+        total_admin = administrator.append(admin)
     bot = []
-    async for tbot in c.get_chat_members(chat_id=chat, filter= enums.ChatMembersFilter.BOTS):
+    async for tbot in c.get_chat_members(
+        chat_id=chat, filter=enums.ChatMembersFilter.BOTS
+    ):
         total_bot = bot.append(tbot)
     bot_admin = 0
     ban = []
@@ -35,25 +40,27 @@ async def count(c: Gojo, chat):
     total_banned = len(total_banned)
     return total_bot, total_admin, bot_admin, total_banned
 
+
 async def user_info(c: Gojo, user, already=False):
     if not already:
-       # try:
-           # user = Users.get_user_info(int(user))  # Try to fetch user info form database if available give key error if user is not present
-          #  user = user["_id"]
-          #  user = await c.get_users(user_ids=user)
-      #  except KeyError:
+        # try:
+        # user = Users.get_user_info(int(user))  # Try to fetch user info form database if available give key error if user is not present
+        #  user = user["_id"]
+        #  user = await c.get_users(user_ids=user)
+        #  except KeyError:
         #    LOGGER.warning(f"Calling api to fetch info about user {user}")
-       #     user = await c.get_users(user_ids=user) # Fetch user info in traditional way if not available in db
+        # user = await c.get_users(user_ids=user) # Fetch user info in
+        # traditional way if not available in db
         user = await c.get_users(user_ids=user)
     if not user.first_name:
         return ["Deleted account", None]
-    
+
     gbanned, reason_gban = gban_db.get_gban(user)
     if gbanned:
-        gban=True
+        gban = True
         reason = f"The user is gbanned because {reason_gban}"
     else:
-        gban=False
+        gban = False
         reason = "User is not gbanned"
 
     user_id = user.id
@@ -78,8 +85,7 @@ async def user_info(c: Gojo, user, already=False):
     is_bot = user.is_bot
     is_fake = user.is_fake
     status = user.status
-        
-        
+
     if is_bot is True:
         last_date = "Targeted user is a bot"
     elif status == "recently":
@@ -95,10 +101,10 @@ async def user_info(c: Gojo, user, already=False):
     elif status == "offline":
         last_date = datetime.fromtimestamp(user.status.date).strftime(
             "%a, %d %b %Y, %H:%M:%S"
-        )  
+        )
     else:
         last_date = "User is currently online"
-        
+
     caption = f"""
 <b><i><u>⚡ Extracted User info From Telegram ⚡</b></i></u>
 
@@ -120,7 +126,7 @@ async def user_info(c: Gojo, user, already=False):
 <b>👀 Last seen</b>: <code>{last_date}</code>
 
 """
-     
+
     return caption, photo_id
 
 
@@ -130,7 +136,7 @@ async def chat_info(c: Gojo, chat, already=False):
     online_mem = c.get_chat_online_count(chat)
     chat_id = chat.id
     username = chat.username
-    total_bot, total_admin, total_bot_admin, total_banned = await count(c,chat)
+    total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat)
     title = chat.title
     type_ = c_type(c, chat_id=chat)
     is_scam = chat.is_scam
@@ -149,7 +155,7 @@ async def chat_info(c: Gojo, chat, already=False):
     sticker_set = chat.sticker_set_name
     linked_chat = chat.linked_chat
     reactions = chat.available_reactions
-  
+
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
 
@@ -180,21 +186,27 @@ async def chat_info(c: Gojo, chat, already=False):
     return caption, photo_id
 
 
-@Gojo.on_message(command(["info","whois"]))
+@Gojo.on_message(command(["info", "whois"]))
 async def info_func(c: Gojo, message: Message):
     try:
-        user, _ , _= await extract_user(c , message)
+        user, _, _ = await extract_user(c, message)
     except Exception as e:
-        return await message.reply_text(f"Got an error while running extract_user function error is {e}.....Give this message in supoort group")
-    
+        return await message.reply_text(
+            f"Got an error while running extract_user function error is {e}.....Give this message in supoort group"
+        )
+
     if not user:
         message.reply_text("Can't find user to fetch info!")
-    
-    m = await message.reply_text(f"Fetching user info of user {message.from_user.id}...")
+
+    m = await message.reply_text(
+        f"Fetching user info of user {message.from_user.id}..."
+    )
 
     try:
-        info_caption, photo_id = await user_info(c , user=user)
-        LOGGER.info(f"{message.from_user.id} tried to fetch user info of user {message.from_user.id} in {message.chat.id}")
+        info_caption, photo_id = await user_info(c, user=user)
+        LOGGER.info(
+            f"{message.from_user.id} tried to fetch user info of user {message.from_user.id} in {message.chat.id}"
+        )
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -207,27 +219,29 @@ async def info_func(c: Gojo, message: Message):
     await message.reply_photo(photo, caption=info_caption, quote=False)
     await m.delete()
     os.remove(photo)
-    LOGGER.info(f"{message.from_user.id} fetched user info of user {user.username} in {m.chat.id}")
+    LOGGER.info(
+        f"{message.from_user.id} fetched user info of user {user.username} in {m.chat.id}"
+    )
 
 
-
-@Gojo.on_message(command(["chinfo","chatinfo","chat_info"]))
+@Gojo.on_message(command(["chinfo", "chatinfo", "chat_info"]))
 async def chat_info_func(c: Gojo, message: Message):
-    splited = message.text.split() 
+    splited = message.text.split()
     try:
         if len(splited) == 1:
             chat = message.chat.id
 
         else:
             chat = splited[1]
-        
+
         try:
             chat = int(chat)
         except ValueError:
             return await message.reply_text("**Usage:**/chinfo [USERNAME|ID]")
-        
 
-        m = await message.reply_text(f"Fetching chat info of chat **{message.chat.title}**.....")
+        m = await message.reply_text(
+            f"Fetching chat info of chat **{message.chat.title}**....."
+        )
 
         info_caption, photo_id = await chat_info(c, chat=chat)
         if not photo_id:
@@ -235,7 +249,9 @@ async def chat_info_func(c: Gojo, message: Message):
 
         photo = await Gojo.download_media(photo_id)
         await message.reply_photo(photo, caption=info_caption, quote=False)
-        LOGGER.info(f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}")
+        LOGGER.info(
+            f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}"
+        )
 
         await m.delete()
         os.remove(photo)
@@ -244,11 +260,12 @@ async def chat_info_func(c: Gojo, message: Message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
 
+
 __PLUGIN__ = "info"
 __alt_name__ = [
     "info",
     "chinfo",
-] 
+]
 
 __HELP__ = """
 ***Information***

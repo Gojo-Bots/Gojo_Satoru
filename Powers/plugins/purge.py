@@ -1,12 +1,10 @@
 from asyncio import sleep
-
-from pyrogram.errors import MessageDeleteForbidden, RPCError
-from pyrogram.types import Message
-
 from Powers import SUPPORT_GROUP
 from Powers.bot_class import Gojo
+from pyrogram.types import Message
 from Powers.utils.chat_type import chattype
-from Powers.utils.custom_filters import admin_filter, command
+from pyrogram.errors import RPCError, MessageDeleteForbidden
+from Powers.utils.custom_filters import command, admin_filter
 
 
 @Gojo.on_message(command("purge") & admin_filter)
@@ -35,7 +33,9 @@ async def purge(c: Gojo, m: Message):
                 )
             await m.delete()
         except MessageDeleteForbidden:
-            await m.reply_text(text="Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup.")
+            await m.reply_text(
+                text="Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup."
+            )
             return
         except RPCError as ef:
             await m.reply_text(
@@ -46,10 +46,7 @@ async def purge(c: Gojo, m: Message):
 
         count_del_msg = len(message_ids)
 
-        z = await m.reply_text(
-            text=f"Deleted <i>{count_del_msg}</i> messages"
-                
-        )
+        z = await m.reply_text(text=f"Deleted <i>{count_del_msg}</i> messages")
         await sleep(3)
         await z.delete()
         return
@@ -83,7 +80,9 @@ async def spurge(c: Gojo, m: Message):
                 )
             await m.delete()
         except MessageDeleteForbidden:
-            await m.reply_text(text="Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup.")
+            await m.reply_text(
+                text="Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup."
+            )
             return
         except RPCError as ef:
             await m.reply_text(

@@ -1,5 +1,6 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+
 def ikb(rows=None):
     if rows is None:
         rows = []
@@ -7,7 +8,7 @@ def ikb(rows=None):
     for row in rows:
         line = []
         for button in row:
-            button = btn(*button) 
+            button = btn(*button)
             line.append(button)
         lines.append(line)
     return InlineKeyboardMarkup(inline_keyboard=lines)
