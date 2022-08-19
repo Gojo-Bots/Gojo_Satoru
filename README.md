@@ -97,7 +97,7 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 
 --------  
   
-<!---## Deploy To Okteto
+## Deploy To Okteto
   [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/iamgojoof6eyes/Gojo_Satarou)
 
 ### How To Deploy On Okteto
@@ -105,12 +105,12 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
   * [Fork](https://github.com/iamgojoof6eyes/Gojo_Satarou/fork) the repo and give a star to repo
   * Click on [deploy](https://cloud.okteto.com/deploy?repository=https://github.com/iamgojoof6eyes/Gojo_Satarou) button provided above...
   * Login using github.
-  * Now add the values and keys by creating values and keys ***Make sure to add keys __as per given below__ I'll advide you to just copy and paste it***
+  * Fill the values
   * Then wait for 10-15 minutes. 
-  * If logs show error click on redeploy then ``variable`` if the variable is not there fill it and then click ``relaunch``
   * ``Mandaotry`` keys are [given below](#Variables)
   * ``All keys`` are listed [here](https://telegra.ph/Captain-03-27)
-  * ***The bot can be used by provideing mandotry variables only..*** 
+  * ***If you want to add more data of yours just go to variable section and add the key and values to it then hit on `relaunch`*** 
+  
   ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
 
 --------  
