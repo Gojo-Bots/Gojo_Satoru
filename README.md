@@ -37,7 +37,7 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 
 ## About 
   
-  <h1 align="center"><img src="https://media.giphy.com/media/hbKBe6j3JLsNnb4h53/giphy.gif" /></h1>
+  <h1 align="center"><img src="./extras/original.gif" /></h1>
   
   
 The Gojo Satarou is a powerful Group Management bot with awesome plugins and features.
