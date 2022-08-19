@@ -15,7 +15,7 @@ async def botstaff(c: Gojo, m: Message):
         pass
     true_dev = list(set(DEV_USERS) - {OWNER_ID})
     reply += "\n<b>Developers ⚡️:</b>\n"
-    if true_dev == []:
+    if not true_dev:
         reply += "No Dev Users\n"
     else:
         for each_user in true_dev:
