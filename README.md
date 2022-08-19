@@ -115,7 +115,7 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 
 --------  
 
-## Deploy locally---->
+## Deploy locally
 ### Using git
 
 * Install Python v3.7 or later from Python's Website
