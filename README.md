@@ -3,9 +3,9 @@
 <!---</h1>
 <h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1>
 
-<!---<h1 align="center"><img src="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg" /></h1> ----->
+<h1 align="center"><img src="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg" /></h1> ----->
   
-<h1 align="center"><img src="https://te.legra.ph/file/633bd27c1607fe98920b6.jpg" /></h1>
+<h1 align="center"><img src="./extras/gojo_satoru__psd__by_at_yomiko_deyaec4-pre.jpg" /></h1>
 
 
 
@@ -224,7 +224,7 @@ To add your very own plugin just use the format given below and go through the [
 
 
 <p align='left'>
-  <a href="https://github.com/The-HellBot"><img src="https://te.legra.ph/file/a780adeb9b406b169a889.jpg" width="500" 
+  <a href="https://github.com/The-HellBot"><img src="./extras/photo_2022-08-19_13-55-00.jpg" width="500" 
      height="500 alt="Hell Bot"></a></br></br>
    
 </p>
