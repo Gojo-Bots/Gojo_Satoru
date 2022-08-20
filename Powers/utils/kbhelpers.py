@@ -1,8 +1,10 @@
 from re import findall
-from pyrogram.types import InlineKeyboardButton as kb
 from pykeyboard import InlineKeyboard
+from pyrogram.types import InlineKeyboardButton as kb
+
 
 # CREDIT WILLIAM BUTCHER BOT
+
 
 def is_url(text: str) -> bool:
     regex = r"""(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]
@@ -10,6 +12,7 @@ def is_url(text: str) -> bool:
                 \([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\
                 ()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))""".strip()
     return [x[0] for x in findall(regex, str(text))]
+
 
 def keyboard(buttons_list, row_width: int = 2):
     """
