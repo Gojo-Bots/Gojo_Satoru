@@ -1,9 +1,11 @@
 from typing import Tuple
-from Powers import LOGGER
 from traceback import format_exc
+
+from pyrogram.types.messages_and_media.message import Message
+
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.users_db import Users
-from pyrogram.types.messages_and_media.message import Message
 
 
 async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:

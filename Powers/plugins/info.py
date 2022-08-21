@@ -1,11 +1,12 @@
 import os
-from pyrogram import enums
 from datetime import datetime
 from traceback import format_exc
-from Powers.bot_class import Gojo
+
 from pyrogram.types import Message
+from pyrogram import enums
+
+from Powers.bot_class import Gojo
 from Powers.utils.chat_type import c_type
-from Powers.database.users_db import Users
 from Powers.database.antispam_db import GBan
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -43,14 +44,6 @@ async def count(c: Gojo, chat):
 
 async def user_info(c: Gojo, user, already=False):
     if not already:
-        # try:
-        # user = Users.get_user_info(int(user))  # Try to fetch user info form database if available give key error if user is not present
-        #  user = user["_id"]
-        #  user = await c.get_users(user_ids=user)
-        #  except KeyError:
-        #    LOGGER.warning(f"Calling api to fetch info about user {user}")
-        # user = await c.get_users(user_ids=user) # Fetch user info in
-        # traditional way if not available in db
         user = await c.get_users(user_ids=user)
     if not user.first_name:
         return ["Deleted account", None]
