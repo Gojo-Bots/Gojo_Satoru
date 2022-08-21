@@ -1,7 +1,6 @@
 from time import time
-from threading import RLock
-
 from Powers import LOGGER
+from threading import RLock
 from Powers.database import MongoDB
 
 
