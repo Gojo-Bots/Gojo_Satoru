@@ -613,6 +613,7 @@ MUTE_GIFS = [
     "https://media.giphy.com/media/PBZrH2uy9E5rPruuCX/giphy.gif",
     "https://media.giphy.com/media/Cew2qzlug9t3ACYrD5/giphy.gif",
     "https://media.giphy.com/media/PtIm7eUGKYIZbknqsO/giphy.gif",
+    "https://media.giphy.com/media/EKbCY8OgdATSGBekxM/giphy.gif",
 ]
 
 NOWYES = [
