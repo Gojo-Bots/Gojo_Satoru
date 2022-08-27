@@ -514,7 +514,8 @@ TOSS = (
 )
 
 
-DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?", "No one give a damn about it")
+DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?",
+          "No one give a damn about it")
 
 INSULT_STRINGS = [
     "`Owww ... Such a stupid idiot.`",

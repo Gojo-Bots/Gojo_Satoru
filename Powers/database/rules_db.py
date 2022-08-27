@@ -68,7 +68,8 @@ class Rules(MongoDB):
         if not chat_data:
             new_data = {"_id": self.chat_id, "privrules": False, "rules": ""}
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
+            LOGGER.info(
+                f"Initialized Language Document for chat {self.chat_id}")
             return new_data
         return chat_data
 

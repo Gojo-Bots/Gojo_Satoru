@@ -57,7 +57,8 @@ class Notes(MongoDB):
     def get_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.find_all({"chat_id": chat_id})
-            note_list = sorted([(note["note_name"], note["hash"]) for note in curr])
+            note_list = sorted([(note["note_name"], note["hash"])
+                               for note in curr])
             return note_list
 
     def rm_note(self, chat_id: int, note_name: str):
