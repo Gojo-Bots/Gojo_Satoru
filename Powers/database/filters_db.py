@@ -71,8 +71,7 @@ class Filters(MongoDB):
             curr = self.find_all()
             if curr:
                 return len(
-                    [z for z in (i["keyword"].split("|")
-                                 for i in curr) if len(z) >= 2],
+                    [z for z in (i["keyword"].split("|") for i in curr) if len(z) >= 2],
                 )
             return 0
 

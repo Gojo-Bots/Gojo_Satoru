@@ -19,7 +19,7 @@ async def purge(c: Gojo, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i: i + n]
+                yield l[i : i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))
@@ -66,7 +66,7 @@ async def spurge(c: Gojo, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i: i + n]
+                yield l[i : i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))

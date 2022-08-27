@@ -129,8 +129,7 @@ async def evaluate_code(c: Gojo, m: Message):
 
 
 async def aexec(code, c, m):
-    exec("async def __aexec(c, m): " +
-         "".join(f"\n {l}" for l in code.split("\n")))
+    exec("async def __aexec(c, m): " + "".join(f"\n {l}" for l in code.split("\n")))
     return await locals()["__aexec"](c, m)
 
 

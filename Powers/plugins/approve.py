@@ -88,8 +88,7 @@ async def disapprove_user(c: Gojo, m: Message):
     except UserNotParticipant:
         if already_approved:  # If user is approved and not in chat, unapprove them.
             db.remove_approve(user_id)
-            LOGGER.info(
-                f"{user_id} disapproved in {m.chat.id} as UserNotParticipant")
+            LOGGER.info(f"{user_id} disapproved in {m.chat.id} as UserNotParticipant")
         await m.reply_text("This user is not in this chat, unapproved them.")
         return
     except RPCError as ef:
@@ -159,8 +158,7 @@ async def check_approval(c: Gojo, m: Message):
     except Exception:
         return
     check_approve = db.check_approve(user_id)
-    LOGGER.info(
-        f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
+    LOGGER.info(f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
 
     if not user_id:
         await m.reply_text(
