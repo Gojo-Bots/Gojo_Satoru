@@ -216,7 +216,7 @@ To add your very own plugin just use the format given below and go through the [
 
 * [PyKeyboard](https://github.com/pystorage/pykeyboard) `for pagination`
 
-* [Pyrogram](https://github.com/pyrogram/pyrogram) `base code`
+* [Pyrogram](https://github.com/pyrogram/pyrogram) `library`
 
 ---------
 
