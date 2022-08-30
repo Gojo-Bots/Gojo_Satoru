@@ -253,9 +253,11 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
         if user.id == Config.BOT_ID:
             return
         if user.id in DEV_USERS:
-            await c.send_message(
+            await c.send_animation(
                 member.chat.id,
+                "./extras/william.gif",
                 "OwO My ***DEV*** has also joined the chat!",
+                unsave=True,
             )
             return
         if banned_users:
