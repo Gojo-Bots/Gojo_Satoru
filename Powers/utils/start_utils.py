@@ -43,7 +43,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Support 👥",
-                    f"https://t.me/{SUPPORT_GROUP}",
+                    f"https://t.me/{QUEEN_SUPPORT}",
                     "url",
                 ),
             ],
@@ -51,19 +51,19 @@ async def gen_start_kb(q: Message or CallbackQuery):
             [
                 (
                     "🗃️ Source Code",
-                    "https://github.com/iamgojoof6eyes/Gojo_Satarou",
+                    "https://telegra.ph/file/2fc57b07c851da2112a0e.jpg",
                     "url",
                 ),
                 (
                     "Owner ❤️",
-                    f"https://t.me/iamgojoof6eyes",
+                    f"https://t.me/mafia_rj",
                     "url",
                 ),
             ],
             [
                 (
                     "Join for GFx work",
-                    "https://t.me/psy_Logos",
+                    "https://t.me/queen_network",
                     "url",
                 ),
             ],
@@ -71,7 +71,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
     )
 
 
-async def get_private_note(c: Gojo, m: Message, help_option: str):
+async def get_private_note(c: queen, m: Message, help_option: str):
     """Get the note in pm of user, with parsing enabled."""
     help_lst = help_option.split("_")
     if len(help_lst) == 2:
@@ -244,7 +244,7 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
         )
     else:
         help_msg = """
-Hey There! My name is Gojo.
+Hey There! My name is MAFIYAQUEEN.
 I'm here to help you manage your groups!
 Commands available:
 * /start: Start the bot
