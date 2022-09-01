@@ -25,11 +25,11 @@ Your donation might also me get me a new feature or two, which I wasn't able to 
 
 All the fund would be put into my services such as database, storage and hosting!
 
-You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes)
+You can donate by contacting my owner: [MAFIA RAJ](http://t.me/MAFIA_RJ)
      """
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_photo(photo=choice(StartPic), caption=cpt)
+    await m.reply_photo(photo=choice(StartPic), QUEEN=NETWORK)
     return
 
 
@@ -88,11 +88,11 @@ async def start(c: Gojo, m: Message):
             return
         try:
             cpt = f"""
-Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! My self Gojo ✨.
+Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! My self QUEEN ✨.
 I'm here to help you manage your groups!
 Hit /help to find out more about how to use me in my full potential!
 
-Join my [News Channel](https://t.me/gojo_updates) to get information on all the latest updates."""
+Join my [News Channel](https://t.me/QUEEN_NETWORK) to get information on all the latest updates."""
 
             await m.reply_photo(
                 photo=choice(StartPic),
@@ -127,11 +127,11 @@ Join my [News Channel](https://t.me/gojo_updates) to get information on all the 
 async def start_back(_, q: CallbackQuery):
     try:
         cpt = f"""
-Hey [{q.from_user.first_name}](http://t.me/{q.from_user.username})! My name is Gojo ✨.
+Hey [{q.from_user.first_name}](http://t.me/{q.from_user.username})! My name is QUEEN NETWORK ✨.
 I'm here to help you manage your groups!
 Hit /help to find out more about how to use me in my full potential!
 
-Join my [News Channel](http://t.me/gojo_updates) to get information on all the latest updates."""
+Join my [News Channel](http://t.me/QUEEN_NETWORK) to get information on all the latest updates."""
 
         await q.edit_message_caption(
             caption=cpt,
@@ -153,7 +153,7 @@ async def commands_menu(_, q: CallbackQuery):
     )
     try:
         cpt = f"""
-Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! My name is Gojo✨.
+Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! My name is MAFIYAQUEEN✨.
 I'm here to help you manage your groups!
 Commands available:
 * /start: Start the bot
@@ -224,7 +224,7 @@ async def help_menu(_, m: Message):
                 ],
             )
             msg = f"""
-Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is Gojo✨.
+Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is MAFIYAQUEEN✨.
 I'm here to help you manage your groups!
 Commands available:
 * /start: Start the bot
