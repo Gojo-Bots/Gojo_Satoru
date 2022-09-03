@@ -12,14 +12,17 @@
 ------
 
 
-[![GitHub forks](https://img.shields.io/github.com/Gojo-Bots/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/Gojo-Bots/Gojo_Satarou/fork)
-[![GitHub stars](https://img.shields.io/github/stars/Gojo-Bots/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/Gojo-Bots/Gojo_Satarou/stargazers)
-![Repo Size](https://img.shields.io/github/repo-size/Gojo-Bots/Gojo_Satarou?&style=flat-square&logo=github)
-![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green?&style=flat-square)
-[![GitHub license](https://img.shields.io/github/license/Gojo-Bots/Gojo_Satarou?&style=flat-square&logo=github)](https://github.com/Gojo-Bots/Gojo_Satarou/main/LICENSE)
-[![Python](https://img.shields.io/badge/Python-v3.10-blue)](https://www.python.org/)
-![Branch](https://img.shields.io/badge/Branch-Master-orange)
-![GitHub language count](https://img.shields.io/github/languages/count/Gojo-Bots/Gojo_Satarou?color=Pink&label=Language&style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/Gojo-Bots/Gojo_Satarou?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/Gojo-Bots/Gojo_Satarou?style=social)
+
+![Repo Size](https://img.shields.io/github/repo-size/Gojo-Bots/Gojo_Satarou?&style=social&logo=github)
+![Branch](https://img.shields.io/badge/Branch-Main-white?&style=social&logo=github)
+
+![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-white?&style=social&logo=hugo)
+![GitHub license](https://img.shields.io/github/license/Gojo-Bots/Gojo_Satarou?&style=social&logo=github)
+
+![Python](https://img.shields.io/badge/Python-v3.10-white?style=social&logo=python)
+![GitHub language count](https://img.shields.io/github/languages/count/Gojo-Bots/Gojo_Satarou?&style=social&logo=hyper)
 
 
 
