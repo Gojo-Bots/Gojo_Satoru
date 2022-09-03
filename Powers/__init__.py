@@ -55,7 +55,7 @@ LOGGER.info("|      Gojo_Satarou      |")
 LOGGER.info("------------------------")
 LOGGER.info(f"Version: {Config.VERSION}")
 LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
-LOGGER.info("Source Code: https://github.com/iamgojoof6eyes/Gojo_Satarou\n")
+LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satarou\n")
 
 # Account Related
 BOT_TOKEN = Config.BOT_TOKEN
