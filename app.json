@@ -10,7 +10,7 @@
       "Gojo",
       "Anime"
     ],
-    "repository": "https://github.com/iamgojoof6eyes/Gojo_Satarou",
+    "repository": "https://github.com/Gojo-Bots/Gojo_Satarou",
     "success_url": "https://t.me/@iamgojoof6eyes_bot",
     "env": {
       "BOT_TOKEN": {
