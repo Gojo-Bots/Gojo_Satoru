@@ -12,7 +12,7 @@
 ------
 
 
-![GitHub forks](https://img.shields.io/github/forks/Gojo-Bots/Gojo_Satarou?style=social)
+[![GitHub forks](https://img.shields.io/github/forks/Gojo-Bots/Gojo_Satarou?style=social)](https://github.com/Gojo-Bots/Gojo_Satarou/fork)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Gojo-Bots/Gojo_Satarou?style=social)
 
 ![Repo Size](https://img.shields.io/github/repo-size/Gojo-Bots/Gojo_Satarou?&style=social&logo=github)
