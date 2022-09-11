@@ -38,7 +38,7 @@ class Config:
         ).split(" ")
     ]
     DB_URI = config("DB_URI", default="")
-    DB_NAME = config("DB_NAME", default="gojo_satarou")
+    DB_NAME = config("DB_NAME", default="")
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_update")

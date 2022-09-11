@@ -36,7 +36,7 @@
       "DB_NAME": {
         "description": "Your MongoDB database name.",
         "required": true,
-        "value": "gojo_satarou"
+        "value": ""
       },
       "OWNER_ID": {
         "description": "Your user ID as an integer.",
