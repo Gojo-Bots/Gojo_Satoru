@@ -34,7 +34,13 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 ---------  
 
 ## Inspiration ✨
-`Not a particular inspiration, inspired by many bots`
+Not a particular inspiration, inspired by many bots
+
+Mainly:
+
+* [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
+* [WilliamButcherBot](https://github.com/TheHamkerCat/WilliamButcherBot)
+
 
 ---------
 
