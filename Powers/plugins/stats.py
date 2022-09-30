@@ -1,6 +1,6 @@
+from pyrogram import enums
 from Powers.bot_class import Gojo
 from pyrogram.types import Message
-from pyrogram import enums
 from Powers.database.pins_db import Pins
 from Powers.database.chats_db import Chats
 from Powers.database.rules_db import Rules

@@ -1,9 +1,9 @@
 from random import choice
+from pyrogram import enums
 from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
 from pyrogram.filters import regex
-from pyrogram import enums
 from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.utils.extract_user import extract_user
@@ -540,7 +540,10 @@ async def dkick_usr(c: Gojo, m: Message):
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await c.send_message(m.chat.id, txt)
         await c.send_animation(
-            chat_id=m.chat.id, animation=KICK_MEDIA, caption=txt, parse_mode=enums.ParseMode.HTML
+            chat_id=m.chat.id,
+            animation=KICK_MEDIA,
+            caption=txt,
+            parse_mode=enums.ParseMode.HTML,
         )
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:

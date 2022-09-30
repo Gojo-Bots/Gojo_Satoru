@@ -1,9 +1,9 @@
 from html import escape
 from secrets import choice
 from Powers import DEV_USERS
-from pyrogram import filters, enums
 from Powers.vars import Config
 from Powers.bot_class import Gojo
+from pyrogram import enums, filters
 from Powers.utils.chat_type import chattype
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
@@ -403,7 +403,9 @@ async def welcome(c: Gojo, m: Message):
             Welcome text in no formating:
             """,
             )
-            await c.send_message(m.chat.id, text=oo, parse_mode=enums.ParseMode.DISABLED)
+            await c.send_message(
+                m.chat.id, text=oo, parse_mode=enums.ParseMode.DISABLED
+            )
             return
         if args[1].lower() == "on":
             db.set_current_welcome_settings(True)
@@ -448,7 +450,9 @@ async def goodbye(c: Gojo, m: Message):
             Goodbye text in no formating:
             """,
             )
-            await c.send_message(m.chat.id, text=oo, parse_mode=enums.ParseMode.DISABLED)
+            await c.send_message(
+                m.chat.id, text=oo, parse_mode=enums.ParseMode.DISABLED
+            )
             return
         if args[1].lower() == "on":
             db.set_current_goodbye_settings(True)

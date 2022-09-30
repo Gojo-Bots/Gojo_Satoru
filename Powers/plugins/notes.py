@@ -1,9 +1,9 @@
 from Powers import LOGGER
 from secrets import choice
-from pyrogram import filters, enums
 from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
+from pyrogram import enums, filters
 from pyrogram.errors import RPCError
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.cmd_senders import send_cmd
@@ -219,7 +219,9 @@ async def get_raw_note(c: Gojo, m: Message, note: str):
 
     if msgtype == Types.TEXT:
         teks = getnotes["note_value"]
-        await m.reply_text(teks, parse_mode=enums.ParseMode.DISABLED, reply_to_message_id=msg_id)
+        await m.reply_text(
+            teks, parse_mode=enums.ParseMode.DISABLED, reply_to_message_id=msg_id
+        )
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
