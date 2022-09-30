@@ -8,6 +8,7 @@ from Powers.utils.extras import StartPic
 from Powers.utils.chat_type import chattype
 from Powers.utils.custom_filters import command
 from pyrogram.types import Message, CallbackQuery
+from pyrogram import enums
 from pyrogram.errors import UserIsBlocked, QueryIdInvalid, MessageNotModified
 from Powers.utils.start_utils import (
     gen_cmds_kb, gen_start_kb, get_help_msg, get_private_note,
@@ -81,7 +82,7 @@ async def start(c: Gojo, m: Message):
             await m.reply_photo(
                 photo=choice(StartPic),
                 caption=help_msg,
-                parse_mode="markdown",
+                parse_mode=enums.ParseMode.MARKDOWN,
                 reply_markup=ikb(help_kb),
                 quote=True,
             )
@@ -193,7 +194,7 @@ async def help_menu(_, m: Message):
             await m.reply_photo(
                 photo=choice(StartPic),
                 caption=help_msg,
-                parse_mode="markdown",
+                parse_mode=enums.ParseMode.MARKDOWN,
                 reply_markup=ikb(help_kb),
                 quote=True,
             )
@@ -255,7 +256,7 @@ async def get_module_info(_, q: CallbackQuery):
     ]
     await q.edit_message_caption(
         caption=help_msg,
-        parse_mode="markdown",
+        parse_mode=enums.ParseMode.MARKDOWN,
         reply_markup=ikb(help_kb),
     )
     await q.answer()

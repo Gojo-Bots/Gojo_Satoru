@@ -4,7 +4,7 @@ from Powers import *
 from os import remove
 from io import BytesIO
 from tswift import Song
-from pyrogram import filters
+from pyrogram import filters, enums
 from wikipedia import summary
 from traceback import format_exc
 from Powers.bot_class import Gojo
@@ -37,10 +37,10 @@ async def wiki(_, m: Message):
     except DisambiguationError as de:
         return await m.reply_text(
             f"Disambiguated pages found! Adjust your query accordingly.\n<i>{de}</i>",
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
     except PageError as pe:
-        return await m.reply_text(f"<code>{pe}</code>", parse_mode="html")
+        return await m.reply_text(f"<code>{pe}</code>", parse_mode=enums.ParseMode.HTML)
     if res:
         result = f"<b>{search}</b>\n\n"
         result += f"<i>{res}</i>\n"
@@ -48,7 +48,7 @@ async def wiki(_, m: Message):
         try:
             return await m.reply_text(
                 result,
-                parse_mode="html",
+                parse_mode=enums.ParseMode.HTML,
                 disable_web_page_preview=True,
             )
         except MessageTooLong:
@@ -57,7 +57,7 @@ async def wiki(_, m: Message):
                 return await m.reply_document(
                     document=f,
                     quote=True,
-                    parse_mode="html",
+                    parse_mode=enums.ParseMode.HTML,
                 )
     await m.stop_propagation()
 
@@ -144,7 +144,7 @@ async def id_info(c: Gojo, m: Message):
             await m.reply_text(
                 text=f"""Original Sender - {orig_sender} (<code>{orig_id}</code>)
         Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
-                parse_mode="HTML",
+                parse_mode=enums.ParseMode.HTML,
             )
         else:
             try:
@@ -158,7 +158,7 @@ async def id_info(c: Gojo, m: Message):
 
             await m.reply_text(
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
-                parse_mode="HTML",
+                parse_mode=enums.ParseMode.HTML,
             )
     elif chat_type == "private":
         await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
@@ -175,7 +175,7 @@ async def get_gifid(_, m: Message):
         LOGGER.info(f"{m.from_user.id} used gifid cmd in {m.chat.id}")
         await m.reply_text(
             f"Gif ID:\n<code>{m.reply_to_message.animation.file_id}</code>",
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
     else:
         await m.reply_text(text="Please reply to a gif to get it's ID.")

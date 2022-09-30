@@ -124,7 +124,7 @@ async def user_info(c: Gojo, user, already=False):
 async def chat_info(c: Gojo, chat, already=False):
     if not already:
         chat = await c.get_chat(chat)
-    online_mem = c.get_chat_online_count(chat)
+    online_mem = await c.get_chat_online_count(chat)
     chat_id = chat.id
     username = chat.username
     total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat)

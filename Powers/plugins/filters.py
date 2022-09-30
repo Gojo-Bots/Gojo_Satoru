@@ -1,5 +1,5 @@
 from secrets import choice
-from pyrogram import filters
+from pyrogram import filters, enums
 from traceback import format_exc
 from re import escape as re_escape
 from pyrogram.errors import RPCError
@@ -217,7 +217,7 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
                 try:
                     await m.reply_text(
                         textt,
-                        # parse_mode="markdown",
+                        # parse_mode=enums.ParseMode.MARKDOWN,
                         reply_markup=button,
                         disable_web_page_preview=True,
                         quote=True,
@@ -234,7 +234,7 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
             else:
                 await m.reply_text(
                     textt,
-                    # parse_mode="markdown",
+                    # parse_mode=enums.ParseMode.MARKDOWN,
                     quote=True,
                     disable_web_page_preview=True,
                 )
@@ -257,7 +257,7 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
                 m.chat.id,
                 getfilter["fileid"],
                 caption=textt,
-                #   parse_mode="markdown",
+                #   parse_mode=enums.ParseMode.MARKDOWN,
                 reply_markup=button,
                 reply_to_message_id=m.message_id,
             )

@@ -3,6 +3,7 @@ from random import choice
 from Powers.utils import extras
 from Powers.bot_class import Gojo
 from pyrogram.types import Message
+from pyrogram import enums
 from Powers import LOGGER, DEV_USERS
 from pyrogram.errors import MessageTooLong
 from Powers.utils.custom_filters import command
@@ -27,7 +28,7 @@ async def fun_shout(_, m: Message):
         result[0] = text[0]
         result = "".join(result)
         msg = "```\n" + result + "```"
-        await m.reply_text(msg, parse_mode="markdown")
+        await m.reply_text(msg, parse_mode=enums.ParseMode.MARKDOWN)
         LOGGER.info(f"{m.from_user.id} shouted in {m.chat.id}")
         return
     except MessageTooLong as e:

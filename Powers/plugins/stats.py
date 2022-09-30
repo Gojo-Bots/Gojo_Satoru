@@ -1,5 +1,6 @@
 from Powers.bot_class import Gojo
 from pyrogram.types import Message
+from pyrogram import enums
 from Powers.database.pins_db import Pins
 from Powers.database.chats_db import Chats
 from Powers.database.rules_db import Rules
@@ -63,5 +64,5 @@ async def get_stats(_, m: Message):
         "<b>Action:</b>\n"
         f"     <b>Del:</b> Applied in <code>{(dsbl.count_action_dis_all('del'))}</code> chats.\n"
     )
-    await replymsg.edit_text(rply, parse_mode="html")
+    await replymsg.edit_text(rply, parse_mode=enums.ParseMode.HTML)
     return

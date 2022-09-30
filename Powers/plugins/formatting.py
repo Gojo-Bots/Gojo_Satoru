@@ -1,5 +1,5 @@
 from Powers import LOGGER
-from pyrogram import filters
+from pyrogram import filters, enums
 from Powers.bot_class import Gojo
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.custom_filters import command
@@ -60,7 +60,7 @@ async def get_formatting_info(_, q: CallbackQuery):
       <code>[button 3](buttonurl://example.com)</code>
       This will show button 1 and 2 on the same line, while 3 will be underneath.""",
             reply_markup=kb,
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
     elif cmd == "fillings":
         await q.message.edit_text(
@@ -78,7 +78,7 @@ async def get_formatting_info(_, q: CallbackQuery):
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.""",
             reply_markup=kb,
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
     elif cmd == "random_content":
         await q.message.edit_text(
@@ -104,7 +104,7 @@ async def get_formatting_info(_, q: CallbackQuery):
       %%%
       Sup? <code>{first}</code>""",
             reply_markup=kb,
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
 
     await q.answer()

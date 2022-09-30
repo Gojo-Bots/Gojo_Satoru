@@ -3,6 +3,7 @@ from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
 from pyrogram.filters import regex
+from pyrogram import enums
 from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.utils.extract_user import extract_user
@@ -107,7 +108,7 @@ async def tban_usr(c: Gojo, m: Message):
             animation=BAN_MEDIA,
             caption=txt,
             reply_markup=keyboard,
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
     # await m.reply_text(txt, reply_markup=keyboard,
     # reply_to_message_id=r_id)
@@ -308,7 +309,7 @@ async def dtban_usr(c: Gojo, m: Message):
             animation=BAN_MEDIA,
             caption=txt,
             reply_markup=keyboard,
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
         # await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
@@ -394,7 +395,7 @@ async def kick_usr(c: Gojo, m: Message):
             reply_to_message_id=r_id,
             animation=KICK_MEDIA,
             caption=txt,
-            parse_mode="html",
+            parse_mode=enums.ParseMode.HTML,
         )
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
@@ -539,7 +540,7 @@ async def dkick_usr(c: Gojo, m: Message):
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await c.send_message(m.chat.id, txt)
         await c.send_animation(
-            chat_id=m.chat.id, animation=KICK_MEDIA, caption=txt, parse_mode="html"
+            chat_id=m.chat.id, animation=KICK_MEDIA, caption=txt, parse_mode=enums.ParseMode.HTML
         )
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:

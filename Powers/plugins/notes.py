@@ -1,6 +1,6 @@
 from Powers import LOGGER
 from secrets import choice
-from pyrogram import filters
+from pyrogram import filters, enums
 from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
@@ -126,7 +126,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
                 try:
                     await reply_text(
                         textt,
-                        # parse_mode="markdown",
+                        # parse_mode=enums.ParseMode.MARKDOWN,
                         reply_markup=button,
                         disable_web_page_preview=True,
                         quote=True,
@@ -143,7 +143,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
             else:
                 await reply_text(
                     textt,
-                    # parse_mode="markdown",
+                    # parse_mode=enums.ParseMode.MARKDOWN,
                     quote=True,
                     disable_web_page_preview=True,
                 )
@@ -166,7 +166,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
                     m.chat.id,
                     getnotes["fileid"],
                     caption=textt,
-                    # parse_mode="markdown",
+                    # parse_mode=enums.ParseMode.MARKDOWN,
                     reply_markup=button,
                     reply_to_message_id=reply_msg_id,
                 )
@@ -174,7 +174,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
             except RPCError as ef:
                 await m.reply_text(
                     textt,
-                    # parse_mode="markdown",
+                    # parse_mode=enums.ParseMode.MARKDOWN,
                     reply_markup=button,
                     disable_web_page_preview=True,
                     reply_to_message_id=reply_msg_id,
@@ -187,7 +187,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
                 m.chat.id,
                 getnotes["fileid"],
                 caption=textt,
-                # parse_mode="markdown",
+                # parse_mode=enums.ParseMode.MARKDOWN,
                 reply_markup=button,
                 reply_to_message_id=reply_msg_id,
             )
@@ -219,7 +219,7 @@ async def get_raw_note(c: Gojo, m: Message, note: str):
 
     if msgtype == Types.TEXT:
         teks = getnotes["note_value"]
-        await m.reply_text(teks, parse_mode=None, reply_to_message_id=msg_id)
+        await m.reply_text(teks, parse_mode=enums.ParseMode.DISABLED, reply_to_message_id=msg_id)
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
@@ -237,7 +237,7 @@ async def get_raw_note(c: Gojo, m: Message, note: str):
             m.chat.id,
             getnotes["fileid"],
             caption=teks,
-            parse_mode=None,
+            parse_mode=enums.ParseMode.DISABLED,
             reply_to_message_id=msg_id,
         )
     LOGGER.info(
