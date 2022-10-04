@@ -72,7 +72,8 @@ async def fun_slap(c: Gojo, m: Message):
     hit = choice(extras.HIT)
     throw = choice(extras.THROW)
 
-    reply = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
+    reply = temp.format(user1=user1, user2=user2,
+                        item=item, hits=hit, throws=throw)
     await reply_text(reply)
     LOGGER.info(f"{m.from_user.id} slaped in {m.chat.id}")
     return
@@ -111,7 +112,8 @@ async def insult(c: Gojo, m: Message):
             m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
         )
         await reply_text(Insult_omp)
-        LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
 
 
 @Gojo.on_message(command("yes"))

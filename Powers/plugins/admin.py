@@ -40,7 +40,8 @@ async def adminlist_show(_, m: Message):
         adminstr = f"Admins in <b>{m.chat.title}</b>:" + "\n\n"
 
         bot_admins = [i for i in admin_list if (i[1].lower()).endswith("bot")]
-        user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
+        user_admins = [i for i in admin_list if not (
+            i[1].lower()).endswith("bot")]
 
         # format is like: (user_id, username/name,anonyamous or not)
         mention_users = [

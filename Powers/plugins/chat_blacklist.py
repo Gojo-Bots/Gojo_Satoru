@@ -42,7 +42,8 @@ async def unblacklist_chat(c: Gojo, m: Message):
     if len(m.text.split()) >= 2:
         chat_ids = m.text.split()[1:]
         replymsg = await m.reply_text(f"Removing {len(chat_ids)} chats from blacklist")
-        LOGGER.info(f"{m.from_user.id} removed blacklisted {chat_ids} groups for bot")
+        LOGGER.info(
+            f"{m.from_user.id} removed blacklisted {chat_ids} groups for bot")
         bl_chats = db.list_all_chats()
         for chat in chat_ids:
             try:
