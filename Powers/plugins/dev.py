@@ -35,7 +35,7 @@ async def send_log(c: Gojo, m: Message):
     )
     # Send logs
     with open(LOGFILE) as f:
-        raw = (await (f.read()))[1]
+        raw = ((f.read()))[1]
     await m.reply_document(
         document=LOGFILE,
         quote=True,
