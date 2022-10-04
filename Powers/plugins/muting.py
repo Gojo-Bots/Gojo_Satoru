@@ -1,21 +1,19 @@
 from random import choice
-
-from pyrogram.errors import (
-    RPCError, RightForbidden, ChatAdminRequired, UserNotParticipant)
-from pyrogram.filters import regex
-from pyrogram.types import (
-    Message, CallbackQuery, ChatPermissions, InlineKeyboardButton,
-    InlineKeyboardMarkup)
-
-from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
-from Powers.bot_class import Gojo
 from Powers.vars import Config
-from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
-from Powers.utils.custom_filters import command, restrict_filter
-from Powers.utils.extract_user import extract_user
+from Powers.bot_class import Gojo
+from pyrogram.filters import regex
 from Powers.utils.extras import MUTE_GIFS
 from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
+from Powers.utils.extract_user import extract_user
+from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
+from Powers.utils.custom_filters import command, restrict_filter
+from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from pyrogram.errors import (
+    RPCError, RightForbidden, ChatAdminRequired, UserNotParticipant)
+from pyrogram.types import (
+    Message, CallbackQuery, ChatPermissions, InlineKeyboardButton,
+    InlineKeyboardMarkup)
 
 
 @Gojo.on_message(command("tmute") & restrict_filter)
@@ -532,7 +530,10 @@ async def dmute_usr(c: Gojo, m: Message):
             ],
         )
         await c.send_animation(
-            animation=choice(MUTE_GIFS), chat_id=m.chat.id, caption=txt, reply_markup=keyboard
+            animation=choice(MUTE_GIFS),
+            chat_id=m.chat.id,
+            caption=txt,
+            reply_markup=keyboard,
         )
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")

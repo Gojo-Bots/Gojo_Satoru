@@ -1,7 +1,6 @@
-from pyrogram.enums import ChatType
-from pyrogram.types import Message
-
 from Powers.bot_class import Gojo
+from pyrogram.types import Message
+from pyrogram.enums import ChatType
 
 
 async def chattype(m: Message):

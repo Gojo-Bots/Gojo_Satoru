@@ -1,11 +1,11 @@
+from time import time
 from datetime import datetime
+from traceback import format_exc
+from os import path, mkdir, environ
 from importlib import import_module as imp_mod
+from sys import exit as sysexit, stdout, version_info
 from logging import (
     INFO, WARNING, FileHandler, StreamHandler, getLogger, basicConfig)
-from os import path, mkdir, environ
-from sys import exit as sysexit, stdout, version_info
-from time import time
-from traceback import format_exc
 
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")

@@ -1,12 +1,10 @@
-from asyncio import sleep
-
-from pyrogram.errors import RPCError, ChatNotModified, ChatAdminRequired
-from pyrogram.types import Message, ChatPermissions
-
 from Powers import LOGGER
+from asyncio import sleep
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
+from pyrogram.types import Message, ChatPermissions
 from Powers.utils.custom_filters import command, restrict_filter
+from pyrogram.errors import RPCError, ChatNotModified, ChatAdminRequired
 
 
 @Gojo.on_message(command("locktypes"))

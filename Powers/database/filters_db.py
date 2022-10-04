@@ -1,5 +1,4 @@
 from threading import RLock
-
 from Powers.database import MongoDB
 from Powers.utils.msg_types import Types
 

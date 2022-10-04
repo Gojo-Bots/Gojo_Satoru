@@ -1,6 +1,5 @@
-from datetime import datetime
 from threading import RLock
-
+from datetime import datetime
 from Powers.database import MongoDB
 
 
