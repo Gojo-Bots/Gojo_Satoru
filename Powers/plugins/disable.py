@@ -116,8 +116,7 @@ async def rm_alldisbl(_, m: Message):
                         "Confirm",
                         callback_data="enableallcmds",
                     ),
-                    InlineKeyboardButton(
-                        "Cancel", callback_data="close_admin"),
+                    InlineKeyboardButton("Cancel", callback_data="close_admin"),
                 ],
             ],
         ),
