@@ -31,19 +31,16 @@ async def antichanpin_cleanlinked(c: Gojo, m: Message):
         curr = pins_db.get_settings()
         if curr["antichannelpin"]:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
-            LOGGER.info(
-                f"AntiChannelPin: msgid-{m.message_id} unpinned in {m.chat.id}")
+            LOGGER.info(f"AntiChannelPin: msgid-{m.message_id} unpinned in {m.chat.id}")
         if curr["cleanlinked"]:
             await c.delete_messages(m.chat.id, msg_id)
-            LOGGER.info(
-                f"CleanLinked: msgid-{m.message_id} cleaned in {m.chat.id}")
+            LOGGER.info(f"CleanLinked: msgid-{m.message_id} cleaned in {m.chat.id}")
     except ChatAdminRequired:
         await m.reply_text(
             "Disabled antichannelpin as I don't have enough admin rights!",
         )
         pins_db.antichannelpin_off()
-        LOGGER.warning(
-            f"Disabled antichannelpin in {m.chat.id} as i'm not an admin.")
+        LOGGER.warning(f"Disabled antichannelpin in {m.chat.id} as i'm not an admin.")
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -194,8 +191,7 @@ async def gban_watcher(c: Gojo, m: Message):
 
       To get unbanned, appeal at @{SUPPORT_GROUP}"""
             )
-            LOGGER.info(
-                f"Banned user {m.from_user.id} in {m.chat.id} due to antispam")
+            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id} due to antispam")
             return
         except (ChatAdminRequired, UserAdminInvalid):
             # Bot not admin in group and hence cannot ban users!
