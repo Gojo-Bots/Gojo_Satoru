@@ -1,6 +1,7 @@
-from time import time
 from hashlib import md5
 from threading import RLock
+from time import time
+
 from Powers.database import MongoDB
 from Powers.utils.msg_types import Types
 

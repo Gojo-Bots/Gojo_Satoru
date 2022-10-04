@@ -1,25 +1,25 @@
 from random import choice
-from pyrogram import enums
-from Powers.vars import Config
 from traceback import format_exc
-from Powers.bot_class import Gojo
-from pyrogram.filters import regex
-from Powers.utils.parser import mention_html
-from Powers.utils.string import extract_time
-from Powers.utils.extract_user import extract_user
-from Powers.utils.extras import BAN_GIFS, KICK_GIFS
-from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
-from Powers.utils.custom_filters import command, restrict_filter
-from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
-from pyrogram.types import (
-    Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup)
+
+from pyrogram import enums
 from pyrogram.errors import (
     RPCError, PeerIdInvalid, RightForbidden, UserAdminInvalid,
     ChatAdminRequired)
+from pyrogram.filters import regex 
+from pyrogram.types import (
+    Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup)
+
+from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from Powers.bot_class import Gojo
+from Powers.vars import Config
+from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
+from Powers.utils.custom_filters import command, restrict_filter
+from Powers.utils.extract_user import extract_user
+from Powers.utils.extras import BAN_GIFS, KICK_GIFS
+from Powers.utils.parser import mention_html
+from Powers.utils.string import extract_time
 
 
-BAN_MEDIA = choice(BAN_GIFS)
-KICK_MEDIA = choice(KICK_GIFS)
 
 
 @Gojo.on_message(command("tban") & restrict_filter)
@@ -105,7 +105,7 @@ async def tban_usr(c: Gojo, m: Message):
         )
         await m.reply_animation(
             reply_to_message_id=r_id,
-            animation=BAN_MEDIA,
+            animation=choice(BAN_GIFS),
             caption=txt,
             reply_markup=keyboard,
             parse_mode=enums.ParseMode.HTML,
@@ -306,7 +306,7 @@ async def dtban_usr(c: Gojo, m: Message):
         )
         await c.send_animation(
             chat_id=m.chat.id,
-            animation=BAN_MEDIA,
+            animation=choice(BAN_GIFS),
             caption=txt,
             reply_markup=keyboard,
             parse_mode=enums.ParseMode.HTML,
@@ -393,7 +393,7 @@ async def kick_usr(c: Gojo, m: Message):
         # await m.reply_text(txt, reply_to_message_id=r_id)
         await m.reply_animation(
             reply_to_message_id=r_id,
-            animation=KICK_MEDIA,
+            animation=choice(KICK_GIFS),
             caption=txt,
             parse_mode=enums.ParseMode.HTML,
         )
@@ -541,7 +541,7 @@ async def dkick_usr(c: Gojo, m: Message):
         await c.send_message(m.chat.id, txt)
         await c.send_animation(
             chat_id=m.chat.id,
-            animation=KICK_MEDIA,
+            animation=choice(KICK_GIFS),
             caption=txt,
             parse_mode=enums.ParseMode.HTML,
         )
@@ -758,7 +758,7 @@ async def dban_usr(c: Gojo, m: Message):
             ],
         )
         await c.send_animation(
-            m.chat.id, animation=BAN_MEDIA, caption=txt, reply_markup=keyboard
+            m.chat.id, animation=choice(BAN_GIFS), caption=txt, reply_markup=keyboard
         )
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -855,7 +855,7 @@ async def ban_usr(c: Gojo, m: Message):
             ],
         )
         await m.reply_animation(
-            animation=BAN_MEDIA,
+            animation=choice(BAN_GIFS),
             caption=txt,
             reply_markup=keyboard,
             reply_to_message_id=r_id,
@@ -917,7 +917,7 @@ async def kickme(_, m: Message):
         await m.chat.ban_member(m.from_user.id)
         txt = "Why not let me help you!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        await m.reply_animation(animation=KICK_MEDIA, caption=txt)
+        await m.reply_animation(animation=choice(KICK_GIFS), caption=txt)
         await m.chat.unban_member(m.from_user.id)
     except RPCError as ef:
         await m.reply_text(

@@ -1,11 +1,13 @@
 from Powers import LOGGER
+
 from pyrogram import filters
+from pyrogram.types import Message, CallbackQuery
+
 from Powers.vars import Config
 from Powers.bot_class import Gojo
-from Powers.utils.kbhelpers import ikb
 from Powers.database.rules_db import Rules
-from pyrogram.types import Message, CallbackQuery
 from Powers.utils.custom_filters import command, admin_filter
+from Powers.utils.kbhelpers import ikb
 
 
 @Gojo.on_message(command("rules") & filters.group)

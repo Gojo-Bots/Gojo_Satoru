@@ -1,12 +1,13 @@
-from typing import List
-from Powers import LOGGER
-from pyrogram import enums
-from threading import RLock
 from cachetools import TTLCache
+from threading import RLock
 from time import time, perf_counter
+from typing import List
+
+from pyrogram import enums
 from pyrogram.types import CallbackQuery
 from pyrogram.types.messages_and_media.message import Message
 
+from Powers import LOGGER
 
 THREAD_LOCK = RLock()
 

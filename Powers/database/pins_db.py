@@ -1,5 +1,6 @@
-from Powers import LOGGER
 from threading import RLock
+
+from Powers import LOGGER
 from Powers.database import MongoDB
 
 
