@@ -1,9 +1,9 @@
 from html import escape
 from pyrogram import filters
-from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.bot_class import Gojo
 from Powers import LOGGER, HELP_COMMANDS
 from Powers.database.disable_db import Disabling
+from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.types import (
     Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup)
 from Powers.utils.custom_filters import (
@@ -117,8 +117,7 @@ async def rm_alldisbl(_, m: Message):
                         "Confirm",
                         callback_data="enableallcmds",
                     ),
-                    InlineKeyboardButton(
-                        "Cancel", callback_data="close_admin"),
+                    InlineKeyboardButton("Cancel", callback_data="close_admin"),
                 ],
             ],
         ),
