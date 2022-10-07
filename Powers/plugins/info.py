@@ -91,7 +91,7 @@ async def user_info(c: Gojo, user, already=False):
         last_date = "User is currently Online"
     elif status == "offline":
         last_date = datetime.fromtimestamp(user.status.date).strftime(
-            "%a, %d %b %Y, %H:%M:%S"
+            "%Y-%m-%d %H:%M:%S"
         )
     else:
         last_date = "User is currently online"
