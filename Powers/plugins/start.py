@@ -8,8 +8,8 @@ from Powers.utils.extras import StartPic
 from Powers.utils.chat_type import chattype
 from Powers.utils.custom_filters import command
 from pyrogram.types import Message, CallbackQuery
-from pyrogram.errors import UserIsBlocked, QueryIdInvalid, MessageNotModified
 from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.errors import UserIsBlocked, QueryIdInvalid, MessageNotModified
 from Powers.utils.start_utils import (
     gen_cmds_kb, gen_start_kb, get_help_msg, get_private_note,
     get_private_rules)
@@ -70,8 +70,7 @@ async def start(c: Gojo, m: Message):
                 await get_private_note(c, m, help_option)
                 return
             if help_option.startswith("rules"):
-                LOGGER.info(
-                    f"{m.from_user.id} fetched privaterules in {m.chat.id}")
+                LOGGER.info(f"{m.from_user.id} fetched privaterules in {m.chat.id}")
                 await get_private_rules(c, m, help_option)
                 return
 
@@ -183,8 +182,7 @@ async def help_menu(_, m: Message):
         help_msg, help_kb = await get_help_msg(m, help_option)
 
         if not help_msg:
-            LOGGER.error(
-                f"No help_msg found for help_option - {help_option}!!")
+            LOGGER.error(f"No help_msg found for help_option - {help_option}!!")
             return
 
         LOGGER.info(
