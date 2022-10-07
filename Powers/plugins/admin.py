@@ -2,6 +2,7 @@ from os import remove
 from html import escape
 from asyncio import sleep
 from pyrogram import filters
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
@@ -40,7 +41,8 @@ async def adminlist_show(_, m: Message):
         adminstr = f"Admins in <b>{m.chat.title}</b>:" + "\n\n"
 
         bot_admins = [i for i in admin_list if (i[1].lower()).endswith("bot")]
-        user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
+        user_admins = [i for i in admin_list if not (
+            i[1].lower()).endswith("bot")]
 
         # format is like: (user_id, username/name,anonyamous or not)
         mention_users = [
@@ -189,7 +191,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
         )  # This should be here
 
     user = await c.get_chat_member(m.chat.id, m.from_user.id)
-    if m.from_user.id not in [DEV_USERS, OWNER_ID] and user.status != "creator":
+    if m.from_user.id != OWNER_ID and user.status != CMS.OWNER:
         return await m.reply_text("This command can only be used by chat owner.")
     # If user is alreay admin
     try:
@@ -396,7 +398,7 @@ async def get_invitelink(c: Gojo, m: Message):
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
 
-        if not user.can_invite_users and user.status != "creator":
+        if not user.can_invite_users and user.status != CMS.OWNER:
             await m.reply_text(text="You don't have rights to invite users....")
             return False
 
@@ -427,7 +429,7 @@ async def get_invitelink(c: Gojo, m: Message):
 async def setgtitle(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
 
-    if not user.can_change_info and user.status != "creator":
+    if not user.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -450,7 +452,7 @@ async def setgtitle(_, m: Message):
 async def setgdes(_, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_change_info and user.status != "creator":
+    if not user.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -473,7 +475,7 @@ async def setgdes(_, m: Message):
 async def set_user_title(c: Gojo, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_promote_members and user.status != "creator":
+    if not user.can_promote_members and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -516,7 +518,7 @@ async def set_user_title(c: Gojo, m: Message):
 @Gojo.on_message(command("setgpic") & admin_filter)
 async def setgpic(c: Gojo, m: Message):
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_change_info and user.status != "creator":
+    if not user.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )

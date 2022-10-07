@@ -7,6 +7,7 @@ from Powers.database.approve_db import Approve
 from pyrogram.types import Message, CallbackQuery
 from Powers.utils.extract_user import extract_user
 from pyrogram.errors import RPCError, PeerIdInvalid, UserNotParticipant
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.utils.custom_filters import command, admin_filter, owner_filter
 
 
@@ -37,7 +38,7 @@ async def approve_user(c: Gojo, m: Message):
             f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
         )
         return
-    if member.status in ("administrator", "creator"):
+    if member.status in (CMS.ADMINISTRATOR, CMS.OWNER):
         await m.reply_text(
             "User is already admin - blacklists and locks already don't apply to them.",
         )
@@ -97,7 +98,7 @@ async def disapprove_user(c: Gojo, m: Message):
         )
         return
 
-    if member.status in ("administrator", "creator"):
+    if member.status in (CMS.OWNER, CMS.ADMINISTRATOR):
         await m.reply_text("This user is an admin, they can't be disapproved.")
         return
 
@@ -202,7 +203,7 @@ async def unapproveall_callback(_, q: CallbackQuery):
     db = Approve(q.message.chat.id)
     approved_people = db.list_approved()
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {CMS.OWNER, CMS.ADMINISTRATOR}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,

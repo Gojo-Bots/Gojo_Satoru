@@ -3,6 +3,7 @@ from pyrogram import enums
 from Powers.vars import Config
 from typing import List, Union
 from pyrogram.filters import create
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.utils.chat_type import chattype
 from re import escape, compile as compile_re
 from Powers.database.disable_db import Disabling
@@ -73,14 +74,14 @@ def command(
                     user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
                     # i.e anon admin
-                    user_status = "administrator"
+                    user_status = CMS.ADMINISTRATOR
                 except ValueError:
                     # i.e. PM
-                    user_status = "creator"
+                    user_status = CMS.OWNER
                 ddb = Disabling(m.chat.id)
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
-                    "creator",
-                    "administrator",
+                    CMS.OWNER,
+                    CMS.ADMINISTRATOR,
                 ):
                     if bool(ddb.get_action() == "del"):
                         try:
@@ -194,11 +195,11 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.status == "creator":
+    if user.status == CMS.OWNER:
         status = True
     else:
         status = False
-        if user.status == "administrator":
+        if user.status == CMS.ADMINISTRATOR:
             msg = "You're an admin only, stay in your limits!"
         else:
             msg = "Do you think that you can execute owner commands?"
@@ -222,7 +223,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_restrict_members or user.status == "creator":
+    if user.can_restrict_members or user.status == CMS.OWNER:
         status = True
     else:
         status = False
@@ -245,7 +246,7 @@ async def promote_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_promote_members or user.status == "creator":
+    if user.can_promote_members or user.status == CMS.OWNER:
         status = True
     else:
         status = False
@@ -274,7 +275,7 @@ async def changeinfo_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_change_info or user.status == "creator":
+    if user.can_change_info or user.status == CMS.OWNER:
         status = True
     else:
         status = False
@@ -302,7 +303,7 @@ async def can_pin_message_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_pin_messages or user.status == "creator":
+    if user.can_pin_messages or user.status == CMS.OWNER:
         status = True
     else:
         status = False

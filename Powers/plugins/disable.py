@@ -1,5 +1,6 @@
 from html import escape
 from pyrogram import filters
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.bot_class import Gojo
 from Powers import LOGGER, HELP_COMMANDS
 from Powers.database.disable_db import Disabling
@@ -116,7 +117,8 @@ async def rm_alldisbl(_, m: Message):
                         "Confirm",
                         callback_data="enableallcmds",
                     ),
-                    InlineKeyboardButton("Cancel", callback_data="close_admin"),
+                    InlineKeyboardButton(
+                        "Cancel", callback_data="close_admin"),
                 ],
             ],
         ),
@@ -128,13 +130,13 @@ async def rm_alldisbl(_, m: Message):
 async def enablealll(_, q: CallbackQuery):
     user_id = q.from_user.id
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {CMS.OWNER, CMS.ADMINISTRATOR}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != CMS.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,

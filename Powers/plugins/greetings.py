@@ -9,6 +9,7 @@ from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
 from Powers.utils.msg_types import Types, get_wlcm_type
 from pyrogram.errors import RPCError, ChatAdminRequired
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.utils.parser import mention_html, escape_markdown
 from pyrogram.types import Message, ChatMemberUpdated, InlineKeyboardMarkup
 from Powers.utils.custom_filters import command, admin_filter, bot_admin_filter
@@ -238,7 +239,7 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
 
     if (
         member.new_chat_member
-        and member.new_chat_member.status not in {"banned", "left", "restricted"}
+        and member.new_chat_member.status not in {CMS.BANNED, CMS.LEFT, CMS.RESTRICTED}
         and not member.old_chat_member
     ):
         pass
@@ -321,7 +322,7 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
 
     if (
         not member.new_chat_member
-        and member.old_chat_member.status not in {"banned", "restricted"}
+        and member.old_chat_member.status not in {CMS.BANNED, CMS.RESTRICTED}
         and member.old_chat_member
     ):
         pass

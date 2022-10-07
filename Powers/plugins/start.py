@@ -9,6 +9,7 @@ from Powers.utils.chat_type import chattype
 from Powers.utils.custom_filters import command
 from pyrogram.types import Message, CallbackQuery
 from pyrogram.errors import UserIsBlocked, QueryIdInvalid, MessageNotModified
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.utils.start_utils import (
     gen_cmds_kb, gen_start_kb, get_help_msg, get_private_note,
     get_private_rules)
@@ -37,13 +38,13 @@ You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes
 async def close_admin_callback(_, q: CallbackQuery):
     user_id = q.from_user.id
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {CMS.OWNER, CMS.ADMINISTRATOR}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != CMS.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,
@@ -69,7 +70,8 @@ async def start(c: Gojo, m: Message):
                 await get_private_note(c, m, help_option)
                 return
             if help_option.startswith("rules"):
-                LOGGER.info(f"{m.from_user.id} fetched privaterules in {m.chat.id}")
+                LOGGER.info(
+                    f"{m.from_user.id} fetched privaterules in {m.chat.id}")
                 await get_private_rules(c, m, help_option)
                 return
 
@@ -181,7 +183,8 @@ async def help_menu(_, m: Message):
         help_msg, help_kb = await get_help_msg(m, help_option)
 
         if not help_msg:
-            LOGGER.error(f"No help_msg found for help_option - {help_option}!!")
+            LOGGER.error(
+                f"No help_msg found for help_option - {help_option}!!")
             return
 
         LOGGER.info(

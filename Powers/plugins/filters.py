@@ -10,6 +10,7 @@ from Powers.database.filters_db import Filters
 from Powers.utils.regex_utils import regex_searcher
 from Powers.utils.msg_types import Types, get_filter_type
 from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.utils.custom_filters import command, admin_filter, owner_filter
 from Powers.utils.string import (
     parse_button, split_quotes, build_keyboard,
@@ -95,7 +96,8 @@ async def add_filter(_, m: Message):
         )
 
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
-    LOGGER.info(f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
+    LOGGER.info(
+        f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
     if add:
         await m.reply_text(
             f"Saved filter for '<code>{', '.join(keyword.split('|'))}</code>' in <b>{m.chat.title}</b>!",
@@ -119,7 +121,8 @@ async def stop_filter(_, m: Message):
     for keyword in act_filters:
         if keyword == m.text.split(None, 1)[1].lower():
             db.rm_filter(m.chat.id, m.text.split(None, 1)[1].lower())
-            LOGGER.info(f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
             await m.reply_text(
                 f"Okay, I'll stop replying to that filter and it's aliases in <b>{m.chat.title}</b>.",
             )
@@ -154,13 +157,13 @@ async def rm_allfilters(_, m: Message):
 async def rm_allfilters_callback(_, q: CallbackQuery):
     user_id = q.from_user.id
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {CMS.OWNER, CMS.ADMINISTRATOR}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != CMS.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,
@@ -280,7 +283,8 @@ async def filters_watcher(c: Gojo, m: Message):
         if match:
             try:
                 msgtype = await send_filter_reply(c, m, trigger)
-                LOGGER.info(f"Replied with {msgtype} to {trigger} in {m.chat.id}")
+                LOGGER.info(
+                    f"Replied with {msgtype} to {trigger} in {m.chat.id}")
             except Exception as ef:
                 await m.reply_text(f"Error: {ef}")
                 LOGGER.error(ef)

@@ -1,5 +1,6 @@
 from traceback import format_exc
 from pyrogram.types import Message, CallbackQuery
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers import LOGGER, OWNER_ID, DEV_USERS, SUDO_USERS
 
 
@@ -21,7 +22,7 @@ async def admin_check(m: Message or CallbackQuery) -> bool:
         LOGGER.error(format_exc())
 
     user = await m.chat.get_member(user_id)
-    admin_strings = ("creator", "administrator")
+    admin_strings = (CMS.OWNER, CMS.ADMINISTRATOR)
 
     if user.status not in admin_strings:
         reply = "Nigga, you're not admin, don't try this explosive shit."
@@ -48,9 +49,9 @@ async def check_rights(m: Message or CallbackQuery, rights) -> bool:
         app = m.message._client
 
     user = await app.get_chat_member(chat_id, user_id)
-    if user.status == "member":
+    if user.status == CMS.MEMBER:
         return False
-    admin_strings = ("creator", "administrator")
+    admin_strings = (CMS.OWNER, CMS.ADMINISTRATOR)
     if user.status in admin_strings:
         return bool(getattr(user, rights, None))
     return False
@@ -73,8 +74,8 @@ async def owner_check(m: Message or CallbackQuery) -> bool:
 
     user = await m.chat.get_member(user_id)
 
-    if user.status != "creator":
-        if user.status == "administrator":
+    if user.status != CMS.OWNER:
+        if user.status == CMS.ADMINISTRATOR:
             reply = "Stay in your limits, or lose adminship too."
         else:
             reply = "You ain't even admin, what are you trying to do?"

@@ -5,6 +5,7 @@ from html import escape as escape_html
 from Powers import LOGGER, SUPPORT_GROUP
 from Powers.database.pins_db import Pins
 from pyrogram.types import Message, CallbackQuery
+from pyrogram.enums import ChatMemberStatus as CMS
 from Powers.utils.string import parse_button, build_keyboard
 from Powers.utils.custom_filters import command, admin_filter
 from pyrogram.errors import RPCError, RightForbidden, ChatAdminRequired
@@ -101,13 +102,13 @@ async def unpinall_message(_, m: Message):
 async def unpinall_calllback(c: Gojo, q: CallbackQuery):
     user_id = q.from_user.id
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {CMS.OWNER, CMS.ADMINISTRATOR}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != CMS.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,
