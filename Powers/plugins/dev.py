@@ -79,9 +79,9 @@ async def evaluate_code(c: Gojo, m: Message):
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
 
-    reply_to_id = m.message_id
+    reply_to_id = m.id
     if m.reply_to_message:
-        reply_to_id = m.reply_to_message.message_id
+        reply_to_id = m.reply_to_message.id
 
     old_stderr = sys.stderr
     old_stdout = sys.stdout
@@ -140,9 +140,9 @@ async def execution(_, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
-    reply_to_id = m.message_id
+    reply_to_id = m.id
     if m.reply_to_message:
-        reply_to_id = m.reply_to_message.message_id
+        reply_to_id = m.reply_to_message.id
 
     process = await create_subprocess_shell(
         cmd,

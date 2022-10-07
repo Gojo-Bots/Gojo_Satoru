@@ -75,7 +75,7 @@ async def report_watcher(c: Gojo, m: Message):
     db = Reporting(m.chat.id)
 
     if (m.chat and m.reply_to_message) and (db.get_settings()):
-        reported_msg_id = m.reply_to_message.message_id
+        reported_msg_id = m.reply_to_message.id
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
         admin_list = await c.get_chat_members(m.chat.id, filter=cmf.ADMINISTRATORS)
@@ -125,7 +125,7 @@ async def report_watcher(c: Gojo, m: Message):
         )
 
         LOGGER.info(
-            f"{m.from_user.id} reported msgid-{m.reply_to_message.message_id} to admins in {m.chat.id}",
+            f"{m.from_user.id} reported msgid-{m.reply_to_message.id} to admins in {m.chat.id}",
         )
         await m.reply_text(
             (

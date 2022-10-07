@@ -45,7 +45,7 @@ async def tban_usr(c: Gojo, m: Message):
         )
         await m.stop_propagation()
 
-    r_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    r_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     if m.reply_to_message and len(m.text.split()) >= 2:
         reason = m.text.split(None, 2)[1]
@@ -340,11 +340,11 @@ async def kick_usr(c: Gojo, m: Message):
     reason = None
 
     if m.reply_to_message:
-        r_id = m.reply_to_message.message_id
+        r_id = m.reply_to_message.id
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
     else:
-        r_id = m.message_id
+        r_id = m.id
         if len(m.text.split()) >= 3:
             reason = m.text.split(None, 2)[2]
     try:
@@ -826,11 +826,11 @@ async def ban_usr(c: Gojo, m: Message):
 
     reason = None
     if m.reply_to_message:
-        r_id = m.reply_to_message.message_id
+        r_id = m.reply_to_message.id
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
     else:
-        r_id = m.message_id
+        r_id = m.id
         if len(m.text.split()) >= 3:
             reason = m.text.split(None, 2)[2]
 

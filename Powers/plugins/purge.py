@@ -15,7 +15,7 @@ async def purge(c: Gojo, m: Message):
         return
 
     if m.reply_to_message:
-        message_ids = list(range(m.reply_to_message.message_id, m.message_id))
+        message_ids = list(range(m.reply_to_message.id, m.id))
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
@@ -108,7 +108,7 @@ async def del_msg(c: Gojo, m: Message):
         await m.delete()
         await c.delete_messages(
             chat_id=m.chat.id,
-            message_ids=m.reply_to_message.message_id,
+            message_ids=m.reply_to_message.id,
         )
     else:
         await m.reply_text(text="What do you wanna delete?")

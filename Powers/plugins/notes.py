@@ -210,7 +210,7 @@ async def get_raw_note(c: Gojo, m: Message, note: str):
         return
 
     getnotes = db.get_note(m.chat.id, note)
-    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     msgtype = getnotes["msgtype"]
     if not getnotes:
@@ -328,7 +328,7 @@ async def local_notes(_, m: Message):
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
         return
 
-    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     curr_pref = db_settings.get_privatenotes(m.chat.id)
     if curr_pref:

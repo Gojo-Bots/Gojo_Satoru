@@ -11,7 +11,7 @@ from Powers.utils.custom_filters import command, admin_filter
 @Gojo.on_message(command("rules") & filters.group)
 async def get_rules(_, m: Message):
     db = Rules(m.chat.id)
-    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     rules = db.get_rules()
     LOGGER.info(f"{m.from_user.id} fetched rules in {m.chat.id}")

@@ -52,7 +52,7 @@ async def tmute_usr(c: Gojo, m: Message):
         await m.reply_text(text="This user is an admin, I cannot mute them!")
         return
 
-    r_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    r_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     if m.reply_to_message and len(m.text.split()) >= 2:
         reason = m.text.split(None, 2)[1]
@@ -319,11 +319,11 @@ async def mute_usr(c: Gojo, m: Message):
 
     reason = None
     if m.reply_to_message:
-        r_id = m.reply_to_message.message_id
+        r_id = m.reply_to_message.id
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
     else:
-        r_id = m.message_id
+        r_id = m.id
         if len(m.text.split()) >= 3:
             reason = m.text.split(None, 2)[2]
     try:
