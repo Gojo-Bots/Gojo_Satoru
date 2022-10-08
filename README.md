@@ -229,12 +229,12 @@ To add your very own plugin just use the format given below and go through the [
 
 ---------
 
-# Powered by [HELL](https://github.com/The-HellBot)
+# Powered by [ɢօʝօ ɮօȶֆ](https://github.com/Gojo-Bots)
 
 
 <p align='left'>
-  <a href="https://github.com/The-HellBot"><img src="./extras/photo_2022-08-19_13-55-00.jpg" width="500" 
-     height="500 alt="Hell Bot"></a></br></br>
+  <a href="https://github.com/Gojo-Bots"><img src="./extras/Untitled(1).webp" width="500" 
+     height="500 alt="Gojo Bots"></a></br></br>
    
 </p>
 
