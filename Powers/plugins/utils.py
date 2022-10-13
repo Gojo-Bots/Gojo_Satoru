@@ -1,6 +1,6 @@
 import re
-import aiofiles
 import asyncio
+import aiofiles
 from Powers import *
 from os import remove
 from io import BytesIO
@@ -18,7 +18,6 @@ from Powers.utils.parser import mention_html
 # from search_engine_parser import GoogleSearch
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.utils.http_helper import get
 from pyrogram.errors import PeerIdInvalid, MessageTooLong
 from Powers.utils.clean_file import remove_markdown_and_html
 from wikipedia.exceptions import PageError, DisambiguationError
@@ -83,6 +82,7 @@ async def gdpr_remove(_, m: Message):
         disable_web_page_preview=True,
     )
     await m.stop_propagation()
+
 
 '''
 @Gojo.on_message(
@@ -169,6 +169,7 @@ async def id_info(c: Gojo, m: Message):
     return
 '''
 
+
 @Gojo.on_message(
     command("gifid") & (filters.group | filters.private),
 )
@@ -204,7 +205,6 @@ async def github(_, m: Message):
         return await message.reply_text("request timeout")
     except Exception as e:
         return await message.reply_text(f"ERROR: `{e}`")
-    
 
     url = r.get("html_url", None)
     name = r.get("name", None)
@@ -340,15 +340,7 @@ async def tr(_, message):
 
 
 __PLUGIN__ = "utils"
-_DISABLE_CMDS_ = [
-    "paste",
-    "wiki",
-    "id",
-    "gifid",
-    "tr",
-    "github",
-    "git"
-]
+_DISABLE_CMDS_ = ["paste", "wiki", "id", "gifid", "tr", "github", "git"]
 __alt_name__ = ["util", "misc", "tools"]
 
 __HELP__ = """
