@@ -1,9 +1,10 @@
 import re
 import aiofiles
+import asyncio
 from Powers import *
 from os import remove
 from io import BytesIO
-from tswift import Song
+# from tswift import Song
 from wikipedia import summary
 from traceback import format_exc
 from Powers.bot_class import Gojo
@@ -14,9 +15,10 @@ from Powers.utils.http_helper import *
 from Powers.database.users_db import Users
 from Powers.utils.chat_type import chattype
 from Powers.utils.parser import mention_html
-from search_engine_parser import GoogleSearch
+# from search_engine_parser import GoogleSearch
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
+from Powers.utils.http_helper import get
 from pyrogram.errors import PeerIdInvalid, MessageTooLong
 from Powers.utils.clean_file import remove_markdown_and_html
 from wikipedia.exceptions import PageError, DisambiguationError
@@ -82,7 +84,7 @@ async def gdpr_remove(_, m: Message):
     )
     await m.stop_propagation()
 
-
+'''
 @Gojo.on_message(
     command("lyrics") & (filters.group | filters.private),
 )
@@ -165,7 +167,7 @@ async def id_info(c: Gojo, m: Message):
     else:
         await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
     return
-
+'''
 
 @Gojo.on_message(
     command("gifid") & (filters.group | filters.private),
@@ -183,31 +185,50 @@ async def get_gifid(_, m: Message):
 
 
 @Gojo.on_message(
-    command("github") & (filters.group | filters.private),
+    command(["github", "git"]) & (filters.group | filters.private),
 )
-async def github(_, message):
+async def github(_, m: Message):
+    if len(m.text.split()) == 2:
+        username = m.text.split(maxsplit=1)[1]
+        LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
+    else:
+        await m.reply_text(
+            f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>",
+        )
+        return
+
+    URL = f"https://api.github.com/users/{username}"
     try:
-        if len(message.command) < 2:
-            await message.reply_text('"/github" Needs An Argument')
-            return
-        gett = message.text.split(None, 1)[1]
-        text = gett + ' "site:github.com"'
-        gresults = await GoogleSearch().async_search(text, 1)
-        result = ""
-        for i in range(4):
-            try:
-                title = gresults["titles"][i].replace("\n", " ")
-                source = gresults["links"][i]
-                description = gresults["descriptions"][i]
-                result += f"[{title}]({source})\n"
-                result += f"`{description}`\n\n"
-            except IndexError:
-                pass
-        await message.reply_text(result, disable_web_page_preview=True)
+        r = await get(URL, timeout=5)
+    except asyncio.TimeoutError:
+        return await message.reply_text("request timeout")
     except Exception as e:
-        await message.reply_text(str(e))
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
+        return await message.reply_text(f"ERROR: `{e}`")
+    
+
+    url = r.get("html_url", None)
+    name = r.get("name", None)
+    company = r.get("company", None)
+    followers = r.get("followers", 0)
+    following = r.get("following", 0)
+    public_repos = r.get("public_repos", 0)
+    bio = r.get("bio", None)
+    created_at = r.get("created_at", "Not Found")
+
+    REPLY = (
+        f"<b>GitHub Info for @{username}:</b>"
+        f"\n<b>Name:</b> <code>{name}</code>\n"
+        f"<b>Bio:</b> <code>{bio}</code>\n"
+        f"<b>URL:</b> {url}\n"
+        f"<b>Public Repos:</b> {public_repos}\n"
+        f"<b>Followers:</b> {followers}\n"
+        f"<b>Following:</b> {following}\n"
+        f"<b>Company:</b> <code>{company}</code>\n"
+        f"<b>Created at:</b> <code>{created_at}</code>"
+    )
+
+    await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
+    return
 
 
 # paste here
@@ -324,9 +345,9 @@ _DISABLE_CMDS_ = [
     "wiki",
     "id",
     "gifid",
-    "lyrics",
     "tr",
     "github",
+    "git"
 ]
 __alt_name__ = ["util", "misc", "tools"]
 
@@ -340,9 +361,8 @@ Some utils provided by bot to make your tasks easy!
 * /gifid: Reply to a gif to me to tell you its file ID.
 * /wiki: `<query>`: wiki your query.
 * /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
-* /github `<username>`: Search for the user using github api!
-* /lyrics `<song>`: Get the lyrics of the song you specify!
+* /github or /git `<username>`: Search for the user using github api!
 * /weebify `<text>` or `<reply to message>`: To weebify the text.
 
 **Example:**
-`/github @iamgojoof6eyes`: this fetches the information about a user from the database."""
+`/git @iamgojoof6eyes`: this fetches the information about a user from the database."""
