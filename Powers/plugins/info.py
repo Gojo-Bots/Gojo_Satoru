@@ -72,8 +72,8 @@ async def user_info(c: Gojo, user, already=False):
             omp = "User is sudoer"
         elif user_id in WHITELIST_USERS:
             omp = "User is in whitelist"
-        else:
-            omp = "Hmmm.......Who is that again?"
+     
+    omp = "Hmmm.......Who is that again?"
     is_bot = user.is_bot
     is_fake = user.is_fake
     status = user.status
