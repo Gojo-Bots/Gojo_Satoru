@@ -229,7 +229,9 @@ async def chat_info_func(c: Gojo, message: Message):
             if chat.isnumeric():
                 chat = int(chat)
         except Exception as e:
-            return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
+            return await message.reply_text(
+                f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]"
+            )
 
         m = await message.reply_text(
             f"Fetching chat info of chat **{message.chat.title}**....."
