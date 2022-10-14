@@ -1,5 +1,4 @@
 import os
-from asyncio import sleep
 from pyrogram import enums
 from datetime import datetime
 from traceback import format_exc
@@ -205,14 +204,11 @@ async def info_func(c: Gojo, message: Message):
         return await m.edit(str(e))
 
     if not photo_id:
-        await m.delete()
-        sleep(2)
-        return await message.reply_text(info_caption, disable_web_page_preview=True)
-    photo = await c.download_media(photo_id)
+        return await m.edit(info_caption, disable_web_page_preview=True)
+    photo = await Gojo.download_media(photo_id)
 
-    await m.delete()
-    sleep(2)
     await message.reply_photo(photo, caption=info_caption, quote=False)
+    await m.delete()
     os.remove(photo)
     LOGGER.info(
         f"{message.from_user.id} fetched user info of user {user_name} in {m.chat.id}"
@@ -230,12 +226,10 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = splited[1]
 
         try:
-            chat = int(chat)
-        except (ValueError, Exception) as ef:
-            if "invalid literal for int() with base 10:" in str(ef):
-                chat = str(chat)
-            else:
-                return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
+            if chat.isnumeric():
+                chat = int(chat)
+        except Exception as e:
+            return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
 
         m = await message.reply_text(
             f"Fetching chat info of chat **{message.chat.title}**....."
@@ -243,18 +237,15 @@ async def chat_info_func(c: Gojo, message: Message):
 
         info_caption, photo_id = await chat_info(c, chat=chat)
         if not photo_id:
-            await m.delete()
-            sleep(2)
-            return await message.reply_text(info_caption, disable_web_page_preview=True)
+            return await m.edit(info_caption, disable_web_page_preview=True)
 
-        photo = await c.download_media(photo_id)
-        await m.delete()
-        sleep(2)
+        photo = await Gojo.download_media(photo_id)
         await message.reply_photo(photo, caption=info_caption, quote=False)
         LOGGER.info(
             f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}"
         )
 
+        await m.delete()
         os.remove(photo)
     except Exception as e:
         await message.reply_text(text=e)
