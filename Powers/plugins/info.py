@@ -17,34 +17,37 @@ gban_db = GBan()
 
 
 async def count(c: Gojo, chat):
-    administrator = []
-    async for admin in c.get_chat_members(
-        chat_id=chat, filter=enums.ChatMembersFilter.ADMINISTRATORS
-    ):
-        administrator.append(admin)
-    total_admin = administrator
-    bot = []
-    async for tbot in c.get_chat_members(
-        chat_id=chat, filter=enums.ChatMembersFilter.BOTS
-    ):
-        bot.append(tbot)
+    try:
+        administrator = []
+        async for admin in c.get_chat_members(
+            chat_id=chat, filter=enums.ChatMembersFilter.ADMINISTRATORS
+        ):
+            administrator.append(admin)
+        total_admin = administrator
+        bot = []
+        async for tbot in c.get_chat_members(
+            chat_id=chat, filter=enums.ChatMembersFilter.BOTS
+        ):
+            bot.append(tbot)
 
-    total_bot = bot
-    bot_admin = 0
-    ban = []
-    async for banned in c.get_chat_members(chat, filter=enums.ChatMembersFilter.BANNED):
-        ban.append(banned)
+        total_bot = bot
+        bot_admin = 0
+        ban = []
+        async for banned in c.get_chat_members(chat, filter=enums.ChatMembersFilter.BANNED):
+            ban.append(banned)
 
-    total_banned = ban
-    for x in total_admin:
-        for y in total_bot:
-            if x == y:
-                bot_admin += 1
-    total_admin = len(total_admin)
-    total_bot = len(total_bot)
-    total_banned = len(total_banned)
-    return total_bot, total_admin, bot_admin, total_banned
-
+        total_banned = ban
+        for x in total_admin:
+            for y in total_bot:
+                if x == y:
+                    bot_admin += 1
+        total_admin = len(total_admin)
+        total_bot = len(total_bot)
+        total_banned = len(total_banned)
+        return total_bot, total_admin, bot_admin, total_banned
+    except Exception as e:
+        total_bot = total_admin = bot_admin = total_banned = "Can't fetch due to some error."
+        return total_bot, total_admin, bot_admin, total_banned
 
 async def user_info(c: Gojo, user, already=False):
     if not already:
@@ -168,7 +171,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>🤨 Fake</b>: {is_fake}
 <b>🧐 Restricted</b>: {is_restricted}
 <b>🤭 Reasons</b>: {reasons}
-<b>👨🏿‍💻 Description: <code>{description}</code>
+<b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>📎 Link to the chat</b>: <a href={invite_link}>Click Here🚪</a>
 <b>🚫 Can Save Content</b>: {can_save}
