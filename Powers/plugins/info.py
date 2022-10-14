@@ -195,7 +195,6 @@ async def info_func(c: Gojo, message: Message):
 
     try:
         info_caption, photo_id = await user_info(c, user=user)
-        photo_id = str(photo_id)
         LOGGER.info(
             f"{message.from_user.id} tried to fetch user info of user {message.from_user.id} in {message.chat.id}"
         )
@@ -227,19 +226,16 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = splited[1]
 
         try:
-            user_found = int(user_found)
-        except (ValueError, Exception) as ef:
-            if "invalid literal for int() with base 10:" in str(ef):
-                user_found = str(user_found)
-            else:
-                return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
+            if chat.isnumeric():
+                chat = int(chat)
+        except Exception as e:
+            return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
 
         m = await message.reply_text(
             f"Fetching chat info of chat **{message.chat.title}**....."
         )
 
         info_caption, photo_id = await chat_info(c, chat=chat)
-        photo_id = str(photo_id)
         if not photo_id:
             return await m.edit(info_caption, disable_web_page_preview=True)
 
