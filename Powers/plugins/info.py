@@ -158,7 +158,7 @@ async def chat_info(c: Gojo, chat, already=False):
     can_save = chat.has_protected_content
     sticker_set = chat.sticker_set_name
     linked_chat = chat.linked_chat
-    reactions = chat.available_reactions
+    reactions = chat.available_reactions.all_are_enabled
 
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
@@ -179,7 +179,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>📎 Link to the chat</b>: <a href={invite_link}>Click Here🚪</a>
-<b>🚫 Can Save Content</b>: {can_save}
+<b>🚫 Has Protected Content</b>: {can_save}
 <b>😋 Sticker set</b>: {sticker_set}
 <b>🔗 Linked Chat</b>: {linked_chat if linked_chat else "Not Linked"}
 <b>🔥 Reactions</b>: {reactions}
