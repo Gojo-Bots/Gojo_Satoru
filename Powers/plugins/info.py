@@ -1,4 +1,5 @@
 import os
+from asyncio import sleep
 from pyrogram import enums
 from datetime import datetime
 from traceback import format_exc
@@ -97,13 +98,13 @@ async def user_info(c: Gojo, user, already=False):
         last_date = "User is currently online"
 
     caption = f"""
-<b><i><u>⚡ Extracted User info From Telegram ⚡</b></i></u>
+<b><i><u>⚡️ Extracted User info From Telegram ⚡️</b></i></u>
 
-<b>🆔️ User ID</b>: <code>{user_id}</code>
+<b>🆔 User ID</b>: <code>{user_id}</code>
 <b>📎 Link To Profile</b>: <a href='tg://user?id={user_id}'>Click Here🚪</a>
-<b>🗣️ Mention</b>: {mention}
-<b>🗣️ First Name</b>: <code>{first_name}</code>
-<b>🗣️ Second Name</b>: <code>{last_name}</code>
+<b>🗣 Mention</b>: {mention}
+<b>🗣 First Name</b>: <code>{first_name}</code>
+<b>🗣 Second Name</b>: <code>{last_name}</code>
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
 <b>🥸 Support</b>: {is_support}
 <b>🤓 Support user type</b>: <code>{omp}</code>
@@ -204,11 +205,14 @@ async def info_func(c: Gojo, message: Message):
         return await m.edit(str(e))
 
     if not photo_id:
-        return await m.edit(info_caption, disable_web_page_preview=True)
-    photo = await Gojo.download_media(photo_id)
+        await m.delete()
+        sleep(2)
+        return await message.reply_text(info_caption, disable_web_page_preview=True)
+    photo = await c.download_media(photo_id)
 
-    await message.reply_photo(photo, caption=info_caption, quote=False)
     await m.delete()
+    sleep(2)
+    await message.reply_photo(photo, caption=info_caption, quote=False)
     os.remove(photo)
     LOGGER.info(
         f"{message.from_user.id} fetched user info of user {user_name} in {m.chat.id}"
@@ -226,12 +230,12 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = splited[1]
 
         try:
-            if chat.isnumeric():
-                chat = int(chat)
-        except Exception as e:
-            return await message.reply_text(
-                f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]"
-            )
+            chat = int(chat)
+        except (ValueError, Exception) as ef:
+            if "invalid literal for int() with base 10:" in str(ef):
+                chat = str(chat)
+            else:
+                return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
 
         m = await message.reply_text(
             f"Fetching chat info of chat **{message.chat.title}**....."
@@ -239,15 +243,18 @@ async def chat_info_func(c: Gojo, message: Message):
 
         info_caption, photo_id = await chat_info(c, chat=chat)
         if not photo_id:
-            return await m.edit(info_caption, disable_web_page_preview=True)
+            await m.delete()
+            sleep(2)
+            return await message.reply_text(info_caption, disable_web_page_preview=True)
 
-        photo = await Gojo.download_media(photo_id)
+        photo = await c.download_media(photo_id)
+        await m.delete()
+        sleep(2)
         await message.reply_photo(photo, caption=info_caption, quote=False)
         LOGGER.info(
             f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}"
         )
 
-        await m.delete()
         os.remove(photo)
     except Exception as e:
         await message.reply_text(text=e)
