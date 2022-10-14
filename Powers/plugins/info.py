@@ -148,22 +148,11 @@ async def chat_info(c: Gojo, chat, already=False):
     description = chat.description
     members = chat.members_count
     is_restricted = chat.is_restricted
-    if is_restricted:
-        reasons = chat.restrictions
-    else:
-        reasons = "Chat is not restricted..."
     invite_link = chat.invite_link
     dc_id = chat.dc_id
     photo_id = chat.photo.big_file_id if chat.photo else None
     can_save = chat.has_protected_content
-    sticker_set = chat.sticker_set_name
-    linked_chat = chat.linked_chat
-    reaction = chat.available_reactions
-    if reaction:
-        reactions = "Enabled"
-    else:
-        reactions = "Disabled"
-
+    
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
 
@@ -179,14 +168,10 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>🧐 Scam</b>: {is_scam}
 <b>🤨 Fake</b>: {is_fake}
 <b>🧐 Restricted</b>: {is_restricted}
-<b>🤭 Reasons</b>: {reasons}
 <b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
-<b>📎 Link to the chat</b>: <a href={invite_link}>Click Here🚪</a>
 <b>🚫 Has Protected Content</b>: {can_save}
-<b>😋 Sticker set</b>: {sticker_set}
 <b>🔗 Linked Chat</b>: {linked_chat if linked_chat else "Not Linked"}
-<b>🔥 Reactions</b>: {reactions}
 
 """
 
