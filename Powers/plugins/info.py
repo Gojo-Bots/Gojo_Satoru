@@ -248,7 +248,7 @@ async def chat_info_func(c: Gojo, message: Message):
             await m.delete()
             await sleep(2)
             return await message.reply_text(info_caption, disable_web_page_preview=True)
-        
+
         photo = await c.download_media(photo_id)
         await m.delete()
         await sleep(2)
