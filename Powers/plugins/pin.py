@@ -237,10 +237,10 @@ __HELP__ = """
 Here you find find all help related to groups pins and how to manage them via me.
 
 **Admin Cmds:**
-* /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-* /unpin: Unpins the last pinned message.
-* /pinned: Gives the current pinned message of the chat.
-* /unpinall: Unpins all the pinned message in the current chat.
-* /antichannelpin `<on/off/yes/no>`: Toggle antichannelpin status. All the messages from linked channel will be unpinned if enabled!
-* /cleanlinked `<on/off/yes/no>`: Toggle cleanlinked status. All the messages from linked channel will be deleted if enabled!
-* /permapin `<text>`: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text."""
+• /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
+• /unpin: Unpins the last pinned message.
+• /pinned: Gives the current pinned message of the chat.
+• /unpinall: Unpins all the pinned message in the current chat.
+• /antichannelpin `<on/off/yes/no>`: Toggle antichannelpin status. All the messages from linked channel will be unpinned if enabled!
+• /cleanlinked `<on/off/yes/no>`: Toggle cleanlinked status. All the messages from linked channel will be deleted if enabled!
+• /permapin `<text>`: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text."""

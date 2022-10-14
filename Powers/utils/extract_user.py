@@ -3,6 +3,7 @@ from Powers import LOGGER
 from traceback import format_exc
 from Powers.bot_class import Gojo
 from Powers.database.users_db import Users
+from pyrogram.enums import MessageEntityType as entity
 from pyrogram.types.messages_and_media.message import Message
 
 
@@ -20,11 +21,11 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
     elif len(m.text.split()) > 1:
         if len(m.entities) > 1:
             required_entity = m.entities[1]
-            if required_entity.type == "text_mention":
+            if required_entity.type == entity.TEXT_MENTION:
                 user_id = required_entity.user.id
                 user_first_name = required_entity.user.first_name
                 user_name = required_entity.user.username
-            elif required_entity.type in ("mention", "phone_number"):
+            elif required_entity.type in (entity.MENTION, entity.PHONE_NUMBER):
                 # new long user ids are identified as phone_number
                 user_found = m.text[
                     required_entity.offset : (

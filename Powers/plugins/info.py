@@ -46,7 +46,7 @@ async def user_info(c: Gojo, user, already=False):
     if not user.first_name:
         return ["Deleted account", None]
 
-    gbanned, reason_gban = gban_db.get_gban(user)
+    gbanned, reason_gban = gban_db.get_gban(user.id)
     if gbanned:
         gban = True
         reason = f"The user is gbanned because {reason_gban}"
@@ -180,14 +180,14 @@ async def chat_info(c: Gojo, chat, already=False):
 @Gojo.on_message(command(["info", "whois"]))
 async def info_func(c: Gojo, message: Message):
     try:
-        user, _, _ = await extract_user(c, message)
+        user, _, user_name = await extract_user(c, message)
     except Exception as e:
         return await message.reply_text(
             f"Got an error while running extract_user function error is {e}.....Give this message in supoort group"
         )
 
     if not user:
-        message.reply_text("Can't find user to fetch info!")
+        await message.reply_text("Can't find user to fetch info!")
 
     m = await message.reply_text(
         f"Fetching user info of user {message.from_user.id}..."
@@ -211,7 +211,7 @@ async def info_func(c: Gojo, message: Message):
     await m.delete()
     os.remove(photo)
     LOGGER.info(
-        f"{message.from_user.id} fetched user info of user {user.username} in {m.chat.id}"
+        f"{message.from_user.id} fetched user info of user {user_name} in {m.chat.id}"
     )
 
 
@@ -226,9 +226,10 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = splited[1]
 
         try:
-            chat = int(chat)
-        except ValueError:
-            return await message.reply_text("**Usage:**/chinfo [USERNAME|ID]")
+            if chat.isnumeric():
+                chat = int(chat)
+        except Exception as e:
+            return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
 
         m = await message.reply_text(
             f"Fetching chat info of chat **{message.chat.title}**....."
@@ -261,6 +262,6 @@ __alt_name__ = [
 __HELP__ = """
 ***Information***
 
-* /info - To get info about the user
-* /chinfo - To get info about the chat
+• /info - To get info about the user
+• /chinfo - To get info about the chat
 """

@@ -368,16 +368,16 @@ __HELP__ = """
 ***Warns***
 
 
-Admin commands:
-- /warn `<reason>`: Warn a user.
-- /dwarn `<reason>`: Warn a user by reply, and delete their message.
-- /swarn `<reason>`: Silently warn a user, and delete your message.
-- /warns: See a user's warnings.
-- /rmwarn: Remove a user's latest warning.
-- /resetwarn: Reset all of a user's warnings to 0.
-- /warnings: Get the chat's warning settings.
-- /warnmode `<ban/kick/mute>`: Set the chat's warn mode.
-- /warnlimit `<number>`: Set the number of warnings before users are punished.
+**Admin commands:**
+• /warn `<reason>`: Warn a user.
+• /dwarn `<reason>`: Warn a user by reply, and delete their message.
+• /swarn `<reason>`: Silently warn a user, and delete your message.
+• /warns: See a user's warnings.
+• /rmwarn: Remove a user's latest warning.
+• /resetwarn: Reset all of a user's warnings to 0.
+• /warnings: Get the chat's warning settings.
+• /warnmode `<ban/kick/mute>`: Set the chat's warn mode.
+• /warnlimit `<number>`: Set the number of warnings before users are punished.
 
-Examples:
+**Examples:**
 `/warn @user`: this warns a user in the chat."""

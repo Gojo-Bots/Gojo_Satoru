@@ -202,9 +202,9 @@ async def github(_, m: Message):
     try:
         r = await get(URL, timeout=5)
     except asyncio.TimeoutError:
-        return await message.reply_text("request timeout")
+        return await m.reply_text("request timeout")
     except Exception as e:
-        return await message.reply_text(f"ERROR: `{e}`")
+        return await m.reply_text(f"ERROR: `{e}`")
 
     url = r.get("html_url", None)
     name = r.get("name", None)
@@ -348,13 +348,13 @@ __HELP__ = """
 
 Some utils provided by bot to make your tasks easy!
 
-* /id: Get the current group id. If used by replying to a message, get that user's id.
-* /info: Get information about a user.
-* /gifid: Reply to a gif to me to tell you its file ID.
-* /wiki: `<query>`: wiki your query.
-* /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
-* /github or /git `<username>`: Search for the user using github api!
-* /weebify `<text>` or `<reply to message>`: To weebify the text.
+• /id: Get the current group id. If used by replying to a message, get that user's id.
+• /info: Get information about a user.
+• /gifid: Reply to a gif to me to tell you its file ID.
+• /wiki: `<query>`: wiki your query.
+• /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
+• /git `<username>`: Search for the user using github api!
+• /weebify `<text>` or `<reply to message>`: To weebify the text.
 
 **Example:**
-`/git @iamgojoof6eyes`: this fetches the information about a user from the database."""
+`/git iamgojoof6eyes`: this fetches the information about a user from the database."""

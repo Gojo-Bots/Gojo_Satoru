@@ -431,26 +431,26 @@ Save a note, get that, even you can delete that note.
 This note only avaiable for your whole group!
 Only admins can save and deletenotes, anyone can get them.
 
-* /save `<notename>` <`note content or reply to message>`
+• /save `<notename>` <`note content or reply to message>`
     Save a note, you can get or delete that later.
 
-* /get `<note>` or #<note>
+• /get `<note>` or #<note>
     Get that note, if avaiable.
 
-* /get `<note>` noformat or /get `<note>` raw
+• /get `<note>` noformat or /get `<note>` raw
     Get that note in raw format, so you can edit and update it.
 
-* /clear `<note>`
+• /clear `<note>`
     Delete that note, if avaiable.
 
-* /clearall
+• /clearall
     Clears all notes in the chat!
     **NOTE:** Can only be used by owner of chat!
 
-* /saved or /notes
+• /saved or /notes
     Get all your notes, if too much notes, please use this in your saved message instead!
 
-* /privatenotes `<on/yes/no/off>`: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+• /privatenotes `<on/yes/no/off>`: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
 
-── **Note Format** ──
+**Note Format**
     Check /markdownhelp for help related to formatting!"""
