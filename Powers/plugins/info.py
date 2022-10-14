@@ -33,7 +33,9 @@ async def count(c: Gojo, chat):
         total_bot = bot
         bot_admin = 0
         ban = []
-        async for banned in c.get_chat_members(chat, filter=enums.ChatMembersFilter.BANNED):
+        async for banned in c.get_chat_members(
+            chat, filter=enums.ChatMembersFilter.BANNED
+        ):
             ban.append(banned)
 
         total_banned = ban
@@ -46,8 +48,11 @@ async def count(c: Gojo, chat):
         total_banned = len(total_banned)
         return total_bot, total_admin, bot_admin, total_banned
     except Exception as e:
-        total_bot = total_admin = bot_admin = total_banned = "Can't fetch due to some error."
+        total_bot = (
+            total_admin
+        ) = bot_admin = total_banned = "Can't fetch due to some error."
         return total_bot, total_admin, bot_admin, total_banned
+
 
 async def user_info(c: Gojo, user, already=False):
     if not already:
