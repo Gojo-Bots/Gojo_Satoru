@@ -24,18 +24,18 @@ async def chattype(m: Message):
 async def c_type(c: Gojo, chat_id):
     # To get chat type with chat id
 
-    c = await Gojo.get_chat(chat_id)
+    ch = await c.get_chat(chat_id)
 
-    if c.type == ChatType.CHANNEL:
+    if ch.type == ChatType.CHANNEL:
         ct = "channel"
 
-    if c.type == ChatType.GROUP:
+    if ch.type == ChatType.GROUP:
         ct = "group"
 
-    if c.type == ChatType.SUPERGROUP:
+    if ch.type == ChatType.SUPERGROUP:
         ct = "supergroup"
 
-    if c.type == ChatType.PRIVATE:
+    if ch.type == ChatType.PRIVATE:
         ct = "private"
 
     return ct
