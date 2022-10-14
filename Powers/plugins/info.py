@@ -195,7 +195,7 @@ async def info_func(c: Gojo, message: Message):
     )
 
     try:
-        info_caption, photo_id = await user_info(c, user=user)
+        info_caption, photo_id = await user_info(c, user)
         LOGGER.info(
             f"{message.from_user.id} tried to fetch user info of user {message.from_user.id} in {message.chat.id}"
         )
