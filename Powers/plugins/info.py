@@ -161,7 +161,8 @@ async def chat_info(c: Gojo, chat, already=False):
     reaction = chat.available_reactions
     if reaction:
         reactions = "Enabled"
-    reactions = "Disabled"
+    else:
+        reactions = "Disabled"
 
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
