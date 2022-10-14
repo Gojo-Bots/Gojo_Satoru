@@ -148,10 +148,10 @@ async def chat_info(c: Gojo, chat, already=False):
     description = chat.description
     members = chat.members_count
     is_restricted = chat.is_restricted
-    invite_link = chat.invite_link
     dc_id = chat.dc_id
     photo_id = chat.photo.big_file_id if chat.photo else None
     can_save = chat.has_protected_content
+    linked_chat = chat.linked_chat
 
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
