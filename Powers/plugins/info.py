@@ -125,12 +125,12 @@ async def user_info(c: Gojo, user, already=False):
 async def chat_info(c: Gojo, chat, already=False):
     if not already:
         chat = await c.get_chat(chat)
-    online_mem = await c.get_chat_online_count(chat)
+    online_mem = await c.get_chat_online_count(chat.id)
     chat_id = chat.id
     username = chat.username
-    total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat)
+    total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat.id)
     title = chat.title
-    type_ = c_type(c, chat_id=chat)
+    type_ = await c_type(c, chat_id=chat.id)
     is_scam = chat.is_scam
     is_fake = chat.is_fake
     description = chat.description
@@ -206,12 +206,12 @@ async def info_func(c: Gojo, message: Message):
 
     if not photo_id:
         await m.delete()
-        sleep(2)
+        await sleep(2)
         return await message.reply_text(info_caption, disable_web_page_preview=True)
     photo = await c.download_media(photo_id)
 
     await m.delete()
-    sleep(2)
+    await sleep(2)
     await message.reply_photo(photo, caption=info_caption, quote=False)
     os.remove(photo)
     LOGGER.info(
@@ -246,12 +246,12 @@ async def chat_info_func(c: Gojo, message: Message):
         info_caption, photo_id = await chat_info(c, chat=chat)
         if not photo_id:
             await m.delete()
-            sleep(2)
+            await sleep(2)
             return await message.reply_text(info_caption, disable_web_page_preview=True)
 
         photo = await c.download_media(photo_id)
         await m.delete()
-        sleep(2)
+        await sleep(2)
         await message.reply_photo(photo, caption=info_caption, quote=False)
         LOGGER.info(
             f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}"
