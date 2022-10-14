@@ -158,7 +158,10 @@ async def chat_info(c: Gojo, chat, already=False):
     can_save = chat.has_protected_content
     sticker_set = chat.sticker_set_name
     linked_chat = chat.linked_chat
-    reactions = chat.available_reactions.all_are_enabled
+    reaction = chat.available_reactions
+    if reaction:
+        reactions = "Enabled"
+    reactions = "Disabled"
 
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
