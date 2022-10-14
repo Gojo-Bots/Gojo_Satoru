@@ -252,7 +252,7 @@ async def chat_info_func(c: Gojo, message: Message):
         photo = await c.download_media(photo_id)
         await m.delete()
         await sleep(2)
-        if len(info_caption) >= 4096:
+        if len(info_caption) >= 1024:
             x = await message.reply_photo(photo)
             await x.reply_text(info_caption)
         else:
