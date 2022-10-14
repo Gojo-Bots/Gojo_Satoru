@@ -130,7 +130,7 @@ async def chat_info(c: Gojo, chat, already=False):
     username = chat.username
     total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat.id)
     title = chat.title
-    type_ = await c_type(c, chat_id=chat.id)
+    type_ = await c_type(c, chat_id)
     is_scam = chat.is_scam
     is_fake = chat.is_fake
     description = chat.description
@@ -153,7 +153,7 @@ async def chat_info(c: Gojo, chat, already=False):
 
 <b>🆔 ID</b>: <code>{chat_id}</code>
 <b>🚀 Chat Title</b>: {title}
-<b>✨ Chat Type</b>: {type_}
+<b>✨ Chat Type</b>: {type_.upper()}
 <b>🌐 DataCentre ID</b>: {dc_id}
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
 <b>⚜️ Administrators</b>: {total_admin}
