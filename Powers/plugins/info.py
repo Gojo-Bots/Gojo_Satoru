@@ -226,10 +226,12 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = splited[1]
 
         try:
-            if chat.isnumeric():
-                chat = int(chat)
-        except Exception as e:
-            return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
+            chat = int(chat)
+        except (ValueError, Exception) as ef:
+            if "invalid literal for int() with base 10:" in str(ef):
+                chat = str(chat)
+            else:
+                return await message.reply_text(f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]")
 
         m = await message.reply_text(
             f"Fetching chat info of chat **{message.chat.title}**....."
