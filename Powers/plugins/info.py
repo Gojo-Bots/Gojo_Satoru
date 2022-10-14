@@ -28,13 +28,13 @@ async def count(c: Gojo, chat):
         chat_id=chat, filter=enums.ChatMembersFilter.BOTS
     ):
         bot.append(tbot)
-            
+
     total_bot = bot
     bot_admin = 0
     ban = []
     async for banned in c.get_chat_members(chat, filter=enums.ChatMembersFilter.BANNED):
         ban.append(banned)
-    
+
     total_banned = ban
     for x in total_admin:
         for y in total_bot:
