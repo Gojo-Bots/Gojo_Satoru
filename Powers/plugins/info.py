@@ -152,7 +152,7 @@ async def chat_info(c: Gojo, chat, already=False):
     dc_id = chat.dc_id
     photo_id = chat.photo.big_file_id if chat.photo else None
     can_save = chat.has_protected_content
-    
+
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
 
