@@ -205,7 +205,7 @@ __PLUGIN__ = "reporting"
 __alt_name__ = ["reports", "report"]
 
 __HELP__ = """
-***Report***
+**Report**
 
 • /report `<reason>`: reply to a message to report it to admins.
 × @admin: reply to a message to report it to admins.

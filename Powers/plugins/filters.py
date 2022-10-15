@@ -298,7 +298,7 @@ _DISABLE_CMDS_ = ["filters"]
 __alt_name__ = ["filters", "autoreply"]
 
 __HELP__ = """
-***Filters***
+**Filters**
 
 • /filters: List all active filters saved in the chat.
 
@@ -316,8 +316,12 @@ Aliases for filters can be too set, just put '|' between the filternames you wan
 Using the you can make a single filter work on 2 filternames without manually adding another one.
 
 • /stop `<filter keyword>`: Stop that filter.
-**Note:** For filters with aliases, if you stop one alias, the filter will stop working on other aliases too.
-**For Example:** If you stop the "filtername1" from above example, the bot will not respond to "filtername2".
+
+**Note:** 
+For filters with aliases, if you stop one alias, the filter will stop working on other aliases too.
+
+**For Example:** 
+If you stop the "filtername1" from above example, the bot will not respond to "filtername2".
 
 **Chat creator only:**
 • /removeallfilters: Remove all chat filters at once.

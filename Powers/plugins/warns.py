@@ -365,7 +365,7 @@ __PLUGIN__ = "warnings"
 __alt_name__ = ["warn", "warning", "warns"]
 
 __HELP__ = """
-***Warns***
+**Warns**
 
 
 **Admin commands:**

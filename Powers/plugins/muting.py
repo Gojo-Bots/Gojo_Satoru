@@ -620,7 +620,7 @@ __alt_name__ = [
 ]
 
 __HELP__ = """
-***Muting***
+**Muting**
 
 **Admin only:**
 • /mute: Mute the user replied to or mentioned.

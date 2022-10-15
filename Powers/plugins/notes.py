@@ -425,7 +425,7 @@ _DISABLE_CMDS_ = ["notes"]
 __alt_name__ = ["groupnotes", "snips", "notes"]
 
 __HELP__ = """
-***Notes***
+**Notes**
 
 Save a note, get that, even you can delete that note.
 This note only avaiable for your whole group!

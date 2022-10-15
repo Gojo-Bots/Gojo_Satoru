@@ -344,7 +344,7 @@ _DISABLE_CMDS_ = ["paste", "wiki", "id", "gifid", "tr", "github", "git"]
 __alt_name__ = ["util", "misc", "tools"]
 
 __HELP__ = """
-***Utils***
+**Utils**
 
 Some utils provided by bot to make your tasks easy!
 

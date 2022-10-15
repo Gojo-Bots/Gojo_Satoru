@@ -290,4 +290,22 @@ async def chat_broadcast(c: Gojo, m: Message):
 
 _DISABLE_CMDS_ = ["ping"]
 
-__HELP__ = """To check the ping of the bot just type `/ping`"""
+__HELP__ = """
+**DEV and SUDOERS commands**
+
+**Dev's commands:**
+• /logs : Return the logs of bot.
+• /neofetch : Fetch neo.
+• /eval : Evaluate the given python code.
+• /exec : Execute the given code.
+• /chatlist : Return the list of chats present in database
+• /uptime : Return the uptime of the bot.
+• /leavechat : Bot will leave the provided chat.
+• /chatbroadcast : Broadcast the messge to chats.
+
+**Sudoer's command:**
+• /ping : return the ping of the bot.
+
+**Example:**
+/ping
+"""

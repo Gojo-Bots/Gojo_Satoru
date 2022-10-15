@@ -483,7 +483,7 @@ __PLUGIN__ = "greetings"
 __alt_name__ = ["welcome", "goodbye", "cleanservice"]
 
 __HELP__ = """
-***Greetings***
+**Greetings**
 
 Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
 
