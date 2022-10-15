@@ -317,10 +317,10 @@ Using the you can make a single filter work on 2 filternames without manually ad
 
 • /stop `<filter keyword>`: Stop that filter.
 
-**Note:** 
+**Note:**
 For filters with aliases, if you stop one alias, the filter will stop working on other aliases too.
 
-**For Example:** 
+**For Example:**
 If you stop the "filtername1" from above example, the bot will not respond to "filtername2".
 
 **Chat creator only:**

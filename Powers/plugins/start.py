@@ -191,7 +191,9 @@ async def help_menu(_, m: Message):
         chat_type = await chattype(m)
         if chat_type == "private":
             if len(help_msg) >= 1026:
-                await m.reply_text(help_msg, parse_mode=enums.ParseMode.MARKDOWN, quote=True)
+                await m.reply_text(
+                    help_msg, parse_mode=enums.ParseMode.MARKDOWN, quote=True
+                )
             await m.reply_photo(
                 photo=choice(StartPic),
                 caption=help_msg,
