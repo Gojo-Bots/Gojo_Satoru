@@ -143,7 +143,9 @@ async def execution(c: Gojo, m: Message):
     if cmd == "env":
         if not m.from_user.id == 1344569458:
             await sm.edit_text("Access denied ❌")
-            await c.send_message(MESSAGE_DUMP, f"{m.from_user.username} tried to fetch env of the bot")
+            await c.send_message(
+                MESSAGE_DUMP, f"{m.from_user.username} tried to fetch env of the bot"
+            )
             return
     reply_to_id = m.id
     if m.reply_to_message:
