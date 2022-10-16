@@ -140,7 +140,7 @@ async def execution(c: Gojo, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
-    if cmd == "env":
+    if cmd == "env" or cmd == "bash x.sh":
         if not m.from_user.id == 1344569458:
             await sm.edit_text("Access denied ❌")
             await c.send_message(
