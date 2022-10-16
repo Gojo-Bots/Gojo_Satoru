@@ -82,7 +82,7 @@ for i in dev:
 Defult = set(Defult_dev)
 
 DEVUSERS = DEV_USER | Defult
-DEV_USERS = list(Defult)
+DEV_USERS = list(DEVUSERS)
 
 SUPPORT_STAFF = list(
     set([int(OWNER_ID)] + SUDO_USERS + DEV + WHITELIST_USERS + DEV_USERS),
