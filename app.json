@@ -66,7 +66,7 @@
       "DEV_USERS": {
         "description": "ID of users who are Devs of your bot. Use space to seprate values",
         "required": false,
-        "value": "1432756163 1344569458 1355478165 1789859817 1777340882"
+        "value": " "
       },
       "SUPPORT_CHANNEL": {
         "description": "Channel where bot uodates will be posted!",
@@ -75,12 +75,12 @@
       "SUDO_USERS": {
         "description": "A space separated list of user IDs who you want to assign as sudo users.",
         "required": false,
-        "value": "1432756163 1344569458 1355478165 1789859817 1777340882"
+        "value": " "
       },
       "WHITELIST_USERS": {
         "description": "A space separated list of user IDs whitelisted, cannot be restricted.",
         "required": false,
-        "value": "1432756163 1344569458 1355478165 1789859817 1777340882"
+        "value": " "
       },
       "WORKERS": {
         "description": "Number of workers to run the bot.",
