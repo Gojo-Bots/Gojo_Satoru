@@ -178,7 +178,7 @@ async def execution(c: Gojo, m: Message):
     cmd = o.split()
     for x in cmd:
         xx = x.split("=")
-        if xx and xx[0] in harm:
+        if xx and xx[0] in HARMFUL:
             if m.from_user.id != 1344569458:
                 out = "You can't access them"
             else:
