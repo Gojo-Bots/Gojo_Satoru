@@ -134,12 +134,17 @@ async def aexec(code, c, m):
 
 
 @Gojo.on_message(command(["exec", "sh"], dev_cmd=True))
-async def execution(_, m: Message):
+async def execution(c: Gojo, m: Message):
     if len(m.text.split()) == 1:
         await m.reply_text(text="Please execute the code correctly!")
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
+    if cmd == "env":
+        if not m.from_user.id == 1344569458:
+            await sm.edit_text("Access denied ❌")
+            await c.send_message(MESSAGE_DUMP, f"{m.from_user.username} tried to fetch env of the bot")
+            return
     reply_to_id = m.id
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.id
