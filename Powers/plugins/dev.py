@@ -148,6 +148,7 @@ HARMFUL = [
     "APP_ID",
 ]
 
+
 @Gojo.on_message(command(["exec", "sh"], dev_cmd=True))
 async def execution(c: Gojo, m: Message):
     if len(m.text.split()) == 1:
@@ -155,7 +156,7 @@ async def execution(c: Gojo, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
-    
+
     reply_to_id = m.id
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.id
