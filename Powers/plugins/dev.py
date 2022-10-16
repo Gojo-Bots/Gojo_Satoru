@@ -175,8 +175,8 @@ async def execution(c: Gojo, m: Message):
     if not o:
         o = "No Output"
     out = o
-    cmd = o.split()
-    for x in cmd:
+    xxx = o.split()
+    for x in xxx:
         xx = x.split("=")
         if xx and xx[0] in HARMFUL:
             if m.from_user.id != 1344569458:
