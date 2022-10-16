@@ -77,7 +77,7 @@ async def user_info(c: Gojo, user, already=False):
     is_verified = user.is_verified
     is_restricted = user.is_restricted
     photo_id = user.photo.big_file_id if user.photo else None
-    is_support = user_id in SUPPORT_STAFF
+    is_support = True if user_id in SUPPORT_STAFF else False
     if user_id in SUPPORT_STAFF:
         if user_id in DEV_USERS:
             omp = "User is dev"
