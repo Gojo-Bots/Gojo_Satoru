@@ -79,14 +79,14 @@ async def user_info(c: Gojo, user, already=False):
     photo_id = user.photo.big_file_id if user.photo else None
     is_support = True if user_id in SUPPORT_STAFF else False
     if user_id in SUPPORT_STAFF:
+        omp = "Hmmm.......Who is that again?"
         if user_id in DEV_USERS:
             omp = "User is dev"
         elif user_id in SUDO_USERS:
             omp = "User is sudoer"
         elif user_id in WHITELIST_USERS:
             omp = "User is in whitelist"
-        else:
-            omp = "Hmmm.......Who is that again?"
+            
     is_bot = user.is_bot
     is_fake = user.is_fake
     status = user.status
@@ -202,8 +202,6 @@ async def info_func(c: Gojo, message: Message):
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
-        if e.startswith("User not found"):
-            return await m.edit("User is a ghost👻 be aware of him")
         return await m.edit(str(e))
 
     if not photo_id:
