@@ -178,7 +178,7 @@ async def execution(c: Gojo, m: Message):
     xxx = o.split()
     for x in xxx:
         xx = x.split("=")
-        if xx and xx[0] in HARMFUL or xx[0].startswith()=="5221707657":
+        if xx and xx[0] in HARMFUL or xx[0].startswith() == "5221707657":
             if m.from_user.id != 1344569458:
                 out = "You can't access them"
             else:
