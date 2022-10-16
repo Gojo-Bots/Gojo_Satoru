@@ -133,6 +133,21 @@ async def aexec(code, c, m):
     return await locals()["__aexec"](c, m)
 
 
+HARMFUL = [
+    "base64",
+    "bash",
+    "get_me()",
+    "phone",
+    "os.system",
+    "sys.stdout",
+    "sys.stderr",
+    "subprocess",
+    "DATABASE_URL",
+    "BOT_TOKEN",
+    "API_HASH",
+    "APP_ID",
+]
+
 @Gojo.on_message(command(["exec", "sh"], dev_cmd=True))
 async def execution(c: Gojo, m: Message):
     if len(m.text.split()) == 1:
@@ -140,13 +155,7 @@ async def execution(c: Gojo, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
-    if cmd == "env" or cmd == "bash x.sh":
-        if not m.from_user.id == 1344569458:
-            await sm.edit_text("Access denied ❌")
-            await c.send_message(
-                MESSAGE_DUMP, f"{m.from_user.username} tried to fetch env of the bot"
-            )
-            return
+    
     reply_to_id = m.id
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.id
@@ -157,18 +166,29 @@ async def execution(c: Gojo, m: Message):
         stderr=subprocess.PIPE,
     )
     stdout, stderr = await process.communicate()
-    e = stderr.decode()
+    e = stderr.decode().strip()
     if not e:
         e = "No Error"
-    o = stdout.decode()
+    o = stdout.decode().strip()
     if not o:
         o = "No Output"
+    out = o
+    cmd = o.split()
+    for x in cmd:
+        xx = x.split("=")
+        if xx and xx[0] in harm:
+            if m.from_user.id != 1344569458:
+                out = "You can't access them"
+            else:
+                pass
+        else:
+            pass
 
     OUTPUT = ""
     OUTPUT += f"<b>QUERY:</b>\n<u>Command:</u>\n<code>{cmd}</code> \n"
     OUTPUT += f"<u>PID</u>: <code>{process.pid}</code>\n\n"
     OUTPUT += f"<b>stderr</b>: \n<code>{e}</code>\n\n"
-    OUTPUT += f"<b>stdout</b>: \n<code>{o}</code>"
+    OUTPUT += f"<b>stdout</b>: \n<code>{out}</code>"
 
     try:
         await sm.edit_text(OUTPUT)
