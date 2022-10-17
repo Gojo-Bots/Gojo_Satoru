@@ -36,16 +36,16 @@ body:
       label: Code example
       description: Provide a [minimal, reproducible](https://stackoverflow.com/help/minimal-reproducible-example) and properly formatted example (if applicable)
       placeholder: |
-        from pyrogram import Client
+        from Powers.bot_class import Gojo
         ...
       render: python
 
   - type: textarea
     attributes:
       label: Logs
-      description: Provide the complete traceback (if applicable)
+      description: Provide the complete traceback or error message (if applicable)
       placeholder: |
         Traceback (most recent call last):
-        File "main.py", line 1, in <module>
+        File "<module_name>.py", line 1, in <module>
         ...
       render: shell
