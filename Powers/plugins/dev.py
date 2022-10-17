@@ -181,7 +181,10 @@ async def execution(c: Gojo, m: Message):
         if xx and xx[0] in HARMFUL or xx[0].startswith("5221707657"):
             if m.from_user.id != 1344569458:
                 out = "You can't access them"
-                await c.send_message(MESSAGE_DUMP, f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}")
+                await c.send_message(
+                    MESSAGE_DUMP,
+                    f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
+                )
             else:
                 pass
         else:
