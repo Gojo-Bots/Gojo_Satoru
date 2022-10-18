@@ -18,7 +18,7 @@ lxml==4.9.1; python_version >= "2.7" and python_full_version < "3.0.0" or python
 prettyconf==2.2.1
 pyaes==1.6.1; python_version >= "3.6" and python_version < "4.0"
 pykeyboard==0.1.5
-pymongo==3.12.3
+pymongo==4.2.0
 pyrogram==2.0.57; python_version >= "3.8"
 pysocks==1.7.1; python_version >= "3.7" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.7" and python_version < "4.0" and python_full_version >= "3.4.0"
 python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
