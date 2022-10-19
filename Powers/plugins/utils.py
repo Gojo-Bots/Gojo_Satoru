@@ -206,6 +206,7 @@ async def github(_, m: Message):
     except Exception as e:
         return await m.reply_text(f"ERROR: `{e}`")
 
+    avtar = r.get("avatar_url", None)
     url = r.get("html_url", None)
     name = r.get("name", None)
     company = r.get("company", None)
@@ -214,20 +215,29 @@ async def github(_, m: Message):
     public_repos = r.get("public_repos", 0)
     bio = r.get("bio", None)
     created_at = r.get("created_at", "Not Found")
+    location = r.get("location", None)
+    email = r.get("email", None)
 
-    REPLY = (
-        f"<b>GitHub Info for @{username}:</b>"
-        f"\n<b>Name:</b> <code>{name}</code>\n"
-        f"<b>Bio:</b> <code>{bio}</code>\n"
-        f"<b>URL:</b> {url}\n"
-        f"<b>Public Repos:</b> {public_repos}\n"
-        f"<b>Followers:</b> {followers}\n"
-        f"<b>Following:</b> {following}\n"
-        f"<b>Company:</b> <code>{company}</code>\n"
-        f"<b>Created at:</b> <code>{created_at}</code>"
-    )
+    REPLY = f"<b>GitHub Info for @{username}:</b>\n"
+    if name:
+        REPLY += f"\n<b>Name:</b> <code>{name}</code>\n"
+    if bio:
+        REPLY += f"<b>Bio:</b> <code>{bio}</code>\n"
+    if url:
+        REPLY += f"<b>URL:</b> {url}\n"
+    REPLY += f"<b>Public Repos:</b> {public_repos}\n"
+    REPLY += f"<b>Followers:</b> {followers}\n"
+    REPLY += f"<b>Following:</b> {following}\n"
+    if email:
+        REPLY += f"<b>Email:</b> <code>{email}</code>\n"
+    if company:
+        org_url = company.strip("@")
+        REPLY += f"<b>Company:</b> <a href='{org_url}'>{company}</a>\n"
+    if location:
+        REPLY += f"<b>Location:</b> <code>{location}</code>\n"
+    REPLY += f"<b>Created at:</b> <code>{created_at}</code>\n"
 
-    await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
+    await m.reply_photo(photo=f"{avtar}", caption=REPLY)
     return
 
 
