@@ -236,7 +236,7 @@ async def github(_, m: Message):
     if location:
         REPLY += f"<b>Location:</b> <code>{location}</code>\n"
     REPLY += f"<b>Created at:</b> <code>{created_at}</code>\n"
-    
+
     if avtar:
         return await m.reply_photo(photo=f"{avtar}", caption=REPLY)
     await m.reply_text(REPLY)
