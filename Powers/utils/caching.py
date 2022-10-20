@@ -36,7 +36,7 @@ async def admin_cache_reload(m: Message or CallbackQuery, status=None) -> List[i
             (
                 z.user.id,
                 f"@{z.user.username}" if z.user.username else z.user.first_name,
-                z.is_anonymous,
+                z.privileges.is_anonymous,
             )
             async for z in m.chat.get_members(filter=ChatMembersFilter.ADMINISTRATORS)
             if not z.user.is_deleted
