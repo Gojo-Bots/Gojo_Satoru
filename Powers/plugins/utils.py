@@ -232,12 +232,16 @@ async def github(_, m: Message):
         REPLY += f"<b>Email:</b> <code>{email}</code>\n"
     if company:
         org_url = company.strip("@")
-        REPLY += f"<b>Company:</b> <a href='{org_url}'>{company}</a>\n"
+        REPLY += (
+            f"<b>Company:</b> <a href='https://github.com/{org_url}'>{company}</a>\n"
+        )
     if location:
         REPLY += f"<b>Location:</b> <code>{location}</code>\n"
     REPLY += f"<b>Created at:</b> <code>{created_at}</code>\n"
 
-    await m.reply_photo(photo=f"{avtar}", caption=REPLY)
+    if avtar:
+        return await m.reply_photo(photo=f"{avtar}", caption=REPLY)
+    await m.reply_text(REPLY)
     return
 
 
