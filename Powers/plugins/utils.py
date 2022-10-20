@@ -281,7 +281,7 @@ async def paste_func(_, message: Message):
     link = await paste(content)
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     try:
-        if m.from_user.is_bot:
+        if message.from_user.is_bot:
             await message.reply_photo(
                 photo=link,
                 quote=False,
@@ -297,7 +297,7 @@ async def paste_func(_, message: Message):
             )
         await m.delete()
     except Exception:
-        await m.edit(
+        await m.edit_text(
             "Here is the link of the document....",
             reply_markup=InlineKeyboardMarkup(kb),
         )
