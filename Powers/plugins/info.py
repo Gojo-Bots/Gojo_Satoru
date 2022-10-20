@@ -176,7 +176,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>🚫 Has Protected Content</b>: {can_save}
-<b>🔗 Linked Chat</b>: f"@{linked_chat if linked_chat else linked_id}"
+<b>🔗 Linked Chat</b>: @{linked_chat if linked_chat else linked_id}
 
 """
 
