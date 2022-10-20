@@ -155,7 +155,8 @@ async def chat_info(c: Gojo, chat, already=False):
     dc_id = chat.dc_id
     photo_id = chat.photo.big_file_id if chat.photo else None
     can_save = chat.has_protected_content
-    linked_chat = chat.linked_chat
+    linked_chat = chat.linked_chat.username
+    linked_id = chat.linked_chat.id
 
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
@@ -175,7 +176,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>🚫 Has Protected Content</b>: {can_save}
-<b>🔗 Linked Chat</b>: {linked_chat if linked_chat else "Not Linked"}
+<b>🔗 Linked Chat</b>: {linked_chat if linked_chat else linked_id}
 
 """
 
