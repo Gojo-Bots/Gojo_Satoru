@@ -15,7 +15,6 @@ from pyrogram.errors import (
     RPCError, MessageTooLong, EntityBoundsInvalid, MediaCaptionTooLong)
 
 
-
 gban_db = GBan()
 
 
@@ -54,7 +53,7 @@ async def count(c: Gojo, chat):
         total_bot = (
             total_admin
         ) = bot_admin = total_banned = "Can't fetch due to some error."
-        
+
     return total_bot, total_admin, bot_admin, total_banned
 
 
@@ -201,7 +200,7 @@ async def info_func(c: Gojo, message: Message):
 
     try:
         info_caption, photo_id = await user_info(c, user)
-        
+
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -236,6 +235,7 @@ async def info_func(c: Gojo, message: Message):
     os.remove(photo)
 
     return
+
 
 @Gojo.on_message(command(["chinfo", "chatinfo", "chat_info"]))
 async def chat_info_func(c: Gojo, message: Message):
