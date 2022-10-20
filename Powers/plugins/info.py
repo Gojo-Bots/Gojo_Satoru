@@ -196,7 +196,7 @@ async def info_func(c: Gojo, message: Message):
         await message.reply_text("Can't find user to fetch info!")
 
     m = await message.reply_text(
-        f"Fetching user info of user {message.from_user.id}..."
+        f"Fetching user info from telegram's database..."
     )
 
     try:
@@ -258,7 +258,7 @@ async def chat_info_func(c: Gojo, message: Message):
             )
 
     m = await message.reply_text(
-        f"Fetching chat info of chat **{message.chat.title}**....."
+        f"Fetching chat info of chat from telegram's database....."
     )
 
     info_caption, photo_id = await chat_info(c, chat=chat)
