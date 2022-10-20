@@ -297,11 +297,12 @@ async def paste_func(_, message: Message):
             )
         await m.delete()
     except Exception:
-        await m.edit_text(
+        await m.delete()
+        await message.reply_text(
             "Here is the link of the document....",
             reply_markup=InlineKeyboardMarkup(kb),
         )
-
+    
 
 @Gojo.on_message(command("tr"))
 async def tr(_, message):
