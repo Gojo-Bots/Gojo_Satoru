@@ -148,7 +148,7 @@ Join my [News Channel](http://t.me/gojo_updates) to get information on all the l
 async def commands_menu(_, q: CallbackQuery):
     keyboard = ikb(
         [
-            *(await gen_cmds_kb(q)),
+            **(await gen_cmds_kb(q)),
             [(f"« Back", "start_back")],
         ],
     )
@@ -223,7 +223,7 @@ async def help_menu(_, m: Message):
         if chat_type == "private":
             keyboard = ikb(
                 [
-                    *(await gen_cmds_kb(m)),
+                    **(await gen_cmds_kb(m)),
                     [("« Back", "start_back")],
                 ],
             )
