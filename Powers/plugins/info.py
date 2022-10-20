@@ -11,6 +11,9 @@ from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers import (
     LOGGER, DEV_USERS, SUDO_USERS, SUPPORT_STAFF, WHITELIST_USERS)
+from pyrogram.errors import (
+    RPCError, MessageTooLong, EntityBoundsInvalid, MediaCaptionTooLong)
+
 
 
 gban_db = GBan()
@@ -51,7 +54,8 @@ async def count(c: Gojo, chat):
         total_bot = (
             total_admin
         ) = bot_admin = total_banned = "Can't fetch due to some error."
-        return total_bot, total_admin, bot_admin, total_banned
+        
+    return total_bot, total_admin, bot_admin, total_banned
 
 
 async def user_info(c: Gojo, user, already=False):
@@ -197,9 +201,7 @@ async def info_func(c: Gojo, message: Message):
 
     try:
         info_caption, photo_id = await user_info(c, user)
-        LOGGER.info(
-            f"{message.from_user.id} tried to fetch user info of user {message.from_user.id} in {message.chat.id}"
-        )
+        
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -213,60 +215,81 @@ async def info_func(c: Gojo, message: Message):
 
     await m.delete()
     await sleep(2)
-    await message.reply_photo(photo, caption=info_caption, quote=False)
-    os.remove(photo)
-    LOGGER.info(
-        f"{message.from_user.id} fetched user info of user {user_name} in {m.chat.id}"
-    )
-
-
-@Gojo.on_message(command(["chinfo", "chatinfo", "chat_info"]))
-async def chat_info_func(c: Gojo, message: Message):
-    splited = message.text.split()
     try:
-        if len(splited) == 1:
-            chat = message.chat.id
-
-        else:
-            chat = splited[1]
-
+        await message.reply_photo(photo, caption=info_caption, quote=False)
+    except MediaCaptionTooLong:
+        x = await message.reply_photo(photo)
         try:
-            chat = int(chat)
-        except (ValueError, Exception) as ef:
-            if "invalid literal for int() with base 10:" in str(ef):
-                chat = str(chat)
-            else:
-                return await message.reply_text(
-                    f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]"
-                )
-
-        m = await message.reply_text(
-            f"Fetching chat info of chat **{message.chat.title}**....."
-        )
-
-        info_caption, photo_id = await chat_info(c, chat=chat)
-        if not photo_id:
-            await m.delete()
-            await sleep(2)
-            return await message.reply_text(info_caption, disable_web_page_preview=True)
-
-        photo = await c.download_media(photo_id)
-        await m.delete()
-        await sleep(2)
-        if len(info_caption) >= 1024:
-            x = await message.reply_photo(photo)
             await x.reply_text(info_caption)
-        else:
-            await message.reply_photo(photo, caption=info_caption, quote=False)
-        LOGGER.info(
-            f"{message.from_user.id} fetched chat info of chat {chat} in {message.chat.id}"
-        )
-
-        os.remove(photo)
+        except EntityBoundsInvalid:
+            await x.delete()
+            await message.reply_text(info_caption)
+        except RPCError as rpc:
+            await message.reply_text(rpc)
+            LOGGER.error(rpc)
+            LOGGER.error(format_exc())
     except Exception as e:
         await message.reply_text(text=e)
         LOGGER.error(e)
         LOGGER.error(format_exc())
+
+    os.remove(photo)
+
+    return
+
+@Gojo.on_message(command(["chinfo", "chatinfo", "chat_info"]))
+async def chat_info_func(c: Gojo, message: Message):
+    splited = message.text.split()
+    if len(splited) == 1:
+        chat = message.chat.id
+
+    else:
+        chat = splited[1]
+
+    try:
+        chat = int(chat)
+    except (ValueError, Exception) as ef:
+        if "invalid literal for int() with base 10:" in str(ef):
+            chat = str(chat)
+        else:
+            return await message.reply_text(
+                f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]"
+            )
+
+    m = await message.reply_text(
+        f"Fetching chat info of chat **{message.chat.title}**....."
+    )
+
+    info_caption, photo_id = await chat_info(c, chat=chat)
+    if not photo_id:
+        await m.delete()
+        await sleep(2)
+        return await message.reply_text(info_caption, disable_web_page_preview=True)
+
+    photo = await c.download_media(photo_id)
+    await m.delete()
+    await sleep(2)
+    try:
+        await message.reply_photo(photo, caption=info_caption, quote=False)
+    except MediaCaptionTooLong:
+        x = await message.reply_photo(photo)
+        try:
+            await x.reply_text(info_caption)
+        except EntityBoundsInvalid:
+            await x.delete()
+            await message.reply_text(info_caption)
+        except RPCError as rpc:
+            await message.reply_text(rpc)
+            LOGGER.error(e)
+            LOGGER.error(format_exc())
+    except Exception as e:
+        await message.reply_text(text=e)
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+
+    os.remove(photo)
+
+    return
 
 
 __PLUGIN__ = "info"
