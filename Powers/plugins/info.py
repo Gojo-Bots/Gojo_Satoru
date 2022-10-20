@@ -195,9 +195,7 @@ async def info_func(c: Gojo, message: Message):
     if not user:
         await message.reply_text("Can't find user to fetch info!")
 
-    m = await message.reply_text(
-        f"Fetching user info from telegram's database..."
-    )
+    m = await message.reply_text(f"Fetching user info from telegram's database...")
 
     try:
         info_caption, photo_id = await user_info(c, user)
