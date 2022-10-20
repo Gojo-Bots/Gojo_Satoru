@@ -4,21 +4,14 @@ import aiofiles
 from Powers import *
 from os import remove
 from io import BytesIO
-# from tswift import Song
 from wikipedia import summary
-from traceback import format_exc
 from Powers.bot_class import Gojo
-from aiohttp import ClientSession
 from gpytranslate import Translator
 from pyrogram import enums, filters
 from Powers.utils.http_helper import *
 from Powers.database.users_db import Users
-from Powers.utils.chat_type import chattype
-from Powers.utils.parser import mention_html
-# from search_engine_parser import GoogleSearch
 from Powers.utils.custom_filters import command
-from Powers.utils.extract_user import extract_user
-from pyrogram.errors import PeerIdInvalid, MessageTooLong
+from pyrogram.errors import MessageTooLong
 from Powers.utils.clean_file import remove_markdown_and_html
 from wikipedia.exceptions import PageError, DisambiguationError
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
@@ -224,7 +217,7 @@ async def github(_, m: Message):
     if bio:
         REPLY += f"<b>Bio:</b> <code>{bio}</code>\n"
     if url:
-        REPLY += f"<b>URL:</b> {url}\n"
+        REPLY += f"<b>URL:</b> <a href='{url}'>{name}</a>\n"
     REPLY += f"<b>Public Repos:</b> {public_repos}\n"
     REPLY += f"<b>Followers:</b> {followers}\n"
     REPLY += f"<b>Following:</b> {following}\n"
@@ -246,19 +239,8 @@ async def github(_, m: Message):
 
 
 # paste here
-session = ClientSession()
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
 BASE = "https://batbin.me/"
-
-
-async def post(url: str, *args, **kwargs):
-    async with session.post(url, *args, **kwargs) as resp:
-        try:
-            data = await resp.json()
-        except Exception:
-            data = await resp.text()
-    return data
-
 
 async def paste(content: str):
     resp = await post(f"{BASE}api/v2/paste", data=content)
