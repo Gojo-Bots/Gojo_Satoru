@@ -181,7 +181,9 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if (m.chat and m.chat.type == ChatType.SUPERGROUP) and m.chat.id != -1001586309125: # testing chat of the bot
+    if (
+        m.chat and m.chat.type == ChatType.SUPERGROUP
+    ) and m.chat.id != -1001586309125:  # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -208,7 +210,9 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != ChatType.SUPERGROUP and m.chat.id != -1001586309125: # testing chat of the bot
+    if (
+        m.chat.type != ChatType.SUPERGROUP and m.chat.id != -1001586309125
+    ):  # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -231,7 +235,9 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if (m.chat and m.chat.type == ChatType.SUPERGROUP) and m.chat.id != -1001586309125: # testing chat of the bot
+    if (
+        m.chat and m.chat.type == ChatType.SUPERGROUP
+    ) and m.chat.id != -1001586309125:  # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
