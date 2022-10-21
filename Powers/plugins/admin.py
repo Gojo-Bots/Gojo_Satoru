@@ -183,7 +183,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, how can I even promote myself?")
         return
 
-    if not bot.can_promote_members:
+    if not bot.privileges.can_promote_members:
         return await m.reply_text(
             "I don't have enough permissions!",
         )  # This should be here
@@ -300,7 +300,7 @@ async def promote_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, how can I even promote myself?")
         return
 
-    if not bot.can_promote_members:
+    if not bot.privileges.can_promote_members:
         return await m.reply_text(
             "I don't have enough permissions",
         )  # This should be here
@@ -396,7 +396,7 @@ async def get_invitelink(c: Gojo, m: Message):
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
 
-        if not user.can_invite_users and user.status != CMS.OWNER:
+        if not user.privileges.can_invite_users and user.status != CMS.OWNER:
             await m.reply_text(text="You don't have rights to invite users....")
             return False
 
@@ -427,7 +427,7 @@ async def get_invitelink(c: Gojo, m: Message):
 async def setgtitle(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
 
-    if not user.can_change_info and user.status != CMS.OWNER:
+    if not user.privileges.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -450,7 +450,7 @@ async def setgtitle(_, m: Message):
 async def setgdes(_, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_change_info and user.status != CMS.OWNER:
+    if not user.privileges.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -473,7 +473,7 @@ async def setgdes(_, m: Message):
 async def set_user_title(c: Gojo, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_promote_members and user.status != CMS.OWNER:
+    if not user.privileges.can_promote_members and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -516,7 +516,7 @@ async def set_user_title(c: Gojo, m: Message):
 @Gojo.on_message(command("setgpic") & admin_filter)
 async def setgpic(c: Gojo, m: Message):
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_change_info and user.status != CMS.OWNER:
+    if not user.privileges.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
