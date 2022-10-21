@@ -2,7 +2,7 @@ from time import time
 from html import escape
 from typing import List
 from re import compile as compile_re
-from Powers.utils.chat_type import chattype
+from pyrogram.enums import ChatType
 from Powers.utils.parser import escape_markdown
 from pyrogram.types import Message, InlineKeyboardButton
 
@@ -123,7 +123,6 @@ async def escape_mentions_using_curly_brackets(
 ) -> str:
     teks = await escape_invalid_curly_brackets(text, parse_words)
     if teks:
-        chat_type = await chattype(m)
         teks = teks.format(
             first=escape(m.from_user.first_name),
             last=escape(m.from_user.last_name or m.from_user.first_name),
@@ -142,7 +141,7 @@ async def escape_mentions_using_curly_brackets(
                 else [escape(m.from_user.first_name)],
             ),
             chatname=escape(m.chat.title)
-            if chat_type != "supergroup"
+            if m.chat.type != ChatType.SUPERGROUP
             else escape(m.from_user.first_name),
             id=m.from_user.id,
         )

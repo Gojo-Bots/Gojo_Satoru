@@ -11,6 +11,7 @@ from pyrogram import enums, filters
 from Powers.utils.http_helper import *
 from Powers.database.users_db import Users
 from pyrogram.errors import MessageTooLong
+from pyrogram.enums import ChatType
 from Powers.utils.custom_filters import command
 from Powers.utils.clean_file import remove_markdown_and_html
 from wikipedia.exceptions import PageError, DisambiguationError
@@ -118,12 +119,12 @@ async def get_lyrics(_, m: Message):
 )
 async def id_info(c: Gojo, m: Message):
 
-    chat_type = await chattype(m)
-    if chat_type == "supergroup" and not m.reply_to_message:
+
+    if m.chat.type == ChatType.SUPERGROUP and not m.reply_to_message:
         await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
         return
 
-    if chat_type == "private" and not m.reply_to_message:
+    if m.chat.type == ChatType.PRIVATE and not m.reply_to_message:
         await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
         return
 
@@ -155,7 +156,7 @@ async def id_info(c: Gojo, m: Message):
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
                 parse_mode=enums.ParseMode.HTML,
             )
-    elif chat_type == "private":
+    elif m.chat.type == ChatType.PRIVATE:
         await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
     else:
         await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")

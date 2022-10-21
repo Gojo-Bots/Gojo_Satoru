@@ -6,7 +6,7 @@ from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
 from pyrogram.types import Message
-from Powers.utils.chat_type import chattype
+from pyrogram.enums import ChatType
 from Powers.utils.parser import mention_html
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
@@ -25,8 +25,8 @@ from pyrogram.errors import (
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
-    chat_type = await chattype(m)
-    if chat_type != "supergroup":
+
+    if m.chat.type != ChatType.SUPERGROUP:
         return await m.reply_text(
             text="This command is made to be used in groups only!",
         )
@@ -112,8 +112,8 @@ async def zombie_clean(c: Gojo, m: Message):
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
-    chat_type = await chattype(m)
-    if chat_type != "supergroup":
+    
+    if m.chat.type != ChatType.SUPERGROUP:
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )

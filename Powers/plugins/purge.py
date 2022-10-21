@@ -2,15 +2,15 @@ from asyncio import sleep
 from Powers import SUPPORT_GROUP
 from Powers.bot_class import Gojo
 from pyrogram.types import Message
-from Powers.utils.chat_type import chattype
+from pyrogram.enums import ChatType
 from pyrogram.errors import RPCError, MessageDeleteForbidden
 from Powers.utils.custom_filters import command, admin_filter
 
 
 @Gojo.on_message(command("purge") & admin_filter)
 async def purge(c: Gojo, m: Message):
-    chat_type = await chattype(m)
-    if chat_type != "supergroup":
+
+    if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
@@ -56,8 +56,8 @@ async def purge(c: Gojo, m: Message):
 
 @Gojo.on_message(command("spurge") & admin_filter)
 async def spurge(c: Gojo, m: Message):
-    chat_type = await chattype(m)
-    if chat_type != "supergroup":
+
+    if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
 
@@ -100,8 +100,8 @@ async def spurge(c: Gojo, m: Message):
     group=9,
 )
 async def del_msg(c: Gojo, m: Message):
-    chat_type = await chattype(m)
-    if chat_type != "supergroup":
+
+    if m.chat.type != ChatType.SUPERGROUP:
         return
 
     if m.reply_to_message:

@@ -5,7 +5,7 @@ from datetime import datetime
 from traceback import format_exc
 from Powers.bot_class import Gojo
 from pyrogram.types import Message
-from Powers.utils.chat_type import c_type
+from pyrogram.enums import ChatType
 from Powers.database.antispam_db import GBan
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -146,7 +146,21 @@ async def chat_info(c: Gojo, chat, already=False):
     username = chat.username
     total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat.id)
     title = chat.title
-    type_ = await c_type(c, chat.id)
+    if chat.type == ChatType.CHANNEL:
+        type_ = "channel"
+
+    if chat.type == ChatType.GROUP:
+        type_ = "group"
+
+    if chat.type == ChatType.SUPERGROUP:
+        type_ = "supergroup"
+
+    if chat.type == ChatType.PRIVATE:
+        type_ = "private"
+
+    if chat.type == ChatType.BOT:
+        type_ = "bot"
+        
     is_scam = chat.is_scam
     is_fake = chat.is_fake
     description = chat.description
@@ -155,8 +169,7 @@ async def chat_info(c: Gojo, chat, already=False):
     dc_id = chat.dc_id
     photo_id = chat.photo.big_file_id if chat.photo else None
     can_save = chat.has_protected_content
-    linked_chat = chat.linked_chat.username
-    linked_id = chat.linked_chat.id
+    linked_chat = chat.linked_chat
 
     caption = f"""
 🔰 <b>CHAT INFO</b> 🔰
@@ -176,7 +189,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>🚫 Has Protected Content</b>: {can_save}
-<b>🔗 Linked Chat</b>: @{linked_chat if linked_chat else linked_id}
+<b>🔗 Linked Chat</b>: @{linked_chat.id if linked_chat else "Noe Linked"}
 
 """
 

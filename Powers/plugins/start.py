@@ -5,10 +5,9 @@ from pyrogram import enums, filters
 from Powers.utils.kbhelpers import ikb
 from Powers import LOGGER, HELP_COMMANDS
 from Powers.utils.extras import StartPic
-from Powers.utils.chat_type import chattype
 from Powers.utils.custom_filters import command
 from pyrogram.types import Message, CallbackQuery
-from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.enums import ChatMemberStatus as CMS, ChatType
 from pyrogram.errors import UserIsBlocked, QueryIdInvalid, MessageNotModified
 from Powers.utils.start_utils import (
     gen_cmds_kb, gen_start_kb, get_help_msg, get_private_note,
@@ -59,8 +58,8 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Gojo, m: Message):
-    chat_type = await chattype(m)
-    if chat_type == "private":
+
+    if m.chat.type == ChatType.PRIVATE:
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
@@ -188,8 +187,8 @@ async def help_menu(_, m: Message):
         LOGGER.info(
             f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
-        chat_type = await chattype(m)
-        if chat_type == "private":
+
+        if m.chat.type == ChatType.PRIVATE:
             if len(help_msg) >= 1026:
                 await m.reply_text(
                     help_msg, parse_mode=enums.ParseMode.MARKDOWN, quote=True
@@ -219,8 +218,8 @@ async def help_menu(_, m: Message):
                 ),
             )
     else:
-        chat_type = await chattype(m)
-        if chat_type == "private":
+
+        if m.chat.type == ChatType.PRIVATE:
             keyboard = ikb(
                 [
                     *(await gen_cmds_kb(m)),

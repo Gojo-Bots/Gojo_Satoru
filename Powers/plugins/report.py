@@ -4,11 +4,10 @@ from Powers.bot_class import Gojo
 from pyrogram.errors import RPCError
 from Powers.utils.kbhelpers import ikb
 from Powers import LOGGER, SUPPORT_STAFF
-from Powers.utils.chat_type import chattype
 from Powers.utils.parser import mention_html
 from pyrogram.types import Message, CallbackQuery
 from Powers.database.reporting_db import Reporting
-from pyrogram.enums import ChatMembersFilter as cmf
+from pyrogram.enums import ChatMembersFilter as cmf, ChatType
 from Powers.utils.custom_filters import command, admin_filter
 
 
@@ -19,8 +18,7 @@ async def report_setting(_, m: Message):
     args = m.text.split()
     db = Reporting(m.chat.id)
 
-    chat_type = await chattype(m)
-    if chat_type == "private":
+    if m.chat.type == ChatType.PRIVATE:
         if len(args) >= 2:
             option = args[1].lower()
             if option in ("yes", "on", "true"):
@@ -64,8 +62,8 @@ async def report_setting(_, m: Message):
 
 @Gojo.on_message(command("report") & filters.group)
 async def report_watcher(c: Gojo, m: Message):
-    chat_type = await chattype(m)
-    if chat_type != "supergroup":
+
+    if m.chat.type != ChatType.SUPERGROUP:
         return
 
     if not m.from_user:
