@@ -160,7 +160,7 @@ async def chat_info(c: Gojo, chat, already=False):
 
     if chat.type == ChatType.BOT:
         type_ = "bot"
-        
+
     is_scam = chat.is_scam
     is_fake = chat.is_fake
     description = chat.description
