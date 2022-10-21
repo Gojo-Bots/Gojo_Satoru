@@ -189,7 +189,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>🚫 Has Protected Content</b>: {can_save}
-<b>🔗 Linked Chat</b>: @{linked_chat.id if linked_chat else "Noe Linked"}
+<b>🔗 Linked Chat</b>: @{linked_chat.id if linked_chat else "Not Linked"}
 
 """
 
@@ -272,7 +272,12 @@ async def chat_info_func(c: Gojo, message: Message):
         f"Fetching chat info of chat from telegram's database....."
     )
 
-    info_caption, photo_id = await chat_info(c, chat=chat)
+    try:
+        info_caption, photo_id = await chat_info(c, chat=chat)
+    except Exception as e:
+        await m.delete()
+        await sleep()
+        return await message.reply_text(f"**GOT AN ERROR:**\n {e}")
     if not photo_id:
         await m.delete()
         await sleep(2)
