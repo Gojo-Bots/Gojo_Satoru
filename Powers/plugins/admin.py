@@ -208,14 +208,14 @@ async def fullpromote_usr(c: Gojo, m: Message):
     try:
         await m.chat.promote_member(
             user_id=user_id,
-            can_change_info=bot.can_change_info,
-            can_invite_users=bot.can_invite_users,
-            can_delete_messages=bot.can_delete_messages,
-            can_restrict_members=bot.can_restrict_members,
-            can_pin_messages=bot.can_pin_messages,
-            can_promote_members=bot.can_promote_members,
-            can_manage_chat=bot.can_manage_chat,
-            can_manage_video_chats=bot.can_manage_video_chats,
+            can_change_info=bot.privileges.can_change_info,
+            can_invite_users=bot.privileges.can_invite_users,
+            can_delete_messages=bot.privileges.can_delete_messages,
+            can_restrict_members=bot.privileges.can_restrict_members,
+            can_pin_messages=bot.privileges.can_pin_messages,
+            can_promote_members=bot.privileges.can_promote_members,
+            can_manage_chat=bot.privileges.can_manage_chat,
+            can_manage_video_chats=bot.privileges.can_manage_video_chats,
         )
 
         title = ""
@@ -321,13 +321,13 @@ async def promote_usr(c: Gojo, m: Message):
     try:
         await m.chat.promote_member(
             user_id=user_id,
-            can_change_info=bot.can_change_info,
-            can_invite_users=bot.can_invite_users,
-            can_delete_messages=bot.can_delete_messages,
-            can_restrict_members=bot.can_restrict_members,
-            can_pin_messages=bot.can_pin_messages,
-            can_manage_chat=bot.can_manage_chat,
-            can_manage_video_chats=bot.can_manage_video_chats,
+            can_change_info=bot.privileges.can_change_info,
+            can_invite_users=bot.privileges.can_invite_users,
+            can_delete_messages=bot.privileges.can_delete_messages,
+            can_restrict_members=bot.privileges.can_restrict_members,
+            can_pin_messages=bot.privileges.can_pin_messages,
+            can_manage_chat=bot.privileges.can_manage_chat,
+            can_manage_video_chats=bot.privileges.can_manage_video_chats,
         )
 
         title = ""  # Deafult title
