@@ -6,12 +6,11 @@ from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
 from pyrogram.types import Message
-from pyrogram.enums import ChatType
 from Powers.utils.parser import mention_html
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
 from Powers.utils.extract_user import extract_user
-from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.enums import ChatType, ChatMemberStatus as CMS
 from Powers import LOGGER, OWNER_ID, DEV_USERS, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.utils.caching import (
     ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload)
@@ -112,7 +111,7 @@ async def zombie_clean(c: Gojo, m: Message):
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
-    
+
     if m.chat.type != ChatType.SUPERGROUP:
         return await m.reply_text(
             "This command is made to be used in groups only!",

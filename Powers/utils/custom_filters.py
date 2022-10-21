@@ -6,8 +6,8 @@ from re import escape, compile as compile_re
 from Powers.database.disable_db import Disabling
 from pyrogram.types import Message, CallbackQuery
 from Powers import OWNER_ID, DEV_USERS, SUDO_USERS
-from pyrogram.enums import ChatMemberStatus as CMS, ChatType
 from pyrogram.errors import RPCError, UserNotParticipant
+from pyrogram.enums import ChatType, ChatMemberStatus as CMS
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 
@@ -146,7 +146,6 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-
     if m.chat.type != ChatType.SUPERGROUP:
         return False
 
@@ -209,7 +208,6 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-
     if m.chat.type != ChatType.SUPERGROUP:
         return False
 
@@ -255,7 +253,6 @@ async def changeinfo_check_func(_, __, m):
     """Check if user can change info or not."""
     if isinstance(m, CallbackQuery):
         m = m.message
-
 
     if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text("This command is made to be used in groups not in pm!")

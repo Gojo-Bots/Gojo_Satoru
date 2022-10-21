@@ -21,6 +21,7 @@ gdb = GBan()
 
 ChatType = enums.ChatType
 
+
 async def escape_mentions_using_curly_brackets_wl(
     m: ChatMemberUpdated,
     n: bool,
