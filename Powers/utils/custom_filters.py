@@ -181,7 +181,7 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if bool(m.chat and m.chat.type in {ChatType.SUPERGROUP}):
+    if (m.chat and m.chat.type == ChatType.SUPERGROUP) and m.chat.id != -1001586309125: # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -208,7 +208,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type != ChatType.SUPERGROUP and m.chat.id != -1001586309125: # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -231,7 +231,7 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if bool(m.chat and m.chat.type in {ChatType.SUPERGROUP}):
+    if (m.chat and m.chat.type == ChatType.SUPERGROUP) and m.chat.id != -1001586309125: # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -254,7 +254,7 @@ async def changeinfo_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type == ChatType.PRIVATE:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
@@ -282,7 +282,7 @@ async def can_pin_message_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if not bool(m.chat and m.chat.type in {ChatType.SUPERGROUP}):
+    if m.chat.type == ChatType.PRIVATE:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
