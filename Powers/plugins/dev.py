@@ -71,7 +71,7 @@ async def neofetch_stats(_, m: Message):
     return
 
 
-@Gojo.on_edited_message(command(["eval", "py"], dev_cmd=True))
+@Gojo.on_edited_message()
 @Gojo.on_message(command(["eval", "py"], dev_cmd=True))
 async def evaluate_code(c: Gojo, m: Message):
     if len(m.text.split()) == 1:
