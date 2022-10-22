@@ -218,6 +218,9 @@ async def help_menu(_, m: Message):
     else:
 
         if m.chat.type == ChatType.PRIVATE:
+            cmds = sorted(list(HELP_COMMANDS.keys()))
+            kb = [cmd.lower() for cmd in cmds]
+            ou = [kb[i : i + 3] for i in range(0, len(kb), 3)]
             keyboard = ikb(ou, True)
             msg = f"""
 Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is Gojo✨.
