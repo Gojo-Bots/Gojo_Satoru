@@ -222,7 +222,7 @@ async def help_menu(_, m: Message):
         if m.chat.type == ChatType.PRIVATE:
             keyboard = ikb(
                 [
-                    *(await gen_cmds_kb(m)),
+                    await gen_cmds_kb(m),
                     [("« Back", "start_back")],
                 ],
             )
