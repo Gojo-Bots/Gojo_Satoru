@@ -208,14 +208,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
     try:
         await m.chat.promote_member(
             user_id=user_id,
-            can_change_info=bot.privileges.can_change_info,
-            can_invite_users=bot.privileges.can_invite_users,
-            can_delete_messages=bot.privileges.can_delete_messages,
-            can_restrict_members=bot.privileges.can_restrict_members,
-            can_pin_messages=bot.privileges.can_pin_messages,
-            can_promote_members=bot.privileges.can_promote_members,
-            can_manage_chat=bot.privileges.can_manage_chat,
-            can_manage_video_chats=bot.privileges.can_manage_video_chats,
+            privileges=bot.privileges
         )
 
         title = ""
@@ -321,13 +314,15 @@ async def promote_usr(c: Gojo, m: Message):
     try:
         await m.chat.promote_member(
             user_id=user_id,
-            can_change_info=bot.privileges.can_change_info,
-            can_invite_users=bot.privileges.can_invite_users,
-            can_delete_messages=bot.privileges.can_delete_messages,
-            can_restrict_members=bot.privileges.can_restrict_members,
-            can_pin_messages=bot.privileges.can_pin_messages,
-            can_manage_chat=bot.privileges.can_manage_chat,
-            can_manage_video_chats=bot.privileges.can_manage_video_chats,
+            privileges=ChatPrivileges(
+                can_change_info=bot.privileges.can_change_info,
+                can_invite_users=bot.privileges.can_invite_users,
+                can_delete_messages=bot.privileges.can_delete_messages,
+                can_restrict_members=bot.privileges.can_restrict_members,
+                can_pin_messages=bot.privileges.can_pin_messages,
+                can_manage_chat=bot.privileges.can_manage_chat,
+                can_manage_video_chats=bot.privileges.can_manage_video_chats,
+            )
         )
 
         title = ""  # Deafult title
@@ -389,6 +384,79 @@ async def promote_usr(c: Gojo, m: Message):
         LOGGER.error(format_exc())
     return
 
+@Gojo.on_message(command("demote") & promote_filter)
+async def demote_usr(c: Gojo, m: Message):
+
+    global ADMIN_CACHE
+
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("I can't demote nothing.")
+        return
+
+    try:
+        user_id, user_first_name, _ = await extract_user(c, m)
+    except Exception:
+        return
+
+    if user_id == Config.BOT_ID:
+        await m.reply_text("Get an admin to demote me!")
+        return
+
+    # If user not already admin
+    try:
+        admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admin_list = {
+            i[0] for i in (await admin_cache_reload(m, "demote_cache_update"))
+        }
+
+    if user_id not in admin_list:
+        await m.reply_text(
+            "This user is not an admin, how am I supposed to re-demote them?",
+        )
+        return
+
+    try:
+        await m.chat.promote_member(
+            user_id=user_id,
+            privileges=ChatPrivileges(can_manage_chat=False),
+        )
+        LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
+
+        # ----- Remove admin from cache -----
+        try:
+            admin_list = ADMIN_CACHE[m.chat.id]
+            user = next(user for user in admin_list if user[0] == user_id)
+            admin_list.remove(user)
+            ADMIN_CACHE[m.chat.id] = admin_list
+        except (KeyError, StopIteration):
+            await admin_cache_reload(m, "demote_key_stopiter_error")
+
+        await m.reply_text(
+            ("{demoter} demoted {demoted} in <b>{chat_title}</b>!").format(
+                demoter=(
+                    await mention_html(
+                        m.from_user.first_name,
+                        m.from_user.id,
+                    )
+                ),
+                demoted=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title,
+            ),
+        )
+
+    except ChatAdminRequired:
+        await m.reply_text("I am not admin aroung here.")
+    except RightForbidden:
+        await m.reply_text("I can't demote users here.")
+    except UserAdminInvalid:
+        await m.reply_text("Cannot act on this user, maybe I wasn't the one who changed their permissions.")
+    except RPCError as ef:
+        await m.reply_text(f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>")
+        LOGGER.error(ef)
+        LOGGER.error(format_exc())
+
+    return
 
 @Gojo.on_message(command("invitelink"))
 async def get_invitelink(c: Gojo, m: Message):
