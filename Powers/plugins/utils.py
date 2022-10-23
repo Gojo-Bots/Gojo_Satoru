@@ -233,7 +233,8 @@ async def github(_, m: Message):
             f"<b>™️ Organization:</b> <a href='https://github.com/{org_url}'>{company}</a>\n"
         )
     if blog:
-        REPLY += f"<b>📝 Blog:</b> <code>{blog}</code>\n""
+        bname = blog.split(".")[-2]
+        REPLY += f"<b>📝 Blog:</b> <a href={blog}>{bname}</a>\n"
     if twitter:
         REPLY += f"<b>⚜️ Twitter:</b> <a href='https://twitter.com/{twitter}'>{twitter}</a>\n"
     if location:
