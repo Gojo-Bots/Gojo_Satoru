@@ -215,8 +215,6 @@ async def fullpromote_usr(c: Gojo, m: Message):
             title = m.text.split()[1]
         if title and len(title) > 16:
             title = title[0:16]  # trim title to 16 characters
-        elif not title:
-            title = "Gojo"
 
         try:
             await c.set_administrator_title(m.chat.id, user_id, title)
@@ -329,8 +327,6 @@ async def promote_usr(c: Gojo, m: Message):
             title = m.text.split()[1]
         if title and len(title) > 16:
             title = title[0:16]  # trim title to 16 characters
-        if not title:
-            title = "Itadori"
 
         try:
             await c.set_administrator_title(m.chat.id, user_id, title)
