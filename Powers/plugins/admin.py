@@ -219,8 +219,8 @@ async def fullpromote_usr(c: Gojo, m: Message):
 
             try:
                 await c.set_administrator_title(m.chat.id, user_id, title)
-            except RPCError as e:
-                LOGGER.error(e)
+        except RPCError as e:
+            LOGGER.error(e)
 
         LOGGER.info(
             f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
