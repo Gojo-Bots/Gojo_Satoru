@@ -21,7 +21,7 @@ file_handler = FileHandler(filename=LOGFILE)
 stdout_handler = StreamHandler(stdout)
 
 basicConfig(
-    format="%(asctime)s - [Gojo_Satarou] - %(levelname)s - %(message)s",
+    format="%(asctime)s - [Gojo_Satoru] - %(levelname)s - %(message)s",
     level=INFO,
     handlers=[file_handler, stdout_handler],
 )
@@ -51,11 +51,11 @@ except Exception as ef:
     sysexit(1)
 
 LOGGER.info("------------------------")
-LOGGER.info("|      Gojo_Satarou      |")
+LOGGER.info("|      Gojo_Satoru      |")
 LOGGER.info("------------------------")
 LOGGER.info(f"Version: {Config.VERSION}")
 LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
-LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satarou\n")
+LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
 
 # Account Related
 BOT_TOKEN = Config.BOT_TOKEN

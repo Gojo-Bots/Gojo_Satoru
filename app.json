@@ -1,5 +1,5 @@
 {
-    "name": "Gojo_Satarou",
+    "name": "Gojo_Satoru",
     "description": "Gojo is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
     "logo" : "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg" ,
     "keywords": [
@@ -10,7 +10,7 @@
       "Gojo",
       "Anime"
     ],
-    "repository": "https://github.com/Gojo-Bots/Gojo_Satarou",
+    "repository": "https://github.com/Gojo-Bots/Gojo_Satoru",
     "success_url": "https://t.me/iamgojoof6eyes_bot",
     "env": {
       "BOT_TOKEN": {

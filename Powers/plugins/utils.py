@@ -191,7 +191,7 @@ async def github(_, m: Message):
             f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>",
         )
         return
-
+    username = username.split("/")[-1]
     URL = f"https://api.github.com/users/{username}"
     try:
         r = await get(URL, timeout=5)

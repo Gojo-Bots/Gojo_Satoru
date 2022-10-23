@@ -1,5 +1,5 @@
 <h1 align="center">
-  <b> Gojo_Satarou </b>
+  <b> Gojo_Satoru </b>
 <!---</h1>
 <h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1>
 
@@ -12,17 +12,17 @@
 ------
 
 
-[![GitHub forks](https://img.shields.io/github/forks/Gojo-Bots/Gojo_Satarou?style=social)](https://github.com/Gojo-Bots/Gojo_Satarou/fork)
-![GitHub Repo stars](https://img.shields.io/github/stars/Gojo-Bots/Gojo_Satarou?style=social)
+[![GitHub forks](https://img.shields.io/github/forks/Gojo-Bots/Gojo_Satoru?style=social)](https://github.com/Gojo-Bots/Gojo_Satoru/fork)
+![GitHub Repo stars](https://img.shields.io/github/stars/Gojo-Bots/Gojo_Satoru?style=social)
 
-![Repo Size](https://img.shields.io/github/repo-size/Gojo-Bots/Gojo_Satarou?&style=social&logo=github)
+![Repo Size](https://img.shields.io/github/repo-size/Gojo-Bots/Gojo_Satoru?&style=social&logo=github)
 ![Branch](https://img.shields.io/badge/Branch-Main-white?&style=social&logo=github)
 
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-white?&style=social&logo=hugo)
-![GitHub license](https://img.shields.io/github/license/Gojo-Bots/Gojo_Satarou?&style=social&logo=github)
+![GitHub license](https://img.shields.io/github/license/Gojo-Bots/Gojo_Satoru?&style=social&logo=github)
 
 ![Python](https://img.shields.io/badge/Python-v3.10-white?style=social&logo=python)
-![GitHub language count](https://img.shields.io/github/languages/count/Gojo-Bots/Gojo_Satarou?&style=social&logo=hyper)
+![GitHub language count](https://img.shields.io/github/languages/count/Gojo-Bots/Gojo_Satoru?&style=social&logo=hyper)
 
 
 
@@ -49,7 +49,7 @@ Mainly:
   <h1 align="center"><img src="./extras/original.gif" /></h1>
   
   
-The Gojo Satarou is a powerful Group Management bot with awesome plugins and features.
+The Gojo Satoru is a powerful Group Management bot with awesome plugins and features.
  
   **If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://telegram.dog/gojo_updates) 🌟 and then join the gc and ask your problem.**
 
@@ -86,7 +86,7 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 
 * Just click on the button it will redirect you to Heroku website and deploy your bot there....enjoy 😉
 
-[![DEPLOY](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Gojo-Bots/Gojo_Satarou.git)
+[![DEPLOY](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Gojo-Bots/Gojo_Satoru.git)
 
 -------
 
@@ -94,10 +94,10 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 [![DEPLOY](https://railway.app/button.svg)](https://railway.app)
 ### How To Deploy On Railway
 *  **Make Sure You have an github account which is minimum 30 days old.**
-* Fork the repo by clicking [here](https://github.com/Gojo-Bots/Gojo_Satarou/fork)
+* Fork the repo by clicking [here](https://github.com/Gojo-Bots/Gojo_Satoru/fork)
 * Click on [deploy](https://railway.app) button 
 * Login in railway using github account
-* Now search the repo in the search bar given like iamgojoof6eyes/Gojo_Satarou ***replace iamgojoof6eyes with your github username.***
+* Now search the repo in the search bar given like iamgojoof6eyes/Gojo_Satoru ***replace iamgojoof6eyes with your github username.***
 * Now add the values and keys by creating values and keys ***Make sure to add keys __as per given below__ I'll advide you to just copy and paste it***
 * Then wait for 10-15 minutes. 
 * `Mandaotry` keys are [given below](#Variables)
@@ -107,12 +107,12 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 --------  
   
 ## Deploy To Okteto
-  [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/Gojo-Bots/Gojo_Satarou)
+  [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/Gojo-Bots/Gojo_Satoru)
 
 ### How To Deploy On Okteto
   * **Make sure you have an github account.**
-  * [Fork](https://github.com/Gojo-Bots/Gojo_Satarou/fork) the repo and give a star to repo
-  * Click on [deploy](https://cloud.okteto.com/deploy?repository=https://github.com/Gojo-Bots/Gojo_Satarou) button provided above...
+  * [Fork](https://github.com/Gojo-Bots/Gojo_Satoru/fork) the repo and give a star to repo
+  * Click on [deploy](https://cloud.okteto.com/deploy?repository=https://github.com/Gojo-Bots/Gojo_Satoru) button provided above...
   * Login using github.
   * Fill the values
   * Then wait for 10-15 minutes. 
@@ -129,7 +129,7 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 
 * Install Python v3.7 or later from Python's Website
 * Install virtualenv using `python3 -m pip -U install virtualenv`.
-* Fork or Clone the project using `git clone https://github.com/Gojo-Bots/Gojo_Satarou.git`
+* Fork or Clone the project using `git clone https://github.com/Gojo-Bots/Gojo_Satoru.git`
 * Create Virtualenv using: `virtualenv venv`
 * Install the requirements using `python3 -m pip install -r requirements.txt`
 * Fill in all the variables in Development class, not Config class. Sudo, Dev, Whitelist users are optional!!
@@ -144,11 +144,11 @@ The Gojo Satarou is a powerful Group Management bot with awesome plugins and fea
 * Now follow the steps:
   To build the docker image **(The dot '.' at last is necessary!)**:
 ```
-docker build -t gojo_satarou:latest .
+docker build -t gojo_gojo_satoru:latest .
 ```
   To run copy and paste the following commang
 ```
-docker run --env-file main.env gojo_satarou
+docker run --env-file main.env gojo_gojo_satoru
 ```
 If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
@@ -170,7 +170,7 @@ To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
   
 # Adding your own plugin
 
-To add your very own plugin just use the format given below and go through the [utils](https://github.com/Gojo-Bots/Gojo_Satarou/blob/master/Powers/utils) and [custom_filters](https://github.com/Gojo-Bots/Gojo_Satarou/blob/master/Powers/utils/custom_filters.py)
+To add your very own plugin just use the format given below and go through the [utils](https://github.com/Gojo-Bots/Gojo_Satoru/blob/master/Powers/utils) and [custom_filters](https://github.com/Gojo-Bots/Gojo_Satoru/blob/master/Powers/utils/custom_filters.py)
   
   ```python
   from traceback import format_exc
@@ -201,14 +201,14 @@ To add your very own plugin just use the format given below and go through the [
   
  
   ```
-  # Add plugins in [plugin](https://github.com/Gojo-Bots/Gojo_Satarou/tree/master/Powers/plugins) section
+  # Add plugins in [plugin](https://github.com/Gojo-Bots/Gojo_Satoru/tree/master/Powers/plugins) section
   ##  **Note** : Don't use <> this bracket while writing the code...
       
 --------  
       
 # Contributors
       
-[![Contributors](https://contrib.rocks/image?repo=Gojo-Bots/Gojo_Satarou)](https://github.com/Gojo-Bots/Gojo_Satarou/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=Gojo-Bots/Gojo_Satoru)](https://github.com/Gojo-Bots/Gojo_Satoru/graphs/contributors)
 
 
 ---------

@@ -5,7 +5,7 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: I am sure the error is coming from Gojo_Satarou's code and not elsewhere
+        - label: I am sure the error is coming from Gojo_Satoru's code and not elsewhere
           required: true
         - label: I have searched in the issue tracker for similar bug reports, including closed ones
           required: true
