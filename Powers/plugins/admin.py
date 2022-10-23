@@ -183,6 +183,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
         return
     try:
         await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
+        title = ""
         if not m.chat.type == ChatType.SUPERGROUP:
             title = "Gojo"  # Default fullpromote title
             if len(m.text.split()) == 3 and not m.reply_to_message:
@@ -207,7 +208,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"{escape(m.chat.title)} title set to {title}"
                 if title
-                else f"{escape(m.chat.title)} title set to Gojo",
+                else f"{escape(m.chat.title)} title set to Default",
             ),
         )
         # If user is approved, disapprove them as they willbe promoted and get
@@ -284,6 +285,7 @@ async def promote_usr(c: Gojo, m: Message):
                 can_manage_video_chats=bot.privileges.can_manage_video_chats,
             ),
         )
+        title = ""
         if not m.chat.type == ChatType.SUPERGROUP:
             title = "Itadori"  # Deafult title
             if len(m.text.split()) == 3 and not m.reply_to_message:
@@ -306,7 +308,7 @@ async def promote_usr(c: Gojo, m: Message):
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"{escape(m.chat.title)} title set to {title}"
                 if title
-                else f"{escape(m.chat.title)} title set to Itadori",
+                else f"{escape(m.chat.title)} title set to default",
             ),
         )
         # If user is approved, disapprove them as they willbe promoted and get
