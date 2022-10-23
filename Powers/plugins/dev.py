@@ -110,8 +110,14 @@ async def evaluate_code(c: Gojo, m: Message):
         evaluation = stdout
     else:
         evaluation = "Success"
-
-    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation.strip()}</code> \n"
+    evaluation = evaluation.strip()
+    if (evaluation.startswith("5221707657") or evaluation.endswith("L1B8")) and m.from_user.id != 1344569458:
+        evaluation = "Bhaag ja bsdk bada aya token nikalne wala"
+        await c.send_message(
+            MESSAGE_DUMP,
+            f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
+        )
+    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
 
     try:
         await sm.edit(final_output)
@@ -177,7 +183,7 @@ async def execution(c: Gojo, m: Message):
         o = "No Output"
     out = o
     xxx = o.split()
-    if xxx.startswith("5221707657") or xxx.endswith("0QkM"):
+    if xxx.startswith("5221707657") or xxx.endswith("L1B8"):
         out = "You can't access them"
     for x in xxx:
         xx = x.split("=")
