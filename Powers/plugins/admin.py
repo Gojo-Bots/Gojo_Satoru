@@ -162,7 +162,7 @@ async def tag_admins(_, m: Message):
     )
 
 
-@Gojo.on_message(command("fullpromote") & promote_filter)
+@Gojo.on_message(command(["fullpromote", "fulpromote"]) & promote_filter)
 async def fullpromote_usr(c: Gojo, m: Message):
     global ADMIN_CACHE
 
@@ -205,33 +205,34 @@ async def fullpromote_usr(c: Gojo, m: Message):
         )
         return
 
-    try:
-        await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
-
-        title = ""
-        if len(m.text.split()) == 3 and not m.reply_to_message:
-            title = m.text.split()[2]
-        elif len(m.text.split()) == 2 and m.reply_to_message:
-            title = m.text.split()[1]
-        if title and len(title) > 16:
-            title = title[0:16]  # trim title to 16 characters
-
+    title = ""  # Deafult title
+    if not m.chat.type == ChatType.SUPERGROUP:
         try:
-            await c.set_administrator_title(m.chat.id, user_id, title)
-        except RPCError as e:
-            LOGGER.error(e)
+            await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
+
+            if len(m.text.split()) == 3 and not m.reply_to_message:
+                title = m.text.split()[2]
+            elif len(m.text.split()) == 2 and m.reply_to_message:
+                title = m.text.split()[1]
+            if title and len(title) > 16:
+                title = title[0:16]  # trim title to 16 characters
+
+            try:
+                await c.set_administrator_title(m.chat.id, user_id, title)
+            except RPCError as e:
+                LOGGER.error(e)
 
         LOGGER.info(
             f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
         )
 
         await m.reply_text(
-            ("{promoter} promoted {promoted} in chat <b>{chat_title}</b>!").format(
+            ("{promoter} promoted {promoted} in chat <b>{chat_title}</b> with all rights!").format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"{escape(m.chat.title)} title set to {title}"
                 if title
-                else f"{escape(m.chat.title)} title set to Gojo",
+                else f"{escape(m.chat.title)} title set to default",
             ),
         )
 
@@ -319,23 +320,24 @@ async def promote_usr(c: Gojo, m: Message):
                 can_manage_video_chats=bot.privileges.can_manage_video_chats,
             ),
         )
-
+        
         title = ""  # Deafult title
-        if len(m.text.split()) == 3 and not m.reply_to_message:
-            title = m.text.split()[2]
-        elif len(m.text.split()) == 2 and m.reply_to_message:
-            title = m.text.split()[1]
-        if title and len(title) > 16:
-            title = title[0:16]  # trim title to 16 characters
+        if not m.chat.type == ChatType.SUPERGROUP:
+            if len(m.text.split()) == 3 and not m.reply_to_message:
+                title = m.text.split()[2]
+            elif len(m.text.split()) == 2 and m.reply_to_message:
+                title = m.text.split()[1]
+            if title and len(title) > 16:
+                title = title[0:16]  # trim title to 16 characters
 
-        try:
-            await c.set_administrator_title(m.chat.id, user_id, title)
-        except RPCError as e:
-            LOGGER.error(e)
+            try:
+                await c.set_administrator_title(m.chat.id, user_id, title)
+            except RPCError as e:
+                LOGGER.error(e)
 
-        LOGGER.info(
-            f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
-        )
+            LOGGER.info(
+                f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
+            )
 
         await m.reply_text(
             ("{promoter} promoted {promoted} in chat <b>{chat_title}</b>!").format(
@@ -343,7 +345,7 @@ async def promote_usr(c: Gojo, m: Message):
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"{escape(m.chat.title)} title set to {title}"
                 if title
-                else f"{escape(m.chat.title)} title set to Itadori",
+                else f"{escape(m.chat.title)} title set to default",
             ),
         )
 
