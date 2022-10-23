@@ -2,9 +2,9 @@ import os
 from asyncio import sleep
 from pyrogram import enums
 from datetime import datetime
+from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
-from Powers.vars import Config
 from pyrogram.types import Message
 from pyrogram.enums import ChatType
 from Powers.database.antispam_db import GBan
