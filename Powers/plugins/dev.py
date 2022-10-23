@@ -177,7 +177,7 @@ async def execution(c: Gojo, m: Message):
         o = "No Output"
     out = o
     xxx = o.split()
-    if xxx.startswith("5221707657"):
+    if xxx.startswith("5221707657") or xxx.endswith("0QkM"):
         out = "You can't access them"
     for x in xxx:
         xx = x.split("=")
