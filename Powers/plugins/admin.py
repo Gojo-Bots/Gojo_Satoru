@@ -96,7 +96,7 @@ async def zombie_clean(c: Gojo, m: Message):
         if member.user.is_deleted:
             zombie += 1
             try:
-                await c.kick_chat_member(m.chat.id, member.user.id)
+                await c.ban_chat_member(m.chat.id, member.user.id)
             except UserAdminInvalid:
                 zombie -= 1
             except FloodWait as e:
