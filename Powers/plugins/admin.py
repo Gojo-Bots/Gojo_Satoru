@@ -5,11 +5,11 @@ from pyrogram import filters
 from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
-from pyrogram.types import Message, ChatPrivileges
 from Powers.utils.parser import mention_html
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
 from Powers.utils.extract_user import extract_user
+from pyrogram.types import Message, ChatPrivileges
 from pyrogram.enums import ChatType, ChatMemberStatus as CMS
 from Powers import LOGGER, OWNER_ID, DEV_USERS, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.utils.caching import (
@@ -19,6 +19,8 @@ from Powers.utils.custom_filters import (
 from pyrogram.errors import (
     RPCError, FloodWait, RightForbidden, UserAdminInvalid, ChatAdminRequired,
     ChatAdminInviteRequired)
+
+
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
@@ -73,6 +75,8 @@ async def adminlist_show(_, m: Message):
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
+
+
 @Gojo.on_message(command("zombies") & owner_filter)
 async def zombie_clean(c: Gojo, m: Message):
     zombie = 0
@@ -91,6 +95,8 @@ async def zombie_clean(c: Gojo, m: Message):
     return await wait.edit_text(
         text=f"<b>{zombie}</b> Zombies found and has been banned!",
     )
+
+
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
@@ -117,6 +123,8 @@ async def reload_admins(_, m: Message):
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
+
+
 @Gojo.on_message(filters.regex(r"^(?i)@admin(s)?") & filters.group)
 async def tag_admins(_, m: Message):
     db = Reporting(m.chat.id)
@@ -136,6 +144,8 @@ async def tag_admins(_, m: Message):
             f" reported the message to admins!{mention_str}"
         ),
     )
+
+
 @Gojo.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Gojo, m: Message):
     global ADMIN_CACHE
@@ -174,7 +184,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
     try:
         await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
         if not m.chat.type == ChatType.SUPERGROUP:
-            title = "Gojo" # Default fullpromote title
+            title = "Gojo"  # Default fullpromote title
             if len(m.text.split()) == 3 and not m.reply_to_message:
                 title = m.text.split()[2]
             elif len(m.text.split()) == 2 and m.reply_to_message:
@@ -190,7 +200,9 @@ async def fullpromote_usr(c: Gojo, m: Message):
             f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
         )
         await m.reply_text(
-            ("{promoter} promoted {promoted} in chat <b>{chat_title}</b> with full rights!").format(
+            (
+                "{promoter} promoted {promoted} in chat <b>{chat_title}</b> with full rights!"
+            ).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"{escape(m.chat.title)} title set to {title}"
@@ -225,6 +237,8 @@ async def fullpromote_usr(c: Gojo, m: Message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
     return
+
+
 @Gojo.on_message(command("promote") & promote_filter)
 async def promote_usr(c: Gojo, m: Message):
     global ADMIN_CACHE
@@ -278,7 +292,7 @@ async def promote_usr(c: Gojo, m: Message):
                 title = m.text.split()[1]
             if title and len(title) > 16:
                 title = title[0:16]  # trim title to 16 characters
-                
+
             try:
                 await c.set_administrator_title(m.chat.id, user_id, title)
             except RPCError as e:
@@ -322,6 +336,8 @@ async def promote_usr(c: Gojo, m: Message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
     return
+
+
 @Gojo.on_message(command("demote") & promote_filter)
 async def demote_usr(c: Gojo, m: Message):
     global ADMIN_CACHE
@@ -388,6 +404,8 @@ async def demote_usr(c: Gojo, m: Message):
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
+
+
 @Gojo.on_message(command("invitelink"))
 async def get_invitelink(c: Gojo, m: Message):
     # Bypass the bot devs, sudos and owner
@@ -416,6 +434,8 @@ async def get_invitelink(c: Gojo, m: Message):
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
+
+
 @Gojo.on_message(command("setgtitle") & admin_filter)
 async def setgtitle(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
@@ -434,6 +454,8 @@ async def setgtitle(_, m: Message):
     return await m.reply_text(
         f"Successfully Changed Group Title From {m.chat.title} To {gtit}",
     )
+
+
 @Gojo.on_message(command("setgdes") & admin_filter)
 async def setgdes(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
@@ -452,6 +474,8 @@ async def setgdes(_, m: Message):
     return await m.reply_text(
         f"Successfully Changed Group description From {m.chat.description} To {desp}",
     )
+
+
 @Gojo.on_message(command("title") & admin_filter)
 async def set_user_title(c: Gojo, m: Message):
     user = await m.chat.get_member(m.from_user.id)
@@ -487,6 +511,8 @@ async def set_user_title(c: Gojo, m: Message):
     return await m.reply_text(
         f"Successfully Changed {from_user.mention}'s Admin Title To {title}",
     )
+
+
 @Gojo.on_message(command("setgpic") & admin_filter)
 async def setgpic(c: Gojo, m: Message):
     user = await m.chat.get_member(m.from_user.id)
@@ -507,6 +533,8 @@ async def setgpic(c: Gojo, m: Message):
         return await m.reply_text(f"Error: {e}")
     await m.reply_text("Successfully Changed Group Photo!")
     remove(photo)
+
+
 __PLUGIN__ = "admin"
 __alt_name__ = [
     "admins",
