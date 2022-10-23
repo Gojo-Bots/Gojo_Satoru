@@ -4,6 +4,7 @@ from pyrogram import enums
 from datetime import datetime
 from traceback import format_exc
 from Powers.bot_class import Gojo
+from Powers.vars import Config
 from pyrogram.types import Message
 from pyrogram.enums import ChatType
 from Powers.database.antispam_db import GBan
@@ -81,13 +82,15 @@ async def user_info(c: Gojo, user, already=False):
     is_restricted = user.is_restricted
     photo_id = user.photo.big_file_id if user.photo else None
     is_support = True if user_id in SUPPORT_STAFF else False
-    if user_id in SUPPORT_STAFF:
+    if is_support or Config.BOT_ID:
         if user_id in DEV_USERS:
             omp = "User is dev"
         elif user_id in SUDO_USERS:
             omp = "User is sudoer"
         elif user_id in WHITELIST_USERS:
             omp = "User is in whitelist"
+        elif user_id == Config.BOT_ID:
+            omp = "I am the targeted user"
     else:
         omp = "Hmmm.......Who is that again?"
 
