@@ -5,7 +5,7 @@ from pyrogram import filters
 from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
-from pyrogram.types import Message
+from pyrogram.types import Message, ChatPrivileges
 from Powers.utils.parser import mention_html
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
