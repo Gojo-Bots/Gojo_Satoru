@@ -217,29 +217,29 @@ async def github(_, m: Message):
 
     REPLY = ""
     if name:
-        REPLY += f"<b>🧑‍💻 GitHub Info of {name}:</b>\n\n"
+        REPLY += f"<b>🧑‍💻 GitHub Info of {name}:</b>"
     if bio:
-        REPLY += f"<b>🎯 Bio:</b> <code>{bio}</code>\n"
+        REPLY += f"\n\n<b>🎯 Bio:</b> <code>{bio}</code>"
     if url:
-        REPLY += f"<b>📎 URL:</b> <a href='{url}'>{username}</a>\n"
-    REPLY += f"<b>🔑 Public Repos:</b> {public_repos}\n"
-    REPLY += f"<b>🧲 Followers:</b> {followers}\n"
-    REPLY += f"<b>✨ Following:</b> {following}\n"
+        REPLY += f"\n<b>📎 URL:</b> <a href='{url}'>{username}</a>"
+    REPLY += f"\n<b>🔑 Public Repos:</b> {public_repos}"
+    REPLY += f"\n<b>🧲 Followers:</b> {followers}"
+    REPLY += f"\n<b>✨ Following:</b> {following}"
     if email:
-        REPLY += f"<b>✉️ Email:</b> <code>{email}</code>\n"
+        REPLY += f"\n<b>✉️ Email:</b> <code>{email}</code>"
     if company:
         org_url = company.strip("@")
-        REPLY += f"<b>™️ Organization:</b> <a href='https://github.com/{org_url}'>{company}</a>\n"
+        REPLY += f"\n<b>™️ Organization:</b> <a href='https://github.com/{org_url}'>{company}</a>"
     if blog:
         bname = blog.split(".")[-2]
         bname = bname.split("/")[-1]
-        REPLY += f"<b>📝 Blog:</b> <a href={blog}>{bname}</a>\n"
+        REPLY += f"\n<b>📝 Blog:</b> <a href={blog}>{bname}</a>"
     if twitter:
-        REPLY += f"<b>⚜️ Twitter:</b> <a href='https://twitter.com/{twitter}'>{twitter}</a>\n"
+        REPLY += f"\n<b>⚜️ Twitter:</b> <a href='https://twitter.com/{twitter}'>{twitter}</a>"
     if location:
-        REPLY += f"<b>🚀 Location:</b> <code>{location}</code>\n"
-    REPLY += f"<b>💫 Created at:</b> <code>{created_at}</code>\n"
-    REPLY += f"<b>⌚️ Updated at:</b> <code>{updated_at}</code>\n"
+        REPLY += f"\n<b>🚀 Location:</b> <code>{location}</code>"
+    REPLY += f"\n<b>💫 Created at:</b> <code>{created_at}</code>"
+    REPLY += f"\n<b>⌚️ Updated at:</b> <code>{updated_at}</code>"
 
     if avtar:
         return await m.reply_photo(photo=f"{avtar}", caption=REPLY)
