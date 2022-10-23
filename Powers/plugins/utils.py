@@ -211,27 +211,35 @@ async def github(_, m: Message):
     created_at = r.get("created_at", "Not Found")
     location = r.get("location", None)
     email = r.get("email", None)
+    updated_at = r.get("updated_at", "Not Found")
+    blog = r.get("blog", None)
+    twitter = r.get("twitter_username", None)
 
-    REPLY = f"<b>GitHub Info for @{username}:</b>\n"
+    REPLY = f"<b>🧑‍💻 GitHub Info for @{username}:</b>\n"
     if name:
-        REPLY += f"\n<b>Name:</b> <code>{name}</code>\n"
+        REPLY += f"\n<b>🗣 Name:</b> <code>{name}</code>\n"
     if bio:
-        REPLY += f"<b>Bio:</b> <code>{bio}</code>\n"
+        REPLY += f"<b>🎯 Bio:</b> <code>{bio}</code>\n"
     if url:
-        REPLY += f"<b>URL:</b> <a href='{url}'>{name}</a>\n"
-    REPLY += f"<b>Public Repos:</b> {public_repos}\n"
-    REPLY += f"<b>Followers:</b> {followers}\n"
-    REPLY += f"<b>Following:</b> {following}\n"
+        REPLY += f"<b>📎 URL:</b> <a href='{url}'>{name}</a>\n"
+    REPLY += f"<b>🔑 Public Repos:</b> {public_repos}\n"
+    REPLY += f"<b>🧲 Followers:</b> {followers}\n"
+    REPLY += f"<b>✨ Following:</b> {following}\n"
     if email:
-        REPLY += f"<b>Email:</b> <code>{email}</code>\n"
+        REPLY += f"<b>✉️ Email:</b> <code>{email}</code>\n"
     if company:
         org_url = company.strip("@")
         REPLY += (
-            f"<b>Company:</b> <a href='https://github.com/{org_url}'>{company}</a>\n"
+            f"<b>™️ Organization:</b> <a href='https://github.com/{org_url}'>{company}</a>\n"
         )
+    if blog:
+        REPLY += f"<b>📝 Blog:</b> <code>{blog}</code>\n""
+    if twitter:
+        REPLY += f"<b>⚜️ Twitter:</b> <a href='https://twitter.com/{twitter}'>{twitter}</a>\n"
     if location:
-        REPLY += f"<b>Location:</b> <code>{location}</code>\n"
-    REPLY += f"<b>Created at:</b> <code>{created_at}</code>\n"
+        REPLY += f"<b>🚀 Location:</b> <code>{location}</code>\n"
+    REPLY += f"<b>💫 Created at:</b> <code>{created_at}</code>\n"
+    REPLY += f"<b>⌚️ Updated at:</b> <code>{updated_at}</code>\n"
 
     if avtar:
         return await m.reply_photo(photo=f"{avtar}", caption=REPLY)
