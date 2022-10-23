@@ -215,7 +215,7 @@ async def github(_, m: Message):
     blog = r.get("blog", None)
     twitter = r.get("twitter_username", None)
 
-    REPLY = f"<b>🧑‍💻 GitHub Info for @{username}:</b>\n"
+    REPLY = f"<b>🧑‍💻 GitHub Info for {username}:</b>\n"
     if name:
         REPLY += f"\n<b>🗣 Name:</b> <code>{name}</code>\n"
     if bio:
