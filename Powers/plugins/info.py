@@ -82,6 +82,8 @@ async def user_info(c: Gojo, user, already=False):
     is_restricted = user.is_restricted
     photo_id = user.photo.big_file_id if user.photo else None
     is_support = True if user_id in SUPPORT_STAFF else False
+    if user_id == Config.BOT_ID:
+        is_support = "A person is a great support to himself"
     if is_support or Config.BOT_ID:
         if user_id in DEV_USERS:
             omp = "User is dev"
@@ -122,18 +124,18 @@ async def user_info(c: Gojo, user, already=False):
 
 <b>🆔 User ID</b>: <code>{user_id}</code>
 <b>📎 Link To Profile</b>: <a href='tg://user?id={user_id}'>Click Here🚪</a>
-<b>🗣 Mention</b>: {mention}
+<b>🫵 Mention</b>: {mention}
 <b>🗣 First Name</b>: <code>{first_name}</code>
-<b>🗣 Second Name</b>: <code>{last_name}</code>
+<b>🔅 Second Name</b>: <code>{last_name}</code>
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
-<b>🥸 Support</b>: {is_support}
-<b>🤓 Support user type</b>: <code>{omp}</code>
+<b>🧑‍💻 Support</b>: {is_support}
+<b>🥷 Support user type</b>: <code>{omp}</code>
 <b>💣 Gbanned</b>: {gban}
-<b>🤭 Gban reason</b>: <code>{reason}</code>
+<b>☠️ Gban reason</b>: <code>{reason}</code>
 <b>🌐 DC ID</b>: {dc_id}
-<b>🧐 RESTRICTED</b>: {is_restricted}
+<b>✋ RESTRICTED</b>: {is_restricted}
 <b>✅ VERIFIED</b>: {is_verified}
-<b>🧐 FAKE</b> : {is_fake}
+<b>❌ FAKE</b> : {is_fake}
 <b>🤖 BOT</b>: {is_bot}
 <b>👀 Last seen</b>: <code>{last_date}</code>
 
@@ -149,21 +151,7 @@ async def chat_info(c: Gojo, chat, already=False):
     username = chat.username
     total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat.id)
     title = chat.title
-    if chat.type == ChatType.CHANNEL:
-        type_ = "channel"
-
-    if chat.type == ChatType.GROUP:
-        type_ = "group"
-
-    if chat.type == ChatType.SUPERGROUP:
-        type_ = "supergroup"
-
-    if chat.type == ChatType.PRIVATE:
-        type_ = "private"
-
-    if chat.type == ChatType.BOT:
-        type_ = "bot"
-
+    type_ = str(chat.type).split(".")[1]
     is_scam = chat.is_scam
     is_fake = chat.is_fake
     description = chat.description
@@ -179,16 +167,16 @@ async def chat_info(c: Gojo, chat, already=False):
 
 <b>🆔 ID</b>: <code>{chat_id}</code>
 <b>🚀 Chat Title</b>: {title}
-<b>✨ Chat Type</b>: {type_.upper()}
+<b>✨ Chat Type</b>: {type_}
 <b>🌐 DataCentre ID</b>: {dc_id}
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
 <b>⚜️ Administrators</b>: {total_admin}
 <b>🤖 Bots</b>: {total_bot}
 <b>🚫 Banned</b>: {total_banned}
 <b>⚜️ Admin 🤖 Bots</b>: {total_bot_admin}
-<b>🧐 Scam</b>: {is_scam}
-<b>🤨 Fake</b>: {is_fake}
-<b>🧐 Restricted</b>: {is_restricted}
+<b>⁉️ Scam</b>: {is_scam}
+<b>❌ Fake</b>: {is_fake}
+<b>✋ Restricted</b>: {is_restricted}
 <b>👨🏿‍💻 Description</b>: <code>{description}</code>
 <b>👪 Total members</b>: {members}
 <b>🚫 Has Protected Content</b>: {can_save}
