@@ -217,7 +217,7 @@ async def github(_, m: Message):
 
     REPLY = ""
     if name:
-        REPLY += f"<b>🧑‍💻 GitHub Info of {name}:</b>\n"
+        REPLY += f"<b>🧑‍💻 GitHub Info of {name}:</b>\n\n"
     if bio:
         REPLY += f"<b>🎯 Bio:</b> <code>{bio}</code>\n"
     if url:
