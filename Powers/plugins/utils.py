@@ -214,14 +214,14 @@ async def github(_, m: Message):
     updated_at = r.get("updated_at", "Not Found")
     blog = r.get("blog", None)
     twitter = r.get("twitter_username", None)
-
-    REPLY = f"<b>🧑‍💻 GitHub Info for {username}:</b>\n"
+    
+    REPLY = "" 
     if name:
-        REPLY += f"\n<b>🗣 Name:</b> <code>{name}</code>\n"
+        REPLY += f"<b>🧑‍💻 GitHub Info of {name}:</b>\n"
     if bio:
         REPLY += f"<b>🎯 Bio:</b> <code>{bio}</code>\n"
     if url:
-        REPLY += f"<b>📎 URL:</b> <a href='{url}'>{name}</a>\n"
+        REPLY += f"<b>📎 URL:</b> <a href='{url}'>{username}</a>\n"
     REPLY += f"<b>🔑 Public Repos:</b> {public_repos}\n"
     REPLY += f"<b>🧲 Followers:</b> {followers}\n"
     REPLY += f"<b>✨ Following:</b> {following}\n"
