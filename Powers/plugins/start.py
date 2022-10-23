@@ -145,12 +145,10 @@ Join my [News Channel](http://t.me/gojo_updates) to get information on all the l
 
 @Gojo.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_, q: CallbackQuery):
-    keyboard = ikb(
-        [
-            *(await gen_cmds_kb(q)),
-            [(f"« Back", "start_back")],
-        ],
-    )
+    cmds = sorted(list(HELP_COMMANDS.keys()))
+    kb = [cmd.lower() for cmd in cmds]
+    ou = [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    keyboard = ikb(ou, True)
     try:
         cpt = f"""
 Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! My name is Gojo✨.
@@ -220,12 +218,10 @@ async def help_menu(_, m: Message):
     else:
 
         if m.chat.type == ChatType.PRIVATE:
-            keyboard = ikb(
-                [
-                    *(await gen_cmds_kb(m)),
-                    [("« Back", "start_back")],
-                ],
-            )
+            cmds = sorted(list(HELP_COMMANDS.keys()))
+            kb = [cmd.lower() for cmd in cmds]
+            ou = [kb[i : i + 3] for i in range(0, len(kb), 3)]
+            keyboard = ikb(ou, True)
             msg = f"""
 Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is Gojo✨.
 I'm here to help you manage your groups!
@@ -247,7 +243,7 @@ Commands available:
     return
 
 
-@Gojo.on_callback_query(filters.regex("^get_mod."))
+@Gojo.on_callback_query(filters.regex("^plugins."))
 async def get_module_info(_, q: CallbackQuery):
     module = q.data.split(".", 1)[1]
 
