@@ -206,10 +206,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
         return
 
     try:
-        await m.chat.promote_member(
-            user_id=user_id,
-            privileges=bot.privileges
-        )
+        await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
 
         title = ""
         if len(m.text.split()) == 3 and not m.reply_to_message:
@@ -322,7 +319,7 @@ async def promote_usr(c: Gojo, m: Message):
                 can_pin_messages=bot.privileges.can_pin_messages,
                 can_manage_chat=bot.privileges.can_manage_chat,
                 can_manage_video_chats=bot.privileges.can_manage_video_chats,
-            )
+            ),
         )
 
         title = ""  # Deafult title
@@ -383,6 +380,7 @@ async def promote_usr(c: Gojo, m: Message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
     return
+
 
 @Gojo.on_message(command("demote") & promote_filter)
 async def demote_usr(c: Gojo, m: Message):
@@ -450,13 +448,18 @@ async def demote_usr(c: Gojo, m: Message):
     except RightForbidden:
         await m.reply_text("I can't demote users here.")
     except UserAdminInvalid:
-        await m.reply_text("Cannot act on this user, maybe I wasn't the one who changed their permissions.")
+        await m.reply_text(
+            "Cannot act on this user, maybe I wasn't the one who changed their permissions."
+        )
     except RPCError as ef:
-        await m.reply_text(f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>")
+        await m.reply_text(
+            f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>"
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
     return
+
 
 @Gojo.on_message(command("invitelink"))
 async def get_invitelink(c: Gojo, m: Message):
