@@ -5,11 +5,11 @@ from pyrogram import filters
 from Powers.vars import Config
 from traceback import format_exc
 from Powers.bot_class import Gojo
+from pyrogram.types import Message, ChatPrivileges
 from Powers.utils.parser import mention_html
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
 from Powers.utils.extract_user import extract_user
-from pyrogram.types import Message, ChatPrivileges
 from pyrogram.enums import ChatType, ChatMemberStatus as CMS
 from Powers import LOGGER, OWNER_ID, DEV_USERS, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.utils.caching import (
@@ -19,12 +19,9 @@ from Powers.utils.custom_filters import (
 from pyrogram.errors import (
     RPCError, FloodWait, RightForbidden, UserAdminInvalid, ChatAdminRequired,
     ChatAdminInviteRequired)
-
-
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
-
     if m.chat.type != ChatType.SUPERGROUP:
         return await m.reply_text(
             text="This command is made to be used in groups only!",
@@ -36,12 +33,9 @@ async def adminlist_show(_, m: Message):
         except KeyError:
             admin_list = await admin_cache_reload(m, "adminlist")
             note = "<i>Note:</i> These are up-to-date values!"
-
         adminstr = f"Admins in <b>{m.chat.title}</b>:" + "\n\n"
-
         bot_admins = [i for i in admin_list if (i[1].lower()).endswith("bot")]
         user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
-
         # format is like: (user_id, username/name,anonyamous or not)
         mention_users = [
             (
@@ -53,7 +47,6 @@ async def adminlist_show(_, m: Message):
             if not admin[2]  # if non-anonyamous admin
         ]
         mention_users.sort(key=lambda x: x[1])
-
         mention_bots = [
             (
                 admin[1]
@@ -63,15 +56,12 @@ async def adminlist_show(_, m: Message):
             for admin in bot_admins
         ]
         mention_bots.sort(key=lambda x: x[1])
-
         adminstr += "<b>User Admins:</b>\n"
         adminstr += "\n".join(f"- {i}" for i in mention_users)
         adminstr += "\n\n<b>Bots:</b>\n"
         adminstr += "\n".join(f"- {i}" for i in mention_bots)
-
         await m.reply_text(adminstr + "\n\n" + note)
         LOGGER.info(f"Adminlist cmd use in {m.chat.id} by {m.from_user.id}")
-
     except Exception as ef:
         if str(ef) == str(m.chat.id):
             await m.reply_text(text="Use /admincache to reload admins!")
@@ -82,15 +72,10 @@ async def adminlist_show(_, m: Message):
             )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
-
     return
-
-
 @Gojo.on_message(command("zombies") & owner_filter)
 async def zombie_clean(c: Gojo, m: Message):
-
     zombie = 0
-
     wait = await m.reply_text("Searching ... and banning ...")
     async for member in c.get_chat_members(m.chat.id):
         if member.user.is_deleted:
@@ -106,17 +91,13 @@ async def zombie_clean(c: Gojo, m: Message):
     return await wait.edit_text(
         text=f"<b>{zombie}</b> Zombies found and has been banned!",
     )
-
-
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
-
     if m.chat.type != ChatType.SUPERGROUP:
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )
-
     if (
         (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
         and (m.from_user.id not in SUPPORT_STAFF)
@@ -124,7 +105,6 @@ async def reload_admins(_, m: Message):
     ):
         await m.reply_text("Can only reload admin cache once per 10 mins!")
         return
-
     try:
         await admin_cache_reload(m, "admincache")
         TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "manualblock"
@@ -137,19 +117,15 @@ async def reload_admins(_, m: Message):
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
-
-
 @Gojo.on_message(filters.regex(r"^(?i)@admin(s)?") & filters.group)
 async def tag_admins(_, m: Message):
     db = Reporting(m.chat.id)
     if not db.get_settings():
         return
-
     try:
         admin_list = ADMIN_CACHE[m.chat.id]
     except KeyError:
         admin_list = await admin_cache_reload(m, "adminlist")
-
     user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
     mention_users = [(await mention_html("\u2063", admin[0])) for admin in user_admins]
     mention_users.sort(key=lambda x: x[1])
@@ -160,34 +136,26 @@ async def tag_admins(_, m: Message):
             f" reported the message to admins!{mention_str}"
         ),
     )
-
-
-@Gojo.on_message(command(["fullpromote", "fulpromote"]) & promote_filter)
+@Gojo.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Gojo, m: Message):
     global ADMIN_CACHE
-
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(
             text="I can't promote nothing! Give me an username or user id or atleast reply to that user"
         )
         return
-
     try:
         user_id, user_first_name, user_name = await extract_user(c, m)
     except Exception:
         return
-
     bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
-
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, how can I even promote myself?")
         return
-
     if not bot.privileges.can_promote_members:
         return await m.reply_text(
             "I don't have enough permissions!",
         )  # This should be here
-
     user = await c.get_chat_member(m.chat.id, m.from_user.id)
     if m.from_user.id != OWNER_ID and user.status != CMS.OWNER:
         return await m.reply_text("This command can only be used by chat owner.")
@@ -198,17 +166,15 @@ async def fullpromote_usr(c: Gojo, m: Message):
         admin_list = {
             i[0] for i in (await admin_cache_reload(m, "promote_cache_update"))
         }
-
     if user_id in admin_list:
         await m.reply_text(
             "This user is already an admin, how am I supposed to re-promote them?",
         )
         return
-
-    title = ""  # Deafult title
-    if not m.chat.type == ChatType.SUPERGROUP:
-            await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
-
+    try:
+        await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
+        if not m.chat.type == ChatType.SUPERGROUP:
+            title = "Gojo" # Default fullpromote title
             if len(m.text.split()) == 3 and not m.reply_to_message:
                 title = m.text.split()[2]
             elif len(m.text.split()) == 2 and m.reply_to_message:
@@ -220,26 +186,22 @@ async def fullpromote_usr(c: Gojo, m: Message):
                 await c.set_administrator_title(m.chat.id, user_id, title)
             except RPCError as e:
                 LOGGER.error(e)
-
         LOGGER.info(
             f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
         )
-
         await m.reply_text(
-            ("{promoter} promoted {promoted} in chat <b>{chat_title}</b> with all rights!").format(
+            ("{promoter} promoted {promoted} in chat <b>{chat_title}</b> with full rights!").format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"{escape(m.chat.title)} title set to {title}"
                 if title
-                else f"{escape(m.chat.title)} title set to default",
+                else f"{escape(m.chat.title)} title set to Gojo",
             ),
         )
-
         # If user is approved, disapprove them as they willbe promoted and get
         # even more rights
         if Approve(m.chat.id).check_approve(user_id):
             Approve(m.chat.id).remove_approve(user_id)
-
         # ----- Add admin to temp cache -----
         try:
             inp1 = user_name or user_first_name
@@ -248,7 +210,6 @@ async def fullpromote_usr(c: Gojo, m: Message):
             ADMIN_CACHE[m.chat.id] = admins_group
         except KeyError:
             await admin_cache_reload(m, "promote_key_error")
-
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights......")
     except RightForbidden:
@@ -264,30 +225,22 @@ async def fullpromote_usr(c: Gojo, m: Message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
     return
-
-
 @Gojo.on_message(command("promote") & promote_filter)
 async def promote_usr(c: Gojo, m: Message):
-
     global ADMIN_CACHE
-
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(
             text="I can't promote nothing!......reply to user to promote him/her...."
         )
         return
-
     try:
         user_id, user_first_name, user_name = await extract_user(c, m)
     except Exception:
         return
-
     bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
-
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, how can I even promote myself?")
         return
-
     if not bot.privileges.can_promote_members:
         return await m.reply_text(
             "I don't have enough permissions",
@@ -299,13 +252,11 @@ async def promote_usr(c: Gojo, m: Message):
         admin_list = {
             i[0] for i in (await admin_cache_reload(m, "promote_cache_update"))
         }
-
     if user_id in admin_list:
         await m.reply_text(
             "This user is already an admin, how am I supposed to re-promote them?",
         )
         return
-
     try:
         await m.chat.promote_member(
             user_id=user_id,
@@ -319,40 +270,35 @@ async def promote_usr(c: Gojo, m: Message):
                 can_manage_video_chats=bot.privileges.can_manage_video_chats,
             ),
         )
-        
-        title = ""  # Deafult title
         if not m.chat.type == ChatType.SUPERGROUP:
+            title = "Itadori"  # Deafult title
             if len(m.text.split()) == 3 and not m.reply_to_message:
                 title = m.text.split()[2]
             elif len(m.text.split()) == 2 and m.reply_to_message:
                 title = m.text.split()[1]
             if title and len(title) > 16:
                 title = title[0:16]  # trim title to 16 characters
-
+                
             try:
                 await c.set_administrator_title(m.chat.id, user_id, title)
             except RPCError as e:
                 LOGGER.error(e)
-
-            LOGGER.info(
-                f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
-            )
-
+        LOGGER.info(
+            f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
+        )
         await m.reply_text(
             ("{promoter} promoted {promoted} in chat <b>{chat_title}</b>!").format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"{escape(m.chat.title)} title set to {title}"
                 if title
-                else f"{escape(m.chat.title)} title set to default",
+                else f"{escape(m.chat.title)} title set to Itadori",
             ),
         )
-
         # If user is approved, disapprove them as they willbe promoted and get
         # even more rights
         if Approve(m.chat.id).check_approve(user_id):
             Approve(m.chat.id).remove_approve(user_id)
-
         # ----- Add admin to temp cache -----
         try:
             inp1 = user_name or user_first_name
@@ -361,7 +307,6 @@ async def promote_usr(c: Gojo, m: Message):
             ADMIN_CACHE[m.chat.id] = admins_group
         except KeyError:
             await admin_cache_reload(m, "promote_key_error")
-
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -377,26 +322,19 @@ async def promote_usr(c: Gojo, m: Message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
     return
-
-
 @Gojo.on_message(command("demote") & promote_filter)
 async def demote_usr(c: Gojo, m: Message):
-
     global ADMIN_CACHE
-
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text("I can't demote nothing.")
         return
-
     try:
         user_id, user_first_name, _ = await extract_user(c, m)
     except Exception:
         return
-
     if user_id == Config.BOT_ID:
         await m.reply_text("Get an admin to demote me!")
         return
-
     # If user not already admin
     try:
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
@@ -404,20 +342,17 @@ async def demote_usr(c: Gojo, m: Message):
         admin_list = {
             i[0] for i in (await admin_cache_reload(m, "demote_cache_update"))
         }
-
     if user_id not in admin_list:
         await m.reply_text(
             "This user is not an admin, how am I supposed to re-demote them?",
         )
         return
-
     try:
         await m.chat.promote_member(
             user_id=user_id,
             privileges=ChatPrivileges(can_manage_chat=False),
         )
         LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
-
         # ----- Remove admin from cache -----
         try:
             admin_list = ADMIN_CACHE[m.chat.id]
@@ -426,7 +361,6 @@ async def demote_usr(c: Gojo, m: Message):
             ADMIN_CACHE[m.chat.id] = admin_list
         except (KeyError, StopIteration):
             await admin_cache_reload(m, "demote_key_stopiter_error")
-
         await m.reply_text(
             ("{demoter} demoted {demoted} in <b>{chat_title}</b>!").format(
                 demoter=(
@@ -439,7 +373,6 @@ async def demote_usr(c: Gojo, m: Message):
                 chat_title=m.chat.title,
             ),
         )
-
     except ChatAdminRequired:
         await m.reply_text("I am not admin aroung here.")
     except RightForbidden:
@@ -454,20 +387,15 @@ async def demote_usr(c: Gojo, m: Message):
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
-
     return
-
-
 @Gojo.on_message(command("invitelink"))
 async def get_invitelink(c: Gojo, m: Message):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
-
         if not user.privileges.can_invite_users and user.status != CMS.OWNER:
             await m.reply_text(text="You don't have rights to invite users....")
             return False
-
     try:
         link = await c.export_chat_invite_link(m.chat.id)
         await m.reply_text(
@@ -487,23 +415,17 @@ async def get_invitelink(c: Gojo, m: Message):
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
-
     return
-
-
 @Gojo.on_message(command("setgtitle") & admin_filter)
 async def setgtitle(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
-
     if not user.privileges.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
         return False
-
     if len(m.command) < 1:
         return await m.reply_text("Please read /help for using it!")
-
     gtit = m.text.split(None, 1)[1]
     try:
         await m.chat.set_title(gtit)
@@ -512,21 +434,16 @@ async def setgtitle(_, m: Message):
     return await m.reply_text(
         f"Successfully Changed Group Title From {m.chat.title} To {gtit}",
     )
-
-
 @Gojo.on_message(command("setgdes") & admin_filter)
 async def setgdes(_, m: Message):
-
     user = await m.chat.get_member(m.from_user.id)
     if not user.privileges.can_change_info and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
         return False
-
     if len(m.command) < 1:
         return await m.reply_text("Please read /help for using it!")
-
     desp = m.text.split(None, 1)[1]
     try:
         await m.chat.set_description(desp)
@@ -535,21 +452,16 @@ async def setgdes(_, m: Message):
     return await m.reply_text(
         f"Successfully Changed Group description From {m.chat.description} To {desp}",
     )
-
-
 @Gojo.on_message(command("title") & admin_filter)
 async def set_user_title(c: Gojo, m: Message):
-
     user = await m.chat.get_member(m.from_user.id)
     if not user.privileges.can_promote_members and user.status != CMS.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
         return False
-
     if len(m.text.split()) == 1 and not m.reply_to_message:
         return await m.reply_text("To whom??")
-
     if m.reply_to_message:
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
@@ -560,16 +472,12 @@ async def set_user_title(c: Gojo, m: Message):
         user_id, _, _ = await extract_user(c, m)
     except Exception:
         return
-
     if not user_id:
         return await m.reply_text("Cannot find user!")
-
     if user_id == Config.BOT_ID:
         return await m.reply_text("Huh, why ?")
-
     if not reason:
         return await m.reply_text("Read /help please!")
-
     from_user = await c.get_users(user_id)
     title = reason
     try:
@@ -579,8 +487,6 @@ async def set_user_title(c: Gojo, m: Message):
     return await m.reply_text(
         f"Successfully Changed {from_user.mention}'s Admin Title To {title}",
     )
-
-
 @Gojo.on_message(command("setgpic") & admin_filter)
 async def setgpic(c: Gojo, m: Message):
     user = await m.chat.get_member(m.from_user.id)
@@ -601,10 +507,7 @@ async def setgpic(c: Gojo, m: Message):
         return await m.reply_text(f"Error: {e}")
     await m.reply_text("Successfully Changed Group Photo!")
     remove(photo)
-
-
 __PLUGIN__ = "admin"
-
 __alt_name__ = [
     "admins",
     "promote",
@@ -618,13 +521,10 @@ __alt_name__ = [
     "setgdes",
     "zombies",
 ]
-
 __HELP__ = """
 **Admin**
-
 **User Commands:**
 • /adminlist: List all the admins in the Group.
-
 **Admin only:**
 • /invitelink: Gets chat invitelink.
 • /promote: Promotes the user replied to or tagged (supports with title).
@@ -639,6 +539,5 @@ __HELP__ = """
 • /disabledel <yes/off>: Delete disabled commands when used by non-admins.
 • /disabled: List the disabled commands in this chat.
 • /enableall: enable all disabled commands.
-
 **Example:**
 `/promote @username`: this promotes a user to admin."""
