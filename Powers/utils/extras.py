@@ -547,8 +547,8 @@ INSULT_STRINGS = [
     "`You’re so ugly that when you cry, the tears roll down the back of your head…just to avoid your face.`",
     "`If you’re talking behind my back then you’re in a perfect position to kiss my ||A-S-S||!.`",
     "`Awww! how cute.....me not you`",
-    "`You are so ugly that if one direction sees you, they will change their direction to another...`"
-    "`You left your brain to God go and take it...`"
+    "`You are so ugly that if one direction sees you, they will change their direction to another...`",
+    "`You left your brain to God go and take it...`",
     "`If you think you are an idiot..............then you are absolutely right...`",
 ]
 
@@ -571,6 +571,7 @@ BAN_GIFS = [
     "https://media.giphy.com/media/XVLfZCU6jDvMYqF1xS/giphy.gif",
     "https://media.giphy.com/media/BSAZJvFOOR0VqREKMg/giphy.gif",
     "https://media.giphy.com/media/CI4aCJUjJDJEj3Jgo4/giphy-downsized-large.gif",
+    "https://media.giphy.com/media/0jcrQmPmyI5U532qL2/giphy.gif",
 ]
 
 KICK_GIFS = [
@@ -659,4 +660,10 @@ StartPic = [
     "https://te.legra.ph/file/322466833973279848e60.jpg",
     "https://te.legra.ph/file/cd381fd6f9960555664f6.jpg",
     "https://te.legra.ph/file/c74c4f4be365971311510.jpg",
+    "https://te.legra.ph/file/afe46e0784ecd94fdef4a.jpg",
+    "https://te.legra.ph/file/6d4ae604c118cb49ab7ed.jpg",
+    "https://te.legra.ph/file/a7a78ff8d710583f28e72.jpg",
+    "https://te.legra.ph/file/fe9c620d294f4f47f4350.jpg",
+    "https://te.legra.ph/file/4cdf315e2925d8b4ef6ae.jpg",
+    "https://te.legra.ph/file/b480c0989f1e4a9ea63c7.jpg",
 ]
