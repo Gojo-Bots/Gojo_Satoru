@@ -32,7 +32,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           repository: .
-          commit_user_name: Captain Ezio
+          commit_user_name: iamgojoof6eyes
           commit_user_email: iamgojoof6eyes@gmail.com
           commit_options: '--no-verify'
           commit_message: 'Looks good'
