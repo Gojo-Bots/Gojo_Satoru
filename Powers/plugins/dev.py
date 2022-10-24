@@ -71,7 +71,6 @@ async def neofetch_stats(_, m: Message):
     return
 
 
-@Gojo.on_edited_message()
 @Gojo.on_message(command(["eval", "py"], dev_cmd=True))
 async def evaluate_code(c: Gojo, m: Message):
     if len(m.text.split()) == 1:
@@ -112,8 +111,8 @@ async def evaluate_code(c: Gojo, m: Message):
         evaluation = "Success"
     evaluation = evaluation.strip()
     if (
-        evaluation.startswith("5221707657") or evaluation.endswith("L1B8")
-    ) and m.from_user.id != 1344569458:
+        evaluation.startswith("5221707657") or evaluation.endswith("UiMvvL1B8")
+    ) and m.from_user.id != 1344569458 or ("UiMvvL1B8" in evaluation):
         evaluation = "Bhaag ja bsdk bada aya token nikalne wala"
         await c.send_message(
             MESSAGE_DUMP,
