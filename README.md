@@ -64,7 +64,7 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
   
 ***Can be found on Telegram as __[@iamgojoof6eyes_bot](https://telegram.dog/iamgojoof6eyes_bot)__***
   
- ⚠️ ***Note: The bot is not currently working due to some issues and I don't think I have that much extra time to solve it....If you think you can help me in fixing it just ib me on tg [@iamgojoof6eyes](https://telegram.dog/iamgojoof6eyes)***
+ ⚠️ ***Note: WORK IN PROGRESS... If you think u may be help ful in fixing the issue contact me on telegram [@iamgojoof6eyes](https://telegram.dog/iamgojoof6eyes)***
 
 -------
 
@@ -164,7 +164,44 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
 
 
-To get a list of all variable click [here](https://telegra.ph/Captain-03-27)
+<details><summary><h3>List of all variables</h3></summary>
+
+`BOT_TOKEN` You can get your bot token at [@BotFather](https://telegram.dog/BotFather)
+
+`API_ID` You can get your api id [here](my.telegram.org)
+
+`API_HASH` You can get your api hash [here](my.telegram.org)
+
+`PREFIX_HANDLER` Your bot handler which will activate commands
+
+`DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
+
+`DB_NAME`: Your [MongoDB](https://www.mongodb.com/) database name.
+
+`OWNER_ID`: Your user ID as an integer. You can get it from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+
+`SUPPORT_GROUP`: Your Telegram support group chat username where user's can contact in case of a problem.
+
+`MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`
+
+`VERSION`: A Version to be shown in bot.
+
+`PREFIX_HANDLER`: Something like '/' to execute commands.
+
+`SUPPORT_CHANNEL`: Your Telegram support channel username where user's can see updates of bot.
+
+`DEV_USERS`: ID of users who are Devs of your bot. Use space to seprate values. You can get there id's from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+
+`SUDO_USERS`: A space separated list of user IDs who you want to assign as sudo users. You can get there id's from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+
+`WHITELIST_USERS`: A space separated list of user IDs whitelisted, cannot be restricted. You can get there id's from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+
+⚠️ **Note:** In case you are passing more than one value seprate them using whitespace (space) for e.g. If I want to pass more than one PREFIX_HANDLER
+I'll pass it like `'/' '.' '!'` this.
+
+YOU CAN ALSO HAVE A LOOK AT [VARS FILE](https://github.com/Gojo-Bots/Gojo_Satoru/blob/main/Powers/vars.py)
+
+</details>
 
 ---------
   
