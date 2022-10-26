@@ -51,7 +51,7 @@ Mainly:
   
 The Gojo Satoru is a powerful Group Management bot with awesome plugins and features.
  
-  **If you counter any problem or face any bugs for help join 🌟 [Gojo Updates](https://telegram.dog/gojo_updates) 🌟 and then join the gc and ask your problem.**
+  **If you counter any problem or face any bugs for help join 🌟 [ɢօʝօ ɮօȶֆ](https://telegram.dog/gojo_bots_network) 🌟 and then join the gc and ask your problem.**
 
 ## Features
   

@@ -1,20 +1,21 @@
 from html import escape
 from secrets import choice
-from Powers.vars import Config
 from traceback import format_exc
+
+from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
 from Powers.bot_class import Gojo
-from pyrogram.errors import RPCError
-from Powers.utils.kbhelpers import ikb
-from Powers.utils.msg_types import Types
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
 from Powers.database.rules_db import Rules
 from Powers.utils.cmd_senders import send_cmd
-from Powers import LOGGER, HELP_COMMANDS, SUPPORT_GROUP
-from pyrogram.types import Message, CallbackQuery, InlineKeyboardButton
-from Powers.utils.string import (
-    parse_button, build_keyboard, escape_mentions_using_curly_brackets)
-
+from Powers.utils.kbhelpers import ikb
+from Powers.utils.msg_types import Types
+from Powers.utils.string import (build_keyboard,
+                                 escape_mentions_using_curly_brackets,
+                                 parse_button)
+from Powers.vars import Config
+from pyrogram.errors import RPCError
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, Message
 
 # Initialize
 notes_db = Notes()
@@ -28,7 +29,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
     cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = [cmd.lower() for cmd in cmds]
 
-    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    return [kb[i: i + 3] for i in range(0, len(kb), 3)]
 
 
 async def gen_start_kb(q: Message or CallbackQuery):

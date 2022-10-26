@@ -1,7 +1,7 @@
 from threading import RLock
+
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
-
 
 INSERTION_LOCK = RLock()
 BLACKLIST_CHATS = []

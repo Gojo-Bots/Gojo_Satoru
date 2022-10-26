@@ -1,21 +1,21 @@
 from random import choice
-from pyrogram import enums
-from Powers.vars import Config
 from traceback import format_exc
+
+from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.bot_class import Gojo
-from pyrogram.filters import regex
-from Powers.utils.parser import mention_html
-from Powers.utils.string import extract_time
-from Powers.utils.extract_user import extract_user
-from Powers.utils.extras import BAN_GIFS, KICK_GIFS
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
-from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
-from pyrogram.types import (
-    Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup)
-from pyrogram.errors import (
-    RPCError, PeerIdInvalid, RightForbidden, UserAdminInvalid,
-    ChatAdminRequired)
+from Powers.utils.extract_user import extract_user
+from Powers.utils.extras import BAN_GIFS, KICK_GIFS
+from Powers.utils.parser import mention_html
+from Powers.utils.string import extract_time
+from Powers.vars import Config
+from pyrogram import enums
+from pyrogram.errors import (ChatAdminRequired, PeerIdInvalid, RightForbidden,
+                             RPCError, UserAdminInvalid)
+from pyrogram.filters import regex
+from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
+                            InlineKeyboardMarkup, Message)
 
 
 @Gojo.on_message(command("tban") & restrict_filter)
@@ -908,7 +908,8 @@ async def kickme(_, m: Message):
     if len(m.text.split()) >= 2:
         reason = m.text.split(None, 1)[1]
     try:
-        LOGGER.info(f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
         await m.chat.ban_member(m.from_user.id)
         txt = "Why not let me help you!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""

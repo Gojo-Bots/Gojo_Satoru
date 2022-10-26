@@ -1,6 +1,7 @@
-from regex import search
-from Powers import LOGGER
 from traceback import format_exc
+
+from Powers import LOGGER
+from regex import search
 
 
 async def regex_searcher(regex_string: str, string: str) -> str:

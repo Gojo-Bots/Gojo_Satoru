@@ -1,7 +1,7 @@
 from os import getcwd
+
 from prettyconf import Configuration
 from prettyconf.loaders import EnvFile, Environment
-
 
 env_file = f"{getcwd()}/.env"
 config = Configuration(loaders=[Environment(), EnvFile(filename=env_file)])
@@ -41,8 +41,8 @@ class Config:
     DB_NAME = config("DB_NAME", default="")
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
-    SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_update")
-    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_updates")
+    SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_bots_network")
+    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_bots_network")
     VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
     BOT_USERNAME = ""

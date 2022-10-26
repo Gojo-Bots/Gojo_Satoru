@@ -1,19 +1,20 @@
 from time import time
-from pyrogram import filters
-from Powers.vars import Config
-from Powers.bot_class import Gojo
-from pyrogram.errors import RPCError
+
 from Powers import LOGGER, SUPPORT_STAFF
+from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.database.users_db import Users
-from Powers.utils.parser import mention_html
-from Powers.utils.extract_user import extract_user
 from Powers.database.warns_db import Warns, WarnSettings
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
-from Powers.utils.custom_filters import command, admin_filter, restrict_filter
-from pyrogram.types import (
-    Message, CallbackQuery, ChatPermissions, InlineKeyboardButton,
-    InlineKeyboardMarkup)
+from Powers.utils.custom_filters import admin_filter, command, restrict_filter
+from Powers.utils.extract_user import extract_user
+from Powers.utils.parser import mention_html
+from Powers.vars import Config
+from pyrogram import filters
+from pyrogram.errors import RPCError
+from pyrogram.types import (CallbackQuery, ChatPermissions,
+                            InlineKeyboardButton, InlineKeyboardMarkup,
+                            Message)
 
 
 @Gojo.on_message(
@@ -204,7 +205,8 @@ async def list_warns(c: Gojo, m: Message):
         await m.reply_text("This user has no warns!")
         return
     msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
-    msg += "\n".join([("- No reason" if i is None else f" - {i}") for i in warns])
+    msg += "\n".join(
+        [("- No reason" if i is None else f" - {i}") for i in warns])
     await m.reply_text(msg)
     return
 

@@ -1,21 +1,21 @@
-from secrets import choice
-from pyrogram import filters
-from traceback import format_exc
 from re import escape as re_escape
-from pyrogram.errors import RPCError
-from Powers.utils.kbhelpers import ikb
-from Powers.bot_class import LOGGER, Gojo
-from Powers.utils.cmd_senders import send_cmd
-from Powers.database.filters_db import Filters
-from pyrogram.enums import ChatMemberStatus as CMS
-from Powers.utils.regex_utils import regex_searcher
-from Powers.utils.msg_types import Types, get_filter_type
-from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup
-from Powers.utils.custom_filters import command, admin_filter, owner_filter
-from Powers.utils.string import (
-    parse_button, split_quotes, build_keyboard,
-    escape_mentions_using_curly_brackets)
+from secrets import choice
+from traceback import format_exc
 
+from Powers.bot_class import LOGGER, Gojo
+from Powers.database.filters_db import Filters
+from Powers.utils.cmd_senders import send_cmd
+from Powers.utils.custom_filters import admin_filter, command, owner_filter
+from Powers.utils.kbhelpers import ikb
+from Powers.utils.msg_types import Types, get_filter_type
+from Powers.utils.regex_utils import regex_searcher
+from Powers.utils.string import (build_keyboard,
+                                 escape_mentions_using_curly_brackets,
+                                 parse_button, split_quotes)
+from pyrogram import filters
+from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.errors import RPCError
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 # Initialise
 db = Filters()
@@ -96,7 +96,8 @@ async def add_filter(_, m: Message):
         )
 
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
-    LOGGER.info(f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
+    LOGGER.info(
+        f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
     if add:
         await m.reply_text(
             f"Saved filter for '<code>{', '.join(keyword.split('|'))}</code>' in <b>{m.chat.title}</b>!",
@@ -120,7 +121,8 @@ async def stop_filter(_, m: Message):
     for keyword in act_filters:
         if keyword == m.text.split(None, 1)[1].lower():
             db.rm_filter(m.chat.id, m.text.split(None, 1)[1].lower())
-            LOGGER.info(f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
             await m.reply_text(
                 f"Okay, I'll stop replying to that filter and it's aliases in <b>{m.chat.title}</b>.",
             )
@@ -281,7 +283,8 @@ async def filters_watcher(c: Gojo, m: Message):
         if match:
             try:
                 msgtype = await send_filter_reply(c, m, trigger)
-                LOGGER.info(f"Replied with {msgtype} to {trigger} in {m.chat.id}")
+                LOGGER.info(
+                    f"Replied with {msgtype} to {trigger} in {m.chat.id}")
             except Exception as ef:
                 await m.reply_text(f"Error: {ef}")
                 LOGGER.error(ef)

@@ -1,21 +1,21 @@
-from time import time
-from pyrogram import filters
-from traceback import format_exc
-from Powers.bot_class import Gojo
 from re import escape as re_escape
-from Powers.database.pins_db import Pins
-from Powers.utils.parser import mention_html
+from time import time
+from traceback import format_exc
+
+from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
+from Powers.bot_class import Gojo
+from Powers.database.antispam_db import ANTISPAM_BANNED, GBan
 from Powers.database.approve_db import Approve
 from Powers.database.blacklist_db import Blacklist
-from Powers.utils.regex_utils import regex_searcher
-from pyrogram.types import Message, ChatPermissions
-from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
-from Powers.database.warns_db import Warns, WarnSettings
 from Powers.database.group_blacklist import BLACKLIST_CHATS
-from Powers.database.antispam_db import ANTISPAM_BANNED, GBan
+from Powers.database.pins_db import Pins
+from Powers.database.warns_db import Warns, WarnSettings
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
-from pyrogram.errors import RPCError, UserAdminInvalid, ChatAdminRequired
-
+from Powers.utils.parser import mention_html
+from Powers.utils.regex_utils import regex_searcher
+from pyrogram import filters
+from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
+from pyrogram.types import ChatPermissions, Message
 
 # Initialise
 gban_db = GBan()
@@ -29,7 +29,8 @@ async def antichanpin_cleanlinked(c: Gojo, m: Message):
         curr = pins_db.get_settings()
         if curr["antichannelpin"]:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
-            LOGGER.info(f"AntiChannelPin: msgid-{m.id} unpinned in {m.chat.id}")
+            LOGGER.info(
+                f"AntiChannelPin: msgid-{m.id} unpinned in {m.chat.id}")
         if curr["cleanlinked"]:
             await c.delete_messages(m.chat.id, msg_id)
             LOGGER.info(f"CleanLinked: msgid-{m.id} cleaned in {m.chat.id}")
@@ -38,7 +39,8 @@ async def antichanpin_cleanlinked(c: Gojo, m: Message):
             "Disabled antichannelpin as I don't have enough admin rights!",
         )
         pins_db.antichannelpin_off()
-        LOGGER.warning(f"Disabled antichannelpin in {m.chat.id} as i'm not an admin.")
+        LOGGER.warning(
+            f"Disabled antichannelpin in {m.chat.id} as i'm not an admin.")
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -189,7 +191,8 @@ async def gban_watcher(c: Gojo, m: Message):
 
       To get unbanned, appeal at @{SUPPORT_GROUP}"""
             )
-            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id} due to antispam")
+            LOGGER.info(
+                f"Banned user {m.from_user.id} in {m.chat.id} due to antispam")
             return
         except (ChatAdminRequired, UserAdminInvalid):
             # Bot not admin in group and hence cannot ban users!

@@ -1,12 +1,12 @@
-from time import time
 from datetime import datetime
-from traceback import format_exc
-from os import path, mkdir, environ
 from importlib import import_module as imp_mod
-from sys import exit as sysexit, stdout, version_info
-from logging import (
-    INFO, WARNING, FileHandler, StreamHandler, getLogger, basicConfig)
-
+from logging import (INFO, WARNING, FileHandler, StreamHandler, basicConfig,
+                     getLogger)
+from os import environ, mkdir, path
+from sys import exit as sysexit
+from sys import stdout, version_info
+from time import time
+from traceback import format_exc
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -103,7 +103,8 @@ async def load_cmds(all_plugins):
     for single in all_plugins:
         # If plugin in NO_LOAD, skip the plugin
         if single.lower() in [i.lower() for i in Config.NO_LOAD]:
-            LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
+            LOGGER.warning(
+                f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
 
         imported_module = imp_mod(f"Powers.plugins.{single}")
@@ -144,6 +145,7 @@ async def load_cmds(all_plugins):
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
-        ", ".join((i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys()))
+        ", ".join((i.split(".")[1]).capitalize()
+                  for i in list(HELP_COMMANDS.keys()))
         + "\n"
     )

@@ -46,7 +46,7 @@
       "SUPPORT_GROUP": {
         "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
         "required": true,
-        "value": "gojo_update"
+        "value": "gojo_bots_network"
       },
       "MESSAGE_DUMP": {
         "description": "Event logs channel where bot will send updates.",
@@ -70,7 +70,7 @@
       },
       "SUPPORT_CHANNEL": {
         "description": "Channel where bot uodates will be posted!",
-        "value": "gojo_updates"
+        "value": "gojo_bots_network"
       },
       "SUDO_USERS": {
         "description": "A space separated list of user IDs who you want to assign as sudo users.",

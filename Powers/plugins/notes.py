@@ -1,20 +1,21 @@
-from Powers import LOGGER
 from secrets import choice
-from Powers.vars import Config
 from traceback import format_exc
-from Powers.bot_class import Gojo
-from pyrogram import enums, filters
-from pyrogram.errors import RPCError
-from Powers.utils.kbhelpers import ikb
-from Powers.utils.cmd_senders import send_cmd
-from pyrogram.enums import ChatMemberStatus as CMS
-from Powers.utils.msg_types import Types, get_note_type
-from Powers.database.notes_db import Notes, NotesSettings
-from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup
-from Powers.utils.custom_filters import command, admin_filter, owner_filter
-from Powers.utils.string import (
-    parse_button, build_keyboard, escape_mentions_using_curly_brackets)
 
+from Powers import LOGGER
+from Powers.bot_class import Gojo
+from Powers.database.notes_db import Notes, NotesSettings
+from Powers.utils.cmd_senders import send_cmd
+from Powers.utils.custom_filters import admin_filter, command, owner_filter
+from Powers.utils.kbhelpers import ikb
+from Powers.utils.msg_types import Types, get_note_type
+from Powers.utils.string import (build_keyboard,
+                                 escape_mentions_using_curly_brackets,
+                                 parse_button)
+from Powers.vars import Config
+from pyrogram import enums, filters
+from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.errors import RPCError
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 # Initialise
 db = Notes()
@@ -74,7 +75,8 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
 
     if priv_notes_status:
 
-        note_hash = next(i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name)
+        note_hash = next(i[1] for i in db.get_all_notes(
+            m.chat.id) if i[0] == note_name)
         await reply_text(
             f"Click on the button to get the note <code>{note_name}</code>",
             reply_markup=ikb(
@@ -300,11 +302,13 @@ async def priv_notes(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db_settings.set_privatenotes(chat_id, True)
-            LOGGER.info(f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
             msg = "Set private notes to On"
         elif option in ("off", "no"):
             db_settings.set_privatenotes(chat_id, False)
-            LOGGER.info(f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
             msg = "Set private notes to Off"
         else:
             msg = "Enter correct option"
@@ -312,7 +316,8 @@ async def priv_notes(_, m: Message):
     elif len(m.text.split()) == 1:
         curr_pref = db_settings.get_privatenotes(m.chat.id)
         msg = msg = f"Private Notes: {curr_pref}"
-        LOGGER.info(f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text("Check help on how to use this command!")

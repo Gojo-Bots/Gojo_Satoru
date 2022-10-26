@@ -1,10 +1,11 @@
 from asyncio import sleep
+
 from Powers import SUPPORT_GROUP
 from Powers.bot_class import Gojo
-from pyrogram.types import Message
+from Powers.utils.custom_filters import admin_filter, command
 from pyrogram.enums import ChatType
-from pyrogram.errors import RPCError, MessageDeleteForbidden
-from Powers.utils.custom_filters import command, admin_filter
+from pyrogram.errors import MessageDeleteForbidden, RPCError
+from pyrogram.types import Message
 
 
 @Gojo.on_message(command("purge") & admin_filter)
@@ -19,7 +20,7 @@ async def purge(c: Gojo, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i : i + n]
+                yield l[i: i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))
@@ -66,7 +67,7 @@ async def spurge(c: Gojo, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i : i + n]
+                yield l[i: i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))

@@ -1,20 +1,18 @@
 import os
 from asyncio import sleep
-from pyrogram import enums
 from datetime import datetime
-from Powers.vars import Config
 from traceback import format_exc
+
+from Powers import (DEV_USERS, LOGGER, SUDO_USERS, SUPPORT_STAFF,
+                    WHITELIST_USERS)
 from Powers.bot_class import Gojo
-from pyrogram.types import Message
-from pyrogram.enums import ChatType
 from Powers.database.antispam_db import GBan
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers import (
-    LOGGER, DEV_USERS, SUDO_USERS, SUPPORT_STAFF, WHITELIST_USERS)
-from pyrogram.errors import (
-    RPCError, MessageTooLong, EntityBoundsInvalid, MediaCaptionTooLong)
-
+from Powers.vars import Config
+from pyrogram import enums
+from pyrogram.errors import EntityBoundsInvalid, MediaCaptionTooLong, RPCError
+from pyrogram.types import Message
 
 gban_db = GBan()
 
@@ -189,17 +187,12 @@ async def chat_info(c: Gojo, chat, already=False):
 
 @Gojo.on_message(command(["info", "whois"]))
 async def info_func(c: Gojo, message: Message):
-    try:
-        user, _, user_name = await extract_user(c, message)
-    except Exception as e:
-        return await message.reply_text(
-            f"Got an error while running extract_user function error is {e}.....Give this message in supoort group"
-        )
+    user, _, user_name = await extract_user(c, message)
 
     if not user:
         await message.reply_text("Can't find user to fetch info!")
 
-    m = await message.reply_text(f"Fetching user info from telegram's database...")
+    m = await message.reply_text(f"Fetching {('@' + user_name) if user_name else 'user'} info from telegram's database...")
 
     try:
         info_caption, photo_id = await user_info(c, user)
