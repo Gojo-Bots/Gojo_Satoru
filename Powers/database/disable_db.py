@@ -1,8 +1,8 @@
-from threading import RLock
 from time import time
-
 from Powers import LOGGER
+from threading import RLock
 from Powers.database import MongoDB
+
 
 INSERTION_LOCK = RLock()
 DISABLED_CMDS = {}
@@ -146,11 +146,9 @@ class Disabling(MongoDB):
                     "commands": [],
                     "action": "none",
                 }
-                DISABLED_CMDS[self.chat_id] = {
-                    "commands": [], "action": "none"}
+                DISABLED_CMDS[self.chat_id] = {"commands": [], "action": "none"}
                 self.insert_one(new_data)
-                LOGGER.info(
-                    f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
             DISABLED_CMDS[self.chat_id] = chat_data
         return chat_data

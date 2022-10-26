@@ -1,14 +1,14 @@
-from Powers import LOGGER, SUPPORT_GROUP
-from Powers.bot_class import Gojo
-from Powers.database.approve_db import Approve
-from Powers.utils.custom_filters import admin_filter, command, owner_filter
-from Powers.utils.extract_user import extract_user
-from Powers.utils.kbhelpers import ikb
-from Powers.utils.parser import mention_html
 from pyrogram import filters
+from Powers.bot_class import Gojo
+from Powers.utils.kbhelpers import ikb
+from Powers import LOGGER, SUPPORT_GROUP
+from Powers.utils.parser import mention_html
+from Powers.database.approve_db import Approve
+from pyrogram.types import Message, CallbackQuery
+from Powers.utils.extract_user import extract_user
 from pyrogram.enums import ChatMemberStatus as CMS
-from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.errors import RPCError, PeerIdInvalid, UserNotParticipant
+from Powers.utils.custom_filters import command, admin_filter, owner_filter
 
 
 @Gojo.on_message(command("approve") & admin_filter)
@@ -89,8 +89,7 @@ async def disapprove_user(c: Gojo, m: Message):
     except UserNotParticipant:
         if already_approved:  # If user is approved and not in chat, unapprove them.
             db.remove_approve(user_id)
-            LOGGER.info(
-                f"{user_id} disapproved in {m.chat.id} as UserNotParticipant")
+            LOGGER.info(f"{user_id} disapproved in {m.chat.id} as UserNotParticipant")
         await m.reply_text("This user is not in this chat, unapproved them.")
         return
     except RPCError as ef:
@@ -160,8 +159,7 @@ async def check_approval(c: Gojo, m: Message):
     except Exception:
         return
     check_approve = db.check_approve(user_id)
-    LOGGER.info(
-        f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
+    LOGGER.info(f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
 
     if not user_id:
         await m.reply_text(

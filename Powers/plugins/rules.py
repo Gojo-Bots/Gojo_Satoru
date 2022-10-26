@@ -1,11 +1,11 @@
 from Powers import LOGGER
-from Powers.bot_class import Gojo
-from Powers.database.rules_db import Rules
-from Powers.utils.custom_filters import admin_filter, command
-from Powers.utils.kbhelpers import ikb
-from Powers.vars import Config
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, Message
+from Powers.vars import Config
+from Powers.bot_class import Gojo
+from Powers.utils.kbhelpers import ikb
+from Powers.database.rules_db import Rules
+from pyrogram.types import Message, CallbackQuery
+from Powers.utils.custom_filters import command, admin_filter
 
 
 @Gojo.on_message(command("rules") & filters.group)
@@ -93,13 +93,11 @@ async def priv_rules(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db.set_privrules(True)
-            LOGGER.info(
-                f"{m.from_user.id} enabled privaterules in {m.chat.id}")
+            LOGGER.info(f"{m.from_user.id} enabled privaterules in {m.chat.id}")
             msg = f"Private Rules have been turned <b>on</b> for chat <b>{m.chat.title}</b>"
         elif option in ("off", "no"):
             db.set_privrules(False)
-            LOGGER.info(
-                f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
+            LOGGER.info(f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
             msg = f"Private Rules have been turned <b>off</b> for chat <b>{m.chat.title}</b>"
         else:
             msg = "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
@@ -109,8 +107,7 @@ async def priv_rules(_, m: Message):
         msg = (
             f"Current Preference for Private rules in this chat is: <b>{curr_pref}</b>"
         )
-        LOGGER.info(
-            f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.reply_text(text="Please check help on how to use this this command.")

@@ -1,16 +1,16 @@
-from platform import python_version
 from threading import RLock
-from time import gmtime, strftime, time
-
-from aiohttp import ClientSession
-from pyrogram import Client, __version__
-from pyrogram.raw.all import layer
-
-from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER,
-                    MESSAGE_DUMP, NO_LOAD, UPTIME, WORKERS, load_cmds)
-from Powers.database import MongoDB
-from Powers.plugins import all_plugins
 from Powers.vars import Config
+from aiohttp import ClientSession
+from pyrogram.raw.all import layer
+from Powers.database import MongoDB
+from platform import python_version
+from Powers.plugins import all_plugins
+from time import time, gmtime, strftime
+from pyrogram import Client, __version__
+from Powers import (
+    API_ID, LOGGER, UPTIME, LOGFILE, NO_LOAD, WORKERS, API_HASH, BOT_TOKEN,
+    LOG_DATETIME, MESSAGE_DUMP, load_cmds)
+
 
 INITIAL_LOCK = RLock()
 

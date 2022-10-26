@@ -1,11 +1,10 @@
-from asyncio import sleep
-
 from Powers import LOGGER
+from asyncio import sleep
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
+from pyrogram.types import Message, ChatPermissions
 from Powers.utils.custom_filters import command, restrict_filter
-from pyrogram.errors import ChatAdminRequired, ChatNotModified, RPCError
-from pyrogram.types import ChatPermissions, Message
+from pyrogram.errors import RPCError, ChatNotModified, ChatAdminRequired
 
 
 @Gojo.on_message(command("locktypes"))
@@ -56,8 +55,7 @@ async def lock_perm(c: Gojo, m: Message):
     if lock_type == "all":
         try:
             await c.set_chat_permissions(chat_id, ChatPermissions())
-            LOGGER.info(
-                f"{m.from_user.id} locked all permissions in {m.chat.id}")
+            LOGGER.info(f"{m.from_user.id} locked all permissions in {m.chat.id}")
         except ChatNotModified:
             pass
         except ChatAdminRequired:
@@ -124,8 +122,7 @@ async def lock_perm(c: Gojo, m: Message):
             ChatPermissions(
                 can_send_messages=msg,
                 can_send_media_messages=media,
-                can_send_other_messages=any(
-                    [stickers, animations, games, inlinebots]),
+                can_send_other_messages=any([stickers, animations, games, inlinebots]),
                 can_add_web_page_previews=webprev,
                 can_send_polls=polls,
                 can_change_info=info,
@@ -133,8 +130,7 @@ async def lock_perm(c: Gojo, m: Message):
                 can_pin_messages=pin,
             ),
         )
-        LOGGER.info(
-            f"{m.from_user.id} locked selected permissions in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} locked selected permissions in {m.chat.id}")
     except ChatNotModified:
         pass
     except ChatAdminRequired:
@@ -216,8 +212,7 @@ async def unlock_perm(c: Gojo, m: Message):
                     can_pin_messages=True,
                 ),
             )
-            LOGGER.info(
-                f"{m.from_user.id} unlocked all permissions in {m.chat.id}")
+            LOGGER.info(f"{m.from_user.id} unlocked all permissions in {m.chat.id}")
         except ChatNotModified:
             pass
         except ChatAdminRequired:
@@ -290,8 +285,7 @@ async def unlock_perm(c: Gojo, m: Message):
         return
 
     try:
-        LOGGER.info(
-            f"{m.from_user.id} unlocked selected permissions in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} unlocked selected permissions in {m.chat.id}")
         await c.set_chat_permissions(
             chat_id,
             ChatPermissions(

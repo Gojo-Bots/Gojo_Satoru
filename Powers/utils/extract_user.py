@@ -1,7 +1,6 @@
-from traceback import format_exc
 from typing import Tuple
-
 from Powers import LOGGER
+from traceback import format_exc
 from Powers.bot_class import Gojo
 from Powers.database.users_db import Users
 from pyrogram.enums import MessageEntityType as entity
@@ -29,7 +28,7 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
             elif required_entity.type in (entity.MENTION, entity.PHONE_NUMBER):
                 # new long user ids are identified as phone_number
                 user_found = m.text[
-                    required_entity.offset: (
+                    required_entity.offset : (
                         required_entity.offset + required_entity.length
                     )
                 ]

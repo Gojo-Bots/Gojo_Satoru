@@ -1,16 +1,14 @@
 from html import escape
 from random import choice
-
-from Powers import DEV_USERS, LOGGER
-from Powers.bot_class import Gojo
+from pyrogram import enums
 from Powers.utils import extras
+from Powers.bot_class import Gojo
+from pyrogram.types import Message
+from Powers import LOGGER, DEV_USERS
+from pyrogram.errors import MessageTooLong
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.utils.extras import NOWYES as NO
-from Powers.utils.extras import YESWNO as YES
-from pyrogram import enums
-from pyrogram.errors import MessageTooLong
-from pyrogram.types import Message
+from Powers.utils.extras import NOWYES as NO, YESWNO as YES
 
 
 @Gojo.on_message(command("shout"))
@@ -74,8 +72,7 @@ async def fun_slap(c: Gojo, m: Message):
     hit = choice(extras.HIT)
     throw = choice(extras.THROW)
 
-    reply = temp.format(user1=user1, user2=user2,
-                        item=item, hits=hit, throws=throw)
+    reply = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
     await reply_text(reply)
     LOGGER.info(f"{m.from_user.id} slaped in {m.chat.id}")
     return
@@ -114,8 +111,7 @@ async def insult(c: Gojo, m: Message):
             m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
         )
         await reply_text(Insult_omp)
-        LOGGER.info(
-            f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
 
 
 @Gojo.on_message(command("yes"))

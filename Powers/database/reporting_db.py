@@ -1,8 +1,8 @@
-from threading import RLock
 from time import time
-
 from Powers import LOGGER
+from threading import RLock
 from Powers.database import MongoDB
+
 
 INSERTION_LOCK = RLock()
 
@@ -42,11 +42,9 @@ class Reporting(MongoDB):
         chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
             chat_type = self.get_chat_type()
-            new_data = {"_id": self.chat_id,
-                        "status": True, "chat_type": chat_type}
+            new_data = {"_id": self.chat_id, "status": True, "chat_type": chat_type}
             self.insert_one(new_data)
-            LOGGER.info(
-                f"Initialized Language Document for chat {self.chat_id}")
+            LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
             return new_data
         return chat_data
 
