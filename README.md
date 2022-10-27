@@ -60,10 +60,10 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 * Fully asynchronous
 * Fully open-source
 * Frequently updated
-
   
 ***Can be found on Telegram as __[@iamgojoof6eyes_bot](https://telegram.dog/iamgojoof6eyes_bot)__***
   
+* Feel free to give ideas for next update. Drop your ideas [here](https://github.com/Gojo-Bots/Gojo_Satoru/discussions/new?category=ideas)
 
 -------
 
