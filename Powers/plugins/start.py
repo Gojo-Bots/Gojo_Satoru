@@ -245,7 +245,7 @@ Commands available:
 async def get_module_info(_, q: CallbackQuery):
     module = q.data.split(".", 1)[1]
 
-    help_msg = (f"**{str(module)}:**\n\n" + HELP_COMMANDS[f"plugins.{module}"]["help_msg"],)
+    help_msg = HELP_COMMANDS[f"plugins.{module}"]["help_msg"]
 
     help_kb = HELP_COMMANDS[f"plugins.{module}"]["buttons"]
     await q.edit_message_caption(
