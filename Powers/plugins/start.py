@@ -4,7 +4,7 @@ from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery, Message, InlineKeyboardButton, InlineKeyboardMarkup
 
 from Powers import HELP_COMMANDS, LOGGER
 from Powers.bot_class import Gojo
@@ -105,17 +105,17 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
         except UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
     else:
-        kb = ikb(
+        kb = InlineKeyboardMarkup(
+          [
             [
-                [
-                    (
-                        "Connect me to pm",
-                        f"https://t.me/{Config.BOT_USERNAME}?start=start",
-                        "url",
-                    )
-                ]
-            ]
-        )
+              InlineKeyboardButton(
+                "Connect me to pm",
+                url=f"https://t.me/{Config.BOT_USERNAME}?start=start",
+              )
+            ],
+          ],
+        ),
+        
         await m.reply_photo(
             photo=choice(StartPic),
             caption="I'm alive :3",
@@ -203,18 +203,16 @@ async def help_menu(_, m: Message):
             await m.reply_photo(
                 photo=choice(StartPic),
                 caption=f"Press the button below to get help for <i>{help_option}</i>",
-                reply_markup=ikb(
+                reply_markup=InlineKeyboardMarkup(
+                  [
                     [
-                        [
-                            (
-                                "Help",
-                                f"t.me/{Config.BOT_USERNAME}?start={help_option}",
-                                "url",
-                            ),
-                        ],
+                      InlineKeyboardButton(
+                        "Help",
+                        url=f"t.me/{Config.BOT_USERNAME}?start={help_option}",
+                        ),
                     ],
+                  ],
                 ),
-            )
     else:
 
         if m.chat.type == ChatType.PRIVATE:
