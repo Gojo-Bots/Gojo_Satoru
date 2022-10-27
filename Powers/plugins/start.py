@@ -213,6 +213,7 @@ async def help_menu(_, m: Message):
                     ],
                   ],
                 ),
+            )
     else:
 
         if m.chat.type == ChatType.PRIVATE:
@@ -225,8 +226,15 @@ Commands available:
 * /start: Start the bot
 * /help: Give's you this message."""
         else:
-            keyboard = ikb(
-                [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
+            keyboard = InlineKeyboardMarkup(
+              [
+                [
+                  InlineKeyboardButton(
+                    "Help", 
+                    url=f"t.me/{Config.BOT_USERNAME}?start=help",
+                  ),
+                ],
+              ],
             )
             msg = "Contact me in PM to get the list of possible commands."
 
