@@ -154,8 +154,8 @@ async def commands_menu(_, q: CallbackQuery):
 Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! My name is Gojo✨.
 I'm here to help you manage your groups!
 Commands available:
-* /start: Start the bot
-* /help: Give's you this message."""
+× /start: Start the bot
+× /help: Give's you this message."""
 
         await q.edit_message_caption(
             caption=cpt,
@@ -223,8 +223,8 @@ async def help_menu(_, m: Message):
 Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is Gojo✨.
 I'm here to help you manage your groups!
 Commands available:
-* /start: Start the bot
-* /help: Give's you this message."""
+× /start: Start the bot
+× /help: Give's you this message."""
         else:
             keyboard = InlineKeyboardMarkup(
               [
