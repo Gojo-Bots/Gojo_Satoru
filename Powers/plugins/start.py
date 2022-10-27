@@ -105,16 +105,16 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
         except UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
     else:
-        kb = InlineKeyboardMarkup(
+      kb = InlineKeyboardMarkup(
+        [
           [
-            [
-              InlineKeyboardButton(
-                "Connect me to pm",
-                url=f"https://t.me/{Config.BOT_USERNAME}?start=start",
-              )
-            ],
+            InlineKeyboardButton(
+              "Connect me to pm", 
+              url=f"https://t.me/{Config.BOT_USERNAME}?start=start",
+            ),
           ],
-        ),
+        ],
+      )
         
         await m.reply_photo(
             photo=choice(StartPic),
