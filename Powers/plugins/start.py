@@ -116,12 +116,10 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
         ],
       )
         
-        await m.reply_photo(
-            photo=choice(StartPic),
-            caption="I'm alive :3",
-            reply_markup=kb,
-            quote=True,
-        )
+      await m.reply_photo(
+        photo=choice(StartPic),
+        caption="I'm alive :3",
+        reply_markup=kb,quote=True,)
     return
 
 
