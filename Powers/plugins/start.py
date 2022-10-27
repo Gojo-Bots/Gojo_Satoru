@@ -208,7 +208,7 @@ async def help_menu(_, m: Message):
                     [
                       InlineKeyboardButton(
                         "Help",
-                        url=f"t.me/{Config.BOT_USERNAME}?help={help_option}",
+                        url=f"t.me/{Config.BOT_USERNAME}?start={help_option}",
                         ),
                     ],
                   ],
@@ -231,7 +231,7 @@ Commands available:
                 [
                   InlineKeyboardButton(
                     "Help", 
-                    url=f"t.me/{Config.BOT_USERNAME}?help=help",
+                    url=f"t.me/{Config.BOT_USERNAME}?start=help",
                   ),
                 ],
               ],
