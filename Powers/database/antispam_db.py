@@ -1,7 +1,7 @@
-from threading import RLock
 from datetime import datetime
-from Powers.database import MongoDB
+from threading import RLock
 
+from Powers.database import MongoDB
 
 INSERTION_LOCK = RLock()
 ANTISPAM_BANNED = set()

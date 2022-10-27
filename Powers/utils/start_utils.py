@@ -1,20 +1,22 @@
 from html import escape
 from secrets import choice
-from Powers.vars import Config
 from traceback import format_exc
-from Powers.bot_class import Gojo
+
 from pyrogram.errors import RPCError
-from Powers.utils.kbhelpers import ikb
-from Powers.utils.msg_types import Types
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, Message
+
+from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
+from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
 from Powers.database.rules_db import Rules
 from Powers.utils.cmd_senders import send_cmd
-from Powers import LOGGER, HELP_COMMANDS, SUPPORT_GROUP
-from pyrogram.types import Message, CallbackQuery, InlineKeyboardButton
-from Powers.utils.string import (
-    parse_button, build_keyboard, escape_mentions_using_curly_brackets)
-
+from Powers.utils.kbhelpers import ikb
+from Powers.utils.msg_types import Types
+from Powers.utils.string import (build_keyboard,
+                                 escape_mentions_using_curly_brackets,
+                                 parse_button)
+from Powers.vars import Config
 
 # Initialize
 notes_db = Notes()
@@ -233,11 +235,12 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
         )
         help_option_value = help_option_name["help_msg"]
-        help_kb = next(
+        ou = next(
             HELP_COMMANDS[i]["buttons"]
             for i in HELP_COMMANDS
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
-        ) + [[("« " + "Back", "commands")]]
+        )
+        help_kb = ikb(ou, True, "commands")
         help_msg = f"**{(help_option_value)}:**"
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
@@ -250,7 +253,9 @@ Commands available:
 * /start: Start the bot
 * /help: Give's you this message.
         """
-        help_kb = [
+        ou = await gen_cmds_kb(m)
+        help_kb = ikb(ou, True)
+        """help_kb = [
             *(await gen_cmds_kb(m)),
             [
                 InlineKeyboardButton(
@@ -258,6 +263,6 @@ Commands available:
                     callback_data="start_back",
                 ),
             ],
-        ]
+        ]"""
 
     return help_msg, help_kb

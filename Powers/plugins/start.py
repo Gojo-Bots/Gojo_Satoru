@@ -1,17 +1,19 @@
 from random import choice
-from Powers.vars import Config
-from Powers.bot_class import Gojo
+
 from pyrogram import enums, filters
-from Powers.utils.kbhelpers import ikb
-from Powers import LOGGER, HELP_COMMANDS
-from Powers.utils.extras import StartPic
+from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.enums import ChatType
+from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
+from pyrogram.types import CallbackQuery, Message
+
+from Powers import HELP_COMMANDS, LOGGER
+from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
-from pyrogram.types import Message, CallbackQuery
-from pyrogram.enums import ChatType, ChatMemberStatus as CMS
-from pyrogram.errors import UserIsBlocked, QueryIdInvalid, MessageNotModified
-from Powers.utils.start_utils import (
-    gen_cmds_kb, gen_start_kb, get_help_msg, get_private_note,
-    get_private_rules)
+from Powers.utils.extras import StartPic
+from Powers.utils.kbhelpers import ikb
+from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb, get_help_msg,
+                                      get_private_note, get_private_rules)
+from Powers.vars import Config
 
 
 @Gojo.on_message(
@@ -145,9 +147,7 @@ Join my [News Channel](http://t.me/gojo_bots_network) to get information on all 
 
 @Gojo.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_, q: CallbackQuery):
-    cmds = sorted(list(HELP_COMMANDS.keys()))
-    kb = [cmd.lower() for cmd in cmds]
-    ou = [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    ou = await gen_cmds_kb(q.message)
     keyboard = ikb(ou, True)
     try:
         cpt = f"""
@@ -218,9 +218,7 @@ async def help_menu(_, m: Message):
     else:
 
         if m.chat.type == ChatType.PRIVATE:
-            cmds = sorted(list(HELP_COMMANDS.keys()))
-            kb = [cmd.lower() for cmd in cmds]
-            ou = [kb[i : i + 3] for i in range(0, len(kb), 3)]
+            ou = await gen_cmds_kb(m)
             keyboard = ikb(ou, True)
             msg = f"""
 Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is Gojo✨.
@@ -247,15 +245,13 @@ Commands available:
 async def get_module_info(_, q: CallbackQuery):
     module = q.data.split(".", 1)[1]
 
-    help_msg = (f"**{str(module)}:**\n\n" + HELP_COMMANDS[module]["help_msg"],)
+    help_msg = (f"**{str(module)}:**\n\n" + HELP_COMMANDS[f"plugins.{module}"]["help_msg"],)
 
-    help_kb = HELP_COMMANDS[module]["buttons"] + [
-        [("« " + "Back", "commands")],
-    ]
+    help_kb = HELP_COMMANDS[f"plugins.{module}"]["buttons"]
     await q.edit_message_caption(
         caption=help_msg,
         parse_mode=enums.ParseMode.MARKDOWN,
-        reply_markup=ikb(help_kb),
+        reply_markup=ikb(help_kb, True, todo="commands"),
     )
     await q.answer()
     return

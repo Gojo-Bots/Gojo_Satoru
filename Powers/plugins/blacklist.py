@@ -1,12 +1,14 @@
 from html import escape
-from Powers import LOGGER
+
 from pyrogram import filters
-from Powers.bot_class import Gojo
-from Powers.utils.kbhelpers import ikb
-from pyrogram.types import Message, CallbackQuery
-from Powers.database.blacklist_db import Blacklist
 from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.types import CallbackQuery, Message
+
+from Powers import LOGGER
+from Powers.bot_class import Gojo
+from Powers.database.blacklist_db import Blacklist
 from Powers.utils.custom_filters import command, owner_filter, restrict_filter
+from Powers.utils.kbhelpers import ikb
 
 
 @Gojo.on_message(command("blacklist") & filters.group)

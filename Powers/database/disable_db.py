@@ -1,8 +1,8 @@
-from time import time
-from Powers import LOGGER
 from threading import RLock
-from Powers.database import MongoDB
+from time import time
 
+from Powers import LOGGER
+from Powers.database import MongoDB
 
 INSERTION_LOCK = RLock()
 DISABLED_CMDS = {}

@@ -1,8 +1,9 @@
 from sys import exit as exiter
+
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
-from Powers import DB_URI, LOGGER, DB_NAME
 
+from Powers import DB_NAME, DB_URI, LOGGER
 
 try:
     Powers_db_client = MongoClient(DB_URI)

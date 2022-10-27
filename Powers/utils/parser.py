@@ -1,5 +1,6 @@
 from html import escape
-from re import sub, compile as compilere
+from re import compile as compilere
+from re import sub
 
 
 async def cleanhtml(raw_html: str) -> str:

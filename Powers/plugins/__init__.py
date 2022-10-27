@@ -3,7 +3,7 @@ async def all_plugins():
     # work.
 
     from glob import glob
-    from os.path import isfile, dirname, basename
+    from os.path import basename, dirname, isfile
 
     mod_paths = glob(dirname(__file__) + "/*.py")
     all_plugs = [
