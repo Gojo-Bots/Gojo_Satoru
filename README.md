@@ -64,7 +64,6 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
   
 ***Can be found on Telegram as __[@iamgojoof6eyes_bot](https://telegram.dog/iamgojoof6eyes_bot)__***
   
- ⚠️ ***Note: WORK IN PROGRESS... If you think u may be help ful in fixing the issue contact me on telegram [@iamgojoof6eyes](https://telegram.dog/iamgojoof6eyes)***
 
 -------
 
