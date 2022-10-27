@@ -84,7 +84,7 @@ async def start(c: Gojo, m: Message):
                 photo=choice(StartPic),
                 caption=help_msg,
                 parse_mode=enums.ParseMode.MARKDOWN,
-                reply_markup=ikb(help_kb),
+                reply_markup=help_kb,
                 quote=True,
             )
             return
@@ -119,7 +119,9 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
       await m.reply_photo(
         photo=choice(StartPic),
         caption="I'm alive :3",
-        reply_markup=kb,quote=True,)
+        reply_markup=kb,
+        quote=True,
+      )
     return
 
 
@@ -193,7 +195,7 @@ async def help_menu(_, m: Message):
                 photo=choice(StartPic),
                 caption=help_msg,
                 parse_mode=enums.ParseMode.MARKDOWN,
-                reply_markup=ikb(help_kb),
+                reply_markup=help_kb,
                 quote=True,
             )
         else:
