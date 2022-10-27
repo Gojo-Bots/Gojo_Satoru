@@ -19,7 +19,7 @@ def ikb(rows=None, back=False, todo="start_back"):
                 line.append(button)
             lines.append(line)
     except AttributeError:
-        for button in rows:
+        for button in row:
             button = btn(*button)  # Will make the kb which don't have "." in them
             line.append(button)
         lines.append(line)
