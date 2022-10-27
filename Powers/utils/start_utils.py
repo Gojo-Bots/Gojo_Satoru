@@ -254,7 +254,7 @@ Commands available:
 * /help: Give's you this message.
         """
         ou = await gen_cmds_kb(m)
-        help_kb = [ikb(ou, True)]
+        help_kb = ikb(ou, True)
         """help_kb = [
             *(await gen_cmds_kb(m)),
             [
