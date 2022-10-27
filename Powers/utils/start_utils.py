@@ -250,8 +250,8 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
 Hey There! My name is Gojo.
 I'm here to help you manage your groups!
 Commands available:
-* /start: Start the bot
-* /help: Give's you this message.
+× /start: Start the bot
+× /help: Give's you this message.
         """
         ou = await gen_cmds_kb(m)
         help_kb = ikb(ou, True)
