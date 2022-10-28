@@ -460,31 +460,6 @@ async def setgtitle(_, m: Message):
         f"Successfully Changed Group Title From {m.chat.title} To {gtit}",
     )
 
-"""@Gojo.on_message(command("contents") & admin_filter)
-async def savecontent(c: Gojo, m: Message):
-    user = await m.chat.get_member(m.from_user.id)
-    if not (user.privileges.can_restrict_members and user.status in [CMS.OWNER, CMS.ADMINISTRATOR]):
-        await m.reply_text(
-            "You can't restrict contents here!"
-        )
-        return
-    if len(m.command) < 1:
-        return await m.reply_text("Please read /help for using it!")
-    todo = m.text.split(None, 1)[1]
-    try:
-        c.set_chat_protected_content()
-        if todo.lower() in ["yes", "true", "on"]:
-            await m.chat.set_protected_content(True)
-            return await m.reply_text("Now no one can save content from this chat!")
-        if todo.lower() in ["no", "false", "off"]:
-            await m.chat.set_protected_content(False)
-            return await m.reply_text("Now peoples can save content from this chat!")
-        return await m.reply_text("**Usage:** `/contents` <yes/on/true> or <off/false/no>\n Do /help admin to know more.")
-    except Exception as e:
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return await m.reply_text(f"**Error:**\n{e}")"""
-
 @Gojo.on_message(command("setgdes") & admin_filter)
 async def setgdes(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
@@ -601,4 +576,4 @@ __HELP__ = """
 **Example:**
 `/promote @username`: this promotes a user to admin."""
 
-# • /contents: Restrict saving contents pass `True` to switch on and `false` to off.
+
