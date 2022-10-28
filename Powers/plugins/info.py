@@ -94,7 +94,7 @@ async def user_info(c: Gojo, user, already=False):
         elif user_id == Config.BOT_ID:
             omp = "I am the targeted user"
         
-
+    is_scam = user.is_scam
     is_bot = user.is_bot
     is_fake = user.is_fake
     status = user.status
@@ -134,6 +134,7 @@ async def user_info(c: Gojo, user, already=False):
 <b>✋ RESTRICTED</b>: {is_restricted}
 <b>✅ VERIFIED</b>: {is_verified}
 <b>❌ FAKE</b> : {is_fake}
+<b>⚠️ SCAM</b> : {is_scam} 
 <b>🤖 BOT</b>: {is_bot}
 <b>👀 Last seen</b>: <code>{last_date}</code>
 
