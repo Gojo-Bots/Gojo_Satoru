@@ -83,6 +83,7 @@ async def user_info(c: Gojo, user, already=False):
     is_support = True if user_id in SUPPORT_STAFF else False
     if user_id == Config.BOT_ID:
         is_support = "A person is a great support to himself"
+    omp = "Hmmm.......Who is that again?"
     if is_support or Config.BOT_ID:
         if user_id in DEV_USERS:
             omp = "User is dev"
@@ -92,8 +93,7 @@ async def user_info(c: Gojo, user, already=False):
             omp = "User is in whitelist"
         elif user_id == Config.BOT_ID:
             omp = "I am the targeted user"
-    if not (is_support or Config.BOT_ID):
-        omp = "Hmmm.......Who is that again?"
+        
 
     is_bot = user.is_bot
     is_fake = user.is_fake
