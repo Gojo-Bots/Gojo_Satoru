@@ -4,7 +4,8 @@ from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
-from pyrogram.types import CallbackQuery, Message, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
+                            InlineKeyboardMarkup, Message)
 
 from Powers import HELP_COMMANDS, LOGGER
 from Powers.bot_class import Gojo
@@ -110,7 +111,7 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
           [
             InlineKeyboardButton(
               "Connect me to pm", 
-              url=f"https://t.me/{Config.BOT_USERNAME}?start=start",
+              url=f"https://{Config.BOT_USERNAME}.t.me/",
             ),
           ],
         ],

@@ -39,7 +39,6 @@ Not a particular inspiration, inspired by many bots
 Mainly:
 
 * [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
-* [WilliamButcherBot](https://github.com/TheHamkerCat/WilliamButcherBot)
 
 
 ---------
@@ -258,8 +257,6 @@ To add your very own plugin just use the format given below and go through the [
 </p>--->
 
 * [PSYREX](https://github.com/iamPSYREX) `for logos`
-
-* [PyKeyboard](https://github.com/pystorage/pykeyboard) `for pagination`
 
 * [Pyrogram](https://github.com/pyrogram/pyrogram) `library`
 

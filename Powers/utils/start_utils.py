@@ -3,7 +3,7 @@ from secrets import choice
 from traceback import format_exc
 
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, Message
+from pyrogram.types import CallbackQuery, Message
 
 from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
 from Powers.bot_class import Gojo
@@ -66,6 +66,11 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 (
                     "Join for GFx work",
                     "https://t.me/psy_Logos",
+                    "url",
+                ),
+                (
+                    "Powered by",
+                    "https://gojo_bots_network.t.me",
                     "url",
                 ),
             ],
@@ -255,14 +260,5 @@ Commands available:
         """
         ou = await gen_cmds_kb(m)
         help_kb = ikb(ou, True)
-        """help_kb = [
-            *(await gen_cmds_kb(m)),
-            [
-                InlineKeyboardButton(
-                    "« Back",
-                    callback_data="start_back",
-                ),
-            ],
-        ]"""
 
     return help_msg, help_kb
