@@ -666,4 +666,10 @@ StartPic = [
     "https://te.legra.ph/file/fe9c620d294f4f47f4350.jpg",
     "https://te.legra.ph/file/4cdf315e2925d8b4ef6ae.jpg",
     "https://te.legra.ph/file/b480c0989f1e4a9ea63c7.jpg",
+    "https://te.legra.ph/file/37423e9680e3f79c9eb15.jpg",
+    "https://te.legra.ph/file/4a9c4663d0120cff7cc82.jpg",
+    "https://te.legra.ph/file/56d72d125005a16dba7b8.jpg",
+    "https://te.legra.ph/file/c10f1b32adaf93c1a9fe1.jpg",
+    "https://te.legra.ph/file/68c607517cca7d08e8910.jpg",
+    "https://te.legra.ph/file/c86855e6d5a5668748ce1.jpg",
 ]
