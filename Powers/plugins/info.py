@@ -92,7 +92,7 @@ async def user_info(c: Gojo, user, already=False):
             omp = "User is in whitelist"
         elif user_id == Config.BOT_ID:
             omp = "I am the targeted user"
-    else:
+    if not (is_support or Config.BOT_ID):
         omp = "Hmmm.......Who is that again?"
 
     is_bot = user.is_bot
