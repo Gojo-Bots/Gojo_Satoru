@@ -270,7 +270,9 @@ async def paste_func(_, message: Message):
         return await message.reply_text("Only text and documents are supported")
 
     m = await message.reply_text("Pasting...")
-
+    
+    r = message.reply_to_message
+    
     if r.text:
         content = str(r.text)
     if r.document:
