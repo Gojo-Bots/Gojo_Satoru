@@ -303,16 +303,11 @@ async def paste_func(_, message: Message):
             await message.reply_photo(
                 photo=link,
                 quote=False,
-                caption="Pasted",
-                reply_markup=InlineKeyboardMarkup(kb),
+                caption=f"**Paste Link:** [Here]({link})"
             )
         await m.delete()
     except Exception:
-        await m.delete()
-        await message.reply_text(
-            "Here is the link of the document....",
-            reply_markup=InlineKeyboardMarkup(kb),
-        )
+        await m.edit("Here's your paste", reply_markup=kb)
 
 
 @Gojo.on_message(command("tr"))

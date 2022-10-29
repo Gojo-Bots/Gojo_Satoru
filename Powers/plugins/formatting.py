@@ -1,4 +1,5 @@
 from pyrogram import enums, filters
+from pyrogram.errors import MediaCaptionTooLong
 from pyrogram.types import CallbackQuery, Message
 
 from Powers import LOGGER
@@ -35,35 +36,45 @@ async def markdownhelp(_, m: Message):
 
 
 @Gojo.on_callback_query(filters.regex("^formatting."))
-async def get_formatting_info(_, q: CallbackQuery):
+async def get_formatting_info(c: Gojo, q: CallbackQuery):
     cmd = q.data.split(".")[1]
     kb = ikb([[("Back", "back.formatting")]])
 
     if cmd == "md_formatting":
-        await q.message.edit_text(
-            text="""<b>Markdown Formatting</b>
-      You can format your message using <b>bold</b>, <i>italic</i>, <u>underline</u>, <strike>strike</strike> and much more. Go ahead and experiment!
+        
+        txt = """<b>Markdown Formatting</b>
+        You can format your message using <b>bold</b>, <i>italic</i>, <u>underline</u>, <strike>strike</strike> and much more. Go ahead and experiment!
 
-      **Note**: It supports telegram user based formatting as well as html and markdown formattings.
-      <b>Supported markdown</b>:
-      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-      - <code>__italic__</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-      - <code>**bold**</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', like: <code>**bold** | *bold*</code>.
-      - <code>--underline--</code>: To make text <u>underline</u>.
-      - <code>~~strike~~</code>: Tildes are used for strikethrough. Shows as: <strike>strike</strike>.
-      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <spoiler>Spoiler</spoiler>.
-      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href="https://example.com/">hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
-      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-      <b>Example:</b>
-      <code>[button 1](buttonurl:example.com)</code>
-      <code>[button 2](buttonurl://example.com:same)</code>
-      <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, while 3 will be underneath.""",
-            reply_markup=kb,
-            parse_mode=enums.ParseMode.HTML,
-        )
+        **Note**: It supports telegram user based formatting as well as html and markdown formattings.
+        <b>Supported markdown</b>:
+        - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
+        - <code>__italic__</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
+        - <code>**bold**</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
+        - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', like: <code>**bold** | *bold*</code>.
+        - <code>--underline--</code>: To make text <u>underline</u>.
+        - <code>~~strike~~</code>: Tildes are used for strikethrough. Shows as: <strike>strike</strike>.
+        - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <spoiler>Spoiler</spoiler>.
+        - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href="https://example.com/">hyperlink</a>.
+        - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+        If you would like to send buttons on the same row, use the <code>:same</code> formatting.
+        <b>Example:</b>
+        <code>[button 1](buttonurl:example.com)</code>
+        <code>[button 2](buttonurl://example.com:same)</code>
+        <code>[button 3](buttonurl://example.com)</code>
+        This will show button 1 and 2 on the same line, while 3 will be underneath."""
+        try:
+            await q.message.edit_text(
+                text=txt,
+                reply_markup=kb,
+                parse_mode=enums.ParseMode.HTML,
+            )
+        except MediaCaptionTooLong:
+            await q.message.delete()
+            await c.send_message(
+                chat_id=q.message.chat.id,
+                text=txt,
+                reply_markup=kb,
+                parse_mode=enums.ParseMode.HTML,)
     elif cmd == "fillings":
         await q.message.edit_text(
             text="""<b>Fillings</b>
