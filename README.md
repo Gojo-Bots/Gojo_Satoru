@@ -131,8 +131,23 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 * Create Virtualenv using: `virtualenv venv`
 * Install the requirements using `python3 -m pip install -r requirements.txt`
 * Fill in all the variables in Development class, not Config class. Sudo, Dev, Whitelist users are optional!!
+* If you want, you can remove all the things
 * Change to virtualenv shell by using: `. venv/bin/activate (Linux) venv\Scripts\activate (Windows)`
 * Run the bot using `python3 -m Powers`
+
+### Using Remote Desktop Protocol(RDP):
+
+* Update apt by using `sudo apt update && sudo apt upgrade -y`
+* Now install required packages by `sudo apt install --no-install-recommends -y python3-lxml python3-psycopg2 libpq-dev libcurl4-openssl-dev libxml2-dev libxslt1-dev python3-pip python3-sqlalchemy openssl wget curl git libffi-dev libjpeg-dev libwebp-dev python3 python3-dev pv tree mediainfo nano nodejs libreadline-dev libyaml-dev gcc zlib1g ffmpeg libssl-dev libgconf-2-4 libxi6 unzip libopus0 libopus-dev python3-virtualenv tmux libmagickwand-dev`
+* Clone the GitHub repo by `https://github.com/Gojo-Bots/Gojo_Satoru`
+* Now make it current directory by `cd Gojo_Satoru`
+* Edit the vars file by `nano Powers/vars.py`
+* Fill in all the variables in Development class, not Config class. Sudo, Dev, Whitelist users are optional!!
+* Enter in new window by `tmux`
+* Create and activate a new virtualenv by `virtualenv venv source venv/bin/activate`
+* Install requirements to run the bot by `pip3 install -r requirements.txt`
+* After requirements are installed, start the bot by `python3 -m Powers`
+* Exit the window `CTRL + B` then `D`
 
 <!---### Using docker
 
