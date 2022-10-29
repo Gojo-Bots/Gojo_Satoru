@@ -69,11 +69,9 @@ async def get_formatting_info(c: Gojo, q: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML,
             )
         except MediaCaptionTooLong:
-            await q.message.delete()
             await c.send_message(
                 chat_id=q.message.chat.id,
                 text=txt,
-                reply_markup=kb,
                 parse_mode=enums.ParseMode.HTML,)
     elif cmd == "fillings":
         await q.message.edit_text(
