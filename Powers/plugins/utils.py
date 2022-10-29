@@ -263,10 +263,8 @@ async def paste(content: str):
 
 @Gojo.on_message(command("paste"))
 async def paste_func(_, message: Message):
-    if not message.reply_to_message:
-        return await message.reply_text("Reply To A Message With `/paste`")
-
-    r = message.reply_to_message
+    if message.reply_to_message:
+        r = message.reply_to_message
 
     if not r.text and not r.document:
         return await message.reply_text("Only text and documents are supported")
@@ -307,8 +305,8 @@ async def paste_func(_, message: Message):
             )
         await m.delete()
     except Exception:
-        await m.edit("Here's your paste", reply_markup=kb)
-
+        await m.edit("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
+    return
 
 @Gojo.on_message(command("tr"))
 async def tr(_, message):
