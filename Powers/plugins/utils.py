@@ -305,7 +305,7 @@ async def paste_func(_, message: Message):
             )
         await m.delete()
     except Exception:
-        await m.edit("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
+        await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
     return
 
 @Gojo.on_message(command("tr"))
