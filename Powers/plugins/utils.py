@@ -293,22 +293,10 @@ async def paste_func(_, message: Message):
     link = await paste(content)
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     try:
-        if message.from_user.is_bot:
-            await message.reply_photo(
-                photo=link,
-                quote=False,
-                caption="Pasted",
-                reply_markup=InlineKeyboardMarkup(kb),
-            )
-        else:
-            await message.reply_photo(
-                photo=link,
-                quote=False,
-                caption=f"**Paste Link:** [Here]({link})"
-            )
         await m.delete()
-    except Exception:
         await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
+    except Exception:
+        await message.reply_text(f"Here's your paste [link]({link})",)
     return
 
 @Gojo.on_message(command("tr"))
