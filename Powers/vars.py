@@ -12,7 +12,7 @@ class Config:
 
     LOGGER = True
     BOT_TOKEN = config("BOT_TOKEN", default=None)
-    API_ID = int(config("API_ID", default=None))
+    API_ID = int(config("API_ID", default="123"))
     API_HASH = config("API_HASH", default=None)
     OWNER_ID = int(config("OWNER_ID", default=1344569458))
     MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=-100))
@@ -27,14 +27,14 @@ class Config:
         int(i)
         for i in config(
             "SUDO_USERS",
-            default="",
+            default="1344569458",
         ).split(" ")
     ]
     WHITELIST_USERS = [
         int(i)
         for i in config(
             "WHITELIST_USERS",
-            default="",
+            default="1344569458",
         ).split(" ")
     ]
     DB_URI = config("DB_URI", default="")
