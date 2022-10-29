@@ -3,7 +3,7 @@ from random import choice
 from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType
-from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
+from pyrogram.errors import MediaCaptionTooLong, MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
@@ -249,16 +249,19 @@ Commands available:
 
 
 @Gojo.on_callback_query(filters.regex("^plugins."))
-async def get_module_info(_, q: CallbackQuery):
+async def get_module_info(c: Gojo, q: CallbackQuery):
     module = q.data.split(".", 1)[1]
 
     help_msg = HELP_COMMANDS[f"plugins.{module}"]["help_msg"]
 
     help_kb = HELP_COMMANDS[f"plugins.{module}"]["buttons"]
-    await q.edit_message_caption(
-        caption=help_msg,
-        parse_mode=enums.ParseMode.MARKDOWN,
-        reply_markup=ikb(help_kb, True, todo="commands"),
-    )
+    try:
+      await q.edit_message_caption(
+          caption=help_msg,
+          parse_mode=enums.ParseMode.MARKDOWN,
+          reply_markup=ikb(help_kb, True, todo="commands"),
+      )
+    except MediaCaptionTooLong:
+      await c.send_message(chat_id=q.message.chat.id,text=help_msg,)
     await q.answer()
     return
