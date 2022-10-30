@@ -255,7 +255,7 @@ async def paste(content: str):
     try:
         KEY = resp["result"]["key"]
     except Exception as e:
-        return e
+        return str(e)
     return BASE + resp["result"]["key"]
 
 
