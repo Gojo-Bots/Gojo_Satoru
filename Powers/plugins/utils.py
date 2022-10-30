@@ -4,7 +4,6 @@ from io import BytesIO
 from os import remove
 
 import aiofiles
-from aiohttp import ClientSession
 from gpytranslate import Translator
 from pyrogram import enums, filters
 from pyrogram.errors import MessageTooLong
@@ -294,10 +293,10 @@ async def paste_func(_, message: Message):
     await m.delete()
     try:
         await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
-    except Exception:
+    except Exception as e:
         if link:
             return await message.reply_text(f"Here's your paste:\n [link]({link})",)
-        return await message.reply_text("Failed to post")
+        return await message.reply_text(f"Failed to post. Due to following error:\n{e}")
     
 
 @Gojo.on_message(command("tr"))
