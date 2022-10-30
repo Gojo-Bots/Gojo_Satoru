@@ -252,9 +252,10 @@ BASE = "https://nekobin.com/"
 
 async def paste(content: str):
     resp = await post(f"{BASE}api/documents", data=content)
-    if not resp["ok"]:
+    key = resp["result"]["key"]
+    if not key:
         return
-    return BASE + resp["ok"]["key"]
+    return BASE + key
 
 
 @Gojo.on_message(command("paste"))
