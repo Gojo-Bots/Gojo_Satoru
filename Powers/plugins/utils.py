@@ -248,7 +248,6 @@ async def github(_, m: Message):
     return
 
 
-session = ClientSession()
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
 BASE = "https://batbin.me/"
 
