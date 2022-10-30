@@ -4,6 +4,7 @@ from io import BytesIO
 from os import remove
 
 import aiofiles
+from aiohttp import ClientSession
 from gpytranslate import Translator
 from pyrogram import enums, filters
 from pyrogram.errors import MessageTooLong
@@ -248,9 +249,23 @@ async def github(_, m: Message):
     return
 
 
-# paste here
+session = ClientSession()
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
-BASE = "https://pasty.lus.pm/"
+BASE = "https://batbin.me/"
+
+async def post(url: str, *args, **kwargs):
+    async with session.post(url, *args, **kwargs) as resp:
+        try:
+            data = await resp.json()
+        except Exception:
+            data = await resp.text()
+    return data
+
+async def paste(content: str):
+    resp = await post(f"{BASE}api/v2/paste", data=content)
+    if not resp["success"]:
+        return
+    return BASE + resp["message"]
 
 
 @Gojo.on_message(command("paste"))
@@ -281,17 +296,8 @@ async def paste_func(_, message: Message):
                 content = await f.read()
 
             remove(doc)
-    resp = await post(f"{BASE}api/v2/pastes", data=content)
-    if not resp["id"]:
-        return await message.reply_text(
-            f"Failed to paste contact to report it", 
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Report it here", 
-                url=f"https://{SUPPORT_CHANNEL}.t.me"
-                )]]
-                )
-                ,)
-    link = f"{BASE}{resp['id']}"
+            
+    link = await paste(content)
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     try:
         await m.delete()
