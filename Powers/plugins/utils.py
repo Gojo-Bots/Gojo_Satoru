@@ -256,15 +256,15 @@ BASE = "https://pasty.lus.pm/"
 @Gojo.on_message(command("paste"))
 async def paste_func(_, message: Message):
     r = message.reply_to_message
+    m = await message.reply_text("Pasting...")
     
     if not r:
         content = message.text.split(None, 1)[1]
     
     if r:
         if not r.text and not r.document:
-            return await message.reply_text("Only text and documents are supported")
+            return await m.edit("Only text and documents are supported")
 
-        m = await message.reply_text("Pasting...")
 
         if r.text:
             content = str(r.text)
