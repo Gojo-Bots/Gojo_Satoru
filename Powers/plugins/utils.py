@@ -291,7 +291,7 @@ async def paste_func(_, message: Message):
     link = await paste(content)
     if len(link.split()) != 1:
         await m.delete()
-        return await message.reply_text(f"Failed to post. Due to following error:\n{e}")
+        return await message.reply_text(f"While posting got an error:\n{e}")
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     await m.delete()
     try:
