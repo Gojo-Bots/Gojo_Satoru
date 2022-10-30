@@ -113,7 +113,7 @@ async def get_lyrics(_, m: Message):
             )
         await em.delete()
     return
-
+'''
 
 @Gojo.on_message(
     command("id") & (filters.group | filters.private),
@@ -162,7 +162,6 @@ async def id_info(c: Gojo, m: Message):
     else:
         await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
     return
-'''
 
 
 @Gojo.on_message(
