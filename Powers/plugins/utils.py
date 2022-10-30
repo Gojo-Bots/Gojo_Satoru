@@ -252,8 +252,10 @@ BASE = "https://nekobin.com/"
 
 async def paste(content: str):
     resp = await post(f"{BASE}api/documents", data=content)
-    if not resp["ok"]:
-        return
+    try:
+        KEY = resp["result"]["key"]
+    except Exception as e:
+        return e
     return BASE + resp["result"]["key"]
 
 
@@ -287,6 +289,9 @@ async def paste_func(_, message: Message):
             remove(doc)
             
     link = await paste(content)
+    if len(link.split()) != 1:
+        await m.delete()
+        return await message.reply_text(f"Failed to post. Due to following error:\n{e}")
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     await m.delete()
     try:
