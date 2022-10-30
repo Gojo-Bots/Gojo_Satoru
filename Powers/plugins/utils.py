@@ -251,7 +251,7 @@ async def github(_, m: Message):
 
 session = ClientSession()
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
-BASE = "https://pasty.lus.pm/"
+BASE = "https://batbin.me/"
 
 async def paste(content: str):
     resp = await post(f"{BASE}api/v2/paste", data=content)
