@@ -113,8 +113,7 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
   * Login using github.
   * Fill the values
   * Then wait for 10-15 minutes. 
-  * ``Mandaotry`` keys are [given below](#Variables)
-  * ``All keys`` are listed [here](https://telegra.ph/Captain-03-27)
+  * Vars are [given below](#Variables)
   * ***If you want to add more data of yours just go to variable section and add the key and values to it then hit on `relaunch`*** 
   
   ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
