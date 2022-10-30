@@ -3,7 +3,8 @@ from random import choice
 from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType
-from pyrogram.errors import MediaCaptionTooLong, MessageNotModified, QueryIdInvalid, UserIsBlocked
+from pyrogram.errors import (MediaCaptionTooLong, MessageNotModified,
+                             QueryIdInvalid, UserIsBlocked)
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 

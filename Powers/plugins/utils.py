@@ -6,7 +6,6 @@ from os import remove
 import aiofiles
 from gpytranslate import Translator
 from pyrogram import enums, filters
-from pyrogram.enums import ChatType
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from wikipedia import summary
@@ -220,8 +219,6 @@ async def github(_, m: Message):
     REPLY = ""
     if name:
         REPLY += f"<b>🧑‍💻 GitHub Info of {name}:</b>"
-    if bio:
-        REPLY += f"\n\n<b>🎯 Bio:</b> <code>{bio}</code>"
     if url:
         REPLY += f"\n<b>📎 URL:</b> <a href='{url}'>{username}</a>"
     REPLY += f"\n<b>🔑 Public Repos:</b> {public_repos}"
@@ -242,6 +239,8 @@ async def github(_, m: Message):
         REPLY += f"\n<b>🚀 Location:</b> <code>{location}</code>"
     REPLY += f"\n<b>💫 Created at:</b> <code>{created_at}</code>"
     REPLY += f"\n<b>⌚️ Updated at:</b> <code>{updated_at}</code>"
+    if bio:
+        REPLY += f"\n\n<b>🎯 Bio:</b> <code>{bio}</code>"
 
     if avtar:
         return await m.reply_photo(photo=f"{avtar}", caption=REPLY)
@@ -251,14 +250,7 @@ async def github(_, m: Message):
 
 # paste here
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
-BASE = "https://batbin.me/"
-
-
-async def paste(content: str):
-    resp = await post(f"{BASE}api/v2/paste", data=content)
-    if not resp["success"]:
-        return
-    return BASE + resp["message"]
+BASE = "https://pasty.lus.pm/"
 
 
 @Gojo.on_message(command("paste"))
@@ -289,15 +281,26 @@ async def paste_func(_, message: Message):
                 content = await f.read()
 
             remove(doc)
-
-    link = await paste(content)
+    resp = await post(f"{BASE}api/v2/pastes", data=content)
+    if not resp["id"]:
+        return await message.reply_text(
+            f"Failed to paste contact to report it", 
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Report it here", 
+                url=f"https://{SUPPORT_CHANNEL}.t.me"
+                )]]
+                )
+                ,)
+    link = f"{BASE}{resp['id']}"
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     try:
         await m.delete()
         await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
     except Exception:
-        await message.reply_text(f"Here's your paste:\n {link}",)
-    return
+        if link:
+            return await message.reply_text(f"Here's your paste:\n [link]({link})",)
+        return 
+    
 
 @Gojo.on_message(command("tr"))
 async def tr(_, message):

@@ -114,7 +114,7 @@ async def user_info(c: Gojo, user, already=False):
     if status == enums.UserStatus.OFFLINE: 
       try:
         last_date = datetime.fromtimestamp(user.status.date).strftime("%Y-%m-%d %H:%M:%S")
-      except Exception as e:
+      except Exception:
         last_date = "User is offline"
 
     caption = f"""
