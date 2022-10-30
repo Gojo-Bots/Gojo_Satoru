@@ -188,11 +188,11 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 `DB_NAME`: Your [MongoDB](https://www.mongodb.com/) database name.
 
-`OWNER_ID`: Your user ID as an integer. You can get it from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+`OWNER_ID`: Your user ID as an integer. You can get it from [@SessionHellBot](https://telegram.dog/SessionHellBot)
 
 `SUPPORT_GROUP`: Your Telegram support group chat username where user's can contact in case of a problem.
 
-`MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`
+`MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`. You can get it from [@SessionHellBot](https://telegram.dog/SessionHellBot)
 
 `VERSION`: A Version to be shown in bot.
 
@@ -200,11 +200,11 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 `SUPPORT_CHANNEL`: Your Telegram support channel username where user's can see updates of bot.
 
-`DEV_USERS`: ID of users who are Devs of your bot. Use space to seprate values. You can get there id's from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+`DEV_USERS`: ID of users who are Devs of your bot. Use space to seprate values. You can get there id's from [@SessionHellBot](https://telegram.dog/SessionHellBot)
 
-`SUDO_USERS`: A space separated list of user IDs who you want to assign as sudo users. You can get there id's from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+`SUDO_USERS`: A space separated list of user IDs who you want to assign as sudo users. You can get there id's from [@SessionHellBot](https://telegram.dog/SessionHellBot)
 
-`WHITELIST_USERS`: A space separated list of user IDs whitelisted, cannot be restricted. You can get there id's from [@Session_HellBot](https://telegram.dog/Session_HellBot)
+`WHITELIST_USERS`: A space separated list of user IDs whitelisted, cannot be restricted. You can get there id's from [@SessionHellBot](https://telegram.dog/SessionHellBot)
 
 ⚠️ **Note:** In case you are passing more than one value seprate them using whitespace (space) for e.g. If I want to pass more than one PREFIX_HANDLER
 I'll pass it like `'/' '.' '!'` this.
