@@ -63,10 +63,10 @@ async def fun_slap(c: Gojo, m: Message):
     else:
         temp = choice(extras.SLAP_TEMPLATES)
 
-    if user_id:
+    if user_id != m.from_user.id:
         user1 = curr_user
         user2 = user.first_name
-
+        
     else:
         user1 = me.first_name
         user2 = curr_user
