@@ -9,7 +9,6 @@ from Powers import DEV_USERS, LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils import extras
 from Powers.utils.custom_filters import command
-from Powers.utils.extract_user import extract_user
 from Powers.utils.extras import NOWYES as NO
 from Powers.utils.extras import YESWNO as YES
 
@@ -53,11 +52,12 @@ async def fun_slap(c: Gojo, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
     curr_user = escape(m.from_user.first_name)
-    try:
-        user_id, user_first_name, _ = await extract_user(c, m)
-    except Exception:
-        return
-
+    if m.reply_to_message:
+        user = m.reply_to_message.from_user
+    else:
+        user = m.from_user
+    user_id = user.id
+    
     if user_id == me.id:
         temp = choice(extras.SLAP_GOJO_TEMPLATES)
     else:
@@ -65,7 +65,7 @@ async def fun_slap(c: Gojo, m: Message):
 
     if user_id:
         user1 = curr_user
-        user2 = escape(user_first_name)
+        user2 = user.first_name
 
     else:
         user1 = me.first_name
@@ -99,10 +99,9 @@ async def fun_toss(_, m: Message):
 
 @Gojo.on_message(command("insult"))
 async def insult(c: Gojo, m: Message):
-    try:
-        user_id, user_first_name, _ = await extract_user(c, m)
-    except BaseException:
-        return
+    if not m.reply_to_message:
+        return await m.reply_text("You want to insult yourself such a foolish person")
+    user_id = m.reply_to_message.from_user.id
     if user_id in DEV_USERS:
         await m.reply_text("Sorry! I can't insult my devs....")
         return LOGGER.info(
