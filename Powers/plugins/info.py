@@ -263,7 +263,7 @@ async def chat_info_func(c: Gojo, message: Message):
         info_caption, photo_id = await chat_info(c, chat=chat)
     except Exception as e:
         await m.delete()
-        await sleep()
+        await sleep(0.5)
         return await message.reply_text(f"**GOT AN ERROR:**\n {e}")
     if not photo_id:
         await m.delete()
