@@ -1,4 +1,4 @@
-from asyncio import locks
+from threading import RLock
 from time import perf_counter, time
 from typing import List
 
@@ -9,7 +9,7 @@ from pyrogram.types.messages_and_media.message import Message
 
 from Powers import LOGGER
 
-THREAD_LOCK = locks.Lock()
+THREAD_LOCK = RLock()
 
 # admins stay cached for 30 mins
 ADMIN_CACHE = TTLCache(maxsize=512, ttl=(60 * 30), timer=perf_counter)
