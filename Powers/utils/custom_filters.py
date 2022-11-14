@@ -184,9 +184,7 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if (
-        m.chat and m.chat.type == ChatType.SUPERGROUP
-    ) and m.chat.id != -1001586309125:  # testing chat of the bot
+    if (m.chat.type != ChatType.SUPERGROUP) and m.chat.id != -1001586309125:  # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -238,9 +236,7 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if (
-        m.chat and m.chat.type == ChatType.SUPERGROUP
-    ) and m.chat.id != -1001586309125:  # testing chat of the bot
+    if (m.chat.type != ChatType.SUPERGROUP) and m.chat.id != -1001586309125:  # testing chat of the bot
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -249,7 +245,7 @@ async def promote_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_promote_members or user.status == CMS.OWNER:
+    if user.privileges.can_promote_members or user.status == CMS.OWNER:
         status = True
     else:
         status = False
@@ -263,7 +259,7 @@ async def changeinfo_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type == ChatType.PRIVATE:
+    if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
@@ -277,7 +273,7 @@ async def changeinfo_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_change_info or user.status == CMS.OWNER:
+    if user.privileges.can_change_info or user.status == CMS.OWNER:
         status = True
     else:
         status = False
@@ -291,7 +287,7 @@ async def can_pin_message_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type == ChatType.PRIVATE:
+    if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
@@ -305,7 +301,7 @@ async def can_pin_message_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_pin_messages or user.status == CMS.OWNER:
+    if user.privileges.can_pin_messages or user.status == CMS.OWNER:
         status = True
     else:
         status = False
