@@ -380,8 +380,8 @@ async def kick_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     try:
-        admin = ((await mention_html(m.from_user.first_name, m.from_user.id)),)
-        kicked = ((await mention_html(user_first_name, user_id)),)
+        admin = await mention_html(m.from_user.first_name, m.from_user.id)
+        kicked = await mention_html(user_first_name, user_id)
         chat_title = (m.chat.title,)
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id)
@@ -530,8 +530,8 @@ async def dkick_usr(c: Gojo, m: Message):
         LOGGER.info(f"{m.from_user.id} dkicked {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
         await m.chat.ban_member(user_id)
-        admin = ((await mention_html(m.from_user.first_name, m.from_user.id)),)
-        kicked = ((await mention_html(user_first_name, user_id)),)
+        admin = await mention_html(m.from_user.first_name, m.from_user.id)
+        kicked = await mention_html(user_first_name, user_id)
         chat_title = (m.chat.title,)
         txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
@@ -593,8 +593,8 @@ async def unban_usr(c: Gojo, m: Message):
 
     try:
         await m.chat.unban_member(user_id)
-        admin = (m.from_user.mention,)
-        unbanned = ((await mention_html(user_first_name, user_id)),)
+        admin = m.from_user.mention
+        unbanned = await mention_html(user_first_name, user_id)
         chat_title = (m.chat.title,)
         txt = f"{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
