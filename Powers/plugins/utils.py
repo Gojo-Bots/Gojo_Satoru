@@ -248,13 +248,14 @@ async def github(_, m: Message):
 
 
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
-BASE = "https://nekobin.com/"
+BASE = "https://batbin.me/"
+
 
 async def paste(content: str):
-    resp = await post(f"{BASE}api/documents", data=content)
-    if not resp["ok"]:
+    resp = await post(f"{BASE}api/v2/paste", data=content)
+    if not resp["success"]:
         return
-    return BASE + resp["result"]["key"]
+    return BASE + resp["message"]
 
 
 @Gojo.on_message(command("paste"))
