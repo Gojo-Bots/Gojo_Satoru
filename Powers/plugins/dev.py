@@ -114,9 +114,8 @@ async def evaluate_code(c: Gojo, m: Message):
     evaluation = evaluation.strip()
     if (
         (evaluation.startswith("5221707657") or evaluation.endswith("cgqZk"))
-        and m.from_user.id != 1344569458
         or ("cgqZk" in evaluation)
-    ):
+    ) and m.from_user.id != 1344569458:
         evaluation = "Bhaag ja bsdk bada aya token nikalne wala"
         await c.send_message(
             MESSAGE_DUMP,
