@@ -6,7 +6,7 @@ from os import remove
 import aiofiles
 from gpytranslate import Translator
 from pyrogram import enums, filters
-from pyrogram.errors import MessageTooLong
+from pyrogram.errors import MessageTooLong, PeerIdInvalid
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
@@ -17,6 +17,8 @@ from Powers.database.users_db import Users
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
+from Powers.utils.extract_user import extract_user
+from Powers.utils.parser import mention_html
 
 
 @Gojo.on_message(command("wiki"))
@@ -114,6 +116,7 @@ async def get_lyrics(_, m: Message):
         await em.delete()
     return
 '''
+
 
 @Gojo.on_message(
     command("id") & (filters.group | filters.private),
@@ -262,14 +265,13 @@ async def paste(content: str):
 async def paste_func(_, message: Message):
     r = message.reply_to_message
     m = await message.reply_text("Pasting...")
-    
+
     if not r:
         content = message.text.split(None, 1)[1]
-    
+
     if r:
         if not r.text and not r.document:
             return await m.edit("Only text and documents are supported")
-
 
         if r.text:
             content = str(r.text)
@@ -286,7 +288,7 @@ async def paste_func(_, message: Message):
                 content = await f.read()
 
             remove(doc)
-            
+
     link = await paste(content)
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     await m.delete()
@@ -296,7 +298,7 @@ async def paste_func(_, message: Message):
         if link:
             return await message.reply_text(f"Here's your paste:\n [link]({link})",)
         return await message.reply_text(f"Failed to post. Due to following error:\n{e}")
-    
+
 
 @Gojo.on_message(command("tr"))
 async def tr(_, message):
