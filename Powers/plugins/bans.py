@@ -382,7 +382,7 @@ async def kick_usr(c: Gojo, m: Message):
     try:
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         kicked = await mention_html(user_first_name, user_id)
-        chat_title = (m.chat.title,)
+        chat_title = m.chat.title
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id)
         txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
@@ -532,7 +532,7 @@ async def dkick_usr(c: Gojo, m: Message):
         await m.chat.ban_member(user_id)
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         kicked = await mention_html(user_first_name, user_id)
-        chat_title = (m.chat.title,)
+        chat_title = m.chat.title
         txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await c.send_message(m.chat.id, txt)
