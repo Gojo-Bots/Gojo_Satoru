@@ -7,8 +7,8 @@ from pyrogram import enums
 from pyrogram.errors import EntityBoundsInvalid, MediaCaptionTooLong, RPCError
 from pyrogram.types import Message
 
-from Powers import (LOGGER, OWNER_ID, SUDO_USERS, SUPPORT_STAFF,
-                    WHITELIST_USERS, defult_dev)
+from Powers import (DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, SUPPORT_STAFF,
+                    WHITELIST_USERS)
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.utils.custom_filters import command
@@ -85,7 +85,7 @@ async def user_info(c: Gojo, user, already=False):
         is_support = "A person is a great support to himself"
     omp = "Hmmm.......Who is that again?"
     if is_support or Config.BOT_ID:
-        if user_id in defult_dev:
+        if user_id in DEV_USERS:
             omp = "Dev"
         elif user_id in SUDO_USERS:
             omp = "Sudoer"
@@ -95,7 +95,7 @@ async def user_info(c: Gojo, user, already=False):
             omp = "I am the targeted user"
         elif user_id == OWNER_ID:
             omp = "Owner of the bot"
-        if user_id in defult_dev and user_id == OWNER_ID:
+        if user_id in DEV_USERS and user_id == OWNER_ID:
             omp = "Dev and Owner"
         
     is_scam = user.is_scam
