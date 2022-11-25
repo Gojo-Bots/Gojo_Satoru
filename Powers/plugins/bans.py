@@ -886,7 +886,7 @@ async def unbanbutton(c: Gojo, q: CallbackQuery):
     user_id = int(splitter[1])
     user = await q.message.chat.get_member(q.from_user.id)
 
-    if not user.can_restrict_members and q.from_user.id != OWNER_ID:
+    if not user.privileges.can_restrict_members and q.from_user.id != OWNER_ID:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,

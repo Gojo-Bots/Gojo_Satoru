@@ -11,7 +11,7 @@
       "Anime"
     ],
     "repository": "https://github.com/Gojo-Bots/Gojo_Satoru",
-    "success_url": "https://t.me/iamgojoof6eyes_bot",
+    "success_url": "https://t.me/GojoSuperbot",
     "env": {
       "BOT_TOKEN": {
         "description": "Your telegram bot token, get from @Botfather in telegram.",
