@@ -89,7 +89,7 @@ limit_kb = InlineKeyboardMarkup(
     ]
 )
 
-@Gojo.on_message(command(['floodaction','actionflood']))
+@Gojo.on_message(command(['floodaction','actionflood']) & admin_filter)
 async def flood_action(c: Gojo, m: Message):
     if m.chat.type == CT.PRIVATE:
         await m.reply_text("Use this command in group")
