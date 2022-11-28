@@ -387,6 +387,13 @@ async def flood_watcher(c: Gojo, m: Message):
                     dic[c_id][u_id][1].clear()
                     dic[c_id][u_id][0].clear()
                     return
+    elif y-x > within:
+      try:
+        dic[c_id][u_id][1].clear()
+        dic[c_id][u_id][0].clear()
+        return
+      except Exception:
+        pass
     else:
         return
 
