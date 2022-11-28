@@ -21,7 +21,7 @@ from Powers.vars import Config
 
 Flood = Floods()
 
-approve = Approve()
+
 
 on_key = ["on", "start", "disable"]
 off_key = ["off", "end", "enable", "stop"]
