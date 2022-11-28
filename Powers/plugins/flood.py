@@ -1,18 +1,23 @@
 import time
+from random import choice
+from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType as CT
-from pyrogram.errors import RPCError
-from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
-                            InlineKeyboardMarkup, Message)
+from pyrogram.errors import RPCError, UserAdminInvalid
+from pyrogram.types import (CallbackQuery, ChatPermissions,
+                            InlineKeyboardButton, InlineKeyboardMarkup,
+                            Message)
 
-from Powers import SUPPORT_STAFF
+from Powers import LOGGER, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.flood_db import Floods
 from Powers.utils.custom_filters import admin_filter, command
+from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
 from Powers.utils.kbhelpers import ikb
+from Powers.vars import Config
 
 Flood = Floods()
 
@@ -91,6 +96,10 @@ limit_kb = InlineKeyboardMarkup(
 
 @Gojo.on_message(command(['floodaction','actionflood']) & admin_filter)
 async def flood_action(c: Gojo, m: Message):
+    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
+    status = bot.status
+    if not status in [CMS.OWNER, CMS.ADMINISTRATOR] and not bot.privileges.can_restrict_members:
+        return await m.reply_text("Give me permission to restict member first")
     if m.chat.type == CT.PRIVATE:
         await m.reply_text("Use this command in group")
         return
@@ -108,6 +117,10 @@ async def flood_action(c: Gojo, m: Message):
 
 @Gojo.on_message(command(['setflood', 'flood']) & ~filters.bot & admin_filter)
 async def flood_set(c: Gojo, m: Message):
+    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
+    status = bot.status
+    if not status in [CMS.OWNER, CMS.ADMINISTRATOR] and not bot.privileges.can_restrict_members:
+        return await m.reply_text("Give me permission to restict member first")
     if m.chat.type == CT.PRIVATE:
         return await m.reply_text("This command is ment to be used in groups.")
     split = m.text.split(None, 1)
@@ -139,8 +152,8 @@ async def flood_set(c: Gojo, m: Message):
 async def callbacks(c: Gojo, q: CallbackQuery):
     data = q.data
     if data == "close":
+        await q.answer("Closed")
         await q.message.delete()
-        q.answer("Closed")
         return
     c_id = q.message.chat.id
     is_flood = Flood.is_chat(c_id)
@@ -153,7 +166,7 @@ async def callbacks(c: Gojo, q: CallbackQuery):
         if data in ["mute", "ban", "kick"]:
             Flood.save_flood(c_id, slimit, swithin, data)
             await q.answer("Updated action", show_alert=True)
-            q.edit_message_caption(
+            await q.edit_message_caption(
                 f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
                 reply_markup=limit_kb
             )
@@ -162,7 +175,7 @@ async def callbacks(c: Gojo, q: CallbackQuery):
             change = int(data.split("_")[1])
             Flood.save_flood(c_id, change, swithin, saction)
             await q.answer("Updated limit", show_alert=True)
-            q.edit_message_caption(
+            await q.edit_message_caption(
                 f"Set the time with the number of message recived treated as flood\n **CUURENT TIME** {swithin}",
                 reply_markup=within_kb
             )
@@ -171,7 +184,7 @@ async def callbacks(c: Gojo, q: CallbackQuery):
             change = int(data)
             Flood.save_flood(c_id, slimit, change, saction)
             await q.answer("Updated", show_alert=True)
-            q.edit_message_caption(
+            await q.edit_message_caption(
                 "Flood protection setting has been updated",
                 reply_markup=close_kb
             )
@@ -181,12 +194,13 @@ async def callbacks(c: Gojo, q: CallbackQuery):
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,
             )
+        return
 
 @Gojo.on_callback_query(filters.regex("^un_"))
 async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
     action = data[1]
-    user_id = int(data[2])
+    user_id = int(q.data.split("=")[1])
     if action == "ban":
         user = await q.message.chat.get_member(q.from_user.id)
         if not user.privileges.can_restrict_members and q.from_user.id in SUPPORT_STAFF:
@@ -208,7 +222,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     if action == "mute":
         user = await q.message.chat.get_member(q.from_user.id)
 
-        if not user.privileges.can_restrict_members and user.id in SUPPORT_STAFF:
+        if not user.privileges.can_restrict_members and q.from_user.id in SUPPORT_STAFF:
             await q.answer(
                 "You don't have enough permission to do this!\nStay in your limits!",
                 show_alert=True,
@@ -242,7 +256,137 @@ async def flood_watcher(c: Gojo, m: Message):
     dic = {}
     for i in str(dic.keys()):
         if str(c_id) != i:
-            z = {c_id : set()}
+            z = {c_id : {}}
             dic.update(z)
-    dic[c_id].add(u_id)
-    # to be continued
+    for i in str(dic[c_id].keys()):
+        if str(u_id) != i:
+            z = {u_id : [[],[]]}
+            dic[c_id].update(z) # make the dic something like {c_id : {u_id : [[],[]]}}
+    sec = round(time.time())
+    try:
+        dic[c_id][u_id][0].append(sec)
+        dic[c_id][u_id][1].append("x")
+    except KeyError:
+        dic[c_id].update({u_id : [[sec], ["x"]]}) 
+    if len(dic[c_id][u_id][1]) == limit and len(dic[c_id][u_id][0]) == within:
+        x = int(dic[c_id][u_id][0][0])
+        y = int(dic[c_id][u_id][0][-1])
+        if y-x <= within:
+            if action == "ban":
+                try:
+                    await m.chat.ban_member(u_id)
+                    keyboard = InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    "Unban",
+                                    callback_data=f"un_ban_={u_id}",
+                                ),
+                            ],
+                        ],
+                    )
+                    txt = "Don't dare to spam here if I am around!"
+                    await m.reply_animation(
+                        animation=choice(BAN_GIFS),
+                        caption=txt,
+                        reply_markup=keyboard,
+                    )
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+
+                except UserAdminInvalid:
+                    await m.reply_text(
+                        "I can't protect this chat from this user",
+                        )
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+                except RPCError as ef:
+                    await m.reply_text(
+                        text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+                        <b>Error:</b> <code>{ef}</code>"""
+                        )
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+                
+            elif action == "kick":
+                try:
+                    await m.chat.ban_member(u_id)
+                    txt = "Don't dare to spam here if I am around!"
+                    await m.reply_animation(
+                        animation=choice(KICK_GIFS),
+                        caption=txt,
+                    )
+                    await m.chat.unban_member(u_id)
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+                except UserAdminInvalid:
+                    await m.reply_text(
+                        "I can't protect this chat from this user",
+                    )
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+                except RPCError as ef:
+                    await m.reply_text(
+                        text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+                        <b>Error:</b> <code>{ef}</code>"""
+                    )
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+            elif action == "mute":
+                try:
+                    await m.chat.restrict_member(
+                        u_id,
+                        ChatPermissions(),
+                    )
+                    keyboard = InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    "Unmute",
+                                    callback_data=f"un_mute_={u_id}",
+                                ),
+                            ],
+                        ],
+                    )
+                    txt = "Don't dare to spam here if I am around!"
+                    await m.reply_animation(
+                        animation=choice(MUTE_GIFS),
+                        caption=txt,
+                        reply_markup=keyboard,
+                    )
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+                except UserAdminInvalid:
+                    await m.reply_text(
+                        "I can't protect this chat from this user",
+                    )
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+                except RPCError as ef:
+                    await m.reply_text(
+                        text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+                        <b>Error:</b> <code>{ef}</code>"""
+                    )
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+    else:
+        return
+
