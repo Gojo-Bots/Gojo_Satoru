@@ -98,7 +98,8 @@ limit_kb = InlineKeyboardMarkup(
 async def flood_action(c: Gojo, m: Message):
     bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
     status = bot.status
-    if not status in [CMS.OWNER, CMS.ADMINISTRATOR] and not bot.privileges.can_restrict_members:
+    if not status in [CMS.OWNER, CMS.ADMINISTRATOR]:
+      if not bot.privileges.can_restrict_members:
         return await m.reply_text("Give me permission to restict member first")
     if m.chat.type == CT.PRIVATE:
         await m.reply_text("Use this command in group")
@@ -119,7 +120,8 @@ async def flood_action(c: Gojo, m: Message):
 async def flood_set(c: Gojo, m: Message):
     bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
     status = bot.status
-    if not status in [CMS.OWNER, CMS.ADMINISTRATOR] and not bot.privileges.can_restrict_members:
+    if not status in [CMS.OWNER, CMS.ADMINISTRATOR]:
+      if not bot.privileges.can_restrict_members:
         return await m.reply_text("Give me permission to restict member first")
     if m.chat.type == CT.PRIVATE:
         return await m.reply_text("This command is ment to be used in groups.")
