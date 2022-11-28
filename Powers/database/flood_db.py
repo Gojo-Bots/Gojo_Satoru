@@ -45,7 +45,7 @@ class Floods(MongoDB):
         with INSERTION_LOCK:
             curr = self.find_all({"chat_id": chat_id})
             if curr:
-                action = [str(curr['limit']), str(curr['within']), str(curr['action'])]
+                action = [str(curr[0]), str(curr[1]), str(curr[2])]
                 return action
             return False
     
