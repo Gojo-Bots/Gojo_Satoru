@@ -21,12 +21,12 @@ class Floods(MongoDB):
         action: str,
     ):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id": chat_id, "limit": limit, "within": within, "action": action})
+            curr = self.find_one({"chat_id": chat_id})
             if curr:
                 if not(limit == int(curr['limit']) or within == int(curr['within']) or action == str(curr['action'])):
                     return self.update(
                         {
-                            "_id": chat_id,
+                            "chat_id": chat_id,
                             "limit": limit,
                             "within": within,
                             "action": action,
@@ -43,9 +43,9 @@ class Floods(MongoDB):
     
     def is_chat(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.find_all({"chat_id": chat_id})
+            curr = self.find_one({"chat_id": chat_id})
             if curr:
-                action = [str(curr[0]), str(curr[1]), str(curr[2])]
+                action = [str(curr["limit"]), str(curr["within"]), str(curr["action"])]
                 return action
             return False
     
