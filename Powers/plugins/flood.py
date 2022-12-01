@@ -173,9 +173,10 @@ async def callbacks(c: Gojo, q: CallbackQuery):
         return
     c_id = q.message.chat.id
     is_flood = Flood.is_chat(c_id)
-    saction = is_flood[2]
-    slimit = is_flood[0]
-    swithin = is_flood[1]
+    if is_flood:
+      saction = is_flood[2]
+      slimit = is_flood[0]
+      swithin = is_flood[1]
     user = q.from_user.id
     user_status = (await q.message.chat.get_member(q.from_user.id)).status
     if user in SUPPORT_STAFF or user_status in [CMS.OWNER, CMS.ADMINISTRATOR]:
