@@ -26,7 +26,7 @@ class Floods(MongoDB):
                 curr = self.find_one({"chat_id": chat_id})
                 if curr:
                     if not(limit == int(curr['limit']) and within == int(curr['within']) and action == str(curr['action'])):
-                        if limit != int(curr['limit'])
+                        if limit != int(curr['limit']):
                             return self.update(
                                 {"chat_id": chat_id,"within": within,"action": action},
                                 {"limit": limit}
