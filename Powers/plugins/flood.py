@@ -42,15 +42,15 @@ action_kb = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "Mute 🔇",
-                callback_data="mute"
+                callback_data="f_mute"
             ),
             InlineKeyboardButton(
                 "Ban 🚷",
-                callback_data="ban"
+                callback_data="f_ban"
             ),
             InlineKeyboardButton(
                 "Kick",
-                callback_data="kick"
+                callback_data="f_kick"
             )
         ]
     ]
@@ -61,15 +61,15 @@ within_kb = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "5",
-                callback_data="5"
+                callback_data="f_f_5"
             ),
             InlineKeyboardButton(
                 "10",
-                callback_data="10"
+                callback_data="f_f_10"
             ),
             InlineKeyboardButton(
                 "15",
-                callback_data="15"
+                callback_data="f_f_15"
             )
         ]
     ]
@@ -80,15 +80,15 @@ limit_kb = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "5",
-                callback_data="l_5"
+                callback_data="f_5"
             ),
             InlineKeyboardButton(
                 "10",
-                callback_data="l_10"
+                callback_data="f_10"
             ),
             InlineKeyboardButton(
                 "15",
-                callback_data="l_15"
+                callback_data="f_15"
             )
         ]
     ]
@@ -164,7 +164,7 @@ async def flood_set(c: Gojo, m: Message):
     await m.reply_text("**Usage:**\n `/setflood on/off`")
     return
 
-@Gojo.on_callback_query()
+@Gojo.on_callback_query(filters.regex("^f_"))
 async def callbacks(c: Gojo, q: CallbackQuery):
     data = q.data
     if data == "close":
@@ -180,15 +180,16 @@ async def callbacks(c: Gojo, q: CallbackQuery):
     user = q.from_user.id
     user_status = (await q.message.chat.get_member(q.from_user.id)).status
     if user in SUPPORT_STAFF or user_status in [CMS.OWNER, CMS.ADMINISTRATOR]:
-        if data in ["mute", "ban", "kick"]:
-            Flood.save_flood(c_id, slimit, swithin, data)
+        if data in ["f_mute", "f_ban", "f_kick"]:
+            change = int(data.split("_")[1])
+            Flood.save_flood(c_id, slimit, swithin, change)
             await q.answer("Updated action", show_alert=True)
             await q.edit_message_caption(
                 f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
                 reply_markup=limit_kb
             )
             return
-        if data in ["l_5", "l_10", "l_15"]:
+        if data in ["f_5", "f_10", "f_15"]:
             change = int(data.split("_")[1])
             Flood.save_flood(c_id, change, swithin, saction)
             await q.answer("Updated limit", show_alert=True)
@@ -197,7 +198,8 @@ async def callbacks(c: Gojo, q: CallbackQuery):
                 reply_markup=within_kb
             )
             return
-        if data in ["5", "10", "15"]:
+        if data in ["f_f_5", "f_f_10", "f_f_15"]:
+            data = data.split("_")[-1]
             change = int(data)
             Flood.save_flood(c_id, slimit, change, saction)
             await q.answer("Updated", show_alert=True)
@@ -415,7 +417,7 @@ async def flood_watcher(c: Gojo, m: Message):
         return
 
 
-__PLUGIN__ = "anti-flood"
+__PLUGIN__ = "flood"
 __alt_name__ = [
   "anit-flood",
   "flood",
