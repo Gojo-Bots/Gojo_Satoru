@@ -25,7 +25,7 @@ class Floods(MongoDB):
             with INSERTION_LOCK:
                 curr = self.find_one({"chat_id": chat_id})
                 if curr:
-                    if not(limit == int(curr['limit']) or within == int(curr['within']) or action == str(curr['action'])):
+                    if not(limit == int(curr['limit']) and within == int(curr['within']) and action == str(curr['action'])):
                         return self.update(
                             {
                                 "chat_id": chat_id,
