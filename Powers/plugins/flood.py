@@ -117,7 +117,7 @@ async def flood_action(c: Gojo, m: Message):
     return
 
 @Gojo.on_message(command(['isflood', 'flood']) & ~filters.bot)
-async def flood_set(c: Gojo, m: Message):
+async def flood_on_off(c: Gojo, m: Message):
     if m.chat.type == CT.PRIVATE:   
       return await m.reply_text("This command is ment to be used in groups.")
     c_id = m.chat.id
