@@ -49,7 +49,7 @@ action_kb = InlineKeyboardMarkup(
                 callback_data="f_ban"
             ),
             InlineKeyboardButton(
-                "Kick",
+                "Kick 🦿",
                 callback_data="f_kick"
             )
         ]
@@ -127,7 +127,7 @@ async def flood_on_off(c: Gojo, m: Message):
       saction = is_flood[2]
       slimit = is_flood[0]
       swithin = is_flood[1]
-      return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec")
+      return await m.reply_text(f"Flood is on for this chat\n**Action**: {saction}\n**Messages**: {slimit} within {swithin} sec")
     return await m.reply_text("Flood protection is off of this chat.")
 
 @Gojo.on_message(command(['setflood']) & ~filters.bot & admin_filter)
@@ -148,7 +148,7 @@ async def flood_set(c: Gojo, m: Message):
             saction = is_flood[2]
             slimit = is_flood[0]
             swithin = is_flood[1]
-            return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec")
+            return await m.reply_text(f"Flood is on for this chat\n**Action**: {saction}\n**Messages**: {slimit} within {swithin} sec")
         return await m.reply_text("Flood protection is off of this chat.")
     
     if len(split) == 2:
@@ -181,7 +181,7 @@ async def callbacks(c: Gojo, q: CallbackQuery):
     user_status = (await q.message.chat.get_member(q.from_user.id)).status
     if user in SUPPORT_STAFF or user_status in [CMS.OWNER, CMS.ADMINISTRATOR]:
         if data in ["f_mute", "f_ban", "f_kick"]:
-            change = int(data.split("_")[1])
+            change = data.split("_")[1]
             Flood.save_flood(c_id, slimit, swithin, change)
             await q.answer("Updated action", show_alert=True)
             await q.edit_message_caption(
