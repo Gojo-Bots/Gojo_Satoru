@@ -116,7 +116,21 @@ async def flood_action(c: Gojo, m: Message):
     await m.reply_text("Switch on the flood protection first.")
     return
 
-@Gojo.on_message(command(['setflood', 'flood']) & ~filters.bot & admin_filter)
+@Gojo.on_message(command(['isflood', 'flood']) & ~filters.bot)
+async def flood_set(c: Gojo, m: Message):
+    if m.chat.type == CT.PRIVATE:   
+      return await m.reply_text("This command is ment to be used in groups.")
+    c_id = m.chat.id
+    is_flood = Flood.is_chat(c_id)
+    c_id = m.chat.id
+    if is_flood:
+      saction = is_flood[2]
+      slimit = is_flood[0]
+      swithin = is_flood[1]
+      return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec")
+    return await m.reply_text("Flood protection is off of this chat.")
+
+@Gojo.on_message(command(['setflood']) & ~filters.bot & admin_filter)
 async def flood_set(c: Gojo, m: Message):
     bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
     status = bot.status
@@ -398,4 +412,25 @@ async def flood_watcher(c: Gojo, m: Message):
         pass
     else:
         return
+
+
+__PLUGIN__ = "anti-flood"
+__alt_name__ = [
+  "anit-flood",
+  "flood",
+  "spam",
+  "anti-spam",
+]
+__HELP__ = """
+**Anti Flood**
+**User Commands:**
+• /flood: to check weather the group is protected from spam or not.
+
+**Admin only:**
+• /setflood `on/off`: To activate or deactivate the flood protection
+• /floodaction: To customize the flood settings.
+
+**Example:**
+`/setflood on`
+"""
 
