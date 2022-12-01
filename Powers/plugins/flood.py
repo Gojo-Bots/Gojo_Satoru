@@ -106,8 +106,8 @@ async def flood_action(c: Gojo, m: Message):
         return
     c_id = m.chat.id
     is_flood = Flood.is_chat(c_id)
-    saction = is_flood[2]
     if is_flood:
+        saction = is_flood[2]
         await m.reply_text(
             f"Choose a action given bellow to do when flood happens.\n **CURRENT ACTION** is {saction}",
             reply_markup=action_kb
