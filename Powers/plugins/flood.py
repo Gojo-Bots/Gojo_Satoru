@@ -128,7 +128,7 @@ async def flood_on_off(c: Gojo, m: Message):
       slimit = is_flood[0]
       swithin = is_flood[1]
       return await m.reply_text(f"Flood is on for this chat\n**Action**: {saction}\n**Messages**: {slimit} within {swithin} sec")
-    return await m.reply_text("Flood protection is off of this chat.")
+    return await m.reply_text("Flood protection is off for this chat.")
 
 @Gojo.on_message(command(['setflood']) & ~filters.bot & admin_filter)
 async def flood_set(c: Gojo, m: Message):
@@ -149,7 +149,7 @@ async def flood_set(c: Gojo, m: Message):
             slimit = is_flood[0]
             swithin = is_flood[1]
             return await m.reply_text(f"Flood is on for this chat\n**Action**: {saction}\n**Messages**: {slimit} within {swithin} sec")
-        return await m.reply_text("Flood protection is off of this chat.")
+        return await m.reply_text("Flood protection is off for this chat.")
     
     if len(split) == 2:
         c_id = m.chat.id
@@ -182,32 +182,53 @@ async def callbacks(c: Gojo, q: CallbackQuery):
     if user in SUPPORT_STAFF or user_status in [CMS.OWNER, CMS.ADMINISTRATOR]:
         if data in ["f_mute", "f_ban", "f_kick"]:
             change = data.split("_")[1]
-            Flood.save_flood(c_id, slimit, swithin, change)
-            await q.answer("Updated action", show_alert=True)
-            await q.edit_message_caption(
-                f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
-                reply_markup=limit_kb
-            )
-            return
-        if data in ["f_5", "f_10", "f_15"]:
+            if not change == saction:
+              Flood.save_flood(c_id, slimit, swithin, change)
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
+              return
+            else:
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
+        if data in ["f_5", "f_10", "f_15"]: 
             change = int(data.split("_")[1])
-            Flood.save_flood(c_id, change, swithin, saction)
-            await q.answer("Updated limit", show_alert=True)
-            await q.edit_message_caption(
-                f"Set the time with the number of message recived treated as flood\n **CUURENT TIME** {swithin}",
-                reply_markup=within_kb
-            )
-            return
+            if not change == slimit:
+              Flood.save_flood(c_id, change, swithin, saction)
+              await q.answer("Updated limit", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the time with the number of message recived treated as flood\n **CUURENT TIME** {swithin}",
+                  reply_markup=within_kb
+              )
+              return
+            else:
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
         if data in ["f_f_5", "f_f_10", "f_f_15"]:
             data = data.split("_")[-1]
             change = int(data)
-            Flood.save_flood(c_id, slimit, change, saction)
-            await q.answer("Updated", show_alert=True)
-            await q.edit_message_caption(
-                "Flood protection setting has been updated",
-                reply_markup=close_kb
-            )
-            return
+            if not change == swithin:
+              Flood.save_flood(c_id, slimit, change, saction)
+              await q.answer("Updated", show_alert=True)
+              await q.edit_message_caption(
+                  "Flood protection setting has been updated",
+                  reply_markup=close_kb
+              )
+              return
+            else:
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
     else:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
