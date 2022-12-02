@@ -31,7 +31,7 @@ close_kb =InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "Close ❌",
-                callback_data="close"
+                callback_data="fclose"
             )
         ]
     ]
@@ -167,7 +167,7 @@ async def flood_set(c: Gojo, m: Message):
 @Gojo.on_callback_query(filters.regex("^f_"))
 async def callbacks(c: Gojo, q: CallbackQuery):
     data = q.data
-    if data == "close":
+    if data == "fclose":
         await q.answer("Closed")
         await q.message.delete()
         return
@@ -196,7 +196,7 @@ async def callbacks(c: Gojo, q: CallbackQuery):
                   f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
                   reply_markup=limit_kb
               )
-        if data in ["f_5", "f_10", "f_15"]: 
+        elif data in ["f_5", "f_10", "f_15"]: 
             change = int(data.split("_")[1])
             if not change == slimit:
               Flood.save_flood(c_id, change, swithin, saction)
@@ -212,7 +212,7 @@ async def callbacks(c: Gojo, q: CallbackQuery):
                   f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
                   reply_markup=limit_kb
               )
-        if data in ["f_f_5", "f_f_10", "f_f_15"]:
+        elif data in ["f_f_5", "f_f_10", "f_f_15"]:
             data = data.split("_")[-1]
             change = int(data)
             if not change == swithin:
