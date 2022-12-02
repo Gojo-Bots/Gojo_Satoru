@@ -152,13 +152,17 @@ async def flood_set(c: Gojo, m: Message):
         return await m.reply_text("Flood protection is off for this chat.")
     
     if len(split) == 2:
+        if is_flood:
+            saction = is_flood[2]
+            slimit = is_flood[0]
+            swithin = is_flood[1]
         c_id = m.chat.id
         if split[1].lower() in on_key:
-            Flood.save_flood(m.chat.id, 5, 5, 'mute')
+            Flood.save_flood(c_id, 5, 5, 'mute')
             await m.reply_text("Flood protection has been started for this group.")
             return
         if split[1].lower() in off_key:
-            Flood.rm_flood(m.chat.id, slimit, swithin, saction)
+            Flood.rm_flood(c_id, slimit, swithin, saction)
             await m.reply_text("Flood protection has been stopped for this chat")
             return
     await m.reply_text("**Usage:**\n `/setflood on/off`")
