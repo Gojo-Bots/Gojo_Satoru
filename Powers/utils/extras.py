@@ -690,4 +690,8 @@ StartPic = [
     "https://te.legra.ph/file/633b81cb0b7849070c88a.jpg",
     "https://te.legra.ph/file/39b720b36106a381fd42b.jpg",
     "https://te.legra.ph/file/d010c6fc8437fd6718b05.jpg",
+    "https://te.legra.ph/file/4e19d49a2aa4512516249.jpg",
+    "https://te.legra.ph/file/b3c60fe91b0ade084dc6e.jpg",
+    "https://te.legra.ph/file/4006443b5c1adb5b185a7.jpg",
+    "https://te.legra.ph/file/d0e77e26afcfba7881621.jpg",
 ]
