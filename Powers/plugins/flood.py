@@ -126,21 +126,23 @@ async def flood_set(c: Gojo, m: Message):
     split = m.text.split(None, 1)
     c_id = m.chat.id
     is_flood = Flood.is_chat(c_id)
+    saction = is_flood[2]
+    slimit = is_flood[0]
+    swithin = is_flood[1]
     if len(split) == 1:
         c_id = m.chat.id
         if is_flood:
-            saction = is_flood[2]
-            slimit = is_flood[0]
-            swithin = is_flood[1]
             return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec")
         return await m.reply_text("Flood protection is off of this chat.")
     
-    if len(split) == 2:
+    elif len(split) == 2:
         c_id = m.chat.id
         if split[1].lower() in on_key:
-            Flood.save_flood(m.chat.id, 5, 5, 'mute')
-            await m.reply_text("Flood protection has been started for this group.")
-            return
+            if not is_flood:
+                Flood.save_flood(m.chat.id, 5, 5, 'mute')
+                await m.reply_text("Flood protection has been started for this group.")
+                return
+            return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec") 
         if split[1].lower() in off_key:
             Flood.rm_flood(m.chat.id, slimit, swithin, saction)
             await m.reply_text("Flood protection has been stopped for this chat")
@@ -237,7 +239,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
         await q.message.edit_text(f"{q.from_user.mention} unmuted {whoo.mention}!")
         return
 
-@Gojo.on_message(filters.all & ~filters.bot, ~filters.private, 10)
+@Gojo.on_message(filters.all & ~filters.bot | ~filters.private, 10)
 async def flood_watcher(c: Gojo, m: Message):
     c_id = m.chat.id
     u_id = m.from_user.id
@@ -287,7 +289,7 @@ async def flood_watcher(c: Gojo, m: Message):
                     )
                     txt = "Don't dare to spam here if I am around!"
                     await m.reply_animation(
-                        animation=choice(BAN_GIFS),
+                        animation=str(choice(BAN_GIFS)),
                         caption=txt,
                         reply_markup=keyboard,
                     )
@@ -319,7 +321,7 @@ async def flood_watcher(c: Gojo, m: Message):
                     await m.chat.ban_member(u_id)
                     txt = "Don't dare to spam here if I am around!"
                     await m.reply_animation(
-                        animation=choice(KICK_GIFS),
+                        animation=str(choice(KICK_GIFS)),
                         caption=txt,
                     )
                     await m.chat.unban_member(u_id)
@@ -362,7 +364,7 @@ async def flood_watcher(c: Gojo, m: Message):
                     )
                     txt = "Don't dare to spam here if I am around!"
                     await m.reply_animation(
-                        animation=choice(MUTE_GIFS),
+                        animation=str(choice(MUTE_GIFS)),
                         caption=txt,
                         reply_markup=keyboard,
                     )

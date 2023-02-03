@@ -33,7 +33,7 @@ You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes
      """
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_photo(photo=choice(StartPic), caption=cpt)
+    await m.reply_photo(photo=str(choice(StartPic)), caption=cpt)
     return
 
 
@@ -83,7 +83,7 @@ async def start(c: Gojo, m: Message):
                 return
 
             await m.reply_photo(
-                photo=choice(StartPic),
+                photo=str(choice(StartPic)),
                 caption=help_msg,
                 parse_mode=enums.ParseMode.MARKDOWN,
                 reply_markup=help_kb,
@@ -99,7 +99,7 @@ Hit /help to find out more about how to use me in my full potential!
 Join my [News Channel](https://t.me/gojo_bots_network) to get information on all the latest updates."""
 
             await m.reply_photo(
-                photo=choice(StartPic),
+                photo=str(choice(StartPic)),
                 caption=cpt,
                 reply_markup=(await gen_start_kb(m)),
                 quote=True,
@@ -119,7 +119,7 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
       )
         
       await m.reply_photo(
-        photo=choice(StartPic),
+        photo=str(choice(StartPic)),
         caption="I'm alive :3",
         reply_markup=kb,
         quote=True,
@@ -167,7 +167,7 @@ Commands available:
         pass
     except QueryIdInvalid:
         await q.message.reply_photo(
-            photo=choice(StartPic), caption=cpt, reply_markup=keyboard
+            photo=str(choice(StartPic)), caption=cpt, reply_markup=keyboard
         )
 
     await q.answer()
@@ -194,7 +194,7 @@ async def help_menu(_, m: Message):
                     help_msg, parse_mode=enums.ParseMode.MARKDOWN, quote=True
                 )
             await m.reply_photo(
-                photo=choice(StartPic),
+                photo=str(choice(StartPic)),
                 caption=help_msg,
                 parse_mode=enums.ParseMode.MARKDOWN,
                 reply_markup=help_kb,
@@ -203,7 +203,7 @@ async def help_menu(_, m: Message):
         else:
 
             await m.reply_photo(
-                photo=choice(StartPic),
+                photo=str(choice(StartPic)),
                 caption=f"Press the button below to get help for <i>{help_option}</i>",
                 reply_markup=InlineKeyboardMarkup(
                   [
@@ -241,7 +241,7 @@ Commands available:
             msg = "Contact me in PM to get the list of possible commands."
 
         await m.reply_photo(
-            photo=choice(StartPic),
+            photo=str(choice(StartPic)),
             caption=msg,
             reply_markup=keyboard,
         )

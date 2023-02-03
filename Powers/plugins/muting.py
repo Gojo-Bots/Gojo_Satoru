@@ -101,7 +101,7 @@ async def tmute_usr(c: Gojo, m: Message):
             ],
         )
         await m.reply_animation(
-            animation=choice(MUTE_GIFS),
+            animation=str(choice(MUTE_GIFS)),
             caption=txt,
             reply_markup=keyboard,
             reply_to_message_id=r_id,
@@ -206,7 +206,7 @@ async def dtmute_usr(c: Gojo, m: Message):
             ],
         )
         await c.send_animation(
-            animation=choice(MUTE_GIFS),
+            animation=str(choice(MUTE_GIFS)),
             chat_id=m.chat.id,
             caption=txt,
             reply_markup=keyboard,
@@ -380,7 +380,7 @@ async def mute_usr(c: Gojo, m: Message):
             ],
         )
         await m.reply_animation(
-            animation=choice(MUTE_GIFS),
+            animation=str(choice(MUTE_GIFS)),
             caption=txt,
             reply_markup=keyboard,
             reply_to_message_id=r_id,
@@ -532,7 +532,7 @@ async def dmute_usr(c: Gojo, m: Message):
             ],
         )
         await c.send_animation(
-            animation=choice(MUTE_GIFS),
+            animation=str(choice(MUTE_GIFS)),
             chat_id=m.chat.id,
             caption=txt,
             reply_markup=keyboard,
