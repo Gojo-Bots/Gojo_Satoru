@@ -21,7 +21,7 @@ from Powers.vars import Config
 
 Flood = Floods()
 
-approve = Approve()
+
 
 on_key = ["on", "start", "disable"]
 off_key = ["off", "end", "enable", "stop"]
@@ -31,7 +31,7 @@ close_kb =InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "Close ❌",
-                callback_data="close"
+                callback_data="fclose"
             )
         ]
     ]
@@ -42,15 +42,15 @@ action_kb = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "Mute 🔇",
-                callback_data="mute"
+                callback_data="f_mute"
             ),
             InlineKeyboardButton(
                 "Ban 🚷",
-                callback_data="ban"
+                callback_data="f_ban"
             ),
             InlineKeyboardButton(
-                "Kick",
-                callback_data="kick"
+                "Kick 🦿",
+                callback_data="f_kick"
             )
         ]
     ]
@@ -61,15 +61,15 @@ within_kb = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "5",
-                callback_data="5"
+                callback_data="f_f_5"
             ),
             InlineKeyboardButton(
                 "10",
-                callback_data="10"
+                callback_data="f_f_10"
             ),
             InlineKeyboardButton(
                 "15",
-                callback_data="15"
+                callback_data="f_f_15"
             )
         ]
     ]
@@ -80,15 +80,15 @@ limit_kb = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 "5",
-                callback_data="l_5"
+                callback_data="f_5"
             ),
             InlineKeyboardButton(
                 "10",
-                callback_data="l_10"
+                callback_data="f_10"
             ),
             InlineKeyboardButton(
                 "15",
-                callback_data="l_15"
+                callback_data="f_15"
             )
         ]
     ]
@@ -98,15 +98,16 @@ limit_kb = InlineKeyboardMarkup(
 async def flood_action(c: Gojo, m: Message):
     bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
     status = bot.status
-    if not status in [CMS.OWNER, CMS.ADMINISTRATOR] and not bot.privileges.can_restrict_members:
+    if not status in [CMS.OWNER, CMS.ADMINISTRATOR]:
+      if not bot.privileges.can_restrict_members:
         return await m.reply_text("Give me permission to restict member first")
     if m.chat.type == CT.PRIVATE:
         await m.reply_text("Use this command in group")
         return
     c_id = m.chat.id
     is_flood = Flood.is_chat(c_id)
-    saction = is_flood[2]
     if is_flood:
+        saction = is_flood[2]
         await m.reply_text(
             f"Choose a action given bellow to do when flood happens.\n **CURRENT ACTION** is {saction}",
             reply_markup=action_kb
@@ -115,82 +116,123 @@ async def flood_action(c: Gojo, m: Message):
     await m.reply_text("Switch on the flood protection first.")
     return
 
-@Gojo.on_message(command(['setflood', 'flood']) & ~filters.bot & admin_filter)
+@Gojo.on_message(command(['isflood', 'flood']) & ~filters.bot)
+async def flood_on_off(c: Gojo, m: Message):
+    if m.chat.type == CT.PRIVATE:   
+      return await m.reply_text("This command is ment to be used in groups.")
+    c_id = m.chat.id
+    is_flood = Flood.is_chat(c_id)
+    c_id = m.chat.id
+    if is_flood:
+      saction = is_flood[2]
+      slimit = is_flood[0]
+      swithin = is_flood[1]
+      return await m.reply_text(f"Flood is on for this chat\n**Action**: {saction}\n**Messages**: {slimit} within {swithin} sec")
+    return await m.reply_text("Flood protection is off for this chat.")
+
+@Gojo.on_message(command(['setflood']) & ~filters.bot & admin_filter)
 async def flood_set(c: Gojo, m: Message):
     bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
     status = bot.status
-    if not status in [CMS.OWNER, CMS.ADMINISTRATOR] and not bot.privileges.can_restrict_members:
+    if not status in [CMS.OWNER, CMS.ADMINISTRATOR]:
+      if not bot.privileges.can_restrict_members:
         return await m.reply_text("Give me permission to restict member first")
     if m.chat.type == CT.PRIVATE:
         return await m.reply_text("This command is ment to be used in groups.")
     split = m.text.split(None, 1)
     c_id = m.chat.id
     is_flood = Flood.is_chat(c_id)
-    saction = is_flood[2]
-    slimit = is_flood[0]
-    swithin = is_flood[1]
     if len(split) == 1:
         c_id = m.chat.id
         if is_flood:
+            saction = is_flood[2]
+            slimit = is_flood[0]
+            swithin = is_flood[1]
             return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec")
         return await m.reply_text("Flood protection is off of this chat.")
     
-    elif len(split) == 2:
+    if len(split) == 2:
+        if is_flood:
+            saction = is_flood[2]
+            slimit = is_flood[0]
+            swithin = is_flood[1]
         c_id = m.chat.id
         if split[1].lower() in on_key:
-            if not is_flood:
-                Flood.save_flood(m.chat.id, 5, 5, 'mute')
-                await m.reply_text("Flood protection has been started for this group.")
-                return
-            return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec") 
+            Flood.save_flood(m.chat.id, 5, 5, 'mute')
+            await m.reply_text("Flood protection has been started for this group.")
+            return
         if split[1].lower() in off_key:
-            Flood.rm_flood(m.chat.id, slimit, swithin, saction)
+            Flood.rm_flood(c_id, slimit, swithin, saction)
             await m.reply_text("Flood protection has been stopped for this chat")
             return
     await m.reply_text("**Usage:**\n `/setflood on/off`")
     return
 
-@Gojo.on_callback_query()
+@Gojo.on_callback_query(filters.regex("^f_"))
 async def callbacks(c: Gojo, q: CallbackQuery):
     data = q.data
-    if data == "close":
+    if data == "fclose":
         await q.answer("Closed")
         await q.message.delete()
         return
     c_id = q.message.chat.id
     is_flood = Flood.is_chat(c_id)
-    saction = is_flood[2]
-    slimit = is_flood[0]
-    swithin = is_flood[1]
+    if is_flood:
+      saction = is_flood[2]
+      slimit = is_flood[0]
+      swithin = is_flood[1]
     user = q.from_user.id
     user_status = (await q.message.chat.get_member(q.from_user.id)).status
     if user in SUPPORT_STAFF or user_status in [CMS.OWNER, CMS.ADMINISTRATOR]:
-        if data in ["mute", "ban", "kick"]:
-            Flood.save_flood(c_id, slimit, swithin, data)
-            await q.answer("Updated action", show_alert=True)
-            await q.edit_message_caption(
-                f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
-                reply_markup=limit_kb
-            )
-            return
-        if data in ["l_5", "l_10", "l_15"]:
+        if data in ["f_mute", "f_ban", "f_kick"]:
+            change = data.split("_")[1]
+            if not change == saction:
+              Flood.save_flood(c_id, slimit, swithin, change)
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
+              return
+            else:
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
+        elif data in ["f_5", "f_10", "f_15"]: 
             change = int(data.split("_")[1])
-            Flood.save_flood(c_id, change, swithin, saction)
-            await q.answer("Updated limit", show_alert=True)
-            await q.edit_message_caption(
-                f"Set the time with the number of message recived treated as flood\n **CUURENT TIME** {swithin}",
-                reply_markup=within_kb
-            )
-            return
-        if data in ["5", "10", "15"]:
+            if not change == slimit:
+              Flood.save_flood(c_id, change, swithin, saction)
+              await q.answer("Updated limit", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the time with the number of message recived treated as flood\n **CUURENT TIME** {swithin}",
+                  reply_markup=within_kb
+              )
+              return
+            else:
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
+        elif data in ["f_f_5", "f_f_10", "f_f_15"]:
+            data = data.split("_")[-1]
             change = int(data)
-            Flood.save_flood(c_id, slimit, change, saction)
-            await q.answer("Updated", show_alert=True)
-            await q.edit_message_caption(
-                "Flood protection setting has been updated",
-                reply_markup=close_kb
-            )
-            return
+            if not change == swithin:
+              Flood.save_flood(c_id, slimit, change, saction)
+              await q.answer("Updated", show_alert=True)
+              await q.edit_message_caption(
+                  "Flood protection setting has been updated",
+                  reply_markup=close_kb
+              )
+              return
+            else:
+              await q.answer("Updated action", show_alert=True)
+              await q.edit_message_caption(
+                  f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                  reply_markup=limit_kb
+              )
     else:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
@@ -389,6 +431,34 @@ async def flood_watcher(c: Gojo, m: Message):
                     dic[c_id][u_id][1].clear()
                     dic[c_id][u_id][0].clear()
                     return
+    elif y-x > within:
+      try:
+        dic[c_id][u_id][1].clear()
+        dic[c_id][u_id][0].clear()
+        return
+      except Exception:
+        pass
     else:
         return
+
+
+__PLUGIN__ = "flood"
+__alt_name__ = [
+  "anit-flood",
+  "flood",
+  "spam",
+  "anti-spam",
+]
+__HELP__ = """
+**Anti Flood**
+**User Commands:**
+• /flood: to check weather the group is protected from spam or not.
+
+**Admin only:**
+• /setflood `on/off`: To activate or deactivate the flood protection
+• /floodaction: To customize the flood settings.
+
+**Example:**
+`/setflood on`
+"""
 

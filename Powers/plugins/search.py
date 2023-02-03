@@ -237,7 +237,7 @@ __alt_name__ = [
 __HELP__ = """
 **Search**
 
-**Admin only:**
+**Available commands:**
 • /google `<query>` : Search the google for the given query.
 • /anime `<query>`  : Search myanimelist for the given query.
 • /stack `<query>`  : Search stackoverflow for the given query.
