@@ -27,7 +27,7 @@
 
 
 **A python and [pyrogram](https://github.com/Gojo-Bots/pyrogram) based group management bot for telegram.
-If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to updating and sending pull requests**
+If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and feel free to update and create pull requests**
 
 
 
@@ -78,11 +78,11 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 
 # DEPLOYMENT 🚀
 ## Deploy To Heroku
-* **Make Sure you have Heroku account**
+* **Make Sure you have a Heroku account**
 
-* If you don't have heroku account what are you waiting for click [here](https://id.heroku.com/login) to make one or just deploy on other platform gudie is given below
+* If you don't have a Heroku account, what are you waiting for? Click [here](https://id.heroku.com/login) to make one or just deploy on other platform gudie is given below
 
-* Just click on the button it will redirect you to Heroku website and deploy your bot there....enjoy 😉
+* Just click on the button it will redirect you to Heroku website and you can deploy your bot there....enjoy 😉
 
 [![DEPLOY](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Gojo-Bots/Gojo_Satoru.git)
 
@@ -91,15 +91,15 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 ## Deploy To Railway
 [![DEPLOY](https://railway.app/button.svg)](https://railway.app)
 ### How To Deploy On Railway
-*  **Make Sure You have an github account which is minimum 30 days old.**
-* Fork the repo by clicking [here](https://github.com/Gojo-Bots/Gojo_Satoru/fork)
-* Click on [deploy](https://railway.app) button 
-* Login in railway using github account
-* Now search the repo in the search bar given like iamgojoof6eyes/Gojo_Satoru ***replace iamgojoof6eyes with your github username.***
-* Now add the values and keys by creating values and keys ***Make sure to add keys __as per given below__ I'll advide you to just copy and paste it***
+*  **Make sure you have a Github account which is at least 30 days old.**
+* Fork the repo by clicking [here](https://github.com/Gojo-Bots/Gojo_Satoru/fork).
+* Click on [deploy](https://railway.app) button .
+* Login to Railway using Github account.
+* Now search the repo in the search bar: iamgojoof6eyes/Gojo_Satoru ***replace iamgojoof6eyes with your github username.***
+* Now add the values and keys by creating values and keys ***Make sure to add keys __as per given below__ I'll advide you to just copy and paste it.***
 * Then wait for 10-15 minutes. 
 * Vars are [given below](#Variables)
-* ***The bot can be used by provideing mandotry variables only..*** 
+* ***The bot can be used by provideing mandotry variables only.*** 
 
 --------  
   
@@ -107,13 +107,13 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
   [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/Gojo-Bots/Gojo_Satoru)
 
 ### How To Deploy On Okteto
-  * **Make sure you have an github account.**
-  * [Fork](https://github.com/Gojo-Bots/Gojo_Satoru/fork) the repo and give a star to repo
+  * **Make sure you have a Github account.**
+  * [Fork](https://github.com/Gojo-Bots/Gojo_Satoru/fork) the repo and give a star to repo.
   * Click on [deploy](https://cloud.okteto.com/deploy?repository=https://github.com/Gojo-Bots/Gojo_Satoru) button provided above...
-  * Login using github.
-  * Fill the values
+  * Login using Github.
+  * Fill in the values.
   * Then wait for 10-15 minutes. 
-  * Vars are [given below](#Variables)
+  * Vars are [given below](#Variables).
   * ***If you want to add more data of yours just go to variable section and add the key and values to it then hit on `relaunch`*** 
   
   ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
@@ -163,50 +163,50 @@ docker run --env-file main.env gojo_gojo_satoru
 If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 ## Variables
-`BOT_TOKEN` You can get your bot token at [@BotFather](https://t.me/BotFather)
+`BOT_TOKEN` You can get your bot token from [@BotFather](https://t.me/BotFather).
 
-`API_ID` You can get your api id [here](my.telegram.org)
+`API_ID` You can get your API ID [here](https://my.telegram.org).
 
-`API_HASH` You can get your api hash [here](my.telegram.org)
+`API_HASH` You can get your API hash [here](https://my.telegram.org).
 
-`PREFIX_HANDLER` Your bot handler which will activate commands
+`PREFIX_HANDLER` Your bot handler which will activate commands.
 
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
 
 
 <details><summary><h3>List of all variables</h3></summary>
 
-`BOT_TOKEN` You can get your bot token at [@BotFather](https://telegram.dog/BotFather)
+`BOT_TOKEN` You can get your bot token from [@BotFather](https://telegram.dog/BotFather).
 
-`API_ID` You can get your api id [here](my.telegram.org)
+`API_ID` You can get your API ID [here](https://my.telegram.org).
 
-`API_HASH` You can get your api hash [here](my.telegram.org)
+`API_HASH` You can get your API hash [here](https://my.telegram.org).
 
-`PREFIX_HANDLER` Your bot handler which will activate commands
+`PREFIX_HANDLER` Your bot handler which will activate commands.
 
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
 
 `DB_NAME`: Your [MongoDB](https://www.mongodb.com/) database name.
 
-`OWNER_ID`: Your user ID as an integer. You can get it from [@SessionHellBot](https://telegram.dog/SessionHellBot)
+`OWNER_ID`: Your user ID as an integer. You can get it from [@SessionHellBot](https://telegram.dog/SessionHellBot).
 
 `SUPPORT_GROUP`: Your Telegram support group chat username where user's can contact in case of a problem.
 
-`MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`. You can get it from [@SessionHellBot](https://telegram.dog/SessionHellBot)
+`MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`. You can get it from [@SessionHellBot](https://telegram.dog/SessionHellBot).
 
-`VERSION`: A Version to be shown in bot.
+`VERSION`: A version to be shown in bot.
 
 `PREFIX_HANDLER`: Something like '/' to execute commands.
 
 `SUPPORT_CHANNEL`: Your Telegram support channel username where user's can see updates of bot.
 
-`DEV_USERS`: ID of users who are Devs of your bot. Use space to seprate values. You can get there id's from [@SessionHellBot](https://telegram.dog/SessionHellBot)
+`DEV_USERS`: ID of users who are devs of your bot. Use space to seperate values. You can get their IDs from [@SessionHellBot](https://telegram.dog/SessionHellBot).
 
-`SUDO_USERS`: A space separated list of user IDs who you want to assign as sudo users. You can get there id's from [@SessionHellBot](https://telegram.dog/SessionHellBot)
+`SUDO_USERS`: A space separated list of user IDs who you want to assign as sudo users (full permissions). You can get their IDs from [@SessionHellBot](https://telegram.dog/SessionHellBot).
 
-`WHITELIST_USERS`: A space separated list of user IDs whitelisted, cannot be restricted. You can get there id's from [@SessionHellBot](https://telegram.dog/SessionHellBot)
+`WHITELIST_USERS`: A space separated list of user IDs whitelisted, cannot be restricted. You can get their IDs from [@SessionHellBot](https://telegram.dog/SessionHellBot).
 
-⚠️ **Note:** In case you are passing more than one value seprate them using whitespace (space) for e.g. If I want to pass more than one PREFIX_HANDLER
+⚠️ **Note:** In case you are passing more than one value seperate them using whitespace (space) for e.g. If I want to pass more than one PREFIX_HANDLER
 I'll pass it like `'/' '.' '!'` this.
 
 YOU CAN ALSO HAVE A LOOK AT [VARS FILE](https://github.com/Gojo-Bots/Gojo_Satoru/blob/main/Powers/vars.py)
