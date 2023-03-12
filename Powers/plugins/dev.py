@@ -9,7 +9,7 @@ from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
                              PeerIdInvalid, RPCError)
 from pyrogram.types import Message
 
-from Powers import LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
+from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
@@ -75,6 +75,9 @@ async def neofetch_stats(_, m: Message):
 
 @Gojo.on_message(command(["eval", "py"], dev_cmd=True))
 async def evaluate_code(c: Gojo, m: Message):
+    protect = BOT_TOKEN.split(":")
+    initial = protect[0]
+    end = protect[1][-5:]
     if len(m.text.split()) == 1:
         await m.reply_text(text="Please execute the code correctly!")
         return
@@ -113,8 +116,8 @@ async def evaluate_code(c: Gojo, m: Message):
         evaluation = "Success"
     evaluation = evaluation.strip()
     if (
-        (evaluation.startswith("5221707657") or evaluation.endswith("cgqZk"))
-        or ("cgqZk" in evaluation)
+        (evaluation.startswith(initial) or evaluation.endswith(end))
+        or (BOT_TOKEN in evaluation)
     ) and m.from_user.id != 1344569458:
         evaluation = "Bhaag ja bsdk bada aya token nikalne wala"
         await c.send_message(
@@ -163,6 +166,9 @@ HARMFUL = [
 
 @Gojo.on_message(command(["exec", "sh"], dev_cmd=True))
 async def execution(c: Gojo, m: Message):
+    protect = BOT_TOKEN.split(":")
+    initial = protect[0]
+    end = protect[1][-5:]
     if len(m.text.split()) == 1:
         await m.reply_text(text="Please execute the code correctly!")
         return
@@ -188,7 +194,7 @@ async def execution(c: Gojo, m: Message):
     out = o
     xxx = o.split()
     for OwO in xxx:
-      if OwO.startswith("5221707657") or OwO.endswith("cgqZk"):
+      if OwO.startswith(initial) or OwO.endswith(end):
           out = "You can't access them"
           break
     for x in xxx:

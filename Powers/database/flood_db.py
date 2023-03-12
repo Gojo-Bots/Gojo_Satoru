@@ -24,10 +24,12 @@ class Floods(MongoDB):
         with INSERTION_LOCK:
             curr = self.find_one({"chat_id": chat_id})
             if curr:
-                if not(limit == int(curr['limit']) or within == int(curr['within']) or action == str(curr['action'])):
+                if not(limit == int(curr['limit']) and within == int(curr['within']) and action == str(curr['action'])):
                     return self.update(
                         {
-                            "_id": chat_id,
+                            "chat_id": chat_id
+                        },
+                        {
                             "limit": limit,
                             "within": within,
                             "action": action,
@@ -47,22 +49,22 @@ class Floods(MongoDB):
     
     def is_chat(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.find_all({"chat_id": chat_id})
+            curr = self.find_one({"chat_id": chat_id})
             if curr:
                 action = [str(curr['limit']), str(curr['within']), str(curr['action'])]
                 return action
             return False
     
-    def get_action(self, chat_id: int, limit: int, within: int, action: str):
+    def get_action(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id": chat_id, "limit": limit, "within": within, "action": action})
+            curr = self.find_one({"chat_id": chat_id})
             if curr:
-                return curr
+                return curr['action']
             return "Flood haven't set"
     
-    def rm_flood(self, chat_id: int, limit: int, within: int, action: str):
+    def rm_flood(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id": chat_id, "limit": limit, "within": within, "action": action})
+            curr = self.find_one({"chat_id": chat_id})
             if curr:
                 self.delete_one(curr)
                 return True
