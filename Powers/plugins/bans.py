@@ -102,7 +102,7 @@ async def tban_usr(c: Gojo, m: Message):
         )
         await m.reply_animation(
             reply_to_message_id=r_id,
-            animation=choice(BAN_GIFS),
+            animation=str(choice(BAN_GIFS)),
             caption=txt,
             reply_markup=keyboard,
             parse_mode=enums.ParseMode.HTML,
@@ -303,7 +303,7 @@ async def dtban_usr(c: Gojo, m: Message):
         )
         await c.send_animation(
             chat_id=m.chat.id,
-            animation=choice(BAN_GIFS),
+            animation=str(choice(BAN_GIFS)),
             caption=txt,
             reply_markup=keyboard,
             parse_mode=enums.ParseMode.HTML,
@@ -390,7 +390,7 @@ async def kick_usr(c: Gojo, m: Message):
         # await m.reply_text(txt, reply_to_message_id=r_id)
         await m.reply_animation(
             reply_to_message_id=r_id,
-            animation=choice(KICK_GIFS),
+            animation=str(choice(KICK_GIFS)),
             caption=txt,
             parse_mode=enums.ParseMode.HTML,
         )
@@ -538,7 +538,7 @@ async def dkick_usr(c: Gojo, m: Message):
         await c.send_message(m.chat.id, txt)
         await c.send_animation(
             chat_id=m.chat.id,
-            animation=choice(KICK_GIFS),
+            animation=str(choice(KICK_GIFS)),
             caption=txt,
             parse_mode=enums.ParseMode.HTML,
         )
@@ -755,7 +755,7 @@ async def dban_usr(c: Gojo, m: Message):
             ],
         )
         await c.send_animation(
-            m.chat.id, animation=choice(BAN_GIFS), caption=txt, reply_markup=keyboard
+            m.chat.id, animation=str(choice(BAN_GIFS)), caption=txt, reply_markup=keyboard
         )
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -852,7 +852,7 @@ async def ban_usr(c: Gojo, m: Message):
             ],
         )
         await m.reply_animation(
-            animation=choice(BAN_GIFS),
+            animation=str(choice(BAN_GIFS)),
             caption=txt,
             reply_markup=keyboard,
             reply_to_message_id=r_id,
@@ -886,7 +886,7 @@ async def unbanbutton(c: Gojo, q: CallbackQuery):
     user_id = int(splitter[1])
     user = await q.message.chat.get_member(q.from_user.id)
 
-    if not user.can_restrict_members and q.from_user.id != OWNER_ID:
+    if not user.privileges.can_restrict_members and q.from_user.id != OWNER_ID:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,
@@ -913,7 +913,7 @@ async def kickme(_, m: Message):
         await m.chat.ban_member(m.from_user.id)
         txt = "Why not let me help you!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        await m.reply_animation(animation=choice(KICK_GIFS), caption=txt)
+        await m.reply_animation(animation=str(choice(KICK_GIFS)), caption=txt)
         await m.chat.unban_member(m.from_user.id)
     except RPCError as ef:
         await m.reply_text(

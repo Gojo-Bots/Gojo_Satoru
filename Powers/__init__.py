@@ -8,6 +8,8 @@ from sys import stdout, version_info
 from time import time
 from traceback import format_exc
 
+import lyricsgenius
+
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
@@ -56,7 +58,22 @@ LOGGER.info("------------------------")
 LOGGER.info(f"Version: {Config.VERSION}")
 LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
 LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
+LOGGER.info("Checking lyrics genius api...")
+if Config.GENIUS_API_TOKEN:
+    LOGGER.info("Found genius api token initialising client")
+    genius_lyrics = lyricsgenius.Genius(
+        "VOT0IxuOq2CzSfAF1xwerHFNpKGyivUxZtWyHPm1ucjM4iWb1LxG-aKSE-YuG5e46ZMRg6yUUtsBcz_OGKPzug",
+        skip_non_songs=True,
+        excluded_terms=["(Remix)", "(Live)"],
+        remove_section_headers=True,
+    )
+    is_genius_lyrics = True
 
+    genius_lyrics.verbose = False
+    LOGGER.info("Client setup complete")
+elif not Config.GENIUS_API_TOKEN:
+    LOGGER.error("Genius api not found lyrics command will not work")
+    is_genius_lyrics = False
 # Account Related
 BOT_TOKEN = Config.BOT_TOKEN
 API_ID = Config.API_ID

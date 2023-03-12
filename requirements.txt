@@ -4,11 +4,12 @@ anyio==3.6.2; python_full_version >= "3.6.2" and python_version >= "3.6"
 asyncio==3.4.3
 beautifulsoup4==4.11.1; python_full_version >= "3.6"
 cachetools==5.2.0; python_version >= "3.7" and python_version < "4.0"
-certifi==2022.6.15; python_version >= "3.7" and python_version < "4"
+certifi==2022.12.7; python_version >= "3.7" and python_version < "4"
 charset-normalizer==2.1.0; python_version >= "3.7" and python_version < "4" and python_full_version >= "3.6.0"
 dnspython==2.2.1; python_version >= "3.6" and python_version < "4.0"
 google==3.0.0
 gpytranslate==1.4.0; python_version >= "3.6"
+lyricsgenius==3.0.1
 lxml==4.9.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 prettyconf==2.2.1
 pyaes==1.6.1; python_version >= "3.6" and python_version < "4.0"

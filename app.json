@@ -11,7 +11,7 @@
       "Anime"
     ],
     "repository": "https://github.com/Gojo-Bots/Gojo_Satoru",
-    "success_url": "https://t.me/iamgojoof6eyes_bot",
+    "success_url": "https://t.me/GojoSuperbot",
     "env": {
       "BOT_TOKEN": {
         "description": "Your telegram bot token, get from @Botfather in telegram.",
@@ -81,6 +81,11 @@
         "description": "A space separated list of user IDs whitelisted, cannot be restricted.",
         "required": false,
         "value": " "
+      },
+      "GENIUS_API" : {
+        "description": "Your Lyrics Genius Api Token. To fetch lyrics of songs",
+        "required": false,
+        "value": ""
       },
       "WORKERS": {
         "description": "Number of workers to run the bot.",
