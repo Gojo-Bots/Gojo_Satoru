@@ -37,6 +37,7 @@ class Config:
             default="1344569458",
         ).split(" ")
     ]
+    GENIUS_API_TOKEN = config("GENIUS_API")
     DB_URI = config("DB_URI", default="")
     DB_NAME = config("DB_NAME", default="")
     NO_LOAD = config("NO_LOAD", default="").split()
@@ -66,6 +67,7 @@ class Development:
     DB_URI = ""  # Your mongo DB URI
     DB_NAME = ""  # Your DB name
     NO_LOAD = []
+    GENIUS_API_TOKEN = ""
     PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
