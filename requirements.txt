@@ -1,4 +1,4 @@
-aiofiles==0.8.0; python_full_version >= "3.7"
+aiofiles==23.1.0; python_full_version >= "3.7"
 aiohttp==3.7.4; python_version >= "3.6" and python_version < "4.0"
 anyio==3.6.2; python_full_version >= "3.6.2" and python_version >= "3.6"
 asyncio==3.4.3
