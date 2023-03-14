@@ -256,7 +256,7 @@ async def chat_info_func(c: Gojo, message: Message):
             chat = str(chat)
         else:
             return await message.reply_text(
-                f"Got and exception {e}\n**Usage:**/chinfo [USERNAME|ID]"
+                f"Got and exception {ef}\n**Usage:**/chinfo [USERNAME|ID]"
             )
 
     m = await message.reply_text(
@@ -288,7 +288,7 @@ async def chat_info_func(c: Gojo, message: Message):
             await message.reply_text(info_caption)
         except RPCError as rpc:
             await message.reply_text(rpc)
-            LOGGER.error(e)
+            LOGGER.error(rpc)
             LOGGER.error(format_exc())
     except Exception as e:
         await message.reply_text(text=e)
