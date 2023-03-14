@@ -102,6 +102,7 @@ async def insult(c: Gojo, m: Message):
     if not m.reply_to_message:
         return await m.reply_text("You want to insult yourself such a foolish person")
     user_id = m.reply_to_message.from_user.id
+    user_first_name = m.reply_to_message.from_user.first_name
     if user_id in DEV_USERS:
         await m.reply_text("Sorry! I can't insult my devs....")
         return LOGGER.info(
