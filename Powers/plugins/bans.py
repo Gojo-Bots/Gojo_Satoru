@@ -85,10 +85,8 @@ async def tban_usr(c: Gojo, m: Message):
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(
             user_id,
-            until_date=int(bantime),
-            text=f"{admin} banned {banned} in <b>{chat_title}</b>!",
-        )
-
+            until_date=int(bantime),)
+        txt=f"{admin} banned {banned} in <b>{chat_title}</b>!", 
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         keyboard = InlineKeyboardMarkup(
             [
