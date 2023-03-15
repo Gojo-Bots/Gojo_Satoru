@@ -122,6 +122,10 @@ async def escape_mentions_using_curly_brackets(
     text: str,
     parse_words: list,
 ) -> str:
+    if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP, ChatType.CHANNEL]:
+        chat_name = escape(m.chat.title)
+    else:
+        chat_name = escape(m.from_user.first_name)
     teks = await escape_invalid_curly_brackets(text, parse_words)
     if teks:
         teks = teks.format(
@@ -141,9 +145,7 @@ async def escape_mentions_using_curly_brackets(
                 if m.from_user.last_name
                 else [escape(m.from_user.first_name)],
             ),
-            chatname=escape(m.chat.title)
-            if m.chat.type != ChatType.SUPERGROUP
-            else escape(m.from_user.first_name),
+            chatname=chat_name,
             id=m.from_user.id,
         )
     else:

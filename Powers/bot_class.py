@@ -5,6 +5,7 @@ from time import gmtime, strftime, time
 from aiohttp import ClientSession
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
+from pyrogram.types import BotCommand
 
 from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER,
                     MESSAGE_DUMP, NO_LOAD, UPTIME, WORKERS, load_cmds)
@@ -41,7 +42,13 @@ class Gojo(Client):
     async def start(self):
         """Start the bot."""
         await super().start()
-
+        await self.set_bot_commands(
+            [
+                BotCommand("start", "To check weather the bot is alive or not"),
+                BotCommand("help", "To get help menu"),
+                BotCommand("donate", "To buy me a coffee")
+            ]
+        )
         meh = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
         Config.BOT_ID = meh.id
