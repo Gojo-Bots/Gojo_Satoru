@@ -35,6 +35,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
 
 async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
+    owner_username = (await Gojo.get_users(Config.OWNER_ID)).username
     return ikb(
         [
             [
@@ -58,7 +59,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Owner ❤️",
-                    f"https://t.me/iamgojoof6eyes",
+                    f"https://t.me/{owner_username}",
                     "url",
                 ),
             ],
@@ -70,7 +71,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Powered by",
-                    "https://gojo_bots_network.t.me",
+                    f"https://{Config.SUPPORT_CHANNEL}.t.me",
                     "url",
                 ),
             ],
@@ -91,8 +92,9 @@ async def get_private_note(c: Gojo, m: Message, help_option: str):
             f"- [{note[0]}](https://t.me/{Config.BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
             for note in all_notes
         ]
-        rply = "\n".join(note_list)
-        rply += "You can retrieve these notes by tapping on the notename."
+        rply = f"Available notes in {chat_title}"
+        rply += "\n".join(note_list)
+        rply += "\n\nYou can retrieve these notes by tapping on the notename."
         await m.reply_text(rply, disable_web_page_preview=True, quote=True)
         return
 
