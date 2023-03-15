@@ -270,8 +270,9 @@ To add your very own plugin just use the format given below and go through the [
 
 * [PSYREX](https://github.com/iamPSYREX) `for logos`
 
-* [Pyrogram](https://github.com/pyrogram/pyrogram) `library`
+* [Dan](https://github.com/delivrance) for [pyrogram](https://github.com/pyrogram/pyrogram) `library`
 
+* [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
 ---------
 
 # Powered by [ɢօʝօ ɮօȶֆ](https://github.com/Gojo-Bots)
