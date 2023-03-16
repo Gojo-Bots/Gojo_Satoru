@@ -139,6 +139,8 @@ async def get_private_note(c: Gojo, m: Message, help_option: str):
         teks, button = await parse_button(text)
         button = await build_keyboard(button)
         button = ikb(button) if button else None
+        if not teks:
+            teks = "Here is your note"
         if button:
             try:
                 await m.reply_text(

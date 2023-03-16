@@ -1,6 +1,6 @@
+from datetime import datetime, timedelta
 from html import escape
 from re import compile as compile_re
-from time import time
 from typing import List
 
 from pyrogram.enums import ChatType
@@ -19,13 +19,13 @@ async def extract_time(m: Message, time_val: str):
         if not time_num.isdigit():
             await m.reply("Unspecified amount of time.")
             return ""
-
+        initial_time = datetime.now()
         if unit == "m":
-            bantime = int(time() + int(time_num) * 60)
+            bantime = initial_time + timedelta(minutes=int(time_num))
         elif unit == "h":
-            bantime = int(time() + int(time_num) * 60 * 60)
-        elif unit == "s":
-            bantime = int(time() + int(time_num) * 24 * 60 * 60)
+            bantime = initial_time + timedelta(hours=int(time_num))
+        elif unit == "d":
+            bantime = initial_time + timedelta(days=int(time_num)) 
         else:
             # how even...?
             return ""
@@ -62,7 +62,6 @@ async def parse_button(text: str):
             prev = match.start(1) - 1
     else:
         note_data += markdown_note[prev:]
-
     return note_data, buttons
 
 

@@ -329,7 +329,10 @@ dic = {}
 async def flood_watcher(c: Gojo, m: Message):
     c_id = m.chat.id
     Flood = Floods()
-    u_id = m.from_user.id
+    try:
+        u_id = m.from_user.id
+    except AttributeError:
+        return # Get this error when the message received is not by an user and return
     is_flood = Flood.is_chat(c_id)
     if not is_flood:
         return # return of chat is not in anti flood protection
