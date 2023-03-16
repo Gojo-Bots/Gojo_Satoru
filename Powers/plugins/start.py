@@ -72,6 +72,7 @@ async def start(c: Gojo, m: Message):
             ):
                 await get_private_note(c, m, help_option)
                 return
+    
             if help_option.startswith("rules"):
                 LOGGER.info(f"{m.from_user.id} fetched privaterules in {m.chat.id}")
                 await get_private_rules(c, m, help_option)
@@ -81,15 +82,15 @@ async def start(c: Gojo, m: Message):
 
             if not help_msg:
                 return
-
-            await m.reply_photo(
-                photo=str(choice(StartPic)),
-                caption=help_msg,
-                parse_mode=enums.ParseMode.MARKDOWN,
-                reply_markup=help_kb,
-                quote=True,
-            )
-            return
+            if help_option.split("_")[1] == "help":
+                await m.reply_photo(
+                    photo=str(choice(StartPic)),
+                    caption=help_msg,
+                    parse_mode=enums.ParseMode.MARKDOWN,
+                    reply_markup=help_kb,
+                    quote=True,
+                )
+                return
         try:
             cpt = f"""
 Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! My self Gojo ✨.
@@ -233,7 +234,7 @@ Commands available:
                 [
                   InlineKeyboardButton(
                     "Help", 
-                    url=f"t.me/{Config.BOT_USERNAME}?start=help",
+                    url=f"t.me/{Config.BOT_USERNAME}?start=start_help",
                   ),
                 ],
               ],

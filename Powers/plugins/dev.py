@@ -9,7 +9,7 @@ from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
                              PeerIdInvalid, RPCError)
 from pyrogram.types import Message
 
-from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
+from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
@@ -118,7 +118,7 @@ async def evaluate_code(c: Gojo, m: Message):
     if (
         (evaluation.startswith(initial) or evaluation.endswith(end))
         or (BOT_TOKEN in evaluation)
-    ) and m.from_user.id != 1344569458:
+    ) and m.from_user.id != OWNER_ID:
         evaluation = "Bhaag ja bsdk bada aya token nikalne wala"
         await c.send_message(
             MESSAGE_DUMP,
@@ -200,7 +200,7 @@ async def execution(c: Gojo, m: Message):
     for x in xxx:
         xx = x.split("=")
         if xx and xx[0] in HARMFUL:
-            if m.from_user.id != 1344569458:
+            if m.from_user.id != OWNER_ID:
                 out = "You can't access them"
                 await c.send_message(
                     MESSAGE_DUMP,
