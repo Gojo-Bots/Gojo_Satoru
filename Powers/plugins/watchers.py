@@ -216,12 +216,12 @@ Scanned by TeamRed7 | Phoenix API ;)
 Appeal [Here](https://t.me/Red7WatchSupport)
        """
        check = Red7_Client.check(m.from_user.id)
-         if check['is_gban']:
-            try:
-               await RiZoeL.ban_chat_member(message.chat.id, user.id)
-            except:
-               pass
-            await RiZoeL.send_message(message.chat.id, msg, disable_web_page_preview=True)
+       if check['is_gban']:
+          try:
+             await c.ban_chat_member(m.chat.id, user.id)
+             await c.send_message(m.chat.id, msg, disable_web_page_preview=True)
+          except Exception as a:
+             LOGGER.error(a)
     except Exception as eror:
        LOGGER.error(eror)
        LOGGER.error(format_exc())
