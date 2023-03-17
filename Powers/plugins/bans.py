@@ -81,12 +81,15 @@ async def tban_usr(c: Gojo, m: Message):
     try:
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         banned = await mention_html(user_first_name, user_id)
-        chat_title = m.chat.title,
+        chat_title = m.chat.title
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(
             user_id,
             until_date=bantime)
-        txt=f"{admin} banned {banned} in <b>{chat_title}</b>!",
+        t_t=f"{admin} banned {banned} in <b>{chat_title}</b>!",
+        txt = t_t
+        if type(t_t) is tuple:
+            txt = t_t[0] # Done this bcuz idk why t_t is tuple type data. SO now if it is tuple this will get text from it
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
         else:
@@ -285,7 +288,7 @@ async def dtban_usr(c: Gojo, m: Message):
     try:
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         banned = await mention_html(user_first_name, user_id)
-        chat_title = (m.chat.title,)
+        chat_title = m.chat.title
         LOGGER.info(f"{m.from_user.id} dtbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id, until_date=bantime)
         await m.reply_to_message.delete()
