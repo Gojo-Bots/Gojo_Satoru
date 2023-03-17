@@ -85,7 +85,7 @@ async def tban_usr(c: Gojo, m: Message):
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(
             user_id,
-            until_date=int(bantime),)
+            until_date=bantime)
         txt=f"{admin} banned {banned} in <b>{chat_title}</b>!", 
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         keyboard = InlineKeyboardMarkup(
@@ -191,7 +191,7 @@ async def stban_usr(c: Gojo, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} stbanned {user_id} in {m.chat.id}")
-        await m.chat.ban_member(user_id, until_date=int(bantime))
+        await m.chat.ban_member(user_id, until_date=bantime)
         await m.delete()
         if m.reply_to_message:
             await m.reply_to_message.delete()
@@ -284,7 +284,7 @@ async def dtban_usr(c: Gojo, m: Message):
         banned = ((await mention_html(user_first_name, user_id)),)
         chat_title = (m.chat.title,)
         LOGGER.info(f"{m.from_user.id} dtbanned {user_id} in {m.chat.id}")
-        await m.chat.ban_member(user_id, until_date=int(bantime))
+        await m.chat.ban_member(user_id, until_date=bantime)
         await m.reply_to_message.delete()
         txt = f"{admin} banned {banned} in <b>{chat_title}</b>!"
 
