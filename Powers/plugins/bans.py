@@ -79,9 +79,9 @@ async def tban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     try:
-        admin = ((await mention_html(m.from_user.first_name, m.from_user.id)),)
-        banned = ((await mention_html(user_first_name, user_id)),)
-        chat_title = (m.chat.title,)
+        admin = await mention_html(m.from_user.first_name, m.from_user.id)
+        banned = await mention_html(user_first_name, user_id)
+        chat_title = m.chat.title,
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(
             user_id,
@@ -283,15 +283,17 @@ async def dtban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     try:
-        admin = ((await mention_html(m.from_user.first_name, m.from_user.id)),)
-        banned = ((await mention_html(user_first_name, user_id)),)
+        admin = await mention_html(m.from_user.first_name, m.from_user.id)
+        banned = await mention_html(user_first_name, user_id)
         chat_title = (m.chat.title,)
         LOGGER.info(f"{m.from_user.id} dtbanned {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id, until_date=bantime)
         await m.reply_to_message.delete()
         txt = f"{admin} banned {banned} in <b>{chat_title}</b>!"
-
-        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -387,7 +389,10 @@ async def kick_usr(c: Gojo, m: Message):
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
         await m.chat.ban_member(user_id)
         txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
-        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         # await m.reply_text(txt, reply_to_message_id=r_id)
         await m.reply_animation(
             reply_to_message_id=r_id,
@@ -535,7 +540,10 @@ async def dkick_usr(c: Gojo, m: Message):
         kicked = await mention_html(user_first_name, user_id)
         chat_title = m.chat.title
         txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
-        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         await c.send_message(m.chat.id, txt)
         await c.send_animation(
             chat_id=m.chat.id,
@@ -598,7 +606,10 @@ async def unban_usr(c: Gojo, m: Message):
         unbanned = await mention_html(user_first_name, user_id)
         chat_title = (m.chat.title,)
         txt = f"{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
-        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         await m.reply_text(txt)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -744,7 +755,10 @@ async def dban_usr(c: Gojo, m: Message):
         await m.reply_to_message.delete()
         await m.chat.ban_member(user_id)
         txt = f"{m.from_user.mention} banned {m.reply_to_message.from_user.mention} in <b>{m.chat.title}</b>!"
-        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -841,7 +855,10 @@ async def ban_usr(c: Gojo, m: Message):
         await m.chat.ban_member(user_id)
         banned = await mention_html(user_first_name, user_id)
         txt = f"{m.from_user.mention} banned {banned} in <b>{m.chat.title}</b>!"
-        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -913,7 +930,10 @@ async def kickme(_, m: Message):
         LOGGER.info(f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
         await m.chat.ban_member(m.from_user.id)
         txt = "Why not let me help you!"
-        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         await m.reply_animation(animation=str(choice(KICK_GIFS)), caption=txt)
         await m.chat.unban_member(m.from_user.id)
     except RPCError as ef:

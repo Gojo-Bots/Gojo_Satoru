@@ -90,6 +90,8 @@ async def tmute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -195,6 +197,8 @@ async def dtmute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -369,6 +373,8 @@ async def mute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -521,6 +527,8 @@ async def dmute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
+        else:
+            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
