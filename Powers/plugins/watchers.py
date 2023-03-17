@@ -17,6 +17,7 @@ from Powers.database.warns_db import Warns, WarnSettings
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.parser import mention_html
 from Powers.utils.regex_utils import regex_searcher
+from PhoenixScanner import Phoenix
 
 # Initialise
 gban_db = GBan()
@@ -169,7 +170,7 @@ async def bl_watcher(_, m: Message):
 @Gojo.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group)
 async def gban_watcher(c: Gojo, m: Message):
     from Powers import SUPPORT_GROUP
-
+    
     if m and not m.from_user:
         return
 
@@ -205,7 +206,26 @@ async def gban_watcher(c: Gojo, m: Message):
         <b>Chat:</b> <code>{m.chat.id}</code>
         <b>Error:</b> <code>{ef}</code>""",
             )
-    return
+    
+    Red7_Client = Phoenix("RED7-yppfpzmakyopbjiwyccs")
+    try:
+       msg = f"""
+** Alert ⚠️**
+User {m.from_user.mention} is officially
+Scanned by TeamRed7 | Phoenix API ;)
+Appeal [Here](https://t.me/Red7WatchSupport)
+       """
+       check = Red7_Client.check(m.from_user.id)
+       if check['is_gban']:
+          try:
+             await c.ban_chat_member(m.chat.id, user.id)
+             await c.send_message(m.chat.id, msg, disable_web_page_preview=True)
+          except Exception as a:
+             LOGGER.error(a)
+    except Exception as eror:
+       LOGGER.error(eror)
+       LOGGER.error(format_exc())
+       return
 
 
 @Gojo.on_message(filters.chat(BLACKLIST_CHATS))
