@@ -100,7 +100,8 @@ async def fun_toss(_, m: Message):
 @Gojo.on_message(command("insult"))
 async def insult(c: Gojo, m: Message):
     if not m.reply_to_message:
-        return await m.reply_text("You want to insult yourself such a foolish person")
+        await m.reply_text("You want to insult yourself such a foolish person.\nYou are not even worth insulting")
+        return
     user_id = m.reply_to_message.from_user.id
     user_first_name = m.reply_to_message.from_user.first_name
     if user_id in DEV_USERS:
@@ -110,10 +111,10 @@ async def insult(c: Gojo, m: Message):
         )
     else:
         Insult_omp = choice(extras.INSULT_STRINGS)
-        reply_text = (
-            m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-        )
-        await reply_text(Insult_omp)
+        if m.reply_to_message:
+            await m.reply_to_message.reply_text(Insult_omp)
+        else:
+            await m.reply_text(Insult_omp)
         LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
 
 
