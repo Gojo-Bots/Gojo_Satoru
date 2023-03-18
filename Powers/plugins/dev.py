@@ -31,7 +31,7 @@ async def add_dev(c: Gojo, m:Message):
     user = reply_to.from_user.id
   elif len(split) == 2:
     try:
-      user = split[1]
+      user = int(split[1])
     except ValueError:
       await m.reply_text("Give me id of the user")
       return
