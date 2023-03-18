@@ -5,7 +5,7 @@ from traceback import format_exc
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
+from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP, owner_username
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
@@ -58,7 +58,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Owner ❤️",
-                    f"https://t.me/{owner_username}",
+                    f"https://t.me/{Config.owner_username}",
                     "url",
                 ),
             ],
