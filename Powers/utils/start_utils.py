@@ -35,7 +35,6 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
 
 async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
-    owner_username = (await Gojo.get_users(Config.OWNER_ID)).username
     return ikb(
         [
             [
