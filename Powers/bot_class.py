@@ -51,7 +51,7 @@ class Gojo(Client):
         )
         meh = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
-        owner_user = await self.get_users(OWNER_ID)).username
+        owner_user = (await self.get_users(OWNER_ID)).username
         Config.owner_username = owner_user
         Config.BOT_ID = meh.id
         Config.BOT_NAME = meh.first_name
