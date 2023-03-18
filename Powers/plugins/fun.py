@@ -111,10 +111,7 @@ async def insult(c: Gojo, m: Message):
         )
     else:
         Insult_omp = choice(extras.INSULT_STRINGS)
-        if m.reply_to_message:
-            await m.reply_to_message.reply_text(Insult_omp)
-        else:
-            await m.reply_text(Insult_omp)
+        await m.reply_to_message.reply_text(Insult_omp)
         LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
 
 
