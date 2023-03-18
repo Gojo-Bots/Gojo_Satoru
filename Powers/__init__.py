@@ -97,7 +97,7 @@ Defult_dev = set(defult_dev)
 
 DEVS = DEVS_USER | Defult_dev
 DEV_USERS = list(DEVS)
-
+owner_username = Config.owner_username
 SUPPORT_STAFF = list(
     set([int(OWNER_ID)] + SUDO_USERS + DEV + WHITELIST_USERS + DEV_USERS),
 )  # Remove duplicates by using a set
