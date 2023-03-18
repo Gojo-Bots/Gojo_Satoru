@@ -9,7 +9,7 @@ from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
                              PeerIdInvalid, RPCError)
 from pyrogram.types import Message
 
-from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME, OWNER_ID, defult_dev
+from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME, OWNER_ID, defult_dev, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
@@ -19,6 +19,9 @@ from Powers.utils.parser import mention_markdown
 
 @Gojo.on_message(command("adddev"))
 async def add_dev(c: Gojo, m:Message):
+  if m.from_user.id != OWNER_ID:
+    await m.reply_text("Only owner can do that")
+    return
   split = m.text.split(None)
   reply_to = m.reply_to_message
   if len(split) != 2 or not reply_to:
