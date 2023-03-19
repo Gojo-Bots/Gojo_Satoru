@@ -169,10 +169,26 @@ async def bl_watcher(_, m: Message):
 
 SCANLIST = []
 
-@Gojo.on_message(filters.command(["start", "ping"])
+@Gojo.on_message(filters.command(["start", "ping"]))
 async def updatescanlist(_, message: Message):
    global SCANLIST
    SCANLIST = update_scanlist()
+
+@Gojo.on_message(filters.user(list(SCANLIST)) & filters.group)
+async def r7_watcher(c: Gojo, m: Message):
+     msg = f"""
+** Alert ⚠️**
+User {m.from_user.mention} is officially
+Scanned by TeamRed7 | Phoenix API ;)
+Appeal [Here](https://t.me/Red7WatchSupport)
+     """
+     try:
+        await c.ban_chat_member(m.chat.id, user.id)
+        await c.send_message(m.chat.id, msg, disable_web_page_preview=True)
+     except Exception as a:
+        LOGGER.error(a)
+        LOGGER.error(format_exc())
+        return
 
 @Gojo.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group)
 async def gban_watcher(c: Gojo, m: Message):
@@ -213,22 +229,6 @@ async def gban_watcher(c: Gojo, m: Message):
         <b>Chat:</b> <code>{m.chat.id}</code>
         <b>Error:</b> <code>{ef}</code>""",
             )
-
-    elif m.from_user.id in SCANLIST:
-       msg = f"""
-** Alert ⚠️**
-User {m.from_user.mention} is officially
-Scanned by TeamRed7 | Phoenix API ;)
-Appeal [Here](https://t.me/Red7WatchSupport)
-       """
-       try:
-          await c.ban_chat_member(m.chat.id, user.id)
-          await c.send_message(m.chat.id, msg, disable_web_page_preview=True)
-       except Exception as a:
-          LOGGER.error(a)
-          LOGGER.error(format_exc())
-          return
-
 
 @Gojo.on_message(filters.chat(BLACKLIST_CHATS))
 async def bl_chats_watcher(c: Gojo, m: Message):
