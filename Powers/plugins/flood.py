@@ -350,15 +350,17 @@ async def flood_watcher(c: Gojo, m: Message):
     if not len(dic):
         z = {c_id : {u_id : [[],[]]}}
         dic.update(z)
-    for i in dic.keys():
-        if c_id != i:
-            z = {c_id : {u_id : [[],[]]}}
-            dic.update(z)
+    try:
+      dic[c_id] # access and check weather the c_id present or not
+    except KeyError:
+      z = {c_id : {u_id : [[],[]]}}
+      dic.update(z)
 
-    for i in dic[c_id].keys():
-        if u_id != i:
-            z = {u_id : [[],[]]}
-            dic[c_id].update(z) # make the dic something like {c_id : {u_id : [[for time],[for msg]]}}
+    try:
+      dic[c_id][u_id]
+    except KeyError:
+      z = {u_id : [[],[]]}
+      dic[c_id].update(z) # make the dic something like {c_id : {u_id : [[for time],[for msg]]}}
     sec = round(time.time())
     try:
         dic[c_id][u_id][0].append(sec)
