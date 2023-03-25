@@ -156,7 +156,7 @@ async def anime_search(c: Gojo, m: Message):
         LOGGER.error(format_exc())
         return
 
-@Gojo.on_message(command('anime'))
+@Gojo.on_message(command('stack'))
 async def stack_search(c: Gojo, m: Message):
     split = m.text.split(None, 1)
     if len(split) == 1:
