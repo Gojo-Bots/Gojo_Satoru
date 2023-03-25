@@ -9,7 +9,7 @@ from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
                              PeerIdInvalid, RPCError)
 from pyrogram.types import Message
 
-from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME, OWNER_ID
+from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME, OWNER_ID, defult_dev, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
@@ -17,7 +17,27 @@ from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
 from Powers.utils.parser import mention_markdown
 
-
+@Gojo.on_message(command("adddev"))
+async def add_dev(c: Gojo, m:Message):
+  if m.from_user.id != OWNER_ID:
+    await m.reply_text("Only owner can do that")
+    return
+  split = m.text.split(None)
+  reply_to = m.reply_to_message
+  if len(split) != 2 or not reply_to:
+    await m.reply_text("Give me an id or reply to message to add the user in dev")
+    return
+  if reply_to:
+    user = reply_to.from_user.id
+  elif len(split) == 2:
+    try:
+      user = int(split[1])
+    except ValueError:
+      await m.reply_text("Give me id of the user")
+      return
+  defult_dev.append(user)
+  return
+      
 @Gojo.on_message(command("ping", sudo_cmd=True))
 async def ping(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")

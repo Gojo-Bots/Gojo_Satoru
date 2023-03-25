@@ -49,6 +49,7 @@ class Config:
     BOT_USERNAME = ""
     BOT_ID = ""
     BOT_NAME = ""
+    owner_username = ""
 
 
 class Development:

@@ -8,7 +8,7 @@ from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
 
 from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER,
-                    MESSAGE_DUMP, NO_LOAD, UPTIME, WORKERS, load_cmds)
+                    MESSAGE_DUMP, NO_LOAD, UPTIME, WORKERS, load_cmds, OWNER_ID)
 from Powers.database import MongoDB
 from Powers.plugins import all_plugins
 from Powers.vars import Config
@@ -51,6 +51,8 @@ class Gojo(Client):
         )
         meh = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
+        owner_user = (await self.get_users(OWNER_ID)).username
+        Config.owner_username = owner_user
         Config.BOT_ID = meh.id
         Config.BOT_NAME = meh.first_name
         Config.BOT_USERNAME = meh.username
