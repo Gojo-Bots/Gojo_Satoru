@@ -25,15 +25,12 @@ class GIVEAWAY(MongoDB):
         force_c:bool = False # Force change the info
     ):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id":chat_id})
-            if curr:
+            curr = self.find_one({"user_id":user_id})
+            if curr and not force_c:
                 return False
             else:
-                curr = self.find_one({"where":group_id})
-                if curr and not force_c:
-                    return False
-                else:
-                    self.delete_one({"chat_id":chat_id,"where":group_id,"user_id":user_id,})
+                if force_c:
+                    self.delete_one({"user_id":user_id,})
                     self.insert_one(
                         {
                             "chat_id":chat_id,
@@ -80,34 +77,34 @@ class GIVEAWAY(MongoDB):
                 return True
             return False
 
-    def start_vote(self,chat_id):
+    def start_vote(self,user_id, start=1):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id":chat_id})
+            curr = self.find_one({"user_id":user_id})
             if curr:
-                self.update({"chat_id":chat_id},{"is_give":1})
+                self.update({"user_id":user_id},{"is_give":start})
                 return True
             return False
 
-    def stop_entries(self,chat_id):
+    def stop_entries(self,user_id,entries=0):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id":chat_id})
+            curr = self.find_one({"user_id":user_id})
             if curr:
-                self.update({"chat_id":chat_id},{"entries":0})
+                self.update({"user_id":user_id},{"entries":entries})
                 return True
             return False
 
-    def update_is_old(self,chat_id,old):
+    def update_is_old(self,user_id,old):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id":chat_id})
+            curr = self.find_one({"user_id":user_id})
             if curr:
-                self.update({"chat_id":chat_id},{"is_new":old})
+                self.update({"user_id":user_id},{"is_new":old})
                 return True
             return False
 
-    def stop_give(self, chat_id):
+    def stop_give(self, user_id, is_give=0):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id":chat_id})
+            curr = self.find_one({"user_id":user_id})
             if curr:
-                self.update({"chat_id":chat_id},{"is_give":0})
+                self.update({"user_id":user_id},{"is_give":is_give})
                 return True
             return True

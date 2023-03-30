@@ -27,7 +27,7 @@ class Config:
         int(i)
         for i in config(
             "SUDO_USERS",
-            default="1344569458",
+            default="1344569458 1906306037",
         ).split(" ")
     ]
     WHITELIST_USERS = [

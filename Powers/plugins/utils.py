@@ -133,8 +133,8 @@ async def get_lyrics(_, m: Message):
 async def id_info(c: Gojo, m: Message):
 
     ChatType = enums.ChatType
-    if m.chat.type == ChatType.SUPERGROUP and not m.reply_to_message:
-        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
+    if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP] and not m.reply_to_message:
+        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>")
         return
 
     if m.chat.type == ChatType.PRIVATE and not m.reply_to_message:
@@ -170,9 +170,15 @@ async def id_info(c: Gojo, m: Message):
                 parse_mode=enums.ParseMode.HTML,
             )
     elif m.chat.type == ChatType.PRIVATE:
-        await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
+        text=f"Your ID is <code>{m.chat.id}</code>."
+        if m.reply_to_message:
+            if m.forward_from:
+                text+=f"Forwarded from user ID <code>{m.forward_from.id}</code>."
+            elif m.forward_from_chat:
+                text+=f"Forwarded from user ID <code>{m.forward_from_chat.id}</code>."
+        await m.reply_text()
     else:
-        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>")
+        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>")
     return
 
 

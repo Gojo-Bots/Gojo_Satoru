@@ -52,7 +52,7 @@ async def count(c: Gojo, chat):
     except Exception as e:
         total_bot = (
             total_admin
-        ) = bot_admin = total_banned = "Can't fetch due to some error."
+        ) = bot_admin = total_banned = "Can't fetch because I am not part of the chat."
 
     return total_bot, total_admin, bot_admin, total_banned
 
@@ -66,7 +66,7 @@ async def user_info(c: Gojo, user, already=False):
     gbanned, reason_gban = gban_db.get_gban(user.id)
     if gbanned:
         gban = True
-        reason = f"The user is gbanned because {reason_gban}"
+        reason = reason_gban
     else:
         gban = False
         reason = "User is not gbanned"
@@ -149,7 +149,15 @@ async def user_info(c: Gojo, user, already=False):
 
 async def chat_info(c: Gojo, chat, already=False):
     if not already:
-        chat = await c.get_chat(chat)
+        try:
+            chat = await c.get_chat(chat)
+        except Exception:
+            try:
+                chat_r = await c.resolve_peer(chat)
+                chat = await c.get_chat(chat_r.channel_id)
+            except KeyError as e:
+                caption = f"Failed to find the chat due to\n{e}"
+                return caption, None
     chat_id = chat.id
     username = chat.username
     total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat.id)
@@ -254,6 +262,8 @@ async def chat_info_func(c: Gojo, message: Message):
     except (ValueError, Exception) as ef:
         if "invalid literal for int() with base 10:" in str(ef):
             chat = str(chat)
+            if chat.startswith("https://"):
+                chat = '@'+chat.split("/")[-1]
         else:
             return await message.reply_text(
                 f"Got and exception {ef}\n**Usage:**/chinfo [USERNAME|ID]"
@@ -262,9 +272,12 @@ async def chat_info_func(c: Gojo, message: Message):
     m = await message.reply_text(
         f"Fetching chat info of chat from telegram's database....."
     )
-
+    
     try:
         info_caption, photo_id = await chat_info(c, chat=chat)
+        if info_caption.startswith("Failed to find the chat due"):
+            await message.reply_text(info_caption)
+            return
     except Exception as e:
         await m.delete()
         await sleep(0.5)

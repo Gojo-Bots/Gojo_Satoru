@@ -2,13 +2,15 @@ from platform import python_version
 from threading import RLock
 from time import gmtime, strftime, time
 
+import pyroaddon
 from aiohttp import ClientSession
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
 
 from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER,
-                    MESSAGE_DUMP, NO_LOAD, UPTIME, WORKERS, load_cmds, OWNER_ID)
+                    MESSAGE_DUMP, NO_LOAD, OWNER_ID, UPTIME, WORKERS,
+                    load_cmds)
 from Powers.database import MongoDB
 from Powers.plugins import all_plugins
 from Powers.vars import Config
@@ -109,4 +111,11 @@ class Gojo(Client):
             Logs have been uploaded to the MESSAGE_DUMP Group!
             Runtime: {runtime}s\n
         """,
+        )
+        LOGGER.info(
+            "Closing client session"
+        )
+        await aiohttpsession.close()
+        LOGGER.info(
+            "Client session closed"
         )

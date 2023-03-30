@@ -54,7 +54,11 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
                     try:
                         user = await c.get_users(user_found)
                     except Exception as ef:
-                        return await m.reply_text(f"User not found ! Error: {ef}")
+                        try:
+                            user_r = await c.resolve_peer(user_found)
+                            user = await c.get_users(user_r.user_id)
+                        except Exception as ef:
+                            return await m.reply_text(f"User not found ! Error: {ef}")
                     user_id = user.id
                     user_first_name = user.first_name
                     user_name = user.username
@@ -89,7 +93,11 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
                     try:
                         user = await c.get_users(user_id)
                     except Exception as ef:
-                        return await m.reply_text(f"User not found ! Error: {ef}")
+                        try:
+                            user_r = await c.resolve_peer(user_found)
+                            user = await c.get_users(user_r.user_id)
+                        except Exception as ef:
+                            return await m.reply_text(f"User not found ! Error: {ef}")
                     user_first_name = user.first_name
                     user_name = user.username
                     LOGGER.error(ef)

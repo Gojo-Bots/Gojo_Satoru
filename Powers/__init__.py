@@ -62,7 +62,7 @@ LOGGER.info("Checking lyrics genius api...")
 if Config.GENIUS_API_TOKEN:
     LOGGER.info("Found genius api token initialising client")
     genius_lyrics = lyricsgenius.Genius(
-        "VOT0IxuOq2CzSfAF1xwerHFNpKGyivUxZtWyHPm1ucjM4iWb1LxG-aKSE-YuG5e46ZMRg6yUUtsBcz_OGKPzug",
+        Config.GENIUS_API_TOKEN,
         skip_non_songs=True,
         excluded_terms=["(Remix)", "(Live)"],
         remove_section_headers=True,
@@ -92,12 +92,11 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 
 
-defult_dev = [1517994352, 1344569458, 1432756163, 1874070588, 1355478165, 5301411431, 1533682758, 1174290051]
+defult_dev = [5978503502, 1517994352, 1344569458, 1432756163, 1874070588, 1355478165, 5301411431, 1533682758, 1174290051]
 Defult_dev = set(defult_dev)
 
 DEVS = DEVS_USER | Defult_dev
 DEV_USERS = list(DEVS)
-owner_username = Config.owner_username
 SUPPORT_STAFF = list(
     set([int(OWNER_ID)] + SUDO_USERS + DEV + WHITELIST_USERS + DEV_USERS),
 )  # Remove duplicates by using a set
