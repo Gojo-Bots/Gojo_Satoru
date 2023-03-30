@@ -59,7 +59,7 @@ async def get_stats(_, m: Message):
         f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
         f"    <b>Private Notes:</b> <code>{(notesettings_db.count_chats())}</code> chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
-        f"<b>Welcoming Users in:</b> <code>{(grtdb.count_chats('welcome'))}</code> chats"
+        f"<b>Welcoming Users in:</b> <code>{(grtdb.count_chats('welcome'))}</code> chats\n"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
         f"<b>Disabling:</b> <code>{(dsbl.count_disabled_all())}</code> items in <code>{(dsbl.count_disabling_chats())}</code> chats.\n"
         "<b>Action:</b>\n"

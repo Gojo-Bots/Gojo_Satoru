@@ -27,7 +27,7 @@ from Powers.vars import Config
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type != ChatType.CHANNEL:
         return await m.reply_text(
             text="This command is made to be used in groups only!",
         )
@@ -103,7 +103,7 @@ async def zombie_clean(c: Gojo, m: Message):
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type not in [ChatType.SUPERGROUP,ChatType.GROUP]:
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )
@@ -187,7 +187,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
     try:
         await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
         title = ""
-        if not m.chat.type == ChatType.SUPERGROUP:
+        if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP]:
             title = "Gojo"  # Default fullpromote title
             if len(m.text.split()) == 3 and not m.reply_to_message:
                 title = m.text.split()[2]
@@ -289,7 +289,7 @@ async def promote_usr(c: Gojo, m: Message):
             ),
         )
         title = ""
-        if not m.chat.type == ChatType.SUPERGROUP:
+        if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP]:
             title = "Itadori"  # Deafult title
             if len(m.text.split()) == 3 and not m.reply_to_message:
                 title = m.text.split()[2]

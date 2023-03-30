@@ -1,6 +1,9 @@
+import subprocess as subp
 import sys
 from asyncio import create_subprocess_shell, sleep, subprocess
 from io import BytesIO, StringIO
+from os import execvp
+from sys import executable
 from time import gmtime, strftime, time
 from traceback import format_exc
 
@@ -9,34 +12,50 @@ from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
                              PeerIdInvalid, RPCError)
 from pyrogram.types import Message
 
-from Powers import BOT_TOKEN, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME, OWNER_ID, defult_dev, OWNER_ID
-from Powers.bot_class import Gojo
+from Powers import (BOT_TOKEN, DEV_USERS, LOG_DATETIME, LOGFILE, LOGGER,
+                    MESSAGE_DUMP, OWNER_ID, UPTIME)
+from Powers.bot_class import Gojo, aiohttpsession
+from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
+from Powers.utils.extract_user import extract_user
 from Powers.utils.http_helper import *
 from Powers.utils.parser import mention_markdown
 
-@Gojo.on_message(command("adddev"))
+
+@Gojo.on_message(command(["adddev", "rmdev"]))
 async def add_dev(c: Gojo, m:Message):
-  if m.from_user.id != OWNER_ID:
-    await m.reply_text("Only owner can do that")
+    if m.from_user.id != OWNER_ID:
+        await m.reply_text("Only owner can do that")
+        return
+    split = m.text.split(None)
+    reply_to = m.reply_to_message
+    if len(split) != 2:
+        await m.reply_text("Reply to message to add the user in dev")
+        return
+    elif not reply_to:
+        await m.reply_text("Give me an id")
+        return 
+    elif reply_to:
+        user = reply_to.from_user.id
+    elif len(split) == 2:
+        try:
+            user,_,_ = extract_user(c,m)
+        except Exception as e:
+            await m.reply_text(f"Give me id of the user {e}")
+            return
+    if m.command[0] == "rmdev":
+        try:
+            DEV_USERS.remove(user)
+            await m.reply_text(f"Removed {user} from dev")
+            return
+        except ValueError:
+            await m.reply_text("User is not a dev")
+            return
+    DEV_USERS.append(user)
+    await m.reply_text(f"Added {user} to dev")
     return
-  split = m.text.split(None)
-  reply_to = m.reply_to_message
-  if len(split) != 2 or not reply_to:
-    await m.reply_text("Give me an id or reply to message to add the user in dev")
-    return
-  if reply_to:
-    user = reply_to.from_user.id
-  elif len(split) == 2:
-    try:
-      user = int(split[1])
-    except ValueError:
-      await m.reply_text("Give me id of the user")
-      return
-  defult_dev.append(user)
-  return
       
 @Gojo.on_message(command("ping", sudo_cmd=True))
 async def ping(_, m: Message):
@@ -92,6 +111,22 @@ async def neofetch_stats(_, m: Message):
         await m.delete()
     return
 
+HARMFUL = [
+    "base64",
+    "bash",
+    "get_me()",
+    "phone",
+    "os.system",
+    "sys.stdout",
+    "sys.stderr",
+    "subprocess",
+    "DB_URI",
+    "DB_URI",
+    "BOT_TOKEN",
+    "API_HASH",
+    "APP_ID",
+]
+
 
 @Gojo.on_message(command(["eval", "py"], dev_cmd=True))
 async def evaluate_code(c: Gojo, m: Message):
@@ -103,6 +138,18 @@ async def evaluate_code(c: Gojo, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
+    if "for" in cmd or "while" in cmd or "with" in cmd:
+        if m.from_user.id != OWNER_ID:
+            await m.reply_text("Spam kro gaye vai.\nEse kese")
+            return
+    if "while True:" in cmd:
+        await sm.delete()
+        await m.reply_text("BSDK SPAM NI")
+        await c.send_message(
+            MESSAGE_DUMP,
+            f"@{m.from_user.username} TREID TO USE `while True` \n userid = {m.from_user.id}"
+            )
+        return
 
     reply_to_id = m.id
     if m.reply_to_message:
@@ -134,16 +181,27 @@ async def evaluate_code(c: Gojo, m: Message):
         evaluation = stdout
     else:
         evaluation = "Success"
-    evaluation = evaluation.strip()
-    if (
-        (evaluation.startswith(initial) or evaluation.endswith(end))
-        or (BOT_TOKEN in evaluation)
-    ) and m.from_user.id != OWNER_ID:
-        evaluation = "Bhaag ja bsdk bada aya token nikalne wala"
-        await c.send_message(
-            MESSAGE_DUMP,
-            f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
-        )
+    for i in evaluation.split(None):
+        ev = i.strip()
+        if (
+            (ev.startswith(initial) or ev.endswith(end))
+            or (BOT_TOKEN in ev)
+        ) and m.from_user.id != OWNER_ID:
+            evaluation = "Bhaag ja bsdk"
+            await c.send_message(
+                MESSAGE_DUMP,
+                f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
+            )
+    for i in evaluation.split():
+        for j in i.split("="):
+            if j and j[0] in HARMFUL:
+                if m.from_user.id != OWNER_ID:
+                    evaluation = "Bhaag ja bsdk"
+                    await c.send_message(
+                        MESSAGE_DUMP,
+                        f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}"
+                    )
+      
     final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
 
     try:
@@ -167,21 +225,6 @@ async def aexec(code, c, m):
     return await locals()["__aexec"](c, m)
 
 
-HARMFUL = [
-    "base64",
-    "bash",
-    "get_me()",
-    "phone",
-    "os.system",
-    "sys.stdout",
-    "sys.stderr",
-    "subprocess",
-    "DB_URI",
-    "DB_URI",
-    "BOT_TOKEN",
-    "API_HASH",
-    "APP_ID",
-]
 
 
 @Gojo.on_message(command(["exec", "sh"], dev_cmd=True))
@@ -251,6 +294,63 @@ async def execution(c: Gojo, m: Message):
         await sm.delete()
     return
 
+async def stop_and_send_logger(c:Gojo,is_update=False):
+    runtime = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
+    LOGGER.info("Uploading logs before stopping...!\n")
+        # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
+    await c.send_document(
+            MESSAGE_DUMP,
+            document=LOGFILE,
+            caption=(
+                f"{'Updating and Restarting'if is_update else 'Restarting'} The Bot !\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
+            ),
+        )
+    if MESSAGE_DUMP:
+        # LOG_CHANNEL is not necessary
+        await c.send_document(
+                MESSAGE_DUMP,
+                document=LOGFILE,
+                caption=f"Uptime: {runtime}",
+            )
+    MongoDB.close()
+    LOGGER.info(
+            f"""Bot Stopped.
+            Logs have been uploaded to the MESSAGE_DUMP Group!
+            Runtime: {runtime}s\n
+        """,
+        )
+    LOGGER.info(
+            "Closing client session"
+        )
+    await aiohttpsession.close()
+    LOGGER.info(
+            "Client session closed"
+        )
+    return
+
+@Gojo.on_message(command(["restart", "update"], owner_cmd=True))
+async def restart_the_bot(c:Gojo,m:Message):
+    try:
+        cmds = m.command
+        await m.reply_text(f"Restarting{' and updating ' if cmds[0] == 'update' else ' '}the bot...\nType `/ping` after few minutes")
+        if cmds[0] == "update":
+            try:
+                out = subp.check_output(["git", "pull"]).decode("UTF-8")
+                if "Already up to date." in str(out):
+                    return await m.reply_text("Its already up-to date!")
+                await m.reply_text(f"```{out}```")
+            except Exception as e:
+                return await m.reply_text(str(e))
+            m = await m.reply_text("**Updated with main branch, restarting now.**")
+            await stop_and_send_logger(c,True)
+        if cmds[0] == "restart":
+            await stop_and_send_logger(c)
+        execvp(executable, [executable, "-m", "Powers"])
+    except Exception as e:
+        await m.reply_text(f"Failed to restart the bot due to\n{e}")
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return
 
 @Gojo.on_message(command("chatlist", dev_cmd=True))
 async def chats(c: Gojo, m: Message):
@@ -362,12 +462,18 @@ async def chat_broadcast(c: Gojo, m: Message):
     return
 
 
-_DISABLE_CMDS_ = ["ping"]
+__PLUGIN__ = "devs"
+
 
 __HELP__ = """
 **DEV and SUDOERS commands**
 
+**Owner's commands:**
+• /restart : Restart the bot
+• /update : To update the bot with the main stream repo
+
 **Dev's commands:**
+• /adddev : Reply to message or give me user id or username
 • /logs : Return the logs of bot.
 • /neofetch : Fetch neo.
 • /eval : Evaluate the given python code.

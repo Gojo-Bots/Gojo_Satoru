@@ -116,7 +116,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -149,16 +149,13 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return False
 
     # Telegram and GroupAnonyamousBot
     if m.sender_chat:
         return True
 
-    # Bypass the bot devs, sudos and owner
-    if m.from_user.id in SUDO_LEVEL:
-        return True
 
     try:
         admin_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
@@ -184,12 +181,8 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if (m.chat.type != ChatType.SUPERGROUP) and m.chat.id != -1001586309125:  # testing chat of the bot
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return False
-
-    # Bypass the bot devs, sudos and owner
-    if m.from_user.id in DEV_LEVEL:
-        return True
 
     user = await m.chat.get_member(m.from_user.id)
 
@@ -212,13 +205,10 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
         m = m.message
 
     if (
-        m.chat.type != ChatType.SUPERGROUP and m.chat.id != -1001586309125
-    ):  # testing chat of the bot
+        m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]
+    ):
         return False
 
-    # Bypass the bot devs, sudos and owner
-    if m.from_user.id in DEV_LEVEL:
-        return True
 
     user = await m.chat.get_member(m.from_user.id)
 
@@ -236,12 +226,9 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if (m.chat.type != ChatType.SUPERGROUP) and m.chat.id != -1001586309125:  # testing chat of the bot
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return False
 
-    # Bypass the bot devs, sudos and owner
-    if m.from_user.id in DEV_LEVEL:
-        return True
 
     user = await m.chat.get_member(m.from_user.id)
 
@@ -259,7 +246,7 @@ async def changeinfo_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
@@ -267,9 +254,6 @@ async def changeinfo_check_func(_, __, m):
     if m.sender_chat:
         return True
 
-    # Bypass the bot devs, sudos and owner
-    if m.from_user.id in SUDO_LEVEL:
-        return True
 
     user = await m.chat.get_member(m.from_user.id)
 
@@ -287,7 +271,7 @@ async def can_pin_message_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != ChatType.SUPERGROUP:
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 

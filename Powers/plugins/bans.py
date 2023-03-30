@@ -604,6 +604,14 @@ async def unban_usr(c: Gojo, m: Message):
         reason = None
 
     try:
+        statu = (await m.chat.get_member(user_id)).status
+        if statu not in [enums.ChatMemberStatus.BANNED,enums.ChatMemberStatus.RESTRICTED]:
+            await m.reply_text("User is not banned in this chat\nOr using this command as reply to his message")
+            return
+    except Exception as e:
+        LOGGER.error(e)
+        LOGGER.exception(format_exc())
+    try:
         await m.chat.unban_member(user_id)
         admin = m.from_user.mention
         unbanned = await mention_html(user_first_name, user_id)

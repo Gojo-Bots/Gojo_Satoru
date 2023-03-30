@@ -4,6 +4,7 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.enums import ParseMode as PM
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
@@ -219,7 +220,7 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
                 try:
                     await m.reply_text(
                         textt,
-                        # parse_mode=enums.ParseMode.MARKDOWN,
+                        parse_mode=PM.MARKDOWN,
                         reply_markup=button,
                         disable_web_page_preview=True,
                         quote=True,
@@ -236,7 +237,7 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
             else:
                 await m.reply_text(
                     textt,
-                    # parse_mode=enums.ParseMode.MARKDOWN,
+                    parse_mode=PM.MARKDOWN,
                     quote=True,
                     disable_web_page_preview=True,
                 )
@@ -259,7 +260,7 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
                 m.chat.id,
                 getfilter["fileid"],
                 caption=textt,
-                #   parse_mode=enums.ParseMode.MARKDOWN,
+                parse_mode=PM.MARKDOWN,
                 reply_markup=button,
                 reply_to_message_id=m.id,
             )

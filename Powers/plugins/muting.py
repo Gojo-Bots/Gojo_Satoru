@@ -1,5 +1,7 @@
 from random import choice
+from traceback import format_exc
 
+from pyrogram import enums
 from pyrogram.errors import (ChatAdminRequired, RightForbidden, RPCError,
                              UserNotParticipant)
 from pyrogram.filters import regex
@@ -576,7 +578,14 @@ async def unmute_usr(c: Gojo, m: Message):
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I unmute myself if you are using me?")
         return
-
+    try:
+        statu = (await m.chat.get_member(user_id)).status
+        if statu not in [enums.ChatMemberStatus.BANNED,enums.ChatMemberStatus.RESTRICTED]:
+            await m.reply_text("User is not muted in this chat\nOr using this command as reply to his message")
+            return
+    except Exception as e:
+        LOGGER.error(e)
+        LOGGER.exception(format_exc())
     try:
         await m.chat.unban_member(user_id)
         LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
