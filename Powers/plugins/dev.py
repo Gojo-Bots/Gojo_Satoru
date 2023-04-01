@@ -14,7 +14,7 @@ from pyrogram.types import Message
 
 from Powers import (BOT_TOKEN, DEV_USERS, LOG_DATETIME, LOGFILE, LOGGER,
                     MESSAGE_DUMP, OWNER_ID, UPTIME)
-from Powers.bot_class import Gojo, aiohttpsession
+from Powers.bot_class import Gojo
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
@@ -318,13 +318,6 @@ async def stop_and_send_logger(c:Gojo,is_update=False):
             Logs have been uploaded to the MESSAGE_DUMP Group!
             Runtime: {runtime}s\n
         """,
-        )
-    LOGGER.info(
-            "Closing client session"
-        )
-    await aiohttpsession.close()
-    LOGGER.info(
-            "Client session closed"
         )
     return
 
