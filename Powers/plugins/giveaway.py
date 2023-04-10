@@ -46,10 +46,16 @@ async def start_give_one(c: Gojo, m: Message):
                 return
             while True:
                 con = await c.ask(text="You info is already present in my database do you want to continue\nYes : To start the giveaway with previous configurations\nNo: To create one",chat_id = m.chat.id,filters=filters.text)
+                if con.text.lower() == "/cancel":
+                    await m.reply_text("cancelled")
+                    return
                 if con.text.lower() == "yes":
                     await c.send_message(m.chat.id,"Done")
                     while True:
                         yes_no = await c.ask(text="Ok.\nDo you want to allow old member of the channel can vote in this giveaway.\n**Yes: To allow**\n**No: To don't allow**\nNote that old mean user who is present in the chat for more than 48 hours",chat_id = m.from_user.id,filters=filters.text)
+                        if yes_no.text.lower() == "/cancel":
+                            await m.reply_text("cancelled")
+                            return
                         if yes_no.text.lower() == "yes":
                             is_old = 0
                             break
@@ -77,14 +83,14 @@ async def start_give_one(c: Gojo, m: Message):
             while True:
                 channel_id = await c.ask(text="OK....send me id of the channel and make sure I am admin their. If you don't have id forward a post from your chat.\nType /cancel cancel the current process",chat_id = m.chat.id,filters=filters.text)
                 if channel_id.text:
-                    if str(channel_id.text).lower() == "/cancel":
-                            
+                    if str(channel_id.text).lower() == "/cancel":        
                         await c.send_message(m.from_user.id, "Cancelled")
+                        return
                     try:
                         c_id = int(channel_id.text)
                         try:
                             bot_stat = (await c.get_chat_member(c_id,Config.BOT_ID)).status
-                            if bot_stat == CMS.ADMINISTRATOR:
+                            if bot_stat in [CMS.ADMINISTRATOR,CMS.OWNER]:
                                 break
                             else:
                                 await c.send_message(m.chat.id,f"Looks like I don't have admin privileges in the chat {c_id}\n Make me admin and then send me channel id again")
@@ -99,7 +105,7 @@ async def start_give_one(c: Gojo, m: Message):
                     if channel_id.forward_from_chat:
                         try:
                             bot_stat = (await c.get_chat_member(c_id,Config.BOT_ID)).status
-                            if bot_stat == CMS.ADMINISTRATOR:
+                            if bot_stat in [CMS.ADMINISTRATOR,CMS.OWNER]:
                                 break
                             else:
                                 await c.send_message(m.chat.id,f"Looks like I don't have admin privileges in the chat {c_id}\n Make me admin and then send me channel id again")
@@ -114,6 +120,7 @@ async def start_give_one(c: Gojo, m: Message):
                 if chat_id.text:
                     if str(chat_id.text).lower() == "/cancel":
                         await c.send_message(m.from_user.id, "Cancelled")
+                        return
                     try:
                         cc_id = int(chat_id.text)               
                         try:
@@ -130,6 +137,14 @@ async def start_give_one(c: Gojo, m: Message):
                                 await c.send_message(m.chat.id,f"Looks like chat doesn't exist{e}")
                     except ValueError:
                         await c.send_message(m.chat.id,"Chat id should be integer type")
+                    try:
+                        bot_stat = (await c.get_chat_member(s_c_id,Config.BOT_ID)).status
+                        if bot_stat in [CMS.ADMINISTRATOR,CMS.OWNER]:
+                            break
+                        else:
+                            await c.send_message(m.chat.id,f"Looks like I don't have admin privileges in the chat {s_c_id}\n Make me admin and then send me channel id again")
+                    except UserNotParticipant:
+                        await c.send_message(m.chat.id,f"Looks like I am not part of the chat {s_c_id}\n")
                 
             await c.send_message(m.chat.id,"Chat id received")
                 

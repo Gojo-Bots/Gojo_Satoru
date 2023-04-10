@@ -3,7 +3,6 @@ from threading import RLock
 from time import gmtime, strftime, time
 
 import pyroaddon
-from aiohttp import ClientSession
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
@@ -23,7 +22,6 @@ if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
         "Please enter a vaild Supergroup ID, A Supergroup ID starts with -100",
     )
 
-aiohttpsession = ClientSession()
 
 
 class Gojo(Client):
@@ -111,11 +109,4 @@ class Gojo(Client):
             Logs have been uploaded to the MESSAGE_DUMP Group!
             Runtime: {runtime}s\n
         """,
-        )
-        LOGGER.info(
-            "Closing client session"
-        )
-        await aiohttpsession.close()
-        LOGGER.info(
-            "Client session closed"
         )

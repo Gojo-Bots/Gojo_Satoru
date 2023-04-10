@@ -27,7 +27,7 @@ from Powers.vars import Config
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
-    if m.chat.type != ChatType.CHANNEL:
+    if m.chat.type not in [ChatType.SUPERGROUP,ChatType.GROUP]:
         return await m.reply_text(
             text="This command is made to be used in groups only!",
         )

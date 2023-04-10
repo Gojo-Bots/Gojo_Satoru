@@ -98,7 +98,7 @@ async def get_filter_type(m: Message):
 
     if not m.reply_to_message and m.text and len(m.text.split()) >= 3:
         content = None
-        text = m.text.split(None, 2)[2]
+        text = m.text.markdown.split(None, 2)[2]
         data_type = Types.TEXT
 
     elif m.reply_to_message:
@@ -165,7 +165,7 @@ async def get_wlcm_type(m: Message):
 
     if not m.reply_to_message and m.text and len(m.text.split()) >= 2:
         content = None
-        text = m.text.split(None, 1)[1]
+        text = m.text.markdown.split(None, 1)[1]
         data_type = Types.TEXT
 
     elif m.reply_to_message:

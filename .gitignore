@@ -1,6 +1,7 @@
 *.session
 *.session-journal
 Powers/config.py
+Powers/vars.py
 .vscode/
 postgres-data/
 *.env

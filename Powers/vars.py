@@ -63,7 +63,7 @@ class Development:
     OWNER_ID = 1344569458  # Your telegram user id defult to mine
     MESSAGE_DUMP = -100  # Your Private Group ID for logs
     DEV_USERS = []
-    SUDO_USERS = []
+    SUDO_USERS = [1906306037]
     WHITELIST_USERS = []
     DB_URI = ""  # Your mongo DB URI
     DB_NAME = ""  # Your DB name
