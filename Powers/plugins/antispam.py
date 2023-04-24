@@ -5,7 +5,8 @@ from traceback import format_exc
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
-from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF
+from Powers import (LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF,
+                    TIME_ZONE)
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.users_db import Users

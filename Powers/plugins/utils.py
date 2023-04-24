@@ -1,4 +1,3 @@
-import asyncio
 import re
 from io import BytesIO
 from os import remove
@@ -19,6 +18,7 @@ from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers.utils.http_helper import *
 from Powers.utils.parser import mention_html
+from Powers.utils.web_helpers import telegraph_up
 
 
 @Gojo.on_message(command("wiki"))
@@ -117,10 +117,18 @@ async def get_lyrics(_, m: Message):
     try:
         await em.edit_text(f"**{query.capitalize()} by {artist}**\n`{reply}`")
     except MessageTooLong:
+        header = f"{query.capitalize()} by {artist}"
+        page_url = await telegraph_up(name=header,content=reply)
+        kb = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("Telegraph link", url=page_url)
+            ]
+        ])
         with BytesIO(str.encode(await remove_markdown_and_html(reply))) as f:
             f.name = "lyrics.txt"
             await m.reply_document(
                 document=f,
+                reply_markup=kb
             )
         await em.delete()
     return
@@ -146,10 +154,10 @@ async def id_info(c: Gojo, m: Message):
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_message.from_user
             user2 = m.reply_to_message.forward_from
-            orig_sender = ((await mention_html(user2.first_name, user2.id)),)
-            orig_id = (f"<code>{user2.id}</code>",)
-            fwd_sender = ((await mention_html(user1.first_name, user1.id)),)
-            fwd_id = (f"<code>{user1.id}</code>",)
+            orig_sender = await mention_html(user2.first_name, user2.id)
+            orig_id = f"<code>{user2.id}</code>"
+            fwd_sender = await mention_html(user1.first_name, user1.id)
+            fwd_id = f"<code>{user1.id}</code>"
             await m.reply_text(
                 text=f"""Original Sender - {orig_sender} (<code>{orig_id}</code>)
         Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
@@ -176,9 +184,14 @@ async def id_info(c: Gojo, m: Message):
                 text+=f"Forwarded from user ID <code>{m.forward_from.id}</code>."
             elif m.forward_from_chat:
                 text+=f"Forwarded from user ID <code>{m.forward_from_chat.id}</code>."
-        await m.reply_text()
+        if len(m.text.split()) > 1 and user_id:
+            text += f"\nGiven user's ID <code>{user_id}</code>"
+        await m.reply_text(text)
     else:
-        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>")
+        text=f"Chat ID <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>"
+        if len(m.text.split()) > 1 and user_id:
+            text += f"\nGiven user's ID <code>{user_id}</code>"
+        await m.reply_text(text)
     return
 
 
@@ -209,14 +222,17 @@ async def github(_, m: Message):
             f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>",
         )
         return
-    username = username.split("/")[-1]
+    username = username.split("/")[-1].strip("@")
     URL = f"https://api.github.com/users/{username}"
     try:
-        r = await get(URL, timeout=5)
-    except asyncio.TimeoutError:
+        r = get(URL, timeout=5)
+    except requests.exceptions.ConnectTimeout:
         return await m.reply_text("request timeout")
     except Exception as e:
-        return await m.reply_text(f"ERROR: `{e}`")
+        return await m.reply_text(f"ERROR:\n`{e}`")
+    if r.status_code != 200:
+        await m.reply_text(f"{username} this user is not available on github\nMake sure you have given correct username")
+        return
 
     avtar = r.get("avatar_url", None)
     url = r.get("html_url", None)
@@ -226,10 +242,10 @@ async def github(_, m: Message):
     following = r.get("following", 0)
     public_repos = r.get("public_repos", 0)
     bio = r.get("bio", None)
-    created_at = r.get("created_at", "Not Found")
+    created_at = r.get("created_at", "NA").replace("T", " ").replace("Z","")
     location = r.get("location", None)
     email = r.get("email", None)
-    updated_at = r.get("updated_at", "Not Found")
+    updated_at = r.get("updated_at", "NA").replace("T", " ").replace("Z","")
     blog = r.get("blog", None)
     twitter = r.get("twitter_username", None)
 
@@ -254,10 +270,12 @@ async def github(_, m: Message):
         REPLY += f"\n<b>⚜️ Twitter:</b> <a href='https://twitter.com/{twitter}'>{twitter}</a>"
     if location:
         REPLY += f"\n<b>🚀 Location:</b> <code>{location}</code>"
-    REPLY += f"\n<b>💫 Created at:</b> <code>{created_at}</code>"
-    REPLY += f"\n<b>⌚️ Updated at:</b> <code>{updated_at}</code>"
+    if created_at != "NA":
+        REPLY += f"\n<b>💫 Created at:</b> <code>{created_at}</code>"
+    if updated_at != "NA":
+        REPLY += f"\n<b>⌚️ Updated at:</b> <code>{updated_at}</code>"
     if bio:
-        REPLY += f"\n\n<b>🎯 Bio:</b> <code>{bio}</code>"
+        REPLY += f"\n\n<b>🎯 Bio:</b> {bio}"
 
     if avtar:
         return await m.reply_photo(photo=f"{avtar}", caption=REPLY)
@@ -266,14 +284,14 @@ async def github(_, m: Message):
 
 
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
-BASE = "https://batbin.me/"
+BASE = "https://nekobin.com/"
 
 
-async def paste(content: str):
-    resp = await post(f"{BASE}api/v2/paste", data=content)
-    if not resp["success"]:
+def paste(content: str):
+    resp = post(f"{BASE}api/documents", data=content)
+    if resp.status_code != 200:
         return
-    return BASE + resp["message"]
+    return BASE + resp["result"]['key']
 
 
 @Gojo.on_message(command("paste"))
@@ -289,7 +307,7 @@ async def paste_func(_, message: Message):
             return await m.edit("Only text and documents are supported")
 
         if r.text:
-            content = str(r.text)
+            content = {'content':f'{r.text}'}
         if r.document:
             if r.document.file_size > 40000:
                 return await m.edit("You can only paste files smaller than 40KB.")
@@ -300,11 +318,14 @@ async def paste_func(_, message: Message):
             doc = await message.reply_to_message.download()
 
             async with aiofiles.open(doc, mode="r") as f:
-                content = await f.read()
+                fdata = await f.read()
+                content = {'content':fdata}
 
             remove(doc)
-
-    link = await paste(content)
+    link = paste(content)
+    if not link:
+        await m.reply_text("Failed to post!")
+        return
     kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
     await m.delete()
     try:

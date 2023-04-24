@@ -9,8 +9,14 @@ from time import time
 from traceback import format_exc
 
 import lyricsgenius
+import pytz
+from telegraph import Telegraph
 
-LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
+#time zone
+TIME_ZONE = pytz.timezone(Config.TIME_ZONE)
+
+
+LOG_DATETIME = datetime.now(TIME_ZONE).strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
 # Make Logs directory if it does not exixts
@@ -59,6 +65,12 @@ LOGGER.info(f"Version: {Config.VERSION}")
 LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
 LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
 LOGGER.info("Checking lyrics genius api...")
+LOGGER.info("Initialising telegraph client")
+telegraph = Telegraph()
+telegraph.create_account(Config.BOT_USERNAME)
+LOGGER.info(f"Created telegraph client with name {Config.BOT_USERNAME}")
+
+# API based clients
 if Config.GENIUS_API_TOKEN:
     LOGGER.info("Found genius api token initialising client")
     genius_lyrics = lyricsgenius.Genius(
@@ -74,6 +86,19 @@ if Config.GENIUS_API_TOKEN:
 elif not Config.GENIUS_API_TOKEN:
     LOGGER.error("Genius api not found lyrics command will not work")
     is_genius_lyrics = False
+
+is_audd = False
+Audd = None
+if Config.AuDD_API:
+    is_audd = True
+    Audd = Config.AuDD_API
+    LOGGER.info("Found Audd api")
+
+is_rmbg = False
+RMBG = None
+if Config.RMBG_API:
+    is_rmbg = True
+    RMBG = Config.RMBG_API
 # Account Related
 BOT_TOKEN = Config.BOT_TOKEN
 API_ID = Config.API_ID
@@ -105,6 +130,7 @@ DB_URI = Config.DB_URI
 DB_NAME = Config.DB_NAME
 NO_LOAD = Config.NO_LOAD
 WORKERS = Config.WORKERS
+BDB_URI = Config.BDB_URI
 
 # Prefixes
 

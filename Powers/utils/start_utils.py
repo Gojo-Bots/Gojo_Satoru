@@ -216,12 +216,17 @@ async def get_private_rules(_, m: Message, help_option: str):
             quote=True,
         )
         return ""
+    teks, button = await parse_button(rules)
+    button = await build_keyboard(button)
+    button = ikb(button) if button else None
+    textt = teks
     await m.reply_text(
         f"""The rules for <b>{escape(chat_title)} are</b>:\n
-{rules}
+{textt}
 """,
         quote=True,
         disable_web_page_preview=True,
+        reply_markup=button
     )
     return ""
 

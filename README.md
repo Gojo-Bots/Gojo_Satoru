@@ -267,19 +267,23 @@ To add your very own plugin just use the format given below and go through the [
    
 </p>--->
 
-* [PSYREX](https://github.com/iamPSYREX) `for logos`
+Some special thanks to the person/repo who/which helped and motivated me for creating this project
+
+* [PSYREX](https://github.com/iamPSYREX) for logos and motivatting me and giving me new ideas.
 
 * [Dan](https://github.com/delivrance) for [pyrogram](https://github.com/pyrogram/pyrogram) `library`
 
-* [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
+* [Anand](https://github.com/HellBoy-OP) for helping me to enhance bot's security and look and also helping me out with various stuffs and bugs and also for motivating me to create this project.
+
+* [Alita_Robot](https://github.com/divideprojects/Alita_Robot) for base code.
+
 ---------
 
 # Powered by [ɢօʝօ ɮօȶֆ](https://github.com/Gojo-Bots)
 
 
 <p align='left'>
-  <a href="https://github.com/Gojo-Bots"><img src="./extras/Untitled(1).webp" width="500" 
-     height="500 alt="Gojo Bots"></a></br></br>
+  <a href="https://github.com/Gojo-Bots"><img src="https://artfiles.alphacoders.com/160/160160.jpeg" alt="Gojo Bots"></a></br></br>
    
 </p>
 

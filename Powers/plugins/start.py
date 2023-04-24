@@ -82,15 +82,16 @@ async def start(c: Gojo, m: Message):
 
             if not help_msg:
                 return
-            if help_option.split("_")[1] == "help":
-                await m.reply_photo(
-                    photo=str(choice(StartPic)),
-                    caption=help_msg,
-                    parse_mode=enums.ParseMode.MARKDOWN,
-                    reply_markup=help_kb,
-                    quote=True,
-                )
-                return
+            if len(help_option.split("_")) == 2:
+                if help_option.split("_")[1] == "help":
+                    await m.reply_photo(
+                        photo=str(choice(StartPic)),
+                        caption=help_msg,
+                        parse_mode=enums.ParseMode.MARKDOWN,
+                        reply_markup=help_kb,
+                        quote=True,
+                    )
+                    return
         try:
             cpt = f"""
 Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! My self Gojo ✨.

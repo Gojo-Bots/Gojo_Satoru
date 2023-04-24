@@ -20,7 +20,6 @@ from Powers.database.chats_db import Chats
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.utils.http_helper import *
 from Powers.utils.parser import mention_markdown
 
 
@@ -32,11 +31,13 @@ async def add_dev(c: Gojo, m:Message):
     split = m.text.split(None)
     reply_to = m.reply_to_message
     if len(split) != 2:
-        await m.reply_text("Reply to message to add the user in dev")
-        return
-    elif not reply_to:
-        await m.reply_text("Give me an id")
-        return 
+        if not reply_to:
+            await m.reply_text("Reply to message to add the user in dev")
+            return
+    if not reply_to:
+        if len(split) != 2:
+            await m.reply_text("Give me an id")
+            return 
     elif reply_to:
         user = reply_to.from_user.id
     elif len(split) == 2:
@@ -138,8 +139,12 @@ async def evaluate_code(c: Gojo, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
-    if "for" in cmd or "while" in cmd or "with" in cmd:
+    if "for" in cmd or "while" in cmd or "with" in cmd or "RiZoeLX" in cmd:
         if m.from_user.id != OWNER_ID:
+            await sm.delete()
+            if "RiZoeLX" in cmd:
+                await m.reply_text("BROSDK")
+                return
             await m.reply_text("Spam kro gaye vai.\nEse kese")
             return
     if "while True:" in cmd:
@@ -150,7 +155,11 @@ async def evaluate_code(c: Gojo, m: Message):
             f"@{m.from_user.username} TREID TO USE `while True` \n userid = {m.from_user.id}"
             )
         return
-
+    if m.reply_to_message.document:
+        if m.reply_to_message.document.mime_type.split("/")[1] == "x-python" or m.reply_to_message.document.file_name.endswith("py"):
+            await sm.delete()
+            await m.reply_text("Loading external plugin is prohibited")
+            return
     reply_to_id = m.id
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.id
@@ -321,7 +330,7 @@ async def stop_and_send_logger(c:Gojo,is_update=False):
         )
     return
 
-@Gojo.on_message(command(["restart", "update"], owner_cmd=True))
+@Gojo.on_message(command(["restart", "update"], owner_cmd=True),group=-100)
 async def restart_the_bot(c:Gojo,m:Message):
     try:
         cmds = m.command
