@@ -1,4 +1,5 @@
 from random import choice
+from time import gmtime, strftime, time
 
 from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
@@ -8,7 +9,8 @@ from pyrogram.errors import (MediaCaptionTooLong, MessageNotModified,
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
-from Powers import HELP_COMMANDS, LOGGER
+from Powers import (HELP_COMMANDS, LOGGER, PYROGRAM_VERSION, PYTHON_VERSION,
+                    UPTIME, VERSION)
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
@@ -82,18 +84,19 @@ async def start(c: Gojo, m: Message):
 
             if not help_msg:
                 return
-            if help_option.split("_")[1] == "help":
-                await m.reply_photo(
-                    photo=str(choice(StartPic)),
-                    caption=help_msg,
-                    parse_mode=enums.ParseMode.MARKDOWN,
-                    reply_markup=help_kb,
-                    quote=True,
-                )
-                return
+            if len(help_option.split("_")) == 2:
+                if help_option.split("_")[1] == "help":
+                    await m.reply_photo(
+                        photo=str(choice(StartPic)),
+                        caption=help_msg,
+                        parse_mode=enums.ParseMode.MARKDOWN,
+                        reply_markup=help_kb,
+                        quote=True,
+                    )
+                    return
         try:
             cpt = f"""
-Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! My self Gojo ✨.
+Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! I am Gojo ✨.
 I'm here to help you manage your groups!
 Hit /help to find out more about how to use me in my full potential!
 
@@ -132,7 +135,7 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
 async def start_back(_, q: CallbackQuery):
     try:
         cpt = f"""
-Hey [{q.from_user.first_name}](http://t.me/{q.from_user.username})! My name is Gojo ✨.
+Hey [{q.from_user.first_name}](http://t.me/{q.from_user.username})! I am Gojo ✨.
 I'm here to help you manage your groups!
 Hit /help to find out more about how to use me in my full potential!
 
@@ -154,7 +157,7 @@ async def commands_menu(_, q: CallbackQuery):
     keyboard = ikb(ou, True)
     try:
         cpt = f"""
-Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! My name is Gojo✨.
+Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! I am Gojo✨.
 I'm here to help you manage your groups!
 Commands available:
 × /start: Start the bot
@@ -223,7 +226,7 @@ async def help_menu(_, m: Message):
             ou = await gen_cmds_kb(m)
             keyboard = ikb(ou, True)
             msg = f"""
-Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!My name is Gojo✨.
+Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!I am Gojo✨.
 I'm here to help you manage your groups!
 Commands available:
 × /start: Start the bot
@@ -249,6 +252,22 @@ Commands available:
 
     return
 
+@Gojo.on_callback_query(filters.regex("^bot_curr_info$"))
+async def give_curr_info(c: Gojo, q: CallbackQuery):
+    start = time()
+    up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
+    x = await c.send_message(q.message.chat.id, "Pinging..")
+    await x.delete()
+    delta_ping = time() - start
+    txt = f"""
+🤖 Bot's version       : {VERSION}
+🐍 Python's version   : {PYTHON_VERSION}
+🔥 Pyrogram's version : {PYROGRAM_VERSION}
+📈 Uptime             : {up}
+🏓 Ping                : {delta_ping * 1000:.3f} ms
+    """
+    await q.answer(txt, show_alert=True)
+    return
 
 @Gojo.on_callback_query(filters.regex("^plugins."))
 async def get_module_info(c: Gojo, q: CallbackQuery):

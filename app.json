@@ -87,6 +87,26 @@
         "required": false,
         "value": ""
       },
+      "AuDD_API" : {
+        "description": "Your Audd api to get info of song by music file",
+        "required": false,
+        "value": ""
+      },
+      "BDB_URI": {
+        "description": "Your mongodb uri different from previous one to store more info",
+        "required": true,
+        "value": ""
+      },
+      "TIME_ZONE": {
+        "description": "Your time zone",
+        "required": false,
+        "value": "Asia/Kolkata"
+      },
+      "RMBG_API" : {
+        "description": "Your removebackground api to remove the background",
+        "required": false,
+        "value": ""
+      },
       "WORKERS": {
         "description": "Number of workers to run the bot.",
         "required": false,
@@ -99,6 +119,9 @@
       }
     },
     "buildpacks": [
+      {
+        "url":"https://github.com/jonathanong/heroku-buildpack-ffmoeg-latest"
+      },
       {
         "url": "heroku/python"
       }

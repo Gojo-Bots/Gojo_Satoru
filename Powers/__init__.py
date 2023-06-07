@@ -2,13 +2,18 @@ from datetime import datetime
 from importlib import import_module as imp_mod
 from logging import (INFO, WARNING, FileHandler, StreamHandler, basicConfig,
                      getLogger)
-from os import environ, mkdir, path
+from os import environ, listdir, mkdir, path
+from platform import python_version
+from random import choice
 from sys import exit as sysexit
 from sys import stdout, version_info
 from time import time
 from traceback import format_exc
 
 import lyricsgenius
+import pyrogram
+import pytz
+from telegraph import Telegraph
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -51,14 +56,44 @@ except Exception as ef:
     LOGGER.error(ef)  # Print Error
     LOGGER.error(format_exc())
     sysexit(1)
+#time zone
+TIME_ZONE = pytz.timezone(Config.TIME_ZONE)
+
+path = "./Version"
+version = []
+for i in listdir(path):
+    if i.startswith("version") and i.endswith("md"):
+        version.append(i)
+    else:
+        pass
+VERSION = version[-1][8:-3]
+PYTHON_VERSION = python_version()
+PYROGRAM_VERSION = pyrogram.__version__
 
 LOGGER.info("------------------------")
 LOGGER.info("|      Gojo_Satoru      |")
 LOGGER.info("------------------------")
-LOGGER.info(f"Version: {Config.VERSION}")
+LOGGER.info(f"Version: {VERSION}")
 LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
+LOGGER.info(f"Time zone set to {Config.TIME_ZONE}")
 LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
 LOGGER.info("Checking lyrics genius api...")
+LOGGER.info("Initialising telegraph client")
+telegraph = Telegraph()
+acc_name = ["iamgojoof6eyes","Gojo_bots","Captain","Ezio","Captain_Ezio","Hell","Forgo10god","kap10","Gojo_Satoru","Naruto","Itachi","DM","HellBots"]
+name_tel = choice(acc_name)
+l = 0
+while True:
+    try:
+        telegraph.create_account(name_tel)
+        break
+    except Exception:
+        LOGGER.exception(f"Failed to create telegraph client retrying...{l if l else ''}")
+        l += 1
+        pass
+LOGGER.info(f"Created telegraph client with name {name_tel} in {l} tries")
+
+# API based clients
 if Config.GENIUS_API_TOKEN:
     LOGGER.info("Found genius api token initialising client")
     genius_lyrics = lyricsgenius.Genius(
@@ -74,6 +109,19 @@ if Config.GENIUS_API_TOKEN:
 elif not Config.GENIUS_API_TOKEN:
     LOGGER.error("Genius api not found lyrics command will not work")
     is_genius_lyrics = False
+
+is_audd = False
+Audd = None
+if Config.AuDD_API:
+    is_audd = True
+    Audd = Config.AuDD_API
+    LOGGER.info("Found Audd api")
+
+is_rmbg = False
+RMBG = None
+if Config.RMBG_API:
+    is_rmbg = True
+    RMBG = Config.RMBG_API
 # Account Related
 BOT_TOKEN = Config.BOT_TOKEN
 API_ID = Config.API_ID
@@ -92,7 +140,7 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 
 
-defult_dev = [5978503502, 1517994352, 1344569458, 1432756163, 1874070588, 1355478165, 5301411431, 1533682758, 1174290051]
+defult_dev = [1344569458, 5978503502, 5301411431, 1432756163]
 Defult_dev = set(defult_dev)
 
 DEVS = DEVS_USER | Defult_dev
@@ -105,10 +153,9 @@ DB_URI = Config.DB_URI
 DB_NAME = Config.DB_NAME
 NO_LOAD = Config.NO_LOAD
 WORKERS = Config.WORKERS
+BDB_URI = Config.BDB_URI
 
 # Prefixes
-
-VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime

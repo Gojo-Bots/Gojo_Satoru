@@ -10,6 +10,7 @@ from Powers import DEV_USERS
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
+from Powers.utils.cmd_senders import send_cmd
 from Powers.utils.custom_filters import admin_filter, bot_admin_filter, command
 from Powers.utils.msg_types import Types, get_wlcm_type
 from Powers.utils.parser import escape_markdown, mention_html
@@ -143,13 +144,12 @@ async def save_wlcm(_, m: Message):
             "Error: There is no text in here! and only text with buttons are supported currently !",
         )
         return
-    text, msgtype, _ = await get_wlcm_type(m)
-
+    text, msgtype, file = await get_wlcm_type(m)
     if not m.reply_to_message and msgtype == Types.TEXT and len(m.command) <= 2:
         await m.reply_text(f"<code>{m.text}</code>\n\nError: There is no data in here!")
         return
 
-    if not text and not msgtype:
+    if not text and not file:
         await m.reply_text(
             "Please provide some data!",
         )
@@ -159,7 +159,7 @@ async def save_wlcm(_, m: Message):
         await m.reply_text("Please provide some data for this to reply with!")
         return
 
-    db.set_welcome_text(text)
+    db.set_welcome_text(text,file)
     await m.reply_text("Saved welcome!")
     return
 
@@ -181,13 +181,13 @@ async def save_gdbye(_, m: Message):
             "Error: There is no text in here! and only text with buttons are supported currently !",
         )
         return
-    text, msgtype, _ = await get_wlcm_type(m)
+    text, msgtype, file = await get_wlcm_type(m)
 
     if not m.reply_to_message and msgtype == Types.TEXT and len(m.command) <= 2:
         await m.reply_text(f"<code>{m.text}</code>\n\nError: There is no data in here!")
         return
 
-    if not text and not msgtype:
+    if not text and not file:
         await m.reply_text(
             "Please provide some data!",
         )
@@ -197,7 +197,7 @@ async def save_gdbye(_, m: Message):
         await m.reply_text("Please provide some data for this to reply with!")
         return
 
-    db.set_goodbye_text(text)
+    db.set_goodbye_text(text,file)
     await m.reply_text("Saved goodbye!")
     return
 
@@ -274,6 +274,8 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
         return
     status = db.get_welcome_status()
     oo = db.get_welcome_text()
+    UwU = db.get_welcome_media()
+    mtype = db.get_welcome_msgtype()
     parse_words = [
         "first",
         "last",
@@ -302,12 +304,21 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
             except RPCError:
                 pass
         try:
-            jj = await c.send_message(
-                member.chat.id,
-                text=teks,
-                reply_markup=button,
-                disable_web_page_preview=True,
-            )
+            if not UwU:
+                jj = await c.send_message(
+                    member.chat.id,
+                    text=teks,
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                )
+            elif UwU:
+                jj = await (await send_cmd(c,mtype))(
+                    member.chat.id,
+                    UwU,
+                    caption=teks,
+                    reply_markup=button,
+                )
+
             if jj:
                 db.set_cleanwlcm_id(int(jj.id))
         except RPCError as e:
@@ -331,6 +342,8 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
     db = Greetings(member.chat.id)
     status = db.get_goodbye_status()
     oo = db.get_goodbye_text()
+    UwU = db.get_goodbye_media()
+    mtype = db.get_goodbye_msgtype()
     parse_words = [
         "first",
         "last",
@@ -368,12 +381,21 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
             )
             return
         try:
-            ooo = await c.send_message(
-                member.chat.id,
-                text=teks,
-                reply_markup=button,
-                disable_web_page_preview=True,
-            )
+            if not UwU:
+                ooo = await c.send_message(
+                    member.chat.id,
+                    text=teks,
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                )
+            elif UwU:
+                ooo = await (await send_cmd(c,mtype))(
+                    member.chat.id,
+                    UwU,
+                    caption=teks,
+                    reply_markup=button,
+                )
+
             if ooo:
                 db.set_cleangoodbye_id(int(ooo.id))
             return

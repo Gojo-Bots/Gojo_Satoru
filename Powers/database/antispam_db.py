@@ -1,6 +1,7 @@
 from datetime import datetime
 from threading import RLock
 
+from Powers import TIME_ZONE as TZ
 from Powers.database import MongoDB
 
 INSERTION_LOCK = RLock()
@@ -27,7 +28,7 @@ class GBan(MongoDB):
                 return self.update_gban_reason(user_id, reason)
 
             # If not already gbanned, then add to gban
-            time_rn = datetime.now()
+            time_rn = datetime.now(TZ)
             return self.insert_one(
                 {
                     "_id": user_id,

@@ -20,32 +20,36 @@ class Config:
         int(i)
         for i in config(
             "DEV_USERS",
-            default="1517994352 1344569458 1432756163 1874070588 1355478165 5301411431 1533682758",
+            default="",
         ).split(" ")
     ]
     SUDO_USERS = [
         int(i)
         for i in config(
             "SUDO_USERS",
-            default="1344569458 1906306037",
+            default="",
         ).split(" ")
     ]
     WHITELIST_USERS = [
         int(i)
         for i in config(
             "WHITELIST_USERS",
-            default="1344569458",
+            default="",
         ).split(" ")
     ]
     GENIUS_API_TOKEN = config("GENIUS_API")
+    AuDD_API = config("AuDD_API")
+    RMBG_API = config("RMBG_API")
     DB_URI = config("DB_URI", default="")
     DB_NAME = config("DB_NAME", default="")
+    BDB_URI = config("BDB_URI")
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_bots_network")
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_bots_network")
     VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
+    TIME_ZONE = config("TIME_ZONE",default='Asia/Kolkata')
     BOT_USERNAME = ""
     BOT_ID = ""
     BOT_NAME = ""
@@ -69,8 +73,12 @@ class Development:
     DB_NAME = ""  # Your DB name
     NO_LOAD = []
     GENIUS_API_TOKEN = ""
+    AuDD_API = ""
+    RMBG_API = ""
     PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     VERSION = "VERSION"
+    TIME_ZONE = 'Asia/Kolkata'
+    BDB_URI = ""
     WORKERS = 8

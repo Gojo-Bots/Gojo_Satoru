@@ -186,9 +186,20 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
 
-`DB_NAME`: Your [MongoDB](https://www.mongodb.com/) database name.
+`DB_NAME` Your [MongoDB](https://www.mongodb.com/) database name.
 
-`OWNER_ID`: Your user ID as an integer.
+`OWNER_ID` Your user ID as an integer.
+
+`GENIUS_API` Your Lyrics Genius Api Token. To fetch lyrics of songs.
+
+`AuDD_API` Your Audd api to get info of song by music file.
+
+`BDB_URI` Your mongodb uri different from previous one to store more info.
+
+`TIME_ZONE` Your time zone.
+
+`RMBG_API` Your removebackground api to remove the background/
+
 `SUPPORT_GROUP`: Your Telegram support group chat username where user's can contact in case of a problem.
 
 `MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`.
@@ -267,19 +278,23 @@ To add your very own plugin just use the format given below and go through the [
    
 </p>--->
 
-* [PSYREX](https://github.com/iamPSYREX) `for logos`
+Some special thanks to the person/repo who/which helped and motivated me for creating this project
+
+* [PSYREX](https://github.com/iamPSYREX) for logos and motivatting me and giving me new ideas.
 
 * [Dan](https://github.com/delivrance) for [pyrogram](https://github.com/pyrogram/pyrogram) `library`
 
-* [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
+* [Anand](https://github.com/HellBoy-OP) for helping me to enhance bot's security and look and also helping me out with various stuffs and bugs and also for motivating me to create this project.
+
+* [Alita_Robot](https://github.com/divideprojects/Alita_Robot) for base code.
+
 ---------
 
 # Powered by [ɢօʝօ ɮօȶֆ](https://github.com/Gojo-Bots)
 
 
 <p align='left'>
-  <a href="https://github.com/Gojo-Bots"><img src="./extras/Untitled(1).webp" width="500" 
-     height="500 alt="Gojo Bots"></a></br></br>
+  <a href="https://github.com/Gojo-Bots"><img src="https://artfiles.alphacoders.com/160/160160.jpeg" alt="Gojo Bots"></a></br></br>
    
 </p>
 

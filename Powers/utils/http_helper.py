@@ -1,36 +1,34 @@
 from asyncio import gather
 
 # from Powers.bot_class import aiohttpsession as session
-import aiohttp
-
-async def get(url: str, *args, **kwargs):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, *args, **kwargs) as resp:
-            try:
-                data = await resp.json()
-            except Exception:
-                data = await resp.text()
-        return data
+import requests
 
 
-async def head(url: str, *args, **kwargs):
-    async with aiohttp.ClientSession() as session:
-        async with session.head(url, *args, **kwargs) as resp:
-            try:
-                data = await resp.json()
-            except Exception:
-                data = await resp.text()
-        return data
+def get(url: str, *args, **kwargs):
+    resp = requests.get(url, *args, **kwargs)
+    try:
+        data = resp.json()
+    except Exception:
+        data = resp.text()
+    return data
 
 
-async def post(url: str, *args, **kwargs):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, *args, **kwargs) as resp:
-            try:
-                data = await resp.json()
-            except Exception:
-                data = await resp.text()
-        return data
+def head(url: str, *args, **kwargs):
+    resp = requests.head(url, *args, **kwargs)
+    try:
+        data = resp.json()
+    except Exception:
+        data = resp.text()
+    return data
+
+
+def post(url: str, *args, **kwargs):
+    resp = requests.post(url, *args, **kwargs)
+    try:
+        data = resp.json()
+    except Exception:
+        data = resp.text()
+    return data
 
 
 async def multiget(url: str, times: int, *args, **kwargs):
@@ -45,9 +43,9 @@ async def multipost(url: str, times: int, *args, **kwargs):
     return await gather(*[post(url, *args, **kwargs) for _ in range(times)])
 
 
-async def resp_get(url: str, *args, **kwargs):
-    return await session.get(url, *args, **kwargs)
+def resp_get(url: str, *args, **kwargs):
+        return requests.get(url, *args, **kwargs)
 
 
-async def resp_post(url: str, *args, **kwargs):
-    return await session.post(url, *args, **kwargs)
+def resp_post(url: str, *args, **kwargs):
+    return requests.post(url, *args, **kwargs)

@@ -47,6 +47,10 @@ class Warns(MongoDB):
             self.user_info = self.__ensure_in_db(user_id)
             return self.delete_one({"chat_id": self.chat_id, "user_id": user_id})
 
+    def clean_warn(self):
+        with INSERTION_LOCK:
+            return self.delete_one({"chat_id":self.chat_id})
+
     def get_warns(self, user_id: int):
         with INSERTION_LOCK:
             self.user_info = self.__ensure_in_db(user_id)
@@ -133,6 +137,10 @@ class WarnSettings(MongoDB):
         with INSERTION_LOCK:
             self.update({"_id": self.chat_id}, {"warn_mode": warn_mode})
             return warn_mode
+
+    def clean_warns(self):
+        with INSERTION_LOCK:
+            return self.delete_one({"_id":self.chat_id})
 
     def get_warnmode(self):
         with INSERTION_LOCK:

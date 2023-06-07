@@ -156,6 +156,8 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if m.sender_chat:
         return True
 
+    if not m.from_user:
+        return False
 
     try:
         admin_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
@@ -183,6 +185,9 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
 
     if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return False
+    
+    if not m.from_user:
+        return False
 
     user = await m.chat.get_member(m.from_user.id)
 
@@ -209,10 +214,12 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
     ):
         return False
 
+    if not m.from_user:
+        return False
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.privileges.can_restrict_members or user.status == CMS.OWNER:
+    if user.status in [CMS.ADMINISTRATOR, CMS.OWNER] and user.privileges.can_restrict_members:
         status = True
     else:
         status = False
@@ -229,10 +236,12 @@ async def promote_check_func(_, __, m):
     if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return False
 
+    if not m.from_user:
+        return False
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.privileges.can_promote_members or user.status == CMS.OWNER:
+    if user.status in [CMS.ADMINISTRATOR, CMS.OWNER] and user.privileges.can_promote_members:
         status = True
     else:
         status = False
@@ -257,7 +266,7 @@ async def changeinfo_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.privileges.can_change_info or user.status == CMS.OWNER:
+    if user.status in [CMS.ADMINISTRATOR, CMS.OWNER] and user.privileges.can_change_info:
         status = True
     else:
         status = False
@@ -285,7 +294,7 @@ async def can_pin_message_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.privileges.can_pin_messages or user.status == CMS.OWNER:
+    if user.status in [CMS.ADMINISTRATOR, CMS.OWNER] and user.privileges.can_pin_messages:
         status = True
     else:
         status = False

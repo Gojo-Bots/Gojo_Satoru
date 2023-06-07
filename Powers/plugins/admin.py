@@ -190,16 +190,18 @@ async def fullpromote_usr(c: Gojo, m: Message):
         if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP]:
             title = "Gojo"  # Default fullpromote title
             if len(m.text.split()) == 3 and not m.reply_to_message:
-                title = m.text.split()[2]
-            elif len(m.text.split()) == 2 and m.reply_to_message:
-                title = m.text.split()[1]
-            if title and len(title) > 16:
-                title = title[0:16]  # trim title to 16 characters
+                title = " ".join(m.text.split()[2:16]) # trim title to 16 characters
+            elif len(m.text.split()) >= 2 and m.reply_to_message:
+                title = " ".join(m.text.split()[1:16]) # trim title to 16 characters
 
             try:
                 await c.set_administrator_title(m.chat.id, user_id, title)
             except RPCError as e:
                 LOGGER.error(e)
+                LOGGER.error(format_exc())
+            except Exception as e:
+                LOGGER.error(e)
+                LOGGER.error(format_exc())
         LOGGER.info(
             f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
         )
@@ -291,17 +293,18 @@ async def promote_usr(c: Gojo, m: Message):
         title = ""
         if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP]:
             title = "Itadori"  # Deafult title
-            if len(m.text.split()) == 3 and not m.reply_to_message:
-                title = m.text.split()[2]
-            elif len(m.text.split()) == 2 and m.reply_to_message:
-                title = m.text.split()[1]
-            if title and len(title) > 16:
-                title = title[0:16]  # trim title to 16 characters
-
+            if len(m.text.split()) >= 3 and not m.reply_to_message:
+                title = " ".join(m.text.split()[2:16]) # trim title to 16 characters
+            elif len(m.text.split()) >= 2 and m.reply_to_message:
+                title = " ".join(m.text.split()[1:16]) # trim title to 16 characters
             try:
                 await c.set_administrator_title(m.chat.id, user_id, title)
             except RPCError as e:
                 LOGGER.error(e)
+                LOGGER.error(format_exc())
+            except Exception as e:
+                LOGGER.error(e)
+                LOGGER.error(format_exc())
         LOGGER.info(
             f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
         )

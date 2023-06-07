@@ -59,7 +59,7 @@ async def tmute_usr(c: Gojo, m: Message):
     r_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 2)[1]
+        reason = m.text.split(None, 1)[1]
     elif not m.reply_to_message and len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
@@ -72,9 +72,7 @@ async def tmute_usr(c: Gojo, m: Message):
 
     split_reason = reason.split(None, 1)
     time_val = split_reason[0].lower()
-
     reason = split_reason[1] if len(split_reason) > 1 else ""
-
     mutetime = await extract_time(m, time_val)
 
     if not mutetime:
@@ -166,7 +164,7 @@ async def dtmute_usr(c: Gojo, m: Message):
         return
 
     if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 2)[1]
+        reason = m.text.split(None, 1)[1]
     elif not m.reply_to_message and len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
@@ -272,7 +270,7 @@ async def stmute_usr(c: Gojo, m: Message):
         return
 
     if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 2)[1]
+        reason = m.text.split(None, 1)[1]
     elif not m.reply_to_message and len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:

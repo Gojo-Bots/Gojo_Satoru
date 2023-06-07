@@ -66,7 +66,7 @@ class Floods(MongoDB):
         with INSERTION_LOCK:
             curr = self.find_one({"chat_id": chat_id})
             if curr:
-                self.delete_one(curr)
+                self.delete_one({"chat_id":chat_id})
                 return True
             return False
             

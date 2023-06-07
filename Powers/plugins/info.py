@@ -5,6 +5,8 @@ from traceback import format_exc
 
 from pyrogram import enums
 from pyrogram.errors import EntityBoundsInvalid, MediaCaptionTooLong, RPCError
+from pyrogram.raw.functions.channels import GetFullChannel
+from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.types import Message
 
 from Powers import (DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, SUPPORT_STAFF,
@@ -72,6 +74,17 @@ async def user_info(c: Gojo, user, already=False):
         reason = "User is not gbanned"
 
     user_id = user.id
+    userrr = await c.resolve_peer(user_id)
+    about = "NA"
+    try:
+        ll = await c.invoke(
+            GetFullUser(
+                id=userrr
+            )
+        )
+        about = ll.full_user.about
+    except Exception:
+        pass
     username = user.username
     first_name = user.first_name
     last_name = user.last_name
@@ -130,6 +143,7 @@ async def user_info(c: Gojo, user, already=False):
 <b>🗣 First Name</b>: <code>{first_name}</code>
 <b>🔅 Second Name</b>: <code>{last_name}</code>
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
+<b>✍️ Bio</b>: `{about}`
 <b>🧑‍💻 Support</b>: {is_support}
 <b>🥷 Support user type</b>: <code>{omp}</code>
 <b>💣 Gbanned</b>: {gban}
@@ -148,18 +162,42 @@ async def user_info(c: Gojo, user, already=False):
 
 
 async def chat_info(c: Gojo, chat, already=False):
+    u_name = False
     if not already:
         try:
             chat = await c.get_chat(chat)
+            try:
+                chat = (await c.resolve_peer(chat.id))
+                ll = await c.invoke(
+                    GetFullChannel(
+                        channel=chat
+                    )
+                )    
+                u_name = ll.chats[0].usernames
+            except Exception:
+                pass 
         except Exception:
             try:
                 chat_r = await c.resolve_peer(chat)
                 chat = await c.get_chat(chat_r.channel_id)
+                try:
+                    chat = (await c.resolve_peer(chat_r))
+                    ll = await c.invoke(
+                        GetFullChannel(
+                            channel=chat
+                        )
+                    )    
+                    u_name = ll.chats[0].usernames
+                except Exception:
+                    pass
             except KeyError as e:
                 caption = f"Failed to find the chat due to\n{e}"
                 return caption, None
     chat_id = chat.id
-    username = chat.username
+    if u_name:
+        username = " ".join([f"@{i}"for i in u_name])
+    elif not u_name:
+        username = chat.username
     total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat.id)
     title = chat.title
     type_ = str(chat.type).split(".")[1]

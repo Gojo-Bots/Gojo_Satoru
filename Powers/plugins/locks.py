@@ -2,6 +2,7 @@ from asyncio import sleep
 from traceback import format_exc
 
 from pyrogram import filters
+from pyrogram.enums import MessageEntityType as MET
 from pyrogram.errors import ChatAdminRequired, ChatNotModified, RPCError
 from pyrogram.types import ChatPermissions, Message
 
@@ -10,6 +11,7 @@ from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
+from Powers.vars import Config
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
 
@@ -17,6 +19,7 @@ anti_c_send = [-1001604479593]
 anti_forward = [-1001604479593]
 anti_forward_u = []
 anti_forward_c = []
+anti_links = []
 @Gojo.on_message(command("locktypes"))
 async def lock_types(_, m: Message):
     await m.reply_text(
@@ -37,7 +40,8 @@ async def lock_types(_, m: Message):
             " - `anonchannel` = Send as chat will be locked\n"
             " - `forwardall` = Forwarding from channel and user\n"
             " - `forwardu` = Forwarding from user\n"
-            " - `forwardc` = Forwarding from channel"
+            " - `forwardc` = Forwarding from channel\n"
+            " - `links | url` = Lock links"
         ),
     )
     return
@@ -121,6 +125,16 @@ async def lock_perm(c: Gojo, m: Message):
     elif lock_type == "pin":
         pin = False
         perm = "pin"
+    elif lock_type in ["links", "url"]:
+        if not len(anti_links):
+            anti_links.append(m.chat.id)
+        elif m.chat.id not in anti_links:
+            anti_links.append(m.chat.id)
+        else:
+            await m.reply_text("It is already on")
+            return
+        await m.reply_text("Locked links in the chat")
+        return
     elif lock_type == "anonchannel":
         if not len(anti_c_send):
             anti_c_send.append(m.chat.id)
@@ -207,13 +221,16 @@ async def view_locks(_, m: Message):
     anon = False
     if m.chat.id in anti_c_send:
         anon = True
-    anti_f = False
+    anti_f = anti_f_u = anti_f_c = False
     if m.chat.id in anti_forward:
         anti_f = True
     if m.chat.id in anti_forward_u:
         anti_f_u = True
     if m.chat.id in anti_forward_c:
         anti_f_c = True
+    antil = False
+    if m.chat.id in anti_links:
+        antil = True
     vmsg = await convert_to_emoji(v_perm.can_send_messages)
     vmedia = await convert_to_emoji(v_perm.can_send_media_messages)
     vother = await convert_to_emoji(v_perm.can_send_other_messages)
@@ -226,6 +243,7 @@ async def view_locks(_, m: Message):
     vanti = await convert_to_emoji(anti_f)
     vantiu = await convert_to_emoji(anti_f_u)
     vantic = await convert_to_emoji(anti_f_c)
+    vantil = await convert_to_emoji(antil)
 
     if v_perm is not None:
         try:
@@ -246,6 +264,7 @@ async def view_locks(_, m: Message):
       <b>Can forward:</b> {vanti}
       <b>Can forward from user:</b> {vantiu}
       <b>Can forward from channel and chats:</b> {vantic}
+      <b>Can send links:</b> {antil}
       """
             LOGGER.info(f"{m.from_user.id} used locks cmd in {m.chat.id}")
             await chkmsg.edit_text(permission_view_str)
@@ -357,6 +376,14 @@ async def unlock_perm(c: Gojo, m: Message):
         except ValueError:
             await m.reply_text("It is already off")
             return
+    elif unlock_type in ["links", "url"]:
+        try:
+            anti_links.remove(m.chat.id)
+            await m.reply_text("Sending link is now allowed")
+            return
+        except ValueError:
+            await m.reply_text("Already allowed")
+            return
     elif unlock_type == "forwardall":
         try:
             if not len(anti_forward) or m.chat.id not in anti_forward:
@@ -443,7 +470,7 @@ async def is_approved_user(c:Gojo, m: Message):
         admins_group = await admin_cache_reload(m, "lock")
     
     if m.forward_from:
-        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group:
+        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
             return True
         return False
     elif m.forward_from_chat:
@@ -453,17 +480,28 @@ async def is_approved_user(c:Gojo, m: Message):
         elif x_chat and x_chat.id == m.chat.id:
             return True
         return False
+    elif m.from_user:
+        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
+            return True
+        return False
 
 @Gojo.on_message(filters.all & ~filters.me,18)
 async def lock_del_mess(c:Gojo, m: Message):
-    all_chats = anti_c_send + anti_forward + anti_forward_c + anti_forward_u
+    all_chats = anti_c_send + anti_forward + anti_forward_c + anti_forward_u + anti_links
     if m.chat.id not in all_chats:
         return
     if m.sender_chat and not (m.forward_from_chat or m.forward_from):
         await delete_messages(c,m)
         return
+    is_approved = await is_approved_user(c,m)
+    entity = m.entities if m.text else m.caption_entities
+    if entity:
+        for i in entity:
+            if i.type in [MET.URL or MET.TEXT_LINK]:
+                if not is_approved:
+                    await delete_messages(c,m)
+                    return
     elif m.forward_from or m.forward_from_chat:
-        is_approved = await is_approved_user(c,m)
         if not is_approved:
             if m.chat.id in anti_forward:
                 await delete_messages(c,m)

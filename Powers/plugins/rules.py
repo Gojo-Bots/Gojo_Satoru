@@ -1,11 +1,12 @@
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
+from Powers.utils.string import build_keyboard, parse_button
 from Powers.vars import Config
 
 
@@ -49,12 +50,16 @@ async def get_rules(_, m: Message):
         return
 
     formated = rules
-
+    teks, button = await parse_button(formated)
+    button = await build_keyboard(button)
+    button = ikb(button) if button else None
+    textt = teks
     await m.reply_text(
         text=f"""The rules for <b>{m.chat.title} are:</b>
-      {formated}""",
+{textt}""",
         disable_web_page_preview=True,
         reply_to_message_id=msg_id,
+        reply_markup=button
     )
     return
 
@@ -161,4 +166,8 @@ Set rules for you chat so that members know what to do and what not to do in you
 **Admin only:**
 • /setrules `<rules>`: Set the rules for this chat, also works as a reply to a message.
 • /clearrules: Clear the rules for this chat.
-• /privrules `<on/yes/no/off>`: Turns on/off the option to send the rules to PM of user or group."""
+• /privrules `<on/yes/no/off>`: Turns on/off the option to send the rules to PM of user or group.
+
+**Note Format**
+    Check /markdownhelp for help related to formatting!
+"""
