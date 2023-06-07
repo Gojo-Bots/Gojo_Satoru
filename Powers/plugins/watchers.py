@@ -5,7 +5,6 @@ from traceback import format_exc
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
-from RiZoeLX.functions import update_scanlist
 
 from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from Powers.bot_class import Gojo
@@ -167,8 +166,6 @@ async def bl_watcher(_, m: Message):
     return
 
 
-SCANLIST = []
-
 
 @Gojo.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group)
 async def gban_watcher(c: Gojo, m: Message):
@@ -210,20 +207,7 @@ async def gban_watcher(c: Gojo, m: Message):
         <b>Error:</b> <code>{ef}</code>""",
             )
 
-    elif m.from_user.id in SCANLIST:
-       msg = f"""
-** Alert ⚠️**
-User {m.from_user.mention} is officially
-Scanned by TeamRed7 | Phoenix API ;)
-Appeal [Here](https://t.me/Red7WatchSupport)
-       """
-       try:
-          await c.ban_chat_member(m.chat.id, m.from_user.id)
-          await c.send_message(m.chat.id, msg, disable_web_page_preview=True)
-       except Exception as a:
-          LOGGER.error(a)
-          LOGGER.error(format_exc())
-          return
+
 
 
 @Gojo.on_message(filters.chat(BLACKLIST_CHATS))

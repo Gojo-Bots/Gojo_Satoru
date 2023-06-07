@@ -161,6 +161,10 @@ class Disabling(MongoDB):
         self.insert_one(new_data)
         self.delete_one({"_id": self.chat_id})
 
+    def clean_disable(self):
+        with INSERTION_LOCK:
+            return self.delete_one({"_id":self.chat_id})
+
     @staticmethod
     def repair_db(collection):
         global DISABLED_CMDS

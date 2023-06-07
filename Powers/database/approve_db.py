@@ -50,6 +50,12 @@ class Approve(MongoDB):
                 {"_id": self.chat_id},
             )
 
+    def clean_approve(self):
+        with INSERTION_LOCK:
+            return self.delete_one(
+                {"_id":self.chat_id}
+            )
+
     def list_approved(self):
         with INSERTION_LOCK:
             return self.chat_info["users"]

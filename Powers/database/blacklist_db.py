@@ -114,6 +114,10 @@ class Blacklist(MongoDB):
             return new_data
         return chat_data
 
+    def clean_blacklist(self):
+        with INSERTION_LOCK:
+            return self.delete_one({"_id":self.chat_id})
+
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):
         old_chat_db = self.find_one({"_id": self.chat_id})

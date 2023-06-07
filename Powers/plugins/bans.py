@@ -5,8 +5,9 @@ from pyrogram import enums
 from pyrogram.errors import (ChatAdminRequired, PeerIdInvalid, RightForbidden,
                              RPCError, UserAdminInvalid)
 from pyrogram.filters import regex
-from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
-                            InlineKeyboardMarkup, Message)
+from pyrogram.types import (CallbackQuery, ChatPrivileges,
+                            InlineKeyboardButton, InlineKeyboardMarkup,
+                            Message)
 
 from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from Powers.bot_class import Gojo
@@ -49,7 +50,7 @@ async def tban_usr(c: Gojo, m: Message):
     r_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 2)[1]
+        reason = m.text.split(None, 1)[1]
     elif not m.reply_to_message and len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
@@ -166,7 +167,7 @@ async def stban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 2)[1]
+        reason = m.text.split(None, 1)[1]
     elif not m.reply_to_message and len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
@@ -256,7 +257,7 @@ async def dtban_usr(c: Gojo, m: Message):
         await m.stop_propagation()
 
     if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 2)[1]
+        reason = m.text.split(None, 1)[1]
     elif not m.reply_to_message and len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
@@ -933,12 +934,23 @@ async def unbanbutton(c: Gojo, q: CallbackQuery):
 
 
 @Gojo.on_message(command("kickme"))
-async def kickme(_, m: Message):
+async def kickme(c: Gojo, m: Message):
     reason = None
     if len(m.text.split()) >= 2:
         reason = m.text.split(None, 1)[1]
     try:
         LOGGER.info(f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
+        mem = await c.get_chat_member(m.chat.id,m.from_user.id)
+        if mem.status in [enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER]:
+            try:
+                await c.promote_chat_member(
+                    m.chat.id,
+                    m.from_user.id,
+                    ChatPrivileges(can_manage_chat=False)
+                )
+            except Exception:
+                await m.reply_text("I can't demote you so I can't ban you")
+                return
         await m.chat.ban_member(m.from_user.id)
         txt = "Why not let me help you!"
         if reason:
@@ -948,6 +960,19 @@ async def kickme(_, m: Message):
         await m.reply_animation(animation=str(choice(KICK_GIFS)), caption=txt)
         await m.chat.unban_member(m.from_user.id)
     except RPCError as ef:
+        if "400 USER_ADMIN_INVALID" in ef:
+            await m.reply_text("Looks like I can't kick you (⊙_⊙)")
+            return
+        elif "400 CHAT_ADMIN_REQUIRED" in ef:
+            await m.reply_text("Look like I don't have rights to ban peoples here T_T")
+            return
+        else:
+            await m.reply_text(
+                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+
+        <b>Error:</b> <code>{ef}</code>"""
+            )
+    except Exception as ef:
         await m.reply_text(
             text=f"""Some error occured, report to @{SUPPORT_GROUP}
 

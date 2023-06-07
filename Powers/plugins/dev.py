@@ -17,6 +17,7 @@ from Powers import (BOT_TOKEN, DEV_USERS, LOG_DATETIME, LOGFILE, LOGGER,
 from Powers.bot_class import Gojo
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
+from Powers.plugins.clean_db import clean_my_db
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -139,14 +140,6 @@ async def evaluate_code(c: Gojo, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
-    if "for" in cmd or "while" in cmd or "with" in cmd or "RiZoeLX" in cmd:
-        if m.from_user.id != OWNER_ID:
-            await sm.delete()
-            if "RiZoeLX" in cmd:
-                await m.reply_text("BROSDK")
-                return
-            await m.reply_text("Spam kro gaye vai.\nEse kese")
-            return
     if "while True:" in cmd:
         await sm.delete()
         await m.reply_text("BSDK SPAM NI")
@@ -155,7 +148,7 @@ async def evaluate_code(c: Gojo, m: Message):
             f"@{m.from_user.username} TREID TO USE `while True` \n userid = {m.from_user.id}"
             )
         return
-    if m.reply_to_message.document:
+    if m.reply_to_message and m.reply_to_message.document:
         if m.reply_to_message.document.mime_type.split("/")[1] == "x-python" or m.reply_to_message.document.file_name.endswith("py"):
             await sm.delete()
             await m.reply_text("Loading external plugin is prohibited")
@@ -463,6 +456,23 @@ async def chat_broadcast(c: Gojo, m: Message):
 
     return
 
+@Gojo.on_message(command(["cleandb","cleandatabase"],sudo_cmd=True))
+async def cleeeen(c:Gojo,m:Message):
+    x = await m.reply_text("Cleaning the database...")
+    try:
+        z = await clean_my_db(c,True,m.from_user.id)
+        try:
+            await x.delete()
+        except Exception:
+            pass
+        await m.reply_text("")
+        return
+    except Exception as e:
+        await m.reply_text(e)
+        await x.delete()
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return
 
 __PLUGIN__ = "devs"
 
@@ -487,6 +497,7 @@ __HELP__ = """
 
 **Sudoer's command:**
 • /ping : return the ping of the bot.
+• /cleandb : Delete useless junks from database (Automatically start cleaning it at 3:00:00 AM)
 
 **Example:**
 /ping

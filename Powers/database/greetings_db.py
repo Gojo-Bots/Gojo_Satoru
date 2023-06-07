@@ -171,6 +171,10 @@ class Greetings(MongoDB):
         self.insert_one(new_data)
         self.delete_one({"_id": self.chat_id})
 
+    def clean_greetings(self):
+        with INSERTION_LOCK:
+            return self.delete_one({"_id":self.chat_id})
+
     @staticmethod
     def count_chats(query: str):
         with INSERTION_LOCK:

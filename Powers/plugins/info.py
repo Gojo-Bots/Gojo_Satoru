@@ -74,12 +74,12 @@ async def user_info(c: Gojo, user, already=False):
         reason = "User is not gbanned"
 
     user_id = user.id
-    user = await c.resolve_peer(user_id)
+    userrr = await c.resolve_peer(user_id)
     about = "NA"
     try:
         ll = await c.invoke(
             GetFullUser(
-                id=user
+                id=userrr
             )
         )
         about = ll.full_user.about
@@ -143,7 +143,7 @@ async def user_info(c: Gojo, user, already=False):
 <b>🗣 First Name</b>: <code>{first_name}</code>
 <b>🔅 Second Name</b>: <code>{last_name}</code>
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
-<b> Bio</b>: {about}
+<b>✍️ Bio</b>: `{about}`
 <b>🧑‍💻 Support</b>: {is_support}
 <b>🥷 Support user type</b>: <code>{omp}</code>
 <b>💣 Gbanned</b>: {gban}

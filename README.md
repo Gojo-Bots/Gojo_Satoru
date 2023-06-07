@@ -186,9 +186,20 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
 
-`DB_NAME`: Your [MongoDB](https://www.mongodb.com/) database name.
+`DB_NAME` Your [MongoDB](https://www.mongodb.com/) database name.
 
-`OWNER_ID`: Your user ID as an integer.
+`OWNER_ID` Your user ID as an integer.
+
+`GENIUS_API` Your Lyrics Genius Api Token. To fetch lyrics of songs.
+
+`AuDD_API` Your Audd api to get info of song by music file.
+
+`BDB_URI` Your mongodb uri different from previous one to store more info.
+
+`TIME_ZONE` Your time zone.
+
+`RMBG_API` Your removebackground api to remove the background/
+
 `SUPPORT_GROUP`: Your Telegram support group chat username where user's can contact in case of a problem.
 
 `MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`.

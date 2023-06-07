@@ -6,12 +6,14 @@ import textwrap
 from typing import List, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
-from pyrogram import Client, errors, raw
+from pyrogram import errors, raw
 from pyrogram.file_id import FileId
+
+from Powers.bot_class import Gojo
 
 
 async def get_sticker_set_by_name(
-    client: Client, name: str
+    client: Gojo, name: str
 ) -> raw.base.messages.StickerSet:
     try:
         return await client.invoke(
@@ -26,7 +28,7 @@ async def get_sticker_set_by_name(
 
 
 async def create_sticker_set(
-    client: Client,
+    client: Gojo,
     owner: int,
     title: str,
     short_name: str,
@@ -47,7 +49,7 @@ async def create_sticker_set(
 
 
 async def add_sticker_to_set(
-    client: Client,
+    client: Gojo,
     stickerset: raw.base.messages.StickerSet,
     sticker: raw.base.InputStickerSetItem,
 ) -> raw.base.messages.StickerSet:
@@ -73,7 +75,6 @@ STICKER_DIMENSIONS = (512, 512)
 
 async def resize_file_to_sticker_size(file_path: str,length:int=512,width:int=512) -> str:
     im = Image.open(file_path)
-    file_path = file_path.replace("\\","/").rsplit("/",1)[0]
     if (im.width, im.height) < STICKER_DIMENSIONS:
         size1 = im.width
         size2 = im.height
@@ -91,16 +92,16 @@ async def resize_file_to_sticker_size(file_path: str,length:int=512,width:int=51
         im = im.resize(sizenew)
     else:
         im.thumbnail(STICKER_DIMENSIONS)
-    try:
-        os.remove(file_path)
-        file_path = f"{file_path}/resized.png"
-        return file_path
-    finally:
-        im.save(file_path)
+
+    file_pathh = "./downloads/resized.png"
+    im.save(file_pathh)
+    os.remove(file_path)
+    return file_pathh
+        
 
 
 async def upload_document(
-    client: Client, file_path: str, chat_id: int
+    client: Gojo, file_path: str, chat_id: int
 ) -> raw.base.InputDocument:
     media = await client.invoke(
         raw.functions.messages.UploadMedia(
@@ -113,6 +114,7 @@ async def upload_document(
                         file_name=os.path.basename(file_path)
                     )
                 ],
+                force_file=True,
             ),
         )
     )
@@ -133,11 +135,9 @@ async def get_document_from_file_id(
         file_reference=decoded.file_reference,
     )
 
-async def draw_meme(image_path, text):
+async def draw_meme(image_path, text:str,stick):
     """Hellbot se churaya hai hue hue hue..."""
     img = Image.open(image_path)
-    UwU = image_path.rsplit("/")[0]
-    os.remove(image_path)
     i_width, i_height = img.size
     m_font = ImageFont.truetype(
         "./extras/comic.ttf", int((70 / 640) * i_width)
@@ -150,7 +150,7 @@ async def draw_meme(image_path, text):
     draw = ImageDraw.Draw(img)
     current_h, pad = 10, 5
     if upper_text:
-        for u_text in textwrap.wrap(upper_text, width=15):
+        for u_text in textwrap.wrap(upper_text,width=15,subsequent_indent=" "):
             u_width, u_height = draw.textsize(u_text, font=m_font)
             draw.text(
                 xy=(((i_width - u_width) / 2) - 1, int((current_h / 640) * i_width)),
@@ -184,7 +184,7 @@ async def draw_meme(image_path, text):
             )
             current_h += u_height + pad
     if lower_text:
-        for l_text in textwrap.wrap(lower_text, width=15):
+        for l_text in textwrap.wrap(upper_text,width=15,subsequent_indent=" "):
             u_width, u_height = draw.textsize(l_text, font=m_font)
             draw.text(
                 xy=(
@@ -232,11 +232,32 @@ async def draw_meme(image_path, text):
                 fill=(255, 255, 255),
             )
             current_h += u_height + pad
-    
-    hue = f"{UwU}/@memesofdank_memer_hu_vai.png"
-    stick_path = await resize_file_to_sticker_size(hue)
-    mee = hue = f"{stick_path.rsplit('/',1)[0]}/@memesofdank_memer_hu_vai.webp"
-    os.remove(stick_path)
+
+    hue = image_path
+    if stick:
+        stick_path = image_path
+    else:
+        stick_path = await resize_file_to_sticker_size(hue)
+    mee = tosticker(stick_path,"@memesofdank_memer_hu_vai.webp")
     img.save(hue)
     img.save(mee)
     return hue, mee
+
+def toimage(image, filename=None):
+    filename = filename if filename else "gojo.jpg"
+    img = Image.open(image)
+    if img.mode != "RGB":
+        img = img.convert("RGB")
+    img.save(filename, "jpeg")
+    os.remove(image)
+    return filename
+
+
+def tosticker(response, filename=None):
+    filename = filename if filename else "gojo.webp"
+    image = Image.open(response)
+    if image.mode != "RGB":
+        image.convert("RGB")
+    image.save(filename, "webp")
+    os.remove(response)
+    return filename

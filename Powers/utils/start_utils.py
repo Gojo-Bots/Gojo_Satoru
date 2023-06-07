@@ -49,7 +49,15 @@ async def gen_start_kb(q: Message or CallbackQuery):
                     "url",
                 ),
             ],
-            [("📚 Commands & Help", "commands")],
+            [
+                (
+                    "📚 Commands & Help", "commands"
+                ),
+                (
+                    "👾 Bot info",
+                    "bot_curr_info"
+                )
+            ],
             [
                 (
                     "🗃️ Source Code",
@@ -58,8 +66,8 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Owner ❤️",
-                    f"https://t.me/{Config.owner_username}",
-                    "url",
+                    Config.OWNER_ID,
+                    "user_id",
                 ),
             ],
             [
@@ -260,7 +268,7 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
         )
     else:
         help_msg = """
-Hey There! My name is Gojo.
+Hey There! I am Gojo.
 I'm here to help you manage your groups!
 Commands available:
 × /start: Start the bot
