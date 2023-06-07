@@ -20,21 +20,21 @@ class Config:
         int(i)
         for i in config(
             "DEV_USERS",
-            default="1517994352 1344569458 1432756163 1874070588 1355478165 5301411431 1533682758",
+            default="",
         ).split(" ")
     ]
     SUDO_USERS = [
         int(i)
         for i in config(
             "SUDO_USERS",
-            default="1344569458 1906306037",
+            default="",
         ).split(" ")
     ]
     WHITELIST_USERS = [
         int(i)
         for i in config(
             "WHITELIST_USERS",
-            default="1344569458",
+            default="",
         ).split(" ")
     ]
     GENIUS_API_TOKEN = config("GENIUS_API")

@@ -79,7 +79,6 @@ async def report_watcher(c: Gojo, m: Message):
         reported_msg_id = m.reply_to_message.id
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
-        admin_list = await c.get_chat_members(m.chat.id, filter=cmf.ADMINISTRATORS)
 
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
@@ -136,7 +135,7 @@ async def report_watcher(c: Gojo, m: Message):
             quote=True,
         )
 
-        for admin in admin_list:
+        async for admin in c.get_chat_members(m.chat.id, filter=cmf.ADMINISTRATORS):
             if (
                 admin.user.is_bot or admin.user.is_deleted
             ):  # can't message bots or deleted accounts

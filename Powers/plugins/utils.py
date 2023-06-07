@@ -141,15 +141,22 @@ async def get_lyrics(_, m: Message):
 async def id_info(c: Gojo, m: Message):
 
     ChatType = enums.ChatType
-    if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP] and not m.reply_to_message:
-        await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>")
-        return
-
-    if m.chat.type == ChatType.PRIVATE and not m.reply_to_message:
-        await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
-        return
-
     user_id, _, _ = await extract_user(c, m)
+    try:
+        if user_id and len(m.text.split()) == 2:
+            txt = f"Given user's id: <code>{user_id}</code>"
+            await m.reply_text(txt, parse_mode=enums.ParseMode.HTML)
+            return
+        elif m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP] and not m.reply_to_message:
+            await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>")
+            return
+
+        elif m.chat.type == ChatType.PRIVATE and not m.reply_to_message:
+            await m.reply_text(text=f"Your ID is <code>{m.chat.id}</code>.")
+            return
+    except Exception as e:
+        await m.reply_text(e)
+        return
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_message.from_user
@@ -160,7 +167,7 @@ async def id_info(c: Gojo, m: Message):
             fwd_id = f"<code>{user1.id}</code>"
             await m.reply_text(
                 text=f"""Original Sender - {orig_sender} (<code>{orig_id}</code>)
-        Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
+Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
                 parse_mode=enums.ParseMode.HTML,
             )
         else:
@@ -184,13 +191,9 @@ async def id_info(c: Gojo, m: Message):
                 text+=f"Forwarded from user ID <code>{m.forward_from.id}</code>."
             elif m.forward_from_chat:
                 text+=f"Forwarded from user ID <code>{m.forward_from_chat.id}</code>."
-        if len(m.text.split()) > 1 and user_id:
-            text += f"\nGiven user's ID <code>{user_id}</code>"
         await m.reply_text(text)
     else:
         text=f"Chat ID <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>"
-        if len(m.text.split()) > 1 and user_id:
-            text += f"\nGiven user's ID <code>{user_id}</code>"
         await m.reply_text(text)
     return
 
@@ -288,7 +291,7 @@ BASE = "https://nekobin.com/"
 
 
 def paste(content: str):
-    resp = post(f"{BASE}api/documents", data=content)
+    resp = resp_post(f"{BASE}api/documents", data=content)
     if resp.status_code != 200:
         return
     return BASE + resp["result"]['key']
@@ -368,9 +371,32 @@ async def tr(_, message):
         f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )
 
+@Gojo.on_message(command("bug"))
+async def reporting_query(c: Gojo, m: Message):
+    repl = m.reply_to_message
+    if not repl:
+        await m.reply_text("Please reply to a message to report it as bug")
+        return
+    if not repl.text:
+        await m.reply_text("Please reply to a text message.")
+        return
+    txt = "#BUG\n"
+    txt += repl.text.html
+    txt += f"\nReported by: {m.from_user.id} ({m.from_user.mention})"
+    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Update channel",url=f"https://t.me/{SUPPORT_GROUP}")],[InlineKeyboardButton("Report on github",url="https://github.com/Gojo-Bots/Gojo_Satoru/issues/new/choose")]])
+    try:
+        z = await c.send_message(MESSAGE_DUMP,txt,parse_mode=enums.ParseMode.HTML)
+    except Exception:
+        txt = repl.text.html
+        z = await c.send_message(MESSAGE_DUMP,txt,parse_mode=enums.ParseMode.HTML)
+        await z.reply_text(f"#BUG\nReported by: {m.from_user.id} ({m.from_user.mention})")
+    await m.reply_text("Successfully reported your bug",reply_markup=kb)
+    ppost = z.link
+    await c.send_message(OWNER_ID,f"New bug report\n{ppost}",disable_web_page_preview=True)
+    return
 
 __PLUGIN__ = "utils"
-_DISABLE_CMDS_ = ["paste", "wiki", "id", "gifid", "tr", "github", "git"]
+_DISABLE_CMDS_ = ["paste", "wiki", "id", "gifid", "tr", "github", "git", "bug"]
 __alt_name__ = ["util", "misc", "tools"]
 
 __HELP__ = """
@@ -386,6 +412,7 @@ Some utils provided by bot to make your tasks easy!
 • /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
 • /git `<username>`: Search for the user using github api!
 • /weebify `<text>` or `<reply to message>`: To weebify the text.
+• /bug <reply to text message> : To report a bug
 
 **Example:**
 `/git iamgojoof6eyes`: this fetches the information about a user from the database."""

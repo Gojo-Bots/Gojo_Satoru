@@ -120,6 +120,9 @@
     },
     "buildpacks": [
       {
+        "url":"https://github.com/jonathanong/heroku-buildpack-ffmoeg-latest"
+      },
+      {
         "url": "heroku/python"
       }
     ],

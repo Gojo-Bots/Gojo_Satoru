@@ -55,6 +55,10 @@ class Reporting(MongoDB):
         self.insert_one(new_data)
         self.delete_one({"_id": self.chat_id})
 
+    def clean_reporting(self):
+        with INSERTION_LOCK:
+            return self.delete_one({"_id":self.chat_id})
+
     @staticmethod
     def repair_db(collection):
         all_data = collection.find_all()

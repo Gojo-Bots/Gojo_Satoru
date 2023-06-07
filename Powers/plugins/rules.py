@@ -52,11 +52,11 @@ async def get_rules(_, m: Message):
     formated = rules
     teks, button = await parse_button(formated)
     button = await build_keyboard(button)
-    button = InlineKeyboardMarkup(button) if button else None
+    button = ikb(button) if button else None
     textt = teks
     await m.reply_text(
         text=f"""The rules for <b>{m.chat.title} are:</b>
-      {textt}""",
+{textt}""",
         disable_web_page_preview=True,
         reply_to_message_id=msg_id,
         reply_markup=button

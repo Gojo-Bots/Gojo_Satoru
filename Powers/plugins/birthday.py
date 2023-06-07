@@ -1,4 +1,6 @@
 from datetime import date, datetime, time
+from random import choice
+from traceback import format_exc
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pyrogram import filters
@@ -8,25 +10,32 @@ from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
-from Powers import TIME_ZONE
+from Powers import BDB_URI, LOGGER, TIME_ZONE
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.plugins import bday_cinfo, bday_info
 from Powers.utils.custom_filters import command
+from Powers.utils.extras import birthday_wish
 
+
+def give_date(date,form = "%d/%m/%Y"):
+    datee = datetime.strptime(date,form).date()
+    return datee
 
 @Gojo.on_message(command("remember"))
 async def remember_me(c: Gojo, m: Message):
+    if not BDB_URI:
+        await m.reply_text("BDB_URI is not configured")
+        return
     splited = m.text.split()
     if len(splited) != 2 and m.reply_to_message:
         await m.reply_text("**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
         return
-    elif len(splited) != 3 and not m.reply_to_message:
-        await m.reply_text("**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
-        return
     DOB = splited[1] if len(splited) == 2 else splited[2]
-    if len(splited) == 2:
+    if len(splited) == 2 and m.reply_to_message:
         user = m.reply_to_message.from_user.id
+    elif not m.reply_to_message:
+        user = m.from_user.id
     else:
         try:
             u_id = int(splited[1])
@@ -42,12 +51,13 @@ async def remember_me(c: Gojo, m: Message):
                 await m.reply_text("Unable to find the user")
                 return
     DOB = DOB.split("/")
-    if len(DOB) != 3 or len(DOB) != 2:
+    if len(DOB) != 3 and len(DOB) != 2:
         await m.reply_text("DOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
         return
+    is_correct = True
     if len(DOB) == 3:
-        is_correct = (len(DOB[2]) == 3)
-    if len(DOB[0]) != 2 or len(DOB[1]) !=2 or not is_correct:
+        is_correct = (len(DOB[2]) == 4)
+    if len(DOB[0]) != 2 and len(DOB[1]) !=2 and not is_correct:
         await m.reply_text("DOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
         return
     try:
@@ -57,16 +67,14 @@ async def remember_me(c: Gojo, m: Message):
             year = int(DOB[2])
             is_year = 1
         else:
-            year = "1800"
+            year = "1900"
             is_year = 0
-        DOB = f"{str(date)}/{str(month)}/{year}"
-        form = "%d/%m/%Y"
-        datee = datetime.strptime(DOB,form).date()
+        DOB = f"{str(date)}/{str(month)}/{str(year)}"
     except ValueError:
         await m.reply_text("DOB should be numbers only")
         return
 
-    data = {"user_id":user,"dob":datee,"is_year":is_year}
+    data = {"user_id":user,"dob":DOB,"is_year":is_year}
     try:
         result = bday_info.find_one({"user_id":user})
         if result:
@@ -74,15 +82,23 @@ async def remember_me(c: Gojo, m: Message):
             return
     except Exception as e:
         await m.reply_text(f"Got an error\n{e}")
-
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return
     try:
         bday_info.insert_one(data)
+        await m.reply_text("Your birthday is now registered in my database")
     except Exception as e:
         await m.reply_text(f"Got an error\n{e}")
-    return
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return
 
 @Gojo.on_message(command(["removebday","rmbday"]))
 async def who_are_you_again(c: Gojo, m: Message):
+    if not BDB_URI:
+        await m.reply_text("BDB_URI is not configured")
+        return
     user = m.from_user.id
     try:
         result = bday_info.find_one({"user_id":user})
@@ -97,38 +113,49 @@ async def who_are_you_again(c: Gojo, m: Message):
         await m.reply_text(f"Got an error\n{e}")
         return
 
-@Gojo.on_message(command(["nextbdays","nbdays"]))
+@Gojo.on_message(command(["nextbdays","nbdays","birthdays","bdays"]))
 async def who_is_next(c: Gojo, m: Message):
+    if not BDB_URI:
+        await m.reply_text("BDB_URI is not configured")
+        return
     blist = list(bday_info.find())
+    if m.chat.type == ChatType.PRIVATE:
+        await m.reply_text("Use it in group")
+        return
     curr = datetime.now(TIME_ZONE).date()
     xx = await m.reply_text("📆")
+    users = []
     if blist:
-        users = []
         for i in blist:
-            if i["dob"].month >= curr.month:
-                if i["dob"].month == curr.month and i["dob"].days < curr.days:
-                    continue
-                users.append(i)
-            elif i["dob"].month < curr.month:
-                continue
+            if Chats(m.chat.id).user_is_in_chat(i["user_id"]):
+                dob = give_date(i["dob"])
+                if dob.month >= curr.month:
+                    if (dob.month == curr.month and not dob.day < curr.day) or dob.month > curr.month:
+                        users.append(i)         
+                elif dob.month < curr.month:
+                    pass
             if len(users) == 10:
                 break
     if not users:
-        xx.delete()
+        await xx.delete()
         await m.reply_text("No birthdays found :/")
+        return
     txt = "🎊 Upcomming Birthdays Are 🎊\n"
     for i in users:
-        DOB = i["dob"]
+        DOB = give_date(i["dob"])
         dete = date(curr.year, DOB.month, DOB.day)
         leff = (dete - curr).days
         txt += f"`{i['user_id']}` : {leff} days left"
-    txt += "\nYou can use /info [user id] to get info about the user"
+    txt += "\n\nYou can use /info [user id] to get info about the user"
     await xx.delete()
     await m.reply_text(txt)
     return
 
-@Gojo.on_message(command(["getbday","gbday"]))
+@Gojo.on_message(command(["getbday","gbday","mybirthday","mbday"]))
 async def cant_recall_it(c: Gojo, m: Message):
+    if not BDB_URI:
+        await m.reply_text("BDB_URI is not configured")
+        return
     user = m.from_user.id
     if m.reply_to_message:
         user = m.reply_to_message.from_user.id
@@ -142,7 +169,7 @@ async def cant_recall_it(c: Gojo, m: Message):
         return
     
     curr = datetime.now(TIME_ZONE).date() 
-    u_dob = result["dob"]
+    u_dob = give_date(result["dob"])
     if u_dob.month < curr.month:
         next_b = date(curr.year + 1, u_dob.month, u_dob.day)
         days_left = (next_b - curr).days
@@ -150,12 +177,15 @@ async def cant_recall_it(c: Gojo, m: Message):
     else:
         u_dobm = date(curr.year, u_dob.month, u_dob.day)
         days_left = (u_dobm - curr).days
-        txt = f"User's birthday is coming🥳\nDays left until next one {days_left}"
+        txt = f"User's birthday is coming🥳\nDays left : {days_left}"
     await m.reply_text(txt)
     return
 
 @Gojo.on_message(command(["settingbday","sbday"]))
 async def chat_birthday_settings(c: Gojo, m: Message):
+    if not BDB_URI:
+        await m.reply_text("BDB_URI is not configured")
+        return
     if m.chat.type == ChatType.PRIVATE:
         await m.reply_text("Use in groups")
         return
@@ -192,17 +222,33 @@ async def switch_on_off(c:Gojo, q: CallbackQuery):
 scheduler = AsyncIOScheduler()
 scheduler.timezone = TIME_ZONE
 scheduler_time = time(0,0,0)
-async def send_wishish(client):
+async def send_wishish(c:Gojo):
     c_list = Chats.list_chats_by_id()
     blist = list(bday_info.find())
     curr = datetime.now(TIME_ZONE).date()
+    cclist = list(bday_cinfo.find())
     for i in blist:
-        if i["dob"].month == curr.month and i["dob"].day == curr.day:
+        dob = give_date(i["dob"])
+        if dob.month == curr.month and dob.day == curr.day:
             for j in c_list:
+                if cclist and (j in cclist):
+                    return
                 try:
-                    U = await Gojo.get_chat_member(j,i)
+                    agee = ""
+                    if i["is_year"]:
+                        agee = curr.year - dob.year
+                        if str(agee).endswith("1"):
+                            agee = f"{agee}st"
+                        elif str(agee).endswith("2"):
+                            agee = f"{agee}nd"
+                        elif str(agee).endswith("3"):
+                            agee = f"{agee}rd"
+                        else:
+                            agee = f"{agee}th"
+                    U = await c.get_chat_member(chat_id=j,user_id=i["user_id"])
+                    wish = choice(birthday_wish)
                     if U.status in [ChatMemberStatus.MEMBER,ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
-                        xXx = await Gojo.send_message(j,f"Happy birthday\n{U.user.mention}")
+                        xXx = await c.send_message(j,f"Happy {agee} birthday {U.user.mention}🥳\n{wish}")
                         try:
                             await xXx.pin()
                         except Exception:
@@ -226,21 +272,19 @@ else:
     days_left = (timmm - x).days
 print(days_left)
 print(x.year - timm.year)
-
-
 """
-
-scheduler.add_job(send_wishish,'cron',hour=0,minute=0,second=0)
-scheduler.start()
+if BDB_URI:
+    scheduler.add_job(send_wishish,'cron',[Gojo],hour=0,minute=0,second=0)
+    scheduler.start()
 
 __PLUGIN__ = "birthday"
 
 __HELP__ = """
-• /remember [username or user id or reply to user] [DOB] : To registers user date of birth in my database
-• /nextbdays (/nbdays) : Return upcoming birthdays of 10 users
+• /remember [reply to user] [DOB] : To registers user date of birth in my database. If not replied to user then the DOB givien will be treated as yours
+• /nextbdays (/nbdays,/brithdays,/bdays) : Return upcoming birthdays of 10 users
 • /removebday (/rmbday) : To remove birthday from database (One can only remove their data from database not of others)
 • /settingbday (/sbday) : To configure the settings for wishing and all for the chat
-• /getbday (/gbday) [reply to user] : If replied to user get the replied user's birthday else returns your birthday
+• /getbday (/gbday,/mybirthday,/mybday) [reply to user] : If replied to user get the replied user's birthday else returns your birthday
 
 DOB should be in format of dd/mm/yyyy
 Year is optional it is not necessary to pass it

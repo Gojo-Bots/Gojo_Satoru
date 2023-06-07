@@ -124,6 +124,10 @@ class NotesSettings(MongoDB):
         self.update({"_id": chat_id}, {"privatenotes": False})
         return False
 
+    def clean_notes(self,chat_id):
+        with INSERTION_LOCK:
+            return self.delete_one({"_id":chat_id})
+
     def list_chats(self):
         return self.find_all({"privatenotes": True})
 

@@ -6,7 +6,8 @@ from traceback import format_exc
 
 from pyrogram.errors import (PeerIdInvalid, ShortnameOccupyFailed,
                              StickerEmojiInvalid, StickerPngDimensions,
-                             StickerPngNopng, UserIsBlocked)
+                             StickerPngNopng, StickerTgsNotgs,
+                             StickerVideoNowebm, UserIsBlocked)
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
@@ -62,9 +63,9 @@ async def sticker_id_gib(c: Gojo, m: Message):
 @Gojo.on_message(command(["kang", "steal"]))
 async def kang(c:Gojo, m: Message):
     if not m.reply_to_message:
-        return await m.reply_text("Reply to a sticker to kang it.")
-    elif not (m.reply_to_message.sticker or m.reply_to_message.photo):
-        return await m.reply_text("Reply to a sticker to kang it.")
+        return await m.reply_text("Reply to a sticker or image to kang it.")
+    elif not (m.reply_to_message.sticker or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image")):
+        return await m.reply_text("Reply to a sticker or image to kang it.")
     if not m.from_user:
         return await m.reply_text("You are anon admin, kang stickers in my pm.")
     msg = await m.reply_text("Kanging Sticker..")
@@ -74,7 +75,7 @@ async def kang(c:Gojo, m: Message):
     if len(args) > 1:
         sticker_emoji = str(args[1])
     else:
-        edit_ = await m.reply_text("No emoji provided choosing a random emoji")
+        edit_ = await msg.edit_text("No emoji provided choosing a random emoji")
         ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
         sticker_emoji = choice(ran)
         await edit_.edit_text(f"Makeing a sticker with {sticker_emoji} emoji")
@@ -82,27 +83,29 @@ async def kang(c:Gojo, m: Message):
     # Get the corresponding fileid, resize the file if necessary
     try:
 
-        if not m.reply_to_message.photo or m.reply_to_message.document.file_name.endswith(("png","jpeg","jpg")):
+        if (m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video) or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
             sizee = (await get_file_size(m.reply_to_message)).split()
             if (sizee[1] == "mb" and sizee > 10) or sizee[1] == "gb":
                 await m.reply_text("File size is too big")
                 return
             path = await m.reply_to_message.download()
-            try:
-                path = await resize_file_to_sticker_size(path)
-            except OSError as e:
-                await m.reply_text(f"Error\n{e}")
-                LOGGER.error(e)
-                LOGGER.error(format_exc)
-                os.remove(path)
-                return
+            if not (m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video):
+                try:
+                    path = await resize_file_to_sticker_size(path)
+                except OSError as e:
+                    await m.reply_text(f"Error\n{e}")
+                    LOGGER.error(e)
+                    LOGGER.error(format_exc)
+                    os.remove(path)
+                    return
     except Exception as e:
         await m.reply_text(f"Got an error:\n{e}")
         LOGGER.error(e)
         LOGGER.error(format_exc())
         return
     try:
-        if not m.reply_to_message.sticker:
+        if (m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video) or not m.reply_to_message.sticker:
+            # telegram doesn't allow animated and video sticker to be kanged as we do for normal stickers
             sticker = await create_sticker(
                 await upload_document(
                     c, path, m.chat.id
@@ -150,22 +153,21 @@ async def kang(c:Gojo, m: Message):
     
     try:
         while not packname_found:
-            packname = f"CE{str(m.from_user.id)}{st_type}_{packnum}by{Config.BOT_ID}"
+            packname = f"CE{str(m.from_user.id)}{st_type}{packnum}_by_{Config.BOT_USERNAME}"
             kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {st_type} {('vOl '+str(volume)) if volume else ''} by @{Config.BOT_USERNAME}"
             if limit >= 50: # To prevent this loop from running forever
-                await msg.delete()
                 await m.reply_text("Failed to kang\nMay be you have made more than 50 sticker packs with me try deleting some")
                 return
             sticker_set = await get_sticker_set_by_name(c,packname)
             if not sticker_set:
                 sticker_set = await create_sticker_set(
-                    c,
-                    m.from_user.id,
-                    kangpack,
-                    packname,
-                    [sticker],
-                    is_anim,
-                    is_vid
+                    client=c,
+                    owner=m.from_user.id,
+                    title=kangpack,
+                    short_name=packname,
+                    stickers=[sticker],
+                    animated=is_anim,
+                    video=is_vid
                 )
             elif sticker_set.set.count >= kang_lim:
                 packnum += 1
@@ -186,24 +188,39 @@ async def kang(c:Gojo, m: Message):
                 ]
             ]
         )
-        await msg.edit_text(
-            f"Kanged the sticker\nPack name: {kangpack}\nEmoji: {sticker_emoji}",
+        await msg.delete()
+        await m.reply_text(
+            f"Kanged the sticker\nPack name: `{kangpack}`\nEmoji: {sticker_emoji}",
             reply_markup=kb
         )
     except (PeerIdInvalid, UserIsBlocked):
         keyboard = IKM(
             [[IKB("Start me first", url=f"t.me/{Config.BOT_USERNAME}")]]
         )
-        await msg.edit_text(
+        await msg.delete()
+        await m.reply_text(
             "You Need To Start A Private Chat With Me.",
             reply_markup=keyboard,
         )
     except StickerPngNopng:
+        await msg.delete()
         await m.reply_text(
             "Stickers must be png files but the provided image was not a png"
         )
     except StickerPngDimensions:
+        await msg.delete()
         await m.reply_text("The sticker png dimensions are invalid.")
+    except StickerTgsNotgs:
+        await msg.delete()
+        await m.reply_text("Sticker must be tgs file but the provided file was not tgs")
+    except StickerVideoNowebm:
+        await msg.delete()
+        await m.reply_text("Sticker must be webm file but the provided file was not webm")
+    except Exception as e:
+        await msg.delete()
+        await m.reply_text(f"Error occured\n{e}")
+    return
+
 
 @Gojo.on_message(command("mmf"))
 async def memify_it(c: Gojo, m: Message):
@@ -211,10 +228,10 @@ async def memify_it(c: Gojo, m: Message):
         await m.reply_text("Invalid type.")
         return
     rep_to = m.reply_to_message
-    if not (rep_to.sticker or rep_to.photo or "image" in rep_to.document.mime_type.split("/")):
+    if not (rep_to.sticker or rep_to.photo or (rep_to.document and "image" in rep_to.document.mime_type.split("/"))):
         await m.reply_text("I only support memifying of normal sticker and photos for now")
         return
-    if rep_to.sticker.is_animated or rep_to.sticker.is_video:
+    if rep_to.sticker and (rep_to.sticker.is_animated or rep_to.sticker.is_video):
         await m.reply_text("I only support memifying of normal sticker and photos for now")
         return
     kb = IKM(
@@ -224,14 +241,18 @@ async def memify_it(c: Gojo, m: Message):
             ]
         ]
     )
-    meme = m.text.split(None,1)[1].split(";")
-    material = [i.strip() for i in meme]
+    if len(m.command) == 1:
+        await m.reply_text("Give me something to write")
+        return
+    x = await m.reply_text("Memifying...")
+    meme = m.text.split(None,1)[1].strip()
+    name = f"@memesofdank_{m.id}.png"
+    path = await rep_to.download(name)
+    is_sticker = False
     if rep_to.sticker:
-        name = "@memesofdank.png"
-    else:
-        name = "@memesofdank.webp"
-    path = rep_to.download(name)
-    cheems,domge = await draw_meme(path,material)
+        is_sticker = True
+    cheems,domge = await draw_meme(path,meme,is_sticker)
+    await x.delete()
     xNx = await m.reply_photo(cheems,reply_markup=kb)
     await xNx.reply_sticker(domge,reply_markup=kb)
     try:
@@ -249,19 +270,24 @@ async def get_sticker_from_file(c: Gojo, m: Message):
         await m.reply_text("Reply to a sticker or file")
         return
     repl = m.reply_to_message
-    if not (repl.sticker or repl.photo or repl.document.mime_type.split("/")[0]=="image"):
+    if not (repl.sticker or repl.photo or (repl.document and repl.document.mime_type.split("/")[0]=="image")):
         await m.reply_text("I only support conversion of plain stickers and images for now")
         return
-    if repl.sticker.is_video or repl.sticker.is_animated:
+    if repl.sticker and (repl.sticker.is_video or repl.sticker.is_animated):
         await m.reply_text("I only support conversion of plain stickers for now")
         return
+    x = await m.reply_text("Converting...")
     if repl.sticker:
-        up = await repl.download(f"{repl.sticker.file_unique_id}.png")
+        upp = await repl.download()
+        up = toimage(upp)
+        await x.delete()
         await m.reply_photo(up,caption=Caption)
         os.remove(up)
         return
     elif repl.photo:
-        up = await repl.download(f"{repl.photo.file_unique_id}.webp")
+        upp = await repl.download()
+        up = tosticker(upp)
+        await x.delete()
         await m.reply_sticker(up,caption=Caption)
         os.remove(up)
         return
