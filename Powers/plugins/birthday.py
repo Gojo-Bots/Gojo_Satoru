@@ -57,7 +57,7 @@ async def remember_me(c: Gojo, m: Message):
     if len(DOB) != 3 and len(DOB) != 2:
         await m.reply_text("DOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
         return
-    is_correct = True
+    is_correct = False
     if len(DOB) == 3:
         is_correct = (len(DOB[2]) == 4)
     if len(DOB[0]) != 2 and len(DOB[1]) !=2 and not is_correct:
