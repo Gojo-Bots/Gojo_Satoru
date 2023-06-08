@@ -228,7 +228,7 @@ async def github(_, m: Message):
     username = username.split("/")[-1].strip("@")
     URL = f"https://api.github.com/users/{username}"
     try:
-        r = get(URL, timeout=5)
+        r = resp_get(URL, timeout=5)
     except requests.exceptions.ConnectTimeout:
         return await m.reply_text("request timeout")
     except Exception as e:
@@ -236,7 +236,7 @@ async def github(_, m: Message):
     if r.status_code != 200:
         await m.reply_text(f"{username} this user is not available on github\nMake sure you have given correct username")
         return
-
+    r = r.json()
     avtar = r.get("avatar_url", None)
     url = r.get("html_url", None)
     name = r.get("name", None)
@@ -294,6 +294,7 @@ def paste(content: str):
     resp = resp_post(f"{BASE}api/documents", data=content)
     if resp.status_code != 200:
         return
+    resp = resp.json()
     return BASE + resp["result"]['key']
 
 
