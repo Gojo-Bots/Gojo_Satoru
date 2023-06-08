@@ -249,7 +249,11 @@ async def remove_background(c: Gojo, m: Message):
 
 @Gojo.on_message(command(["song","yta"]))
 async def song_down_up(c: Gojo, m: Message):
-    splited = m.text.split(None,1)[1].strip()
+    try:
+        splited = m.text.split(None,1)[1].strip()
+    except IndexError:
+        await m.reply_text("**USAGE**\n /song [song name | link]")
+        return
     if splited.startswith("https://youtube.com"):
         is_direct = True
         query = splited
@@ -269,7 +273,11 @@ async def song_down_up(c: Gojo, m: Message):
 
 @Gojo.on_message(command(["vsong","ytv"]))
 async def video_down_up(c: Gojo, m: Message):
-    splited = m.text.split(None,1)[1].strip()
+    try:
+        splited = m.text.split(None,1)[1].strip()
+    except IndexError:
+        await m.reply_text("**USAGE**\n /vsong [song name | link]")
+        return
     if splited.startswith("https://youtube.com"):
         is_direct = True
         query = splited

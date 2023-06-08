@@ -28,6 +28,9 @@ async def remember_me(c: Gojo, m: Message):
         await m.reply_text("BDB_URI is not configured")
         return
     splited = m.text.split()
+    if len(splited) == 1:
+        await m.reply_text("**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
+        return
     if len(splited) != 2 and m.reply_to_message:
         await m.reply_text("**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
         return
