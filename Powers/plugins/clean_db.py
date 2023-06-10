@@ -69,12 +69,15 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
             except Exception:
                 to_clean.append(i)
                 Users(i).delete_user()
-        if infos.is_deleted:
-            to_clean.append(infos.id)
-            Users(infos.id).delete_user()
-            
-        else:
+        try:
+            if infos.is_deleted:
+                to_clean.append(infos.id)
+                Users(infos.id).delete_user()
+            else:
+                pass
+        except Exception:
             pass
+            
     txt += f"\nTotal users removed: {len(to_clean)}"
     to_clean.clear()
     if is_cmd:

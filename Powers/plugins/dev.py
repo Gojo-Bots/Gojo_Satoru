@@ -465,7 +465,7 @@ async def cleeeen(c:Gojo,m:Message):
             await x.delete()
         except Exception:
             pass
-        await m.reply_text("")
+        await m.reply_text(z)
         return
     except Exception as e:
         await m.reply_text(e)
