@@ -232,7 +232,11 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
         dicti = await song_search(query, 1)
         if not dicti:
             await m.reply_text("File with duration less than or equals to 5 minutes is allowed only")
-        query = dicti[1]['link']
+        try:
+            query = dicti[1]['link']
+        except KeyError:
+            z = "KeyError"
+            return z
     FILE = ydl.extract_info(query,download=video)
     if int(FILE['duration']) > 600:
         await m.reply_text("File with duration less than or equals to 5 minutes is allowed only")
@@ -263,7 +267,7 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     )
     if video:
         await m.reply_video(f_path,caption=cap,reply_markup=kb,duration=int(FILE['duration']))
-        os.remove(f_path)
+        os.remove(f"./{FILE['id']}.mp4")
         return
     elif song:
         await m.reply_audio(f_path,caption=cap,reply_markup=kb,duration=int(FILE['duration']),thumb=thumb,title=f_name)

@@ -262,8 +262,11 @@ async def song_down_up(c: Gojo, m: Message):
         query = splited
     XnX = await m.reply_text("⏳")
     try:
-        await youtube_downloader(c,m,query,is_direct,"a")
+        x = await youtube_downloader(c,m,query,is_direct,"a")
         await XnX.delete()
+        return
+    except KeyError:
+        await XnX.edit_text(f"Failed to find any result")
         return
     except Exception as e:
         await XnX.edit_text(f"Got an error\n{e}")
@@ -288,6 +291,9 @@ async def video_down_up(c: Gojo, m: Message):
     try:
         await youtube_downloader(c,m,query,is_direct,"v")
         await XnX.delete()
+        return
+    except KeyError:
+        await XnX.edit_text(f"Failed to find any result")
         return
     except Exception as e:
         await XnX.edit_text(f"Got an error\n{e}")
