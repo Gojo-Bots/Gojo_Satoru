@@ -7,7 +7,7 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import PeerIdInvalid, UserNotParticipant
 
 from Powers import LOGGER, MESSAGE_DUMP, TIME_ZONE
-from Powers.__main__ import JJK
+
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.blacklist_db import Blacklist
@@ -105,5 +105,5 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
         return
     
 
-scheduler.add_job(clean_my_db,'cron',[JJK],hour=3,minute=0,second=0)
+scheduler.add_job(clean_my_db,'cron',[Gojo()],hour=3,minute=0,second=0)
 scheduler.start()
