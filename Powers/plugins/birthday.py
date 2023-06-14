@@ -11,7 +11,7 @@ from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
 from Powers import BDB_URI, LOGGER, TIME_ZONE
-from Powers.__main__ import JJK
+
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.plugins import bday_cinfo, bday_info
@@ -278,7 +278,7 @@ print(days_left)
 print(x.year - timm.year)
 """
 if BDB_URI:
-    scheduler.add_job(send_wishish,'cron',[JJK],hour=0,minute=0,second=0)
+    scheduler.add_job(send_wishish,'cron',[Gojo()],hour=0,minute=0,second=0)
     scheduler.start()
 
 __PLUGIN__ = "birthday"
