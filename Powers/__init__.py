@@ -66,7 +66,7 @@ for i in listdir(path):
         version.append(i)
     else:
         pass
-VERSION = version[-1][8:-3]
+VERSION = sorted(version)[-1][8:-3]
 PYTHON_VERSION = python_version()
 PYROGRAM_VERSION = pyrogram.__version__
 
