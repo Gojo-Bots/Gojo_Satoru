@@ -74,11 +74,13 @@ async def kang(c:Gojo, m: Message):
     args = m.text.split()
     if len(args) > 1:
         sticker_emoji = str(args[1])
+    elif m.reply_to_message.sticker:
+        sticker_emoji = m.reply_to_message.sticker.emoji
     else:
-        edit_ = await msg.edit_text("No emoji provided choosing a random emoji")
+        edit_ = await msg.reply_text("No emoji provided choosing a random emoji")
         ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
         sticker_emoji = choice(ran)
-        await edit_.edit_text(f"Makeing a sticker with {sticker_emoji} emoji")
+    await msg.edit_text(f"Makeing a sticker with {sticker_emoji} emoji")
 
     # Get the corresponding fileid, resize the file if necessary
     try:

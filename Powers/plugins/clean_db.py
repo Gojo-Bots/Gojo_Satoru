@@ -1,11 +1,13 @@
 import time
 from asyncio import sleep
+from traceback import format_exc
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-#from pyrogram import Client, filters
 from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.errors import PeerIdInvalid, UserNotParticipant
 
 from Powers import LOGGER, MESSAGE_DUMP, TIME_ZONE
+from Powers.__main__ import JJK
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.blacklist_db import Blacklist
@@ -22,8 +24,8 @@ from Powers.database.warns_db import Warns, WarnSettings
 from Powers.utils.custom_filters import command
 from Powers.vars import Config
 
-# scheduler = AsyncIOScheduler()
-# scheduler.timezone = TIME_ZONE
+scheduler = AsyncIOScheduler()
+scheduler.timezone = TIME_ZONE
 
 async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     to_clean = list()
@@ -36,8 +38,12 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
             stat = await c.get_chat_member(chat_id=chats,user_id=Config.BOT_ID)
             if stat.status not in [CMS.MEMBER, CMS.ADMINISTRATOR, CMS.OWNER]:
                 to_clean.append(chats)
-        except Exception:
+        except UserNotParticipant:
             to_clean.append(chats)
+        except Exception as e:
+            LOGGER.error(e)
+            LOGGER.error(format_exc())
+            return
     for i in to_clean:
         Approve(i).clean_approve()
         Blacklist(i).clean_blacklist()
@@ -62,13 +68,21 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     for i in all_users:
         try:
             infos = await c.get_users(int(i))
-        except Exception:
+        except PeerIdInvalid:
             try:
                 inn = await c.resolve_peer(int(i))
                 infos = await c.get_users(inn.user_id)
-            except Exception:
+            except KeyError:
                 to_clean.append(i)
                 Users(i).delete_user()
+            except Exception as e:
+                LOGGER.error(e)
+                LOGGER.error(format_exc())
+                return
+        except Exception as e:
+            LOGGER.error(e)
+            LOGGER.error(format_exc())
+            return
         try:
             if infos.is_deleted:
                 to_clean.append(infos.id)
@@ -91,5 +105,5 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
         return
     
 
-# scheduler.add_job(clean_my_db,'cron',[Gojo],hour=3,minute=0,second=0)
-# scheduler.start()
+scheduler.add_job(clean_my_db,'cron',[JJK],hour=3,minute=0,second=0)
+scheduler.start()

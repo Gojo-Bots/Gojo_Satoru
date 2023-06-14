@@ -11,6 +11,7 @@ from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
 from Powers import BDB_URI, LOGGER, TIME_ZONE
+from Powers.__main__ import JJK
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.plugins import bday_cinfo, bday_info
@@ -225,7 +226,7 @@ async def switch_on_off(c:Gojo, q: CallbackQuery):
 scheduler = AsyncIOScheduler()
 scheduler.timezone = TIME_ZONE
 scheduler_time = time(0,0,0)
-async def send_wishish(c:Gojo):
+async def send_wishish(JJK: Gojo):
     c_list = Chats.list_chats_by_id()
     blist = list(bday_info.find())
     curr = datetime.now(TIME_ZONE).date()
@@ -248,10 +249,10 @@ async def send_wishish(c:Gojo):
                             agee = f"{agee}rd"
                         else:
                             agee = f"{agee}th"
-                    U = await c.get_chat_member(chat_id=j,user_id=i["user_id"])
+                    U = await JJK.get_chat_member(chat_id=j,user_id=i["user_id"])
                     wish = choice(birthday_wish)
                     if U.status in [ChatMemberStatus.MEMBER,ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
-                        xXx = await c.send_message(j,f"Happy {agee} birthday {U.user.mention}🥳\n{wish}")
+                        xXx = await JJK.send_message(j,f"Happy {agee} birthday {U.user.mention}🥳\n{wish}")
                         try:
                             await xXx.pin()
                         except Exception:
@@ -277,7 +278,7 @@ print(days_left)
 print(x.year - timm.year)
 """
 if BDB_URI:
-    scheduler.add_job(send_wishish,'cron',[Gojo],hour=0,minute=0,second=0)
+    scheduler.add_job(send_wishish,'cron',[JJK],hour=0,minute=0,second=0)
     scheduler.start()
 
 __PLUGIN__ = "birthday"
