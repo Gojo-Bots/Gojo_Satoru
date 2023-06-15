@@ -16,52 +16,6 @@ from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import toimage
 from Powers.utils.web_helpers import *
 
-
-@Gojo.on_message(command(["telegraph","tgh","tgm"]))
-async def telegraph_upload(c:Gojo,m:Message):
-    if not m.reply_to_message:
-        await m.reply_text("Reply to media/text to upload it to telegraph")
-        return
-    XnX = await m.reply_text("⏳")
-    file = m.reply_to_message
-    if file.text:
-        if len(m.command) == 1:
-            name = file.from_user.first_name + file.text.split()[1]
-        elif len(m.command) > 1:
-            name = " ".join(m.command[1:5])
-        try:
-            upload = await telegraph_up(file,name)
-        except Exception as e:
-            await m.reply_text(f"Got an error\n{e}")
-            return
-        if upload:
-            await XnX.delete()
-            kb = IKM([[IKB("Here is link to the uploaded text",url=upload)]])
-            await m.reply_text("Here is your uploaded text",disable_web_page_preview=True,reply_markup=kb)
-            return
-        elif not upload:
-            await m.reply_text("Failed to upload the text to telegraph")
-            return
-    if m.reply_to_message.photo or m.reply_to_message.document or m.reply_to_message.audio or m.reply_to_message.video:
-        size = await get_file_size(m.reply_to_message)
-        form = size.split(None,1)
-        if (form[-1] == "mb" and int(form[0]) > 5) or form[-1] == "gb":
-            await XnX.edit_text("File size too big to upload\nLimit: 5mbs")
-            return
-    await XnX.delete()
-    try:
-        upload = await telegraph_up(file)
-    except Exception as e:
-        await m.reply_text(f"Got an error\n{e}")
-        return
-    if upload:
-        kb = IKM([[IKB("Here is link to the file",url=upload)]])
-        await m.reply_text(f"Here is your file link\n`{upload}`",reply_markup=kb)
-        return
-    elif not upload:
-        await m.reply_text("Failed to upload the file to telegraph")
-        return
-
 # @Gojo.on_message(command(["songname","insong","songinfo","whichsong","rsong","reversesong"]))
 # • /whichsong (/songname, /songinfo, /insong, /rsong, /reversesong) : Reply to file to get the song playing in it.
 # async def get_song_info(c: Gojo, m: Message):
@@ -150,11 +104,12 @@ async def telegraph_upload(c:Gojo,m:Message):
 #             pass
 #     return
 
+songs = dict()
 
 @Gojo.on_callback_query(filters.regex("^lyrics_"))
 async def lyrics_for_song(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")[1].split(":")
-    song = data[0]
+    song = songe = data[0]
     try:
         artist = data[1]
     except IndexError:
@@ -163,20 +118,26 @@ async def lyrics_for_song(c: Gojo, q: CallbackQuery):
         song = genius_lyrics.search_song(song,artist)
     elif not artist:
         song = genius_lyrics.search_song(song)
+        artist = song.artist
     if not song.lyrics:
         await q.answer("‼️ No lyrics found ‼️",True)
         return
-    header = f"{song.capitalize()} by {artist}"
+    header = f"{songe.capitalize()} by {artist}"
     if song.lyrics:
         await q.answer("Fetching lyrics")
         reply = song.lyrics.split("\n",1)[1]
     if len(reply) >= 4096:
-        link = telegraph_up(name=header,content=reply)
-        cap = "Lyrics was too long\nUploaded it to telegraph"
+        cap = f"{header}\n{reply[0:4080]}..."
+        if artist:
+            songs[f"{songe}"][f"{artist}"] = reply
+            art = '_'+artist
+        else:
+            songs[f"{songe}"] = reply
+            art = ''
         new_kb = [
             [
-                IKB("Telegraph",url=link)
-            ],
+                IKB("Next",f"lyrics_next_{songe}{art}")
+            ]
             [
                 IKB("Close","f_close")
             ]
@@ -191,6 +152,45 @@ async def lyrics_for_song(c: Gojo, q: CallbackQuery):
     await q.message.reply_to_message.reply_text(cap,reply_markup=new_kb)
     await q.message.delete()
     return
+
+@Gojo.on_callback_query(filters.regex("^lyrics_next_") | filters.regex("^lyrics_prev_"))
+async def lyrics_for_song_next(c: Gojo, q: CallbackQuery):
+    split = q.data.split("_")
+    song = split[2]
+    todo = split[1]
+    try:
+        artist = split[3]
+        header = f"{song.capitalize()} by {artist}"
+        art = '_'+artist
+    except IndexError:
+        artist = False
+        header = f"{song.capitalize()}"
+        art = ''
+    try:
+        if artist:
+            songe = songs[song][artist]
+        else:
+            songe = songs[song]
+    except KeyError:
+        if artist:
+            songe = genius_lyrics.search_song(song,artist)
+        elif not artist:
+            songe = genius_lyrics.search_song(song)
+        if todo == "next":
+            next_part = songe[4080:]
+        else:
+            next_part = songe[:4080]
+    next_part = f"{header}\n{next_part}"
+    new_kb = [
+            [
+                IKB("Next",f"lyrics_prev_{song}{art}")
+            ]
+            [
+                IKB("Close","f_close")
+            ]
+        ]
+    await q.edit_message_text(next_part, reply_markup=new_kb)
+
 
 @Gojo.on_message(command(["removebackground","removebg","rmbg"]))
 async def remove_background(c: Gojo, m: Message):
@@ -305,7 +305,6 @@ __PLUGIN__ = "web support"
 
 __HELP__ = """
 **Available commands**
-• /telegraph (/tgh, /tgm) <page name> : Reply to media which you want to upload to telegraph.
 • /rmbg (/removebg, /removebackground) : Reply to image file or sticker of which you want to remove background
 • /song (/yta) <songname or youtube link>
 • /vsong (/ytv) <songname or youtube link>

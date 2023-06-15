@@ -18,7 +18,6 @@ from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers.utils.http_helper import *
 from Powers.utils.parser import mention_html
-from Powers.utils.web_helpers import telegraph_up
 
 
 @Gojo.on_message(command("wiki"))
@@ -92,6 +91,7 @@ async def get_lyrics(_, m: Message):
         return
 
     query = m.text.split(None, 1)[1]
+    artist = m.text.split("-")[-1].strip()
     song = ""
     if not query:
         await m.edit_text(text="You haven't specified which song to look for!")
@@ -99,7 +99,10 @@ async def get_lyrics(_, m: Message):
     song_name = query
     em = await m.reply_text(text=f"Finding lyrics for <code>{song_name}<code>...")
     try:
-        song = genius_lyrics.search_song(query)
+        if artist:
+            song = genius_lyrics.search_song(query,artist)
+        else:
+            song = genius_lyrics.search_song(query)
     except Exception as e:
         await em.delete()
         await m.reply_text("Connection error try again after sometime")
@@ -109,7 +112,10 @@ async def get_lyrics(_, m: Message):
         if song.lyrics:
             reply = song.lyrics
             reply = reply.split("\n",1)[1]
-            artist = song.artist
+            if not artist:
+                artist = song.artist
+            else:
+                artist = artist
         else:
             reply = "Couldn't find any lyrics for that song!"
     else:
@@ -118,17 +124,11 @@ async def get_lyrics(_, m: Message):
         await em.edit_text(f"**{query.capitalize()} by {artist}**\n`{reply}`")
     except MessageTooLong:
         header = f"{query.capitalize()} by {artist}"
-        page_url = await telegraph_up(name=header,content=reply)
-        kb = InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("Telegraph link", url=page_url)
-            ]
-        ])
         with BytesIO(str.encode(await remove_markdown_and_html(reply))) as f:
             f.name = "lyrics.txt"
             await m.reply_document(
                 document=f,
-                reply_markup=kb
+                caption=header
             )
         await em.delete()
     return
@@ -408,7 +408,7 @@ Some utils provided by bot to make your tasks easy!
 • /id: Get the current group id. If used by replying to a message, get that user's id.
 • /info: Get information about a user.
 • /gifid: Reply to a gif to me to tell you its file ID.
-• /lyrics `<song name>` : Find your song and give the lyrics of the song
+• /lyrics `<song name>`-`<artist name>` : Find your song and give the lyrics of the song
 • /wiki: `<query>`: wiki your query.
 • /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
 • /git `<username>`: Search for the user using github api!

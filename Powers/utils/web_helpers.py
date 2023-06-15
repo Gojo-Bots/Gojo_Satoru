@@ -6,9 +6,7 @@ import yt_dlp
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
-from telegraph import upload_file
 
-from Powers import telegraph
 from Powers.bot_class import Gojo
 from Powers.utils.http_helper import *
 
@@ -35,30 +33,6 @@ async def get_file_size(file: Message):
             size = size/1024
             return f"{round(size)} gb"
 
-async def telegraph_up(file:Message=None,name=None,content=None):
-    if not name:
-        name = "Captain_Ezio_Gojo_Bots"
-    if content:
-        page = telegraph.create_page(name,html_content=content)
-        if page:
-            return page['url']
-        else:
-            return
-    if file.text:
-        to_upload = file.text.html
-        page = telegraph.create_page(name,html_content=to_upload)
-        if page:
-            return page['url']
-        else:
-            return
-    doc = await file.download()
-    media_url = upload_file(doc)
-    tg_url = f"https://telegra.ph/{media_url[0]}"
-    os.remove(doc)
-    if tg_url:
-        return tg_url
-    else:
-        return
 
 class GOJO_YTS:
     """

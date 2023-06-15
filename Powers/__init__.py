@@ -13,7 +13,6 @@ from traceback import format_exc
 import lyricsgenius
 import pyrogram
 import pytz
-from telegraph import Telegraph
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -79,19 +78,6 @@ LOGGER.info(f"Time zone set to {Config.TIME_ZONE}")
 LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
 LOGGER.info("Checking lyrics genius api...")
 LOGGER.info("Initialising telegraph client")
-telegraph = Telegraph()
-acc_name = ["iamgojoof6eyes","Gojo_bots","Captain","Ezio","Captain_Ezio","Hell","Forgo10god","kap10","Gojo_Satoru","Naruto","Itachi","DM","HellBots"]
-name_tel = choice(acc_name)
-l = 0
-while True:
-    try:
-        telegraph.create_account(name_tel)
-        break
-    except Exception:
-        LOGGER.exception(f"Failed to create telegraph client retrying...{l if l else ''}")
-        l += 1
-        pass
-LOGGER.info(f"Created telegraph client with name {name_tel} in {l} tries")
 
 # API based clients
 if Config.GENIUS_API_TOKEN:
