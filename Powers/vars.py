@@ -37,12 +37,12 @@ class Config:
             default="",
         ).split(" ")
     ]
-    GENIUS_API_TOKEN = config("GENIUS_API")
-    AuDD_API = config("AuDD_API")
-    RMBG_API = config("RMBG_API")
+    GENIUS_API_TOKEN = config("GENIUS_API",default=None)
+    AuDD_API = config("AuDD_API",default=None)
+    RMBG_API = config("RMBG_API",default=None)
     DB_URI = config("DB_URI", default="")
     DB_NAME = config("DB_NAME", default="")
-    BDB_URI = config("BDB_URI")
+    BDB_URI = config("BDB_URI",default=None)
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_bots_network")
