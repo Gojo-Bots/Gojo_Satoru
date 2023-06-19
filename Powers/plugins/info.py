@@ -167,10 +167,10 @@ async def chat_info(c: Gojo, chat, already=False):
         try:
             chat = await c.get_chat(chat)
             try:
-                chat = (await c.resolve_peer(chat.id))
+                chat_r = (await c.resolve_peer(chat.id))
                 ll = await c.invoke(
                     GetFullChannel(
-                        channel=chat
+                        channel=chat_r
                     )
                 )    
                 u_name = ll.chats[0].usernames
@@ -181,10 +181,9 @@ async def chat_info(c: Gojo, chat, already=False):
                 chat_r = await c.resolve_peer(chat)
                 chat = await c.get_chat(chat_r.channel_id)
                 try:
-                    chat = (await c.resolve_peer(chat_r))
                     ll = await c.invoke(
                         GetFullChannel(
-                            channel=chat
+                            channel=chat_r
                         )
                     )    
                     u_name = ll.chats[0].usernames
