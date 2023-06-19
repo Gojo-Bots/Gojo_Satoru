@@ -80,6 +80,7 @@ async def kang(c:Gojo, m: Message):
         edit_ = await msg.reply_text("No emoji provided choosing a random emoji")
         ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
         sticker_emoji = choice(ran)
+        await edit_.delete()
     await msg.edit_text(f"Makeing a sticker with {sticker_emoji} emoji")
 
     # Get the corresponding fileid, resize the file if necessary
@@ -114,7 +115,6 @@ async def kang(c:Gojo, m: Message):
                 ),
                 sticker_emoji
             )
-            await edit_.delete()
             os.remove(path)
         elif m.reply_to_message.sticker:
             sticker = await create_sticker(
