@@ -243,8 +243,11 @@ async def draw_meme(image_path, text:str,stick):
     img.save(mee)
     return hue, mee
 
-def toimage(image, filename=None):
+def toimage(image, filename=None, is_direc=False):
     filename = filename if filename else "gojo.jpg"
+    if is_direc:
+        os.rename(image,filename)
+        return filename
     img = Image.open(image)
     if img.mode != "RGB":
         img = img.convert("RGB")
@@ -253,8 +256,11 @@ def toimage(image, filename=None):
     return filename
 
 
-def tosticker(response, filename=None):
+def tosticker(response, filename=None, is_direc=False):
     filename = filename if filename else "gojo.webp"
+    if is_direc:
+        os.rename(response,filename)
+        return filename
     image = Image.open(response)
     if image.mode != "RGB":
         image.convert("RGB")

@@ -77,16 +77,20 @@ async def kang(c:Gojo, m: Message):
     elif m.reply_to_message.sticker:
         sticker_emoji = m.reply_to_message.sticker.emoji
     else:
-        edit_ = await msg.reply_text("No emoji provided choosing a random emoji")
+        edit = await msg.reply_text("No emoji provided choosing a random emoji")
         ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
         sticker_emoji = choice(ran)
-        await edit_.delete()
+        await edit.delete()
     await msg.edit_text(f"Makeing a sticker with {sticker_emoji} emoji")
 
     # Get the corresponding fileid, resize the file if necessary
     try:
-
-        if (m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video) or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
+        if m.reply_to_message.sticker:
+            if m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video:
+                is_requ = True
+            else:
+                is_requ = False
+        if is_requ or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
             sizee = (await get_file_size(m.reply_to_message)).split()
             if (sizee[1] == "mb" and sizee > 10) or sizee[1] == "gb":
                 await m.reply_text("File size is too big")
@@ -281,14 +285,14 @@ async def get_sticker_from_file(c: Gojo, m: Message):
     x = await m.reply_text("Converting...")
     if repl.sticker:
         upp = await repl.download()
-        up = toimage(upp)
+        up = toimage(upp,is_direc=True)
         await x.delete()
         await m.reply_photo(up,caption=Caption)
         os.remove(up)
         return
     elif repl.photo:
         upp = await repl.download()
-        up = tosticker(upp)
+        up = tosticker(upp,is_direc=True)
         await x.delete()
         await m.reply_sticker(up,caption=Caption)
         os.remove(up)
