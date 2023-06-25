@@ -69,7 +69,10 @@ async def kang(c:Gojo, m: Message):
     if not m.from_user:
         return await m.reply_text("You are anon admin, kang stickers in my pm.")
     msg = await m.reply_text("Kanging Sticker..")
-
+    is_requ = False
+    if m.reply_to_message.sticker:
+        if m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video:
+            is_requ = True
     # Find the proper emoji
     args = m.text.split()
     if len(args) > 1:
@@ -85,18 +88,13 @@ async def kang(c:Gojo, m: Message):
 
     # Get the corresponding fileid, resize the file if necessary
     try:
-        if m.reply_to_message.sticker:
-            if m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video:
-                is_requ = True
-            else:
-                is_requ = False
         if is_requ or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
             sizee = (await get_file_size(m.reply_to_message)).split()
             if (sizee[1] == "mb" and sizee > 10) or sizee[1] == "gb":
                 await m.reply_text("File size is too big")
                 return
             path = await m.reply_to_message.download()
-            if not (m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video):
+            if not is_requ:
                 try:
                     path = await resize_file_to_sticker_size(path)
                 except OSError as e:
@@ -111,7 +109,7 @@ async def kang(c:Gojo, m: Message):
         LOGGER.error(format_exc())
         return
     try:
-        if (m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video) or not m.reply_to_message.sticker:
+        if is_requ or not m.reply_to_message.sticker:
             # telegram doesn't allow animated and video sticker to be kanged as we do for normal stickers
             sticker = await create_sticker(
                 await upload_document(
