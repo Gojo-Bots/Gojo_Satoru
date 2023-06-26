@@ -134,7 +134,7 @@ async def song_search(query, max_results=1):
         if len(durr) == 2:
             minutes_to_sec = int(durr[0])*60
             total = minutes_to_sec + int(durr[1])
-        if not (total > 300):
+        if not (total > 600):
             dict_form = {
                 "link": f"https://www.youtube.com{i['url_suffix']}",
                 "title": i['title'],

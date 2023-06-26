@@ -94,6 +94,15 @@ async def start(c: Gojo, m: Message):
                         quote=True,
                     )
                     return
+                else:
+                    await m.reply_photo(
+                        photo=str(choice(StartPic)),
+                        caption=help_msg,
+                        parse_mode=enums.ParseMode.MARKDOWN,
+                        reply_markup=help_kb,
+                        quote=True,
+                    )
+                    return
         try:
             cpt = f"""
 Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! I am Gojo ✨.
@@ -161,7 +170,10 @@ Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! I am Goj
 I'm here to help you manage your groups!
 Commands available:
 × /start: Start the bot
-× /help: Give's you this message."""
+× /help: Give's you this message.
+
+You can use `$` and `!` in placec of `/` as your prefix handler
+"""
 
         await q.edit_message_caption(
             caption=cpt,
@@ -181,7 +193,8 @@ Commands available:
 @Gojo.on_message(command("help"))
 async def help_menu(_, m: Message):
     if len(m.text.split()) >= 2:
-        help_option = (m.text.split(None, 1)[1]).lower()
+        textt = m.text.replace(" ","_")
+        help_option = (textt.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
 
         if not help_msg:

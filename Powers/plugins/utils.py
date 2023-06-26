@@ -222,7 +222,7 @@ async def github(_, m: Message):
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
-            f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>",
+            f"Usage: <code>/github username</code>",
         )
         return
     username = username.split("/")[-1].strip("@")

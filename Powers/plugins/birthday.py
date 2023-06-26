@@ -276,9 +276,6 @@ else:
 print(days_left)
 print(x.year - timm.year)
 """
-# if BDB_URI:
-#     scheduler.add_job(send_wishish,'cron',[Gojo()],hour=0,minute=0,second=0)
-#     scheduler.start()
 
 __PLUGIN__ = "birthday"
 
