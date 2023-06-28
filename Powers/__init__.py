@@ -95,6 +95,7 @@ if Config.GENIUS_API_TOKEN:
 elif not Config.GENIUS_API_TOKEN:
     LOGGER.error("Genius api not found lyrics command will not work")
     is_genius_lyrics = False
+    genius_lyrics = False
 
 is_audd = False
 Audd = None
