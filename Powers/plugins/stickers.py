@@ -255,13 +255,13 @@ async def memify_it(c: Gojo, m: Message):
     is_sticker = False
     if rep_to.sticker:
         is_sticker = True
-    cheems,domge = await draw_meme(path,meme,is_sticker)
+    output = await draw_meme(path,meme,is_sticker)
     await x.delete()
-    xNx = await m.reply_photo(cheems,reply_markup=kb)
-    await xNx.reply_sticker(domge,reply_markup=kb)
+    xNx = await m.reply_photo(output[0],reply_markup=kb)
+    await xNx.reply_sticker(output[1],reply_markup=kb)
     try:
-        os.remove(cheems)
-        os.remove(domge)
+        os.remove(output[0])
+        os.remove(output[1])
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
