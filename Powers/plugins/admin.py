@@ -533,8 +533,11 @@ async def setgpic(c: Gojo, m: Message):
     if not m.reply_to_message.photo and not m.reply_to_message.document:
         return await m.reply_text("Reply to a photo to set it as chat photo")
     photo = await m.reply_to_message.download()
+    is_vid = False
+    if m.reply_to_message.video:
+        is_vid = True
     try:
-        await m.chat.set_photo(photo)
+        await m.chat.set_photo(photo,video=is_vid)
     except Exception as e:
         remove(photo)
         return await m.reply_text(f"Error: {e}")
@@ -567,6 +570,7 @@ __HELP__ = """
 • /promote: Promotes the user replied to or tagged (supports with title).
 • /fullpromote: Fully Promotes the user replied to or tagged (supports with title).
 • /demote: Demotes the user replied to or tagged.
+• /setgpic: Set group picture.
 • /admincache: Reloads the List of all the admins in the Group.
 • /zombies: Bans all the deleted accounts. (owner only)
 • /title: sets a custom title for an admin that the bot promoted.

@@ -66,7 +66,7 @@ async def close_admin_callback(_, q: CallbackQuery):
 async def start(c: Gojo, m: Message):
 
     if m.chat.type == ChatType.PRIVATE:
-        if len(m.text.split()) > 1:
+        if len(m.text.strip().split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
             if help_option.startswith("note") and (
@@ -84,17 +84,17 @@ async def start(c: Gojo, m: Message):
 
             if not help_msg:
                 return
-            if len(help_option.split("_")) == 2:
+            elif help_msg:
+                await m.reply_photo(
+                    photo=str(choice(StartPic)),
+                    caption=help_msg,
+                    parse_mode=enums.ParseMode.MARKDOWN,
+                    reply_markup=help_kb,
+                    quote=True,
+                )
+                return
+            if len(help_option.split("_",1)) == 2:
                 if help_option.split("_")[1] == "help":
-                    await m.reply_photo(
-                        photo=str(choice(StartPic)),
-                        caption=help_msg,
-                        parse_mode=enums.ParseMode.MARKDOWN,
-                        reply_markup=help_kb,
-                        quote=True,
-                    )
-                    return
-                else:
                     await m.reply_photo(
                         photo=str(choice(StartPic)),
                         caption=help_msg,
@@ -193,8 +193,8 @@ You can use `$` and `!` in placec of `/` as your prefix handler
 @Gojo.on_message(command("help"))
 async def help_menu(_, m: Message):
     if len(m.text.split()) >= 2:
-        textt = m.text.replace(" ","_")
-        help_option = (textt.split(None, 1)[1]).lower()
+        textt = m.text.replace(" ","_",).replace("_"," ",1)
+        help_option = (textt.split(None)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
 
         if not help_msg:

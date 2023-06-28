@@ -20,12 +20,13 @@ from pymongo.errors import PyMongoError
 
 from Powers import BDB_URI, LOGGER
 
-try:
-    BIRTHDAY_DB = MongoClient(BDB_URI)
-except PyMongoError as f:
-    LOGGER.error(f"Error in Mongodb2: {f}")
-    exiter(1)
-Birth_main_db = BIRTHDAY_DB["birthdays"]
+if BDB_URI:
+    try:
+        BIRTHDAY_DB = MongoClient(BDB_URI)
+    except PyMongoError as f:
+        LOGGER.error(f"Error in Mongodb2: {f}")
+        exiter(1)
+    Birth_main_db = BIRTHDAY_DB["birthdays"]
 
-bday_info = Birth_main_db['users_bday']
-bday_cinfo = Birth_main_db["chat_bday"]
+    bday_info = Birth_main_db['users_bday']
+    bday_cinfo = Birth_main_db["chat_bday"]

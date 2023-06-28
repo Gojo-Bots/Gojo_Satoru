@@ -13,7 +13,10 @@ from pyrogram.types import Message
 from Powers import BDB_URI, LOGGER, TIME_ZONE
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
-from Powers.plugins import bday_cinfo, bday_info
+
+if BDB_URI:
+    from Powers.plugins import bday_cinfo, bday_info
+
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import birthday_wish
 
@@ -133,7 +136,7 @@ async def who_is_next(c: Gojo, m: Message):
             if Chats(m.chat.id).user_is_in_chat(i["user_id"]):
                 dob = give_date(i["dob"])
                 if dob.month >= curr.month:
-                    if (dob.month == curr.month and not dob.day < curr.day) or dob.month > curr.month:
+                    if (dob.month == curr.month and not dob.day < curr.day) or dob.month >= curr.month:
                         users.append(i)         
                 elif dob.month < curr.month:
                     pass
@@ -154,14 +157,16 @@ async def who_is_next(c: Gojo, m: Message):
     await m.reply_text(txt)
     return
 
-@Gojo.on_message(command(["getbday","gbday","mybirthday","mbday"]))
+@Gojo.on_message(command(["getbday","gbday","mybirthday","mybday"]))
 async def cant_recall_it(c: Gojo, m: Message):
     if not BDB_URI:
         await m.reply_text("BDB_URI is not configured")
         return
     user = m.from_user.id
+    men = m.from_user.mention
     if m.reply_to_message:
         user = m.reply_to_message.from_user.id
+        men = m.reply_to_message.from_user.mention
     try:
         result = bday_info.find_one({"user_id":user})
         if not result:
@@ -176,7 +181,7 @@ async def cant_recall_it(c: Gojo, m: Message):
     if u_dob.month < curr.month:
         next_b = date(curr.year + 1, u_dob.month, u_dob.day)
         days_left = (next_b - curr).days
-        txt = f"User's birthday is passed 🫤\nDays left until next one {days_left}"
+        txt = f"{men} 's birthday is passed 🫤\nDays left until next one {days_left}"
     else:
         u_dobm = date(curr.year, u_dob.month, u_dob.day)
         days_left = (u_dobm - curr).days

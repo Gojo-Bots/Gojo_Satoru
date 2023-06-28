@@ -267,13 +267,16 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )
     else:
-        help_msg = """
-Hey There! I am Gojo.
+        if isinstance(m,CallbackQuery):
+            mes = m.message
+        else:
+            mes = m
+        help_msg = f"""
+Hey **[{mes.from_user.first_name}](http://t.me/{mes.from_user.username})**!I am Gojo✨.
 I'm here to help you manage your groups!
 Commands available:
 × /start: Start the bot
-× /help: Give's you this message.
-        """
+× /help: Give's you this message."""
         ou = await gen_cmds_kb(m)
         help_kb = ikb(ou, True)
 
