@@ -3,13 +3,13 @@ from traceback import format_exc
 
 from pyrogram import enums
 from pyrogram.errors import (ChatAdminRequired, PeerIdInvalid, RightForbidden,
-                             RPCError, UserAdminInvalid)
+                             RPCError, UserAdminInvalid, WebpageCurlFailed)
 from pyrogram.filters import regex
 from pyrogram.types import (CallbackQuery, ChatPrivileges,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID, SUPPORT_STAFF
 from Powers.bot_class import Gojo
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
@@ -95,6 +95,8 @@ async def tban_usr(c: Gojo, m: Message):
             txt += f"\n<b>Reason</b>: {reason}"
         else:
             txt += "\n<b>Reason</b>: Not Specified"
+        if time_val:
+            txt += f"\n<b>Banned till</b>:{bantime}"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -105,13 +107,24 @@ async def tban_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await m.reply_animation(
-            reply_to_message_id=r_id,
-            animation=str(choice(BAN_GIFS)),
-            caption=txt,
-            reply_markup=keyboard,
-            parse_mode=enums.ParseMode.HTML,
-        )
+        anim = choice(BAN_GIFS)
+        try:
+            await m.reply_animation(
+                reply_to_message_id=r_id,
+                animation=str(anim),
+                caption=txt,
+                reply_markup=keyboard,
+                parse_mode=enums.ParseMode.HTML,
+            )
+        except WebpageCurlFailed:
+            
+            await m.reply_text(
+                reply_to_message_id=r_id,
+                caption=txt,
+                reply_markup=keyboard,
+                parse_mode=enums.ParseMode.HTML,
+            )
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
     # await m.reply_text(txt, reply_markup=keyboard,
     # reply_to_message_id=r_id)
     except ChatAdminRequired:
@@ -129,7 +142,7 @@ async def tban_usr(c: Gojo, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (
-                f"""Some error occured, report to @{SUPPORT_GROUP}
+                f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
             )
@@ -218,7 +231,7 @@ async def stban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -298,6 +311,9 @@ async def dtban_usr(c: Gojo, m: Message):
             txt += f"\n<b>Reason</b>: {reason}"
         else:
             txt += "\n<b>Reason</b>: Not Specified"
+
+        if bantime:
+            txt += f"\n<b>Banned till</b>: {bantime}"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -308,13 +324,22 @@ async def dtban_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await c.send_animation(
-            chat_id=m.chat.id,
-            animation=str(choice(BAN_GIFS)),
-            caption=txt,
-            reply_markup=keyboard,
-            parse_mode=enums.ParseMode.HTML,
-        )
+        anim = choice(BAN_GIFS)
+        try:
+            await m.reply_animation(
+                animation=str(anim),
+                caption=txt,
+                reply_markup=keyboard,
+                parse_mode=enums.ParseMode.HTML,
+            )
+        except WebpageCurlFailed:
+            
+            await m.reply_text(
+                caption=txt,
+                reply_markup=keyboard,
+                parse_mode=enums.ParseMode.HTML,
+            )
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
         # await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -330,7 +355,7 @@ async def dtban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -398,12 +423,21 @@ async def kick_usr(c: Gojo, m: Message):
         else:
             txt += "\n<b>Reason</b>: Not Specified"
         # await m.reply_text(txt, reply_to_message_id=r_id)
-        await m.reply_animation(
-            reply_to_message_id=r_id,
-            animation=str(choice(KICK_GIFS)),
-            caption=txt,
-            parse_mode=enums.ParseMode.HTML,
-        )
+        kickk = choice(KICK_GIFS)
+        try:
+            await m.reply_animation(
+                reply_to_message_id=r_id,
+                animation=str(kickk),
+                caption=txt,
+                parse_mode=enums.ParseMode.HTML,
+            )
+        except:
+            await m.reply_text(
+                reply_to_message_id=r_id,
+                caption=txt,
+                parse_mode=enums.ParseMode.HTML,
+            )
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from KICK_GFIS\n{kickk}")
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -419,7 +453,7 @@ async def kick_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -487,7 +521,7 @@ async def skick_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to kick this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -548,13 +582,19 @@ async def dkick_usr(c: Gojo, m: Message):
             txt += f"\n<b>Reason</b>: {reason}"
         else:
             txt += "\n<b>Reason</b>: Not Specified"
-        await c.send_message(m.chat.id, txt)
-        await c.send_animation(
-            chat_id=m.chat.id,
-            animation=str(choice(KICK_GIFS)),
-            caption=txt,
-            parse_mode=enums.ParseMode.HTML,
-        )
+        kickk = choice(KICK_GIFS)
+        try:
+            await m.reply_animation(
+                animation=str(kickk),
+                caption=txt,
+                parse_mode=enums.ParseMode.HTML,
+            )
+        except:
+            await m.reply_text(
+                caption=txt,
+                parse_mode=enums.ParseMode.HTML,
+            )
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from KICK_GFIS\n{kickk}")
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -570,7 +610,7 @@ async def dkick_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to kick this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -629,7 +669,7 @@ async def unban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to unban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -701,7 +741,7 @@ async def sban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -781,9 +821,14 @@ async def dban_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await c.send_animation(
-            m.chat.id, animation=str(choice(BAN_GIFS)), caption=txt, reply_markup=keyboard
-        )
+        animm = choice(BAN_GIFS)
+        try:
+            await c.send_animation(
+                m.chat.id, animation=str(animm), caption=txt, reply_markup=keyboard
+            )
+        except WebpageCurlFailed:
+            await c.send_message(m.chat.id,txt,enums.ParseMode.HTML,reply_markup=keyboard)
+            await c.send_messagea(MESSAGE_DUMP,f"#REMOVE from BAN_GIFS\n{animm}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
@@ -798,7 +843,7 @@ async def dban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -881,12 +926,24 @@ async def ban_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await m.reply_animation(
-            animation=str(choice(BAN_GIFS)),
-            caption=txt,
-            reply_markup=keyboard,
-            reply_to_message_id=r_id,
-        )
+        anim = choice(BAN_GIFS)
+        try:
+            await m.reply_animation(
+                reply_to_message_id=r_id,
+                animation=str(anim),
+                caption=txt,
+                reply_markup=keyboard,
+                parse_mode=enums.ParseMode.HTML,
+            )
+        except WebpageCurlFailed:
+            
+            await m.reply_text(
+                reply_to_message_id=r_id,
+                caption=txt,
+                reply_markup=keyboard,
+                parse_mode=enums.ParseMode.HTML,
+            )
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
@@ -901,7 +958,7 @@ async def ban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -968,13 +1025,13 @@ async def kickme(c: Gojo, m: Message):
             return
         else:
             await m.reply_text(
-                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+                text=f"""Some error occured, report it using `/bug`
 
         <b>Error:</b> <code>{ef}</code>"""
             )
     except Exception as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )

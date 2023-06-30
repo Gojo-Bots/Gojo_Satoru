@@ -55,7 +55,7 @@ async def pin_message(_, m: Message):
             await m.reply_text(text="I don't have enough rights to pin messages.")
         except RPCError as ef:
             await m.reply_text(
-                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+                text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
             )
@@ -84,7 +84,7 @@ async def unpin_message(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to unpin messages.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -128,7 +128,7 @@ async def unpinall_calllback(c: Gojo, q: CallbackQuery):
         await q.message.edit_text(text="I don't have enough rights to unpin messages.")
     except RPCError as ef:
         await q.message.edit_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )

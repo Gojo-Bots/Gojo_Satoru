@@ -3,13 +3,13 @@ from traceback import format_exc
 
 from pyrogram import enums
 from pyrogram.errors import (ChatAdminRequired, RightForbidden, RPCError,
-                             UserNotParticipant)
+                             UserNotParticipant, WebpageCurlFailed)
 from pyrogram.filters import regex
 from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID, SUPPORT_STAFF
 from Powers.bot_class import Gojo
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
@@ -92,6 +92,8 @@ async def tmute_usr(c: Gojo, m: Message):
             txt += f"\n<b>Reason</b>: {reason}"
         else:
             txt += "\n<b>Reason</b>: Not Specified"
+        if mutetime:
+            txt += f"\n<b>Muted till</b>: {mutetime}"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -102,12 +104,17 @@ async def tmute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await m.reply_animation(
-            animation=str(choice(MUTE_GIFS)),
-            caption=txt,
-            reply_markup=keyboard,
-            reply_to_message_id=r_id,
-        )
+        mutt = choice(MUTE_GIFS)
+        try:
+            await m.reply_animation(
+                animation=str(mutt),
+                caption=txt,
+                reply_markup=keyboard,
+                reply_to_message_id=r_id,
+            )
+        except WebpageCurlFailed:
+            await m.reply_text(txt,reply_markup=keyboard, reply_to_message_id=r_id)
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -116,7 +123,7 @@ async def tmute_usr(c: Gojo, m: Message):
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -183,7 +190,6 @@ async def dtmute_usr(c: Gojo, m: Message):
 
     if not mutetime:
         return
-
     try:
         await m.chat.restrict_member(
             user_id,
@@ -199,6 +205,8 @@ async def dtmute_usr(c: Gojo, m: Message):
             txt += f"\n<b>Reason</b>: {reason}"
         else:
             txt += "\n<b>Reason</b>: Not Specified"
+        if mutetime:
+            txt += f"\n<b>Muted till</b>: {mutetime}"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -209,13 +217,16 @@ async def dtmute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await c.send_animation(
-            animation=str(choice(MUTE_GIFS)),
-            chat_id=m.chat.id,
-            caption=txt,
-            reply_markup=keyboard,
-            unsave=True,
-        )
+        mutt = choice(MUTE_GIFS)
+        try:
+            await m.reply_animation(
+                animation=str(mutt),
+                caption=txt,
+                reply_markup=keyboard,
+            )
+        except WebpageCurlFailed:
+            await m.reply_text(txt,reply_markup=keyboard)
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -224,7 +235,7 @@ async def dtmute_usr(c: Gojo, m: Message):
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -308,7 +319,7 @@ async def stmute_usr(c: Gojo, m: Message):
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -385,12 +396,17 @@ async def mute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await m.reply_animation(
-            animation=str(choice(MUTE_GIFS)),
-            caption=txt,
-            reply_markup=keyboard,
-            reply_to_message_id=r_id,
-        )
+        mutt = choice(MUTE_GIFS)
+        try:
+            await m.reply_animation(
+                animation=str(mutt),
+                caption=txt,
+                reply_markup=keyboard,
+                reply_to_message_id=r_id,
+            )
+        except WebpageCurlFailed:
+            await m.reply_text(txt,reply_markup=keyboard, reply_to_message_id=r_id)
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -399,7 +415,7 @@ async def mute_usr(c: Gojo, m: Message):
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -463,7 +479,7 @@ async def smute_usr(c: Gojo, m: Message):
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -539,12 +555,16 @@ async def dmute_usr(c: Gojo, m: Message):
                 ],
             ],
         )
-        await c.send_animation(
-            animation=str(choice(MUTE_GIFS)),
-            chat_id=m.chat.id,
-            caption=txt,
-            reply_markup=keyboard,
-        )
+        mutt = choice(MUTE_GIFS)
+        try:
+            await m.reply_animation(
+                animation=str(mutt),
+                caption=txt,
+                reply_markup=keyboard,
+            )
+        except WebpageCurlFailed:
+            await m.reply_text(txt,reply_markup=keyboard)
+            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -553,7 +573,7 @@ async def dmute_usr(c: Gojo, m: Message):
         await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )
@@ -598,7 +618,7 @@ async def unmute_usr(c: Gojo, m: Message):
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"""Some error occured, report to @{SUPPORT_GROUP}
+            text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
         )

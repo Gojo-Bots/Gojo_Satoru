@@ -288,6 +288,8 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
     action = data[1]
     user_id = int(q.data.split("=")[1])
+    if not q.from_user:
+        return q.answer("Looks like you are not an user 👀")
     if action == "ban":
         user = await q.message.chat.get_member(q.from_user.id)
         if not user.privileges.can_restrict_members and q.from_user.id in SUPPORT_STAFF:
@@ -328,6 +330,8 @@ dic = {}
 @Gojo.on_message(filters.all & ~filters.bot | ~filters.private, 10)
 async def flood_watcher(c: Gojo, m: Message):
     c_id = m.chat.id
+    if not m.chat:
+        return
     Flood = Floods()
     try:
         u_id = m.from_user.id
@@ -403,7 +407,7 @@ async def flood_watcher(c: Gojo, m: Message):
                     return
                 except RPCError as ef:
                     await m.reply_text(
-                        text=f"""Some error occured, report to @{SUPPORT_GROUP}
+                        text=f"""Some error occured, report it using `/bug`
 
                         <b>Error:</b> <code>{ef}</code>"""
                         )
@@ -434,7 +438,7 @@ async def flood_watcher(c: Gojo, m: Message):
                     return
                 except RPCError as ef:
                     await m.reply_text(
-                        text=f"""Some error occured, report to @{SUPPORT_GROUP}
+                        text=f"""Some error occured, report it using `/bug`
 
                         <b>Error:</b> <code>{ef}</code>"""
                     )
@@ -477,7 +481,7 @@ async def flood_watcher(c: Gojo, m: Message):
                     return
                 except RPCError as ef:
                     await m.reply_text(
-                        text=f"""Some error occured, report to @{SUPPORT_GROUP}
+                        text=f"""Some error occured, report it using `/bug`
 
                         <b>Error:</b> <code>{ef}</code>"""
                     )

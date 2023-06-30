@@ -491,6 +491,8 @@ async def lock_del_mess(c:Gojo, m: Message):
     if m.chat.id not in all_chats:
         return
     if m.sender_chat and not (m.forward_from_chat or m.forward_from):
+        if m.sender_chat == m.chat.id:
+            return
         await delete_messages(c,m)
         return
     is_approved = await is_approved_user(c,m)

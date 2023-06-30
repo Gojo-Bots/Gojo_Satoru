@@ -73,14 +73,14 @@ async def adminlist_show(_, m: Message):
         else:
             ef = str(ef) + f"{admin_list}\n"
             await m.reply_text(
-                text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>"
+                text=f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"
             )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
 
 
-@Gojo.on_message(command("zombies") & owner_filter)
+@Gojo.on_message(command("zombies") & admin_filter)
 async def zombie_clean(c: Gojo, m: Message):
     zombie = 0
     wait = await m.reply_text("Searching ... and banning ...")
@@ -121,7 +121,7 @@ async def reload_admins(_, m: Message):
         LOGGER.info(f"Admincache cmd use in {m.chat.id} by {m.from_user.id}")
     except RPCError as ef:
         await m.reply_text(
-            text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>"
+            text=f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -238,7 +238,7 @@ async def fullpromote_usr(c: Gojo, m: Message):
         )
     except RPCError as e:
         await m.reply_text(
-            text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{e}</code>"
+            text=f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{e}</code>"
         )
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -339,7 +339,7 @@ async def promote_usr(c: Gojo, m: Message):
         )
     except RPCError as e:
         await m.reply_text(
-            text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{e}</code>"
+            text=f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{e}</code>"
         )
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -407,7 +407,7 @@ async def demote_usr(c: Gojo, m: Message):
         )
     except RPCError as ef:
         await m.reply_text(
-            f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>"
+            f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -437,7 +437,7 @@ async def get_invitelink(c: Gojo, m: Message):
         await m.reply_text(text="You don't have permissions to invite users.")
     except RPCError as ef:
         await m.reply_text(
-            text=f"Some error occured, report to @{SUPPORT_GROUP} \n <b>Error:</b> <code>{ef}</code>"
+            text=f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())

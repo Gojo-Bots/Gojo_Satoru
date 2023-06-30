@@ -41,7 +41,7 @@ async def purge(c: Gojo, m: Message):
             return
         except RPCError as ef:
             await m.reply_text(
-                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+                text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
             )
@@ -88,7 +88,7 @@ async def spurge(c: Gojo, m: Message):
             return
         except RPCError as ef:
             await m.reply_text(
-                text=f"""Some error occured, report to @{SUPPORT_GROUP}
+                text=f"""Some error occured, report it using `/bug`
 
       <b>Error:</b> <code>{ef}</code>"""
             )
