@@ -148,7 +148,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool) -> list:
     image = Image.open(image_path)
     width, height = image.size
 
-    font_size = int(width / 15)
+    font_size = int(width / 11)
     font = ImageFont.truetype("./extras/comic.ttf", font_size)
 
     draw = ImageDraw.Draw(image)
