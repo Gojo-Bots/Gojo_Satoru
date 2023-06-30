@@ -18,7 +18,7 @@ from Powers.database.greetings_db import Greetings
 from Powers.database.notes_db import Notes, NotesSettings
 from Powers.database.pins_db import Pins
 from Powers.database.reporting_db import Reporting
-from Powers.database.users_db import Users
+# from Powers.database.users_db import Users
 from Powers.database.warns_db import Warns, WarnSettings
 from Powers.utils.custom_filters import command
 from Powers.vars import Config
@@ -26,7 +26,6 @@ from Powers.vars import Config
 
 async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     to_clean = list()
-    all_userss = Users.list_users()
     chats_list = Chats.list_chats_by_id()
     to_clean.clear()
     start = time.time()
@@ -40,7 +39,10 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error(format_exc())
-            return e
+            if not is_cmd:
+                return e
+            else:
+                to_clean.append()
     for i in to_clean:
         Approve(i).clean_approve()
         Blacklist(i).clean_blacklist()
@@ -58,37 +60,7 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     x = len(to_clean)
     txt = f"#INFO\n\nCleaned db:\nTotal chats removed: {x}"
     to_clean.clear()
-    LOGGER.info("Sleeping for 60 seconds")
-    await sleep(60)
-    LOGGER.info("Continuing the cleaning process")
-    all_users = [i["_id"] for i in all_userss]
-    for i in all_users:
-        try:
-            infos = await c.get_users(int(i))
-        except PeerIdInvalid:
-            try:
-                inn = await c.resolve_peer(int(i))
-                infos = await c.get_users(inn.user_id)
-            except KeyError:
-                to_clean.append(i)
-                Users(i).delete_user()
-            except Exception as e:
-                LOGGER.error(e)
-                LOGGER.error(format_exc())
-                return e
-        except Exception as e:
-            LOGGER.error(e)
-            LOGGER.error(format_exc())
-            return e
-        try:
-            if infos.is_deleted:
-                to_clean.append(infos.id)
-                Users(infos.id).delete_user()
-            else:
-                pass
-        except Exception:
-            pass
-            
+    
     txt += f"\nTotal users removed: {len(to_clean)}"
     to_clean.clear()
     if is_cmd:
