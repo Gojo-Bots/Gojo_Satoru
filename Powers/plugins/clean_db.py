@@ -60,9 +60,6 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     x = len(to_clean)
     txt = f"#INFO\n\nCleaned db:\nTotal chats removed: {x}"
     to_clean.clear()
-    
-    txt += f"\nTotal users removed: {len(to_clean)}"
-    to_clean.clear()
     if is_cmd:
         txt += f"\nClean type: Forced\nInitiated by: {(await c.get_users(user_ids=id)).mention}"
         txt += f"\nClean type: Auto\n\tTook {time.time()-start-60} seconds to complete the process"
