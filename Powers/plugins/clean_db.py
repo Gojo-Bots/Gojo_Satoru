@@ -60,13 +60,14 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     x = len(to_clean)
     txt = f"#INFO\n\nCleaned db:\nTotal chats removed: {x}"
     to_clean.clear()
+    nums = time.time()-start
     if is_cmd:
         txt += f"\nClean type: Forced\nInitiated by: {(await c.get_users(user_ids=id)).mention}"
-        txt += f"\nClean type: Auto\n\tTook {time.time()-start-60} seconds to complete the process"
+        txt += f"\nClean type: Manual\n\tTook {round(nums,2)} seconds to complete the process"
         await c.send_message(chat_id=MESSAGE_DUMP,text=txt)
         return txt
     else:
-        txt += f"\nClean type: Auto\n\tTook {time.time()-start-60} seconds to complete the process"
+        txt += f"\nClean type: Auto\n\tTook {round(nums,2)} seconds to complete the process"
         await c.send_message(chat_id=MESSAGE_DUMP,text=txt)
         return txt
     
