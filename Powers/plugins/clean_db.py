@@ -40,7 +40,7 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error(format_exc())
-            return
+            return e
     for i in to_clean:
         Approve(i).clean_approve()
         Blacklist(i).clean_blacklist()
@@ -75,11 +75,11 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
             except Exception as e:
                 LOGGER.error(e)
                 LOGGER.error(format_exc())
-                return
+                return e
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error(format_exc())
-            return
+            return e
         try:
             if infos.is_deleted:
                 to_clean.append(infos.id)
@@ -99,7 +99,7 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     else:
         txt += f"\nClean type: Auto\n\tTook {time.time()-start-60} seconds to complete the process"
         await c.send_message(chat_id=MESSAGE_DUMP,text=txt)
-        return
+        return txt
     
 
 
