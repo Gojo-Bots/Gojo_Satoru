@@ -42,7 +42,7 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
             if not is_cmd:
                 return e
             else:
-                to_clean.append()
+                to_clean.append(chats)
     for i in to_clean:
         Approve(i).clean_approve()
         Blacklist(i).clean_blacklist()
