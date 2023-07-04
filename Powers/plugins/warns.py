@@ -81,6 +81,9 @@ async def warn(c: Gojo, m: Message):
         elif warn_settings["warn_mode"] == "mute":
             await m.chat.restrict_member(user_id, ChatPermissions())
             action = "muted"
+        else:
+            await m.chat.ban_member(user_id, until_date=timeee)
+            action = "kicked"
         await m.reply_text(
             (
                 f"Warnings {num}/{warn_settings['warn_limit']}!"
