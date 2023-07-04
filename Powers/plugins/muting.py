@@ -93,7 +93,7 @@ async def tmute_usr(c: Gojo, m: Message):
         else:
             txt += "\n<b>Reason</b>: Not Specified"
         if mutetime:
-            txt += f"\n<b>Muted till</b>: {mutetime}"
+            txt += f"\n<b>Muted for</b>: {time_val}"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -206,7 +206,7 @@ async def dtmute_usr(c: Gojo, m: Message):
         else:
             txt += "\n<b>Reason</b>: Not Specified"
         if mutetime:
-            txt += f"\n<b>Muted till</b>: {mutetime}"
+            txt += f"\n<b>Muted for</b>: {time_val}"
         keyboard = InlineKeyboardMarkup(
             [
                 [

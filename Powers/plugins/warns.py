@@ -1,4 +1,4 @@
-from time import time
+from datetime import datetime, timedelta
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
@@ -6,7 +6,7 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, SUPPORT_STAFF
+from Powers import LOGGER, SUPPORT_STAFF, TIME_ZONE
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.database.users_db import Users
@@ -71,8 +71,9 @@ async def warn(c: Gojo, m: Message):
     _, num = warn_db.warn_user(user_id, reason)
     warn_settings = warn_settings_db.get_warnings_settings()
     if num >= warn_settings["warn_limit"]:
+        timeee = datetime.now(TIME_ZONE) + timedelta(minutes=45)
         if warn_settings["warn_mode"] == "kick":
-            await m.chat.ban_member(user_id, until_date=int(time() + 45))
+            await m.chat.ban_member(user_id, until_date=timeee)
             action = "kicked"
         elif warn_settings["warn_mode"] == "ban":
             await m.chat.ban_member(user_id)
@@ -294,7 +295,8 @@ async def remove_last_warn_btn(c: Gojo, q: CallbackQuery):
         )
     if action == "kick":
         try:
-            await c.kick_chat_member(chat_id, user_id, until_date=int(time() + 45))
+            timee = timeee = datetime.now(TIME_ZONE) + timedelta(minutes=45)
+            await c.ban_chat_member(chat_id, user_id, until_date=timee)
             await q.message.edit_text(
                 (
                     f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "

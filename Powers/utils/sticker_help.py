@@ -136,7 +136,7 @@ async def get_document_from_file_id(
     )
 
 
-async def draw_meme(image_path: str, text: str, sticker: bool) -> list:
+async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> list:
     _split = text.split(";", 1)
     if len(_split) == 2:
         lower_text = _split[1]
@@ -159,8 +159,8 @@ async def draw_meme(image_path: str, text: str, sticker: bool) -> list:
     upper_text_position = ((width - upper_text_width) // 2, height // 10)
     lower_text_position = ((width - lower_text_width) // 2, height - lower_text_height - (height // 10))
 
-    draw.text(upper_text_position, upper_text, font=font, fill="white")
-    draw.text(lower_text_position, lower_text, font=font, fill="white")
+    draw.text(upper_text_position, upper_text, font=font, fill=fiill)
+    draw.text(lower_text_position, lower_text, font=font, fill=fiill)
 
     if sticker:
         stick_path = image_path

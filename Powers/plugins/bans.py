@@ -96,7 +96,7 @@ async def tban_usr(c: Gojo, m: Message):
         else:
             txt += "\n<b>Reason</b>: Not Specified"
         if time_val:
-            txt += f"\n<b>Banned till</b>:{bantime}"
+            txt += f"\n<b>Banned for</b>:{time_val}"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -313,7 +313,7 @@ async def dtban_usr(c: Gojo, m: Message):
             txt += "\n<b>Reason</b>: Not Specified"
 
         if bantime:
-            txt += f"\n<b>Banned till</b>: {bantime}"
+            txt += f"\n<b>Banned for</b>: {time_val}"
         keyboard = InlineKeyboardMarkup(
             [
                 [
