@@ -12,8 +12,8 @@ scheduler.timezone = TIME_ZONE
 if __name__ == "__main__":
     uvloop.install() # Comment it out if using on windows
     Gojo().run()
-    scheduler.add_job(clean_my_db,'cron',[Gojo()],hour=3,minute=0,second=0)
+scheduler.add_job(clean_my_db,'cron',[Gojo()],hour=3,minute=0,second=0)
+scheduler.start()
+if BDB_URI:
+    scheduler.add_job(send_wishish,'cron',[Gojo()],hour=0,minute=0,second=0)
     scheduler.start()
-    if BDB_URI:
-        scheduler.add_job(send_wishish,'cron',[Gojo()],hour=0,minute=0,second=0)
-        scheduler.start()
