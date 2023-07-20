@@ -120,7 +120,7 @@ async def tban_usr(c: Gojo, m: Message):
             
             await m.reply_text(
                 reply_to_message_id=r_id,
-                caption=txt,
+                text=txt,
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
@@ -335,7 +335,7 @@ async def dtban_usr(c: Gojo, m: Message):
         except WebpageCurlFailed:
             
             await m.reply_text(
-                caption=txt,
+                txt,
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
@@ -434,7 +434,7 @@ async def kick_usr(c: Gojo, m: Message):
         except:
             await m.reply_text(
                 reply_to_message_id=r_id,
-                caption=txt,
+                text=txt,
                 parse_mode=enums.ParseMode.HTML,
             )
             await c.send_message(MESSAGE_DUMP,f"#REMOVE from KICK_GFIS\n{kickk}")
@@ -591,7 +591,7 @@ async def dkick_usr(c: Gojo, m: Message):
             )
         except:
             await m.reply_text(
-                caption=txt,
+                txt,
                 parse_mode=enums.ParseMode.HTML,
             )
             await c.send_message(MESSAGE_DUMP,f"#REMOVE from KICK_GFIS\n{kickk}")
@@ -939,7 +939,7 @@ async def ban_usr(c: Gojo, m: Message):
             
             await m.reply_text(
                 reply_to_message_id=r_id,
-                caption=txt,
+                text=txt,
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
