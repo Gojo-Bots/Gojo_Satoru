@@ -3,7 +3,7 @@ from traceback import format_exc
 
 from pyrogram import enums
 from pyrogram.errors import (ChatAdminRequired, RightForbidden, RPCError,
-                             UserNotParticipant, WebpageCurlFailed)
+                             UserNotParticipant)
 from pyrogram.filters import regex
 from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
@@ -112,7 +112,7 @@ async def tmute_usr(c: Gojo, m: Message):
                 reply_markup=keyboard,
                 reply_to_message_id=r_id,
             )
-        except WebpageCurlFailed:
+        except Exception:
             await m.reply_text(txt,reply_markup=keyboard, reply_to_message_id=r_id)
             await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
@@ -224,7 +224,7 @@ async def dtmute_usr(c: Gojo, m: Message):
                 caption=txt,
                 reply_markup=keyboard,
             )
-        except WebpageCurlFailed:
+        except Exception:
             await m.reply_text(txt,reply_markup=keyboard)
             await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
@@ -404,7 +404,7 @@ async def mute_usr(c: Gojo, m: Message):
                 reply_markup=keyboard,
                 reply_to_message_id=r_id,
             )
-        except WebpageCurlFailed:
+        except Exception:
             await m.reply_text(txt,reply_markup=keyboard, reply_to_message_id=r_id)
             await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
@@ -562,7 +562,7 @@ async def dmute_usr(c: Gojo, m: Message):
                 caption=txt,
                 reply_markup=keyboard,
             )
-        except WebpageCurlFailed:
+        except Exception:
             await m.reply_text(txt,reply_markup=keyboard)
             await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
