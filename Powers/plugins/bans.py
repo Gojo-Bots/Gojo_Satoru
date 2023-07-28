@@ -3,7 +3,7 @@ from traceback import format_exc
 
 from pyrogram import enums
 from pyrogram.errors import (ChatAdminRequired, PeerIdInvalid, RightForbidden,
-                             RPCError, UserAdminInvalid, WebpageCurlFailed)
+                             RPCError, UserAdminInvalid)
 from pyrogram.filters import regex
 from pyrogram.types import (CallbackQuery, ChatPrivileges,
                             InlineKeyboardButton, InlineKeyboardMarkup,
@@ -116,7 +116,7 @@ async def tban_usr(c: Gojo, m: Message):
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
-        except WebpageCurlFailed:
+        except Exception:
             
             await m.reply_text(
                 reply_to_message_id=r_id,
@@ -332,7 +332,7 @@ async def dtban_usr(c: Gojo, m: Message):
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
-        except WebpageCurlFailed:
+        except Exception:
             
             await m.reply_text(
                 txt,
@@ -826,7 +826,7 @@ async def dban_usr(c: Gojo, m: Message):
             await c.send_animation(
                 m.chat.id, animation=str(animm), caption=txt, reply_markup=keyboard
             )
-        except WebpageCurlFailed:
+        except Exception:
             await c.send_message(m.chat.id,txt,enums.ParseMode.HTML,reply_markup=keyboard)
             await c.send_messagea(MESSAGE_DUMP,f"#REMOVE from BAN_GIFS\n{animm}")
     except ChatAdminRequired:
@@ -935,7 +935,7 @@ async def ban_usr(c: Gojo, m: Message):
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
-        except WebpageCurlFailed:
+        except Exception:
             
             await m.reply_text(
                 reply_to_message_id=r_id,
