@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from re import escape as re_escape
 from time import time
 from traceback import format_exc
@@ -53,117 +54,120 @@ async def bl_watcher(_, m: Message):
         return
 
     bl_db = Blacklist(m.chat.id)
-
-    async def perform_action_blacklist(m: Message, action: str, trigger: str):
-        if action == "kick":
-            await m.chat.kick_member(m.from_user.id, int(time() + 45))
-            await m.reply_text(
-                text="Kicked {user} for sending a blacklisted word!".format(
-                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
-                ),
-            )
-
-        elif action == "ban":
-            (
-                await m.chat.kick_member(
-                    m.from_user.id,
-                )
-            )
-            await m.reply_text(
-                text="Banned {user} for sending a blacklisted word!".format(
-                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
-                ),
-            )
-
-        elif action == "mute":
-            await m.chat.restrict_member(
-                m.from_user.id,
-                ChatPermissions(),
-            )
-
-            await m.reply_text(
-                text="Muted {user} for sending a blacklisted word!".format(
-                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
-                ),
-            )
-
-        elif action == "warn":
-            warns_settings_db = WarnSettings(m.chat.id)
-            warns_db = Warns(m.chat.id)
-            warn_settings = warns_settings_db.get_warnings_settings()
-            warn_reason = bl_db.get_reason()
-            _, num = warns_db.warn_user(m.from_user.id, warn_reason)
-            if num >= warn_settings["warn_limit"]:
-                if warn_settings["warn_mode"] == "kick":
-                    await m.chat.ban_member(
-                        m.from_user.id,
-                        until_date=int(time() + 45),
-                    )
-                    action = "kicked"
-                elif warn_settings["warn_mode"] == "ban":
-                    await m.chat.ban_member(m.from_user.id)
-                    action = "banned"
-                elif warn_settings["warn_mode"] == "mute":
-                    await m.chat.restrict_member(m.from_user.id, ChatPermissions())
-                    action = "muted"
+    try:
+        async def perform_action_blacklist(m: Message, action: str, trigger: str):
+            if action == "kick":
+                tim = datetime.now() + timedelta(minutes=45)
+                await m.chat.ban_member(m.from_user.id, tim)
                 await m.reply_text(
-                    (
-                        f"Warnings {num}/{warn_settings['warn_limit']}\n"
-                        f"{(await mention_html(m.from_user.first_name, m.from_user.id))} has been <b>{action}!</b>"
+                    text="Kicked {user} for sending a blacklisted word!".format(
+                        user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
                     ),
                 )
-                return
-            await m.reply_text(
+
+            elif action == "ban":
                 (
-                    f"{(await mention_html(m.from_user.first_name, m.from_user.id))} warned {num}/{warn_settings['warn_limit']}\n"
-                    # f"Last warn was for:\n<i>{warn_reason}</i>"
-                    f"Last warn was for:\n<i>{warn_reason.format(trigger)}</i>"
-                ),
-            )
-        return
-
-    if m.from_user.id in SUPPORT_STAFF:
-        # Don't work on Support Staff!
-        return
-
-    # If no blacklists, then return
-    chat_blacklists = bl_db.get_blacklists()
-    if not chat_blacklists:
-        return
-
-    # Get admins from admin_cache, reduces api calls
-    try:
-        admin_ids = {i[0] for i in ADMIN_CACHE[m.chat.id]}
-    except KeyError:
-        admin_ids = await admin_cache_reload(m, "blacklist_watcher")
-
-    if m.from_user.id in admin_ids:
-        return
-
-    # Get approved user from cache/database
-    app_users = Approve(m.chat.id).list_approved()
-    if m.from_user.id in {i[0] for i in app_users}:
-        return
-
-    # Get action for blacklist
-    action = bl_db.get_action()
-    for trigger in chat_blacklists:
-        pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
-        match = await regex_searcher(pattern, m.text.lower())
-        if not match:
-            continue
-        if match:
-            try:
-                await perform_action_blacklist(m, action, trigger)
-                LOGGER.info(
-                    f"{m.from_user.id} {action}ed for using blacklisted word {trigger} in {m.chat.id}",
+                    await m.chat.ban_member(
+                        m.from_user.id,
+                    )
                 )
-                await m.delete()
-            except RPCError as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-            break
-    return
+                await m.reply_text(
+                    text="Banned {user} for sending a blacklisted word!".format(
+                        user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
+                    ),
+                )
+
+            elif action == "mute":
+                await m.chat.restrict_member(
+                    m.from_user.id,
+                    ChatPermissions(),
+                )
+
+                await m.reply_text(
+                    text="Muted {user} for sending a blacklisted word!".format(
+                        user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
+                    ),
+                )
+
+            elif action == "warn":
+                warns_settings_db = WarnSettings(m.chat.id)
+                warns_db = Warns(m.chat.id)
+                warn_settings = warns_settings_db.get_warnings_settings()
+                warn_reason = bl_db.get_reason()
+                _, num = warns_db.warn_user(m.from_user.id, warn_reason)
+                if num >= warn_settings["warn_limit"]:
+                    if warn_settings["warn_mode"] == "kick":
+                        await m.chat.ban_member(
+                            m.from_user.id,
+                            until_date=int(time() + 45),
+                        )
+                        action = "kicked"
+                    elif warn_settings["warn_mode"] == "ban":
+                        await m.chat.ban_member(m.from_user.id)
+                        action = "banned"
+                    elif warn_settings["warn_mode"] == "mute":
+                        await m.chat.restrict_member(m.from_user.id, ChatPermissions())
+                        action = "muted"
+                    await m.reply_text(
+                        (
+                            f"Warnings {num}/{warn_settings['warn_limit']}\n"
+                            f"{(await mention_html(m.from_user.first_name, m.from_user.id))} has been <b>{action}!</b>"
+                        ),
+                    )
+                    return
+                await m.reply_text(
+                    (
+                        f"{(await mention_html(m.from_user.first_name, m.from_user.id))} warned {num}/{warn_settings['warn_limit']}\n"
+                        # f"Last warn was for:\n<i>{warn_reason}</i>"
+                        f"Last warn was for:\n<i>{warn_reason.format(trigger)}</i>"
+                    ),
+                )
+            return
+
+        if m.from_user.id in SUPPORT_STAFF:
+            # Don't work on Support Staff!
+            return
+
+        # If no blacklists, then return
+        chat_blacklists = bl_db.get_blacklists()
+        if not chat_blacklists:
+            return
+
+        # Get admins from admin_cache, reduces api calls
+        try:
+            admin_ids = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+        except KeyError:
+            admin_ids = await admin_cache_reload(m, "blacklist_watcher")
+
+        if m.from_user.id in admin_ids:
+            return
+
+        # Get approved user from cache/database
+        app_users = Approve(m.chat.id).list_approved()
+        if m.from_user.id in {i[0] for i in app_users}:
+            return
+
+        # Get action for blacklist
+        action = bl_db.get_action()
+        for trigger in chat_blacklists:
+            pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
+            match = await regex_searcher(pattern, m.text.lower())
+            if not match:
+                continue
+            if match:
+                try:
+                    await perform_action_blacklist(m, action, trigger)
+                    LOGGER.info(
+                        f"{m.from_user.id} {action}ed for using blacklisted word {trigger} in {m.chat.id}",
+                    )
+                    await m.delete()
+                except RPCError as ef:
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
+                break
+        return
+    except Exception:
+        return
 
 
 

@@ -219,7 +219,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.status in [CMS.ADMINISTRATOR, CMS.OWNER] and user.privileges.can_restrict_members:
+    if user and user.status in [CMS.ADMINISTRATOR, CMS.OWNER] and user.privileges.can_restrict_members:
         status = True
     else:
         status = False

@@ -330,30 +330,46 @@ dic = {}
 @Gojo.on_message(filters.all & ~filters.bot | ~filters.private, 10)
 async def flood_watcher(c: Gojo, m: Message):
     c_id = m.chat.id
+    
     if not m.chat:
         return
+    
     Flood = Floods()
+    
     try:
         u_id = m.from_user.id
     except AttributeError:
         return # Get this error when the message received is not by an user and return
+    
     is_flood = Flood.is_chat(c_id)
+    
     if not is_flood:
         return # return of chat is not in anti flood protection
+    
     app_users = Approve(m.chat.id).list_approved()
+    
     if u_id in {i[0] for i in app_users}:
         return #return if the user is approved
+    
     if not is_flood or u_id in SUPPORT_STAFF:
         return #return if the user is in support_staff
-    user_status = (await m.chat.get_member(m.from_user.id)).status
+    
+    try:
+        user_status = (await m.chat.get_member(m.from_user.id)).status
+    except Exception:
+        return
+    
     if user_status in [CMS.OWNER, CMS.ADMINISTRATOR]:
         return #return if the user is owner or admin
+    
     action = is_flood[2]
     limit = int(is_flood[0])
     within = int(is_flood[1])
+    
     if not len(dic):
         z = {c_id : {u_id : [[],[]]}}
         dic.update(z)
+    
     try:
       dic[c_id] # access and check weather the c_id present or not
     except KeyError:
@@ -365,14 +381,18 @@ async def flood_watcher(c: Gojo, m: Message):
     except KeyError:
       z = {u_id : [[],[]]}
       dic[c_id].update(z) # make the dic something like {c_id : {u_id : [[for time],[for msg]]}}
+    
     sec = round(time.time())
+    
     try:
         dic[c_id][u_id][0].append(sec)
         dic[c_id][u_id][1].append("x")
     except KeyError:
         dic[c_id].update({u_id : [[sec], ["x"]]})
+    
     x = int(dic[c_id][u_id][0][0])
     y = int(dic[c_id][u_id][0][-1])
+    
     if len(dic[c_id][u_id][1]) == limit:
         if y-x <= within:
             if action == "ban":

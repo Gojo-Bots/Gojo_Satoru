@@ -287,11 +287,11 @@ async def github(_, m: Message):
 
 
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
-BASE = "https://nekobin.com/"
+BASE = "https://batbin.me/"
 
 
 def paste(content: str):
-    resp = resp_post(f"{BASE}api/documents", data=content)
+    resp = resp_post(f"{BASE}api/v2/paste", data=content)
     if resp.status_code != 200:
         return
     resp = resp.json()
