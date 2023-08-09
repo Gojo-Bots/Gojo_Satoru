@@ -325,7 +325,7 @@ async def paste_func(_, message: Message):
                 return await m.edit("Only text files can be pasted.")
 
             doc = await message.reply_to_message.download()
-            exe = doc.rsplit(".".1)[-1]
+            exe = doc.rsplit(".",1)[-1]
             async with aiofiles.open(doc, mode="r") as f:
                 fdata = await f.read()
                 content = {'content':fdata}
