@@ -1,4 +1,5 @@
 import re
+import json
 from io import BytesIO
 from os import remove
 
@@ -287,12 +288,15 @@ async def github(_, m: Message):
 
 
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
-BASE = "https://batbin.me/"
-
+BASE = "https://pasty.lus.pm/"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36",
+    "content-type": "application/json",
+}
 
 def paste(content: str):
-    resp = resp_post(f"{BASE}api/v2/paste", data=content)
-    if resp.status_code != 200:
+    resp = resp_post(f"{BASE}api/v1/pastes", data=content, headers=headers)
+    if resp.ok:
         return
     resp = resp.json()
     return BASE + resp["result"]['key']
@@ -311,7 +315,8 @@ async def paste_func(_, message: Message):
             return await m.edit("Only text and documents are supported")
 
         if r.text:
-            content = {'content':f'{r.text}'}
+            content = {'content':json.dumps(f'{r.text}')}
+            exe = "txt"
         if r.document:
             if r.document.file_size > 40000:
                 return await m.edit("You can only paste files smaller than 40KB.")
@@ -320,17 +325,17 @@ async def paste_func(_, message: Message):
                 return await m.edit("Only text files can be pasted.")
 
             doc = await message.reply_to_message.download()
-
+            exe = doc.rsplit(".".1)[-1]
             async with aiofiles.open(doc, mode="r") as f:
                 fdata = await f.read()
                 content = {'content':fdata}
 
             remove(doc)
-    link = paste(content)
+    link = paste(content) + f".{exe}"
     if not link:
         await m.reply_text("Failed to post!")
         return
-    kb = [[InlineKeyboardButton(text="Paste Link ", url=link)]]
+    kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=link)]]
     await m.delete()
     try:
         await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
