@@ -289,6 +289,8 @@ async def info_func(c: Gojo, message: Message):
 async def chat_info_func(c: Gojo, message: Message):
     splited = message.text.split()
     if len(splited) == 1:
+        if message.reply_to_message and message.reply_to_message.sender_chat:
+            chat = m.reply_to_message.sender_chat.id
         chat = message.chat.id
 
     else:
