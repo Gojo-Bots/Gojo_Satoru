@@ -237,6 +237,9 @@ async def chat_info(c: Gojo, chat, already=False):
 
 @Gojo.on_message(command(["info", "whois"]))
 async def info_func(c: Gojo, message: Message):
+    if message.reply_to_message and message.reply_to_message.sender_chat:
+        await message.reply_text("This is not a user, but rather a channel. Use `/chinfo` to fetch its information.")
+        return
     user, _, user_name = await extract_user(c, message)
 
     if not user:
@@ -290,8 +293,9 @@ async def chat_info_func(c: Gojo, message: Message):
     splited = message.text.split()
     if len(splited) == 1:
         if message.reply_to_message and message.reply_to_message.sender_chat:
-            chat = m.reply_to_message.sender_chat.id
-        chat = message.chat.id
+            chat = message.reply_to_message.sender_chat.id
+        else:  
+            chat = message.chat.id
 
     else:
         chat = splited[1]
