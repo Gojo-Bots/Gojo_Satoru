@@ -1,4 +1,4 @@
-aiofiles==23.1.0; python_full_version >= "3.7"
+aiofiles==23.2.1; python_full_version >= "3.7"
 anyio==3.7.1; python_full_version >= "3.6.2" and python_version >= "3.6"
 apscheduler==3.10.1
 asyncio==3.4.3
