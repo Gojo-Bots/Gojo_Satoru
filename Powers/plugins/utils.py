@@ -332,11 +332,12 @@ async def paste_func(_, message: Message):
                 content = fdata
 
             remove(doc)
-    try:
+    '''try:
         link = paste(content)
     except Exception as e:
         await m.edit_text(e)
-        return
+        return'''
+    link = paste(content)
     if not link:
         await m.edit_text("Failed to post!")
         return
