@@ -297,7 +297,7 @@ headers = {
 def paste(content: str):
     data = {"content": content}
     resp = resp_post(f"{BASE}api/v1/pastes", data=json.dumps(data), headers=headers)
-    if resp.ok:
+    if not resp.ok:
         return
     resp = resp.json()
     return BASE + resp["result"]['key']
