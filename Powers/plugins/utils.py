@@ -294,8 +294,8 @@ headers = {
     "content-type": "application/json",
 }
 
-def paste(content: str):
-    resp = resp_post(f"{BASE}api/v1/pastes", data=content, headers=headers)
+def paste(content):
+    resp = resp_post(f"{BASE}api/v1/pastes", data=json.dumps(content), headers=headers)
     if resp.ok:
         return
     resp = resp.json()
@@ -315,7 +315,7 @@ async def paste_func(_, message: Message):
             return await m.edit("Only text and documents are supported")
 
         if r.text:
-            content = {'content':json.dumps(f'{r.text}')}
+            content = r.text
             exe = "txt"
         if r.document:
             if r.document.file_size > 40000:
@@ -328,7 +328,7 @@ async def paste_func(_, message: Message):
             exe = doc.rsplit(".",1)[-1]
             async with aiofiles.open(doc, mode="r") as f:
                 fdata = await f.read()
-                content = {'content':fdata}
+                content = fdata
 
             remove(doc)
     link = paste(content)
