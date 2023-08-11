@@ -1,5 +1,5 @@
-import re
 import json
+import re
 from io import BytesIO
 from os import remove
 
@@ -331,17 +331,17 @@ async def paste_func(_, message: Message):
                 content = {'content':fdata}
 
             remove(doc)
-    link = paste(content) + f".{exe}"
+    link = paste(content)
     if not link:
         await m.reply_text("Failed to post!")
         return
-    kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=link)]]
+    kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=link + f".{exe}")]]
     await m.delete()
     try:
         await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
     except Exception as e:
         if link:
-            return await message.reply_text(f"Here's your paste:\n [link]({link})",)
+            return await message.reply_text(f"Here's your paste:\n [link]({link + f'.{exe}'})",)
         return await message.reply_text(f"Failed to post. Due to following error:\n{e}")
 
 

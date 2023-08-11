@@ -52,9 +52,7 @@ async def count(c: Gojo, chat):
         total_banned = len(total_banned)
         return total_bot, total_admin, bot_admin, total_banned
     except Exception as e:
-        total_bot = (
-            total_admin
-        ) = bot_admin = total_banned = "Can't fetch because I am not part of the chat."
+        total_bot = total_admin = bot_admin = total_banned = "`Can't fetch because I am not part of the chat.`"
 
     return total_bot, total_admin, bot_admin, total_banned
 
