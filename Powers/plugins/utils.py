@@ -294,11 +294,11 @@ headers = {
     "content-type": "application/json",
 }
 
-def paste(content):
-    resp = resp_post(f"{BASE}api/v1/pastes", data=json.dumps(content), headers=headers)
+def paste(content: str):
+    data = {"content": content}
+    resp = resp_post(f"{BASE}api/v1/pastes", data=json.dumps(data), headers=headers)
     if resp.ok:
         return
-    print(resp)
     resp = resp.json()
     return BASE + resp["result"]['key']
 
@@ -332,12 +332,11 @@ async def paste_func(_, message: Message):
                 content = fdata
 
             remove(doc)
-    '''try:
+    try:
         link = paste(content)
     except Exception as e:
         await m.edit_text(e)
-        return'''
-    link = paste(content)
+        return
     if not link:
         await m.edit_text("Failed to post!")
         return
