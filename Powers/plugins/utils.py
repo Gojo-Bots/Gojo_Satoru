@@ -300,7 +300,7 @@ def paste(content: str):
     if not resp.ok:
         return
     resp = resp.json()
-    return BASE + resp["result"]['key']
+    return BASE + resp['id']
 
 
 @Gojo.on_message(command("paste"))
