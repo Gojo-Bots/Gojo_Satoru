@@ -332,9 +332,13 @@ async def paste_func(_, message: Message):
                 content = fdata
 
             remove(doc)
-    link = paste(content)
+    try:
+        link = paste(content)
+    except Exception as e:
+        await m.edit_text(e)
+        return
     if not link:
-        await m.reply_text("Failed to post!")
+        await m.edit_text("Failed to post!")
         return
     kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=link + f".{exe}")]]
     await m.delete()
