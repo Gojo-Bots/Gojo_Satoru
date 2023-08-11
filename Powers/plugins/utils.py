@@ -299,6 +299,7 @@ def paste(content):
     if resp.ok:
         return
     resp = resp.json()
+    print(resp)
     return BASE + resp["result"]['key']
 
 
