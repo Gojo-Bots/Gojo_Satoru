@@ -298,8 +298,8 @@ def paste(content):
     resp = resp_post(f"{BASE}api/v1/pastes", data=json.dumps(content), headers=headers)
     if resp.ok:
         return
-    resp = resp.json()
     print(resp)
+    resp = resp.json()
     return BASE + resp["result"]['key']
 
 
