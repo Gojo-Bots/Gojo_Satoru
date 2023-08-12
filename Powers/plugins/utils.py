@@ -401,10 +401,12 @@ async def reporting_query(c: Gojo, m: Message):
         txt = repl.text.html
         z = await c.send_message(MESSAGE_DUMP,txt,parse_mode=enums.ParseMode.HTML)
         await z.reply_text(f"#BUG\nReported by: {m.from_user.id} ({m.from_user.mention})")
-    await m.reply_text("Successfully reported your bug",reply_markup=kb)
+    await repl.delete()
+    await m.reply_photo(photo="./extras/Fire.jpg",caption="Successfully reported your bug",reply_markup=kb)
     ppost = z.link
     await c.send_message(OWNER_ID,f"New bug report\n{ppost}",disable_web_page_preview=True)
     return
+
 
 __PLUGIN__ = "utils"
 _DISABLE_CMDS_ = ["paste", "wiki", "id", "gifid", "tr", "github", "git", "bug"]
