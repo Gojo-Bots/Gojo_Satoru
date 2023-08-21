@@ -4,7 +4,7 @@ apscheduler==3.10.4
 asyncio==3.4.3
 beautifulsoup4==4.12.2; python_full_version >= "3.6"
 cachetools==5.2.0; python_version >= "3.7" and python_version < "4.0"
-certifi==2022.12.7; python_version >= "3.7" and python_version < "4"
+certifi==2023.7.22; python_version >= "3.7" and python_version < "4"
 charset-normalizer==2.1.0; python_version >= "3.7" and python_version < "4" and python_full_version >= "3.6.0"
 dnspython==2.2.1; python_version >= "3.6" and python_version < "4.0"
 google==3.0.0
