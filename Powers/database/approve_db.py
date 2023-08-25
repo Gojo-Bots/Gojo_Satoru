@@ -19,7 +19,14 @@ class Approve(MongoDB):
 
     def check_approve(self, user_id: int):
         with INSERTION_LOCK:
-            return bool(user_id in i for i in self.chat_info["users"])
+            j = False
+            if not self.chat_info["users"]:
+                return j
+            for i in self.chat_info["users"]:
+                if user_id in i:
+                    j = True
+                    break
+            return j
 
     def add_approve(self, user_id: int, user_name: str):
         with INSERTION_LOCK:
