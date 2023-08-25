@@ -50,8 +50,7 @@ async def approve_user(c: Gojo, m: Message):
             f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}",
         )
         return
-    test = db.add_approve(user_id, user_first_name)
-    LOGGER.info(test)
+    db.add_approve(user_id, user_first_name)
     LOGGER.info(f"{user_id} approved by {m.from_user.id} in {m.chat.id}")
 
     # Allow all permissions
