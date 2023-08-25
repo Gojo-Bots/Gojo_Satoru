@@ -26,8 +26,8 @@ class Approve(MongoDB):
 
     def add_approve(self, user_id: int, user_name: str):
         with INSERTION_LOCK:
-            self.chat_info["users"].append((user_id, user_name))
             if not self.check_approve(user_id):
+                self.chat_info["users"].append((user_id, user_name))
                 return self.update(
                     {"_id": self.chat_id},
                     {"users": self.chat_info["users"]},
