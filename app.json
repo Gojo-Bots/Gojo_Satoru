@@ -40,7 +40,7 @@
       },
       "OWNER_ID": {
         "description": "Your user ID as an integer.",
-        "required": true,
+        "required": false,
         "value": "1344569458"
       },
       "SUPPORT_GROUP": {
@@ -55,7 +55,7 @@
       },
       "PREFIX_HANDLER": {
         "description": "Something like '/' to execute commands...Don't give a comma or anything after 1 handler just give and space then enter second hand;ler",
-        "required": true,
+        "required": false,
         "value": "/ ! $"
       },
       "DEV_USERS": {
