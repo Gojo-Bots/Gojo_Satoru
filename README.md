@@ -114,7 +114,7 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
   * Fill the values
   * Then wait for 10-15 minutes. 
   * Vars are [given below](#Variables)
-  * ***If you want to add more data of yours just go to variable section and add the key and values to it then hit on `relaunch`*** 
+  * ***If you want to add more data of yours just go to the variable section and add the key and values to it then hit on `relaunch`*** 
   
   ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
 
@@ -128,7 +128,7 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 * Fork or Clone the project using `git clone https://github.com/Gojo-Bots/Gojo_Satoru.git`
 * Create Virtualenv using: `virtualenv venv`
 * Install the requirements using `python3 -m pip install -r requirements.txt`
-* Fill in all the variables in Development class, not Config class. Sudo, Dev, Whitelist users are optional!!
+* Fill in all the variables in the Development class, not the Config class. Sudo, Dev, Whitelist users are optional!!
 * If you want, you can remove all the things
 * Change to virtualenv shell by using: `. venv/bin/activate (Linux) venv\Scripts\activate (Windows)`
 * Run the bot using `python3 -m Powers`
@@ -138,9 +138,9 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 * Update apt by using `sudo apt update && sudo apt upgrade -y`
 * Now install required packages by `sudo apt install --no-install-recommends -y python3-lxml python3-psycopg2 libpq-dev libcurl4-openssl-dev libxml2-dev libxslt1-dev python3-pip python3-sqlalchemy openssl wget curl git libffi-dev libjpeg-dev libwebp-dev python3 python3-dev pv tree mediainfo nano nodejs libreadline-dev libyaml-dev gcc zlib1g ffmpeg libssl-dev libgconf-2-4 libxi6 unzip libopus0 libopus-dev python3-virtualenv tmux libmagickwand-dev`
 * Clone the GitHub repo by `https://github.com/Gojo-Bots/Gojo_Satoru`
-* Now make it current directory by `cd Gojo_Satoru`
+* Now make it the current directory by `cd Gojo_Satoru`
 * Edit the vars file by `nano Powers/vars.py`
-* Fill in all the variables in Development class, not Config class. Sudo, Dev, Whitelist users are optional!!
+* Fill in all the variables in the Development class, not the Config class. Sudo, Dev, and Whitelist users are optional!!
 * Create and activate a new virtualenv by `virtualenv venv source venv/bin/activate`
 * Install requirements to run the bot by `pip3 install -r requirements.txt`
 * After requirements are installed, start the bot by `python3 -m Powers`
@@ -156,22 +156,23 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 ```
 docker build -t gojo_gojo_satoru:latest .
 ```
-  To run copy and paste the following commang
+  To run copy and paste the following command
 ```
 docker run --env-file main.env gojo_gojo_satoru
 ```
-If all works well, bot should send message to the MESSAGE_DUMP Group!--->
+If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 
 ## Variables
+<details><summary><h3>List of all mandatory variables</h3></summary>
+  
 `BOT_TOKEN` You can get your bot token at [@BotFather](https://t.me/BotFather)
 
 `API_ID` You can get your api id [here](my.telegram.org)
 
 `API_HASH` You can get your api hash [here](my.telegram.org)
 
-`PREFIX_HANDLER` Your bot handler which will activate commands
-
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
+</details>
 
 
 <details><summary><h3>List of all variables</h3></summary>
@@ -192,31 +193,27 @@ If all works well, bot should send message to the MESSAGE_DUMP Group!--->
 
 `GENIUS_API` Your Lyrics [Genius Api Token](https://docs.genius.com/#/getting-started-h1). To fetch lyrics of songs.
 
-`AuDD_API` Your [Audd api](https://audd.io/) to get info of song by music file.
-
-`BDB_URI` Your mongodb uri different from previous one to store more info.
+`BDB_URI` Your mongodb uri is different from the previous one to store more info.
 
 `TIME_ZONE` Your time zone.
 
 `RMBG_API` Your [removebackground api](https://www.remove.bg/api#remove-background) to remove the background/
 
-`SUPPORT_GROUP`: Your Telegram support group chat username where user's can contact in case of a problem.
+`SUPPORT_GROUP`: Your Telegram support group chat username that users can contact in case of a problem.
 
-`MESSAGE_DUMP`: Event logs channel where bot will send updates. Note that id should starts with `-100`.
-
-`VERSION`: A Version to be shown in bot.
+`MESSAGE_DUMP`: Event logs channel where the bot will send updates. Note that it should start with `-100`.
 
 `PREFIX_HANDLER`: Something like '/' to execute commands.
 
-`SUPPORT_CHANNEL`: Your Telegram support channel username where user's can see updates of bot.
+`SUPPORT_CHANNEL`: Your Telegram support channel username where users can see bot updates.
 
-`DEV_USERS`: ID of users who are Devs of your bot. Use space to seprate values.
+`DEV_USERS`: ID of users who are Devs of your bot. Use space to separate values.
 
-`SUDO_USERS`: A space separated list of user IDs who you want to assign as sudo users.
+`SUDO_USERS`: A space-separated list of user IDs you want to assign as sudo users.
 
-`WHITELIST_USERS`: A space separated list of user IDs whitelisted, cannot be restricted.
+`WHITELIST_USERS`: A space-separated list of user IDs whitelisted, cannot be restricted.
 
-⚠️ **Note:** In case you are passing more than one value seprate them using whitespace (space) for e.g. If I want to pass more than one PREFIX_HANDLER
+⚠️ **Note:** In case you are passing more than one value separate them using whitespace (space) for example If I want to pass more than one PREFIX_HANDLER
 I'll pass it like `'/' '.' '!'` this.
 
 YOU CAN ALSO HAVE A LOOK AT [VARS FILE](https://github.com/Gojo-Bots/Gojo_Satoru/blob/main/Powers/vars.py)
@@ -235,23 +232,23 @@ To add your very own plugin just use the format given below and go through the [
   from Powers.utils.custom_filters import command 
   from Powers import LOGGER
   from Powers.bot_class import Gojo 
-  # All the import provided above is mandotry in case you don't want to use logger remove the first and third import 
-  # Import more funcs and module as per your need
+  # All the import provided above is mandatory in case you don't want to use logger remove the first and third import 
+  # Import more functions and modules as per your need
   
   @Gojo.on_message(command("<your command>")) # Pass additional filters if you need
   async def <function name>(<arguments to take>):
     <your code>
       
-    '''use logger to add log info using LOGGER.info(<string>) in the platfrom on which bot is running 
+    '''use logger to add log info using LOGGER.info(<string>) in the platform on which bot is running 
       and error as LOGGER.error(<string>) and after LOGGER.error() use        
       LOGGER.error(format_exc())'''
       
   __PLUGIN__ = <name of plugin> # Pass the name of your plugin as string
-  _DISABLE_CMDS_ = [<command as string>] # Enter the commands if you want that they can be disabled if needed.
+  _DISABLE_CMDS_ = [<command as string>] # Enter the commands if you want so that they can be disabled if needed.
 
   __alt_name__ = [<command as string>] # Alternative name of the plugin
       
-  __HELP__ = <string> # To tell about you plugin and commands you must use it
+  __HELP__ = <string> # To tell about your plugin and commands you must use it
   
  
   # See any plugin to get more information about how to make a plugin 
@@ -278,13 +275,13 @@ To add your very own plugin just use the format given below and go through the [
    
 </p>--->
 
-Some special thanks to the person/repo who/which helped and motivated me for creating this project
+Some special thanks to the person/repo who/which helped and motivated me to create this project
 
-* [PSYREX](https://github.com/iamPSYREX) for logos and motivatting me and giving me new ideas.
+* [PSYREX](https://github.com/iamPSYREX) for logos and motivating me and giving me new ideas.
 
 * [Dan](https://github.com/delivrance) for [pyrogram](https://github.com/pyrogram/pyrogram) `library`
 
-* [Anand](https://github.com/HellBoy-OP) for helping me to enhance bot's security and look and also helping me out with various stuffs and bugs and also for motivating me to create this project.
+* [Anand](https://github.com/HellBoy-OP) for helping me to enhance the bot's security and look and also helping me out with various stuff and bugs and also for motivating me to create this project.
 
 * [Alita_Robot](https://github.com/divideprojects/Alita_Robot) for base code.
 
