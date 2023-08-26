@@ -1,7 +1,7 @@
 {
     "name": "Gojo_Satoru",
     "description": "Gojo is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
-    "logo" : "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg" ,
+    "logo" : "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg",
     "keywords": [
       "telegram bot",
       "group bot",
@@ -35,7 +35,7 @@
       },
       "DB_NAME": {
         "description": "Your MongoDB database name.",
-        "required": true,
+        "required": false,
         "value": ""
       },
       "OWNER_ID": {
@@ -44,57 +44,49 @@
         "value": "1344569458"
       },
       "SUPPORT_GROUP": {
-        "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
-        "required": true,
+        "description": "Your Telegram support group chat username where users can contact in case of a problem..",
+        "required": false,
         "value": "gojo_bots_network"
       },
       "MESSAGE_DUMP": {
         "description": "Event logs channel where bot will send updates.",
-        "required": true,
-        "value": "-1001713325956"
-      },
-      "VERSION": {
-        "description": "A Version to be shown in bot.",
         "required": false,
-        "value": "Stable"
+        "value": ""
       },
       "PREFIX_HANDLER": {
-        "description": "Something like '/' to execute commands...Don't give comma or anything after 1 handler just give and space then enter second hand;ler",
+        "description": "Something like '/' to execute commands...Don't give a comma or anything after 1 handler just give and space then enter second hand;ler",
         "required": true,
         "value": "/ ! $"
       },
       "DEV_USERS": {
-        "description": "ID of users who are Devs of your bot. Use space to seprate values",
+        "description": "ID of users who are Devs of your bot. Use space to separate values",
         "required": false,
-        "value": " "
+        "value": ""
       },
       "SUPPORT_CHANNEL": {
-        "description": "Channel where bot uodates will be posted!",
+        "description": "Channel where bot updates will be posted!",
+        "required": false,
         "value": "gojo_bots_network"
       },
       "SUDO_USERS": {
-        "description": "A space separated list of user IDs who you want to assign as sudo users.",
+        "description": "A space-separated list of user IDs who you want to assign as sudo users.",
         "required": false,
-        "value": " "
+        "value": ""
       },
       "WHITELIST_USERS": {
-        "description": "A space separated list of user IDs whitelisted, cannot be restricted.",
+        "description": "A space-separated list of user IDs whitelisted, cannot be restricted.",
         "required": false,
-        "value": " "
+        "value": ""
       },
       "GENIUS_API" : {
         "description": "Your Lyrics Genius Api Token. To fetch lyrics of songs",
         "required": false,
         "value": ""
       },
-      "AuDD_API" : {
-        "description": "Your Audd api to get info of song by music file",
-        "required": false,
-        "value": ""
-      },
+      
       "BDB_URI": {
-        "description": "Your mongodb uri different from previous one to store more info",
-        "required": true,
+        "description": "Your Mongodb uri different from the previous one to store more info",
+        "required": false,
         "value": ""
       },
       "TIME_ZONE": {
