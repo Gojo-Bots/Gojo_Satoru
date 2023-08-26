@@ -41,13 +41,12 @@ class Config:
     AuDD_API = config("AuDD_API",default=None)
     RMBG_API = config("RMBG_API",default=None)
     DB_URI = config("DB_URI", default="")
-    DB_NAME = config("DB_NAME", default="")
+    DB_NAME = config("DB_NAME", default="gojo_satarou")
     BDB_URI = config("BDB_URI",default=None)
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_bots_network")
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_bots_network")
-    VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
     TIME_ZONE = config("TIME_ZONE",default='Asia/Kolkata')
     BOT_USERNAME = ""
@@ -67,15 +66,14 @@ class Development:
     OWNER_ID = 1344569458  # Your telegram user id defult to mine
     MESSAGE_DUMP = -100  # Your Private Group ID for logs
     DEV_USERS = []
-    SUDO_USERS = [1906306037]
+    SUDO_USERS = []
     WHITELIST_USERS = []
     DB_URI = ""  # Your mongo DB URI
     DB_NAME = ""  # Your DB name
     NO_LOAD = []
     GENIUS_API_TOKEN = ""
-    AuDD_API = ""
     RMBG_API = ""
-    PREFIX_HANDLER = ["!", "/"]
+    PREFIX_HANDLER = ["!", "/","$"]
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     VERSION = "VERSION"
