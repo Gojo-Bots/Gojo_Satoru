@@ -270,14 +270,14 @@ async def give_curr_info(c: Gojo, q: CallbackQuery):
     start = time()
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     x = await c.send_message(q.message.chat.id, "Pinging..")
-    await x.delete()
     delta_ping = time() - start
+    await x.delete()
     txt = f"""
-🤖 Bot's version       : {VERSION}
-🐍 Python's version   : {PYTHON_VERSION}
+🏓 Ping : {delta_ping * 1000:.3f} ms
+📈 Uptime : {up}
+🤖 Bot's version: {VERSION}
+🐍 Python's version: {PYTHON_VERSION}
 🔥 Pyrogram's version : {PYROGRAM_VERSION}
-📈 Uptime             : {up}
-🏓 Ping                : {delta_ping * 1000:.3f} ms
     """
     await q.answer(txt, show_alert=True)
     return
