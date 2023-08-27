@@ -127,6 +127,10 @@ HARMFUL = [
     "BOT_TOKEN",
     "API_HASH",
     "APP_ID",
+    "SSH_CLIENT",
+    "SSH_CONNECTION"
+    "SSH"
+    
 ]
 
 
@@ -194,9 +198,16 @@ async def evaluate_code(c: Gojo, m: Message):
                 MESSAGE_DUMP,
                 f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
             )
+    for j in HARMFUL:
+        if j in evaluation:
+            if m.from_user.id != OWNER_ID:
+                evaluation = "Bhaag ja bsdk"
+                await c.send_message(
+                    MESSAGE_DUMP,
+                    f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}")
     for i in evaluation.split():
         for j in i.split("="):
-            if j and j[0] in HARMFUL:
+            if j and j[0].casefold() in HARMFUL.casefold():
                 if m.from_user.id != OWNER_ID:
                     evaluation = "Bhaag ja bsdk"
                     await c.send_message(
@@ -275,6 +286,19 @@ async def execution(c: Gojo, m: Message):
                 pass
         else:
             pass
+    for x in HARMFUL:
+        if x in out:
+            if m.from_user.id != OWNER_ID:
+                out = "You can't access them"
+                await c.send_message(
+                    MESSAGE_DUMP,
+                    f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
+                )
+            else:
+                pass
+        else:
+            pass
+    
 
     OUTPUT = ""
     OUTPUT += f"<b>QUERY:</b>\n<u>Command:</u>\n<code>{cmd}</code> \n"
