@@ -8,6 +8,7 @@ postgres-data/
 !sample.env
 logs/
 Powers/local_vars.py
+Powers/vars.py
 .idea/
 
 # Byte-compiled / optimized / DLL files
