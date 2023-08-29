@@ -207,7 +207,7 @@ async def evaluate_code(c: Gojo, m: Message):
                     f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}")
     for i in evaluation.split():
         for j in i.split("="):
-            if j and j[0].casefold() in HARMFUL.casefold():
+            if j and j[0] in HARMFUL:
                 if m.from_user.id != OWNER_ID:
                     evaluation = "Bhaag ja bsdk"
                     await c.send_message(
