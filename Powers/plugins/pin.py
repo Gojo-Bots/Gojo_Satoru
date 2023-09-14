@@ -97,7 +97,7 @@ async def unpin_message(c: Gojo, m: Message):
 async def unpinall_message(_, m: Message):
     await m.reply_text(
         "Do you really want to unpin all messages in this chat?",
-        reply_markup=ikb([[("Yes", "unpin all in this chat"), ("No", "close_admin")]]),
+        reply_markup=ikb([[("Yes", "unpin_all_in_this_chat"), ("No", "close_admin")]]),
     )
     return
 
