@@ -9,8 +9,7 @@ from pyrogram.raw.functions.channels import GetFullChannel
 from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.types import Message
 
-from Powers import (DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, SUPPORT_STAFF,
-                    WHITELIST_USERS)
+from Powers import LOGGER, OWNER_ID, get_support_staff
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.utils.custom_filters import command
@@ -83,6 +82,10 @@ async def user_info(c: Gojo, user, already=False):
         about = ll.full_user.about
     except Exception:
         pass
+    SUPPORT_STAFF = get_support_staff()
+    DEV_USERS = get_support_staff("dev")
+    SUDO_USERS = get_support_staff("sudo")
+    WHITELIST_USERS = get_support_staff("whitelist")
     username = user.username
     first_name = user.first_name
     last_name = user.last_name

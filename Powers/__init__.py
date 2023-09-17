@@ -14,6 +14,8 @@ import lyricsgenius
 import pyrogram
 import pytz
 
+from Powers.database.support_db import SUPPORTS
+
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
@@ -127,14 +129,45 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 
 
-defult_dev = [1344569458, 5978503502, 5301411431, 1432756163, 1854700253, 1174290051, 1218475925, 960958169, 5294360309]
+defult_dev = [1344569458, 1432756163, 5294360309] + [int(OWNER_ID)]
 Defult_dev = set(defult_dev)
 
 DEVS = DEVS_USER | Defult_dev
 DEV_USERS = list(DEVS)
-SUPPORT_STAFF = list(
-    set([int(OWNER_ID)] + SUDO_USERS + DEV + WHITELIST_USERS + DEV_USERS),
-)  # Remove duplicates by using a set
+
+async def load_support_users():
+    support = SUPPORTS()
+    for i in DEV_USERS:
+        support.insert_support_user(int(i),"dev")
+    for i in SUDO_USERS:
+        support.insert_support_user(int(i),"sudo")
+    for i in WHITELIST_USERS:
+        support.insert_support_user(int(i),"whitelist")
+    return
+
+def get_support_staff(want = "all"):
+    """
+    dev, sudo, whitelist, dev_level, sudo_level, all
+    """
+    support = SUPPORTS()
+    devs = support.get_particular_support("dev")
+    sudo = support.get_particular_support("sudo")
+    whitelist = support.get_particular_support("whitelist")
+
+    if want == "dev":
+        return devs
+    elif want == "sudo":
+        return sudo
+    elif want == "whitelist":
+        return whitelist
+    elif want == "dev_level":
+        return devs
+    elif want == "sudo_level":
+        return sudo + devs
+    else:
+        return list(set([int(OWNER_ID)] + devs + sudo + whitelist))
+
+
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI
 DB_NAME = Config.DB_NAME

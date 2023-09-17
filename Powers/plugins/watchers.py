@@ -7,7 +7,7 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
 
-from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
+from Powers import LOGGER, MESSAGE_DUMP, get_support_staff
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import ANTISPAM_BANNED, GBan
 from Powers.database.approve_db import Approve
@@ -21,7 +21,7 @@ from Powers.utils.regex_utils import regex_searcher
 
 # Initialise
 gban_db = GBan()
-
+SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(filters.linked_channel)
 async def antichanpin_cleanlinked(c: Gojo, m: Message):

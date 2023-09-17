@@ -6,13 +6,14 @@ from pyrogram.enums import ChatType
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER, SUPPORT_STAFF
+from Powers import LOGGER, get_support_staff
 from Powers.bot_class import Gojo
 from Powers.database.reporting_db import Reporting
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_html
 
+SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(
     command("reports") & (filters.private | admin_filter),

@@ -89,7 +89,7 @@ async def get_note_type(m: Message):
 async def get_filter_type(m: Message):
     """Get filter type."""
     if len(m.text.split()) <= 1:
-        return None, None, None, None
+        return None, None, None
 
     data_type = None
     content = None
@@ -158,6 +158,9 @@ async def get_filter_type(m: Message):
 
 async def get_wlcm_type(m: Message):
     """Get wlcm type."""
+    if len(m.text.split()) <= 1:
+        return None, None, None
+        
     data_type = None
     content = None
     raw_text = m.text.markdown if m.text else m.caption.markdown

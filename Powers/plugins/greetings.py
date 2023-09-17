@@ -6,7 +6,7 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
 
-from Powers import DEV_USERS
+from Powers import get_support_staff
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
@@ -20,6 +20,8 @@ from Powers.vars import Config
 
 # Initialize
 gdb = GBan()
+
+DEV_USERS = get_support_staff("dev")
 
 ChatType = enums.ChatType
 

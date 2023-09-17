@@ -9,7 +9,7 @@ from pyrogram.types import (CallbackQuery, ChatPrivileges,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID, SUPPORT_STAFF
+from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID, get_support_staff
 from Powers.bot_class import Gojo
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
@@ -19,6 +19,7 @@ from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.vars import Config
 
+SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(command("tban") & restrict_filter)
 async def tban_usr(c: Gojo, m: Message):
@@ -93,8 +94,6 @@ async def tban_usr(c: Gojo, m: Message):
             txt = t_t[0] # Done this bcuz idk why t_t is tuple type data. SO now if it is tuple this will get text from it
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         if time_val:
             txt += f"\n<b>Banned for</b>:{time_val}"
         keyboard = InlineKeyboardMarkup(
@@ -309,9 +308,6 @@ async def dtban_usr(c: Gojo, m: Message):
         txt = f"{admin} banned {banned} in <b>{chat_title}</b>!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
-
         if bantime:
             txt += f"\n<b>Banned for</b>: {time_val}"
         keyboard = InlineKeyboardMarkup(
@@ -420,8 +416,6 @@ async def kick_usr(c: Gojo, m: Message):
         txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         # await m.reply_text(txt, reply_to_message_id=r_id)
         kickk = choice(KICK_GIFS)
         try:
@@ -580,8 +574,6 @@ async def dkick_usr(c: Gojo, m: Message):
         txt = f"{admin} kicked {kicked} in <b>{chat_title}</b>!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         kickk = choice(KICK_GIFS)
         try:
             await m.reply_animation(
@@ -660,8 +652,6 @@ async def unban_usr(c: Gojo, m: Message):
         txt = f"{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         await m.reply_text(txt)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -809,8 +799,6 @@ async def dban_usr(c: Gojo, m: Message):
         txt = f"{m.from_user.mention} banned {m.reply_to_message.from_user.mention} in <b>{m.chat.title}</b>!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -914,8 +902,7 @@ async def ban_usr(c: Gojo, m: Message):
         txt = f"{m.from_user.mention} banned {banned} in <b>{m.chat.title}</b>!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
+
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -1019,8 +1006,6 @@ async def kickme(c: Gojo, m: Message):
         txt = "Why not let me help you!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         await m.reply_animation(animation=str(choice(KICK_GIFS)), caption=txt)
         await m.chat.unban_member(m.from_user.id)
     except RPCError as ef:

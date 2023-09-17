@@ -2,16 +2,21 @@ from platform import python_version
 from threading import RLock
 from time import gmtime, strftime, time
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
 
-from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER,
-                    MESSAGE_DUMP, NO_LOAD, OWNER_ID, UPTIME, WORKERS,
-                    load_cmds)
+from Powers import (API_HASH, API_ID, BDB_URI, BOT_TOKEN, LOG_DATETIME,
+                    LOGFILE, LOGGER, MESSAGE_DUMP, NO_LOAD, OWNER_ID,
+                    TIME_ZONE, UPTIME, WORKERS, load_cmds, load_support_users)
 from Powers.database import MongoDB
 from Powers.plugins import all_plugins
+from Powers.plugins.birthday import send_wishish
+from Powers.plugins.clean_db import clean_my_db
 from Powers.vars import Config
+
+scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
 
 INITIAL_LOCK = RLock()
 
@@ -51,12 +56,13 @@ class Gojo(Client):
         )
         meh = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
-        owner_user = (await self.get_users(OWNER_ID)).username
-        Config.owner_username = owner_user
         Config.BOT_ID = meh.id
         Config.BOT_NAME = meh.first_name
         Config.BOT_USERNAME = meh.username
-
+        scheduler.add_job(clean_my_db,'cron',[self],hour=3,minute=0,second=0)
+        if BDB_URI:
+            scheduler.add_job(send_wishish,'cron',[self],hour=0,minute=0,second=0)
+        scheduler.start()
         startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Show in Log that bot has started
@@ -67,7 +73,7 @@ class Gojo(Client):
 
         # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())
-
+        await load_support_users()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
 
         # Send a message to MESSAGE_DUMP telling that the
@@ -95,6 +101,7 @@ class Gojo(Client):
                 "Bot Stopped!\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
             ),
         )
+        scheduler.remove_all_jobs()
         if MESSAGE_DUMP:
             # LOG_CHANNEL is not necessary
             await self.send_document(

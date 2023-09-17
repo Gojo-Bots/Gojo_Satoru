@@ -62,7 +62,7 @@ async def wiki(_, m: Message):
 
 @Gojo.on_message(command("gdpr"))
 async def gdpr_remove(_, m: Message):
-    if m.from_user.id in SUPPORT_STAFF:
+    if m.from_user.id in get_support_staff():
         await m.reply_text(
             "You're in my support staff, I cannot do that unless you are no longer a part of it!",
         )
@@ -239,6 +239,11 @@ async def github(_, m: Message):
         return
     r = r.json()
     avtar = r.get("avatar_url", None)
+    if avtar:
+        avtar = avtar.rsplit("=",1)
+        avtar.pop(-1)
+        avtar.append("5")
+        avtar = "=".join(avtar)
     url = r.get("html_url", None)
     name = r.get("name", None)
     company = r.get("company", None)
@@ -280,6 +285,12 @@ async def github(_, m: Message):
         REPLY += f"\n<b>⌚️ Updated at:</b> <code>{updated_at}</code>"
     if bio:
         REPLY += f"\n\n<b>🎯 Bio:</b> {bio}"
+
+    kb = InlineKeyboardMarkup(
+        [
+            InlineKeyboardButton("")
+        ]
+    )
 
     if avtar:
         return await m.reply_photo(photo=f"{avtar}", caption=REPLY)

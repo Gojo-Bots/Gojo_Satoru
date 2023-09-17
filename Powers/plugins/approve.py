@@ -3,7 +3,7 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER, SUPPORT_GROUP
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.utils.custom_filters import admin_filter, command, owner_filter
@@ -36,7 +36,7 @@ async def approve_user(c: Gojo, m: Message):
 
     except RPCError as ef:
         await m.reply_text(
-            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
+            f"<b>Error</b>: <code>{ef}</code>\nReport it using /bug",
         )
         return
     if member.status in (CMS.ADMINISTRATOR, CMS.OWNER):
@@ -95,7 +95,7 @@ async def disapprove_user(c: Gojo, m: Message):
         return
     except RPCError as ef:
         await m.reply_text(
-            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
+            f"<b>Error</b>: <code>{ef}</code>\nReport it using /bug",
         )
         return
 

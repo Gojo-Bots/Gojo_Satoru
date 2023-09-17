@@ -136,7 +136,7 @@ async def get_document_from_file_id(
     )
 
 
-async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> list:
+async def draw_meame(image_path: str, text: str, sticker: bool, fiill: str) -> list:
     _split = text.split(";", 1)
     if len(_split) == 2:
         lower_text = _split[1]
@@ -183,7 +183,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
 #     img = Image.open(image_path)
 #     i_width, i_height = img.size
 #     m_font = ImageFont.truetype(
-#         "./extras/comic.ttf", int((70 / 640) * i_width)
+#         "./extras/comic.ttf", int(i_width / 11)
 #     )
 #     if ";" in text:
 #         upper_text, lower_text = text.split(";")

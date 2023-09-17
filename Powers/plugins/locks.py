@@ -6,43 +6,45 @@ from pyrogram.enums import MessageEntityType as MET
 from pyrogram.errors import ChatAdminRequired, ChatNotModified, RPCError
 from pyrogram.types import ChatPermissions, Message
 
-from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
+from Powers import LOGGER, get_support_staff
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.vars import Config
 
-SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
+SUDO_LEVEL = get_support_staff("sudo_level")
 
 anti_c_send = [-1001604479593]
 anti_forward = [-1001604479593]
 anti_forward_u = []
 anti_forward_c = []
 anti_links = []
+
+l_t = """
+**Lock Types:**
+- `all` = Everything
+- `msg` = Messages
+- `media` = Media, such as Photo and Video.
+- `polls` = Polls
+- `invite` = Add users to Group
+- `pin` = Pin Messages
+- `info` = Change Group Info
+- `webprev` = Web Page Previews
+- `inlinebots`, `inline` = Inline bots
+- `animations` = Animations
+- `games` = Game Bots
+- `stickers` = Stickers
+- `anonchannel` = Send as chat will be locked
+- `forwardall` = Forwarding from channel and user
+- `forwardu` = Forwarding from user
+- `forwardc` = Forwarding from channel
+- `links | url` = Lock links"""
+
 @Gojo.on_message(command("locktypes"))
 async def lock_types(_, m: Message):
     await m.reply_text(
-        (
-            "**Lock Types:**\n"
-            " - `all` = Everything\n"
-            " - `msg` = Messages\n"
-            " - `media` = Media, such as Photo and Video.\n"
-            " - `polls` = Polls\n"
-            " - `invite` = Add users to Group\n"
-            " - `pin` = Pin Messages\n"
-            " - `info` = Change Group Info\n"
-            " - `webprev` = Web Page Previews\n"
-            " - `inlinebots`, `inline` = Inline bots\n"
-            " - `animations` = Animations\n"
-            " - `games` = Game Bots\n"
-            " - `stickers` = Stickers\n"
-            " - `anonchannel` = Send as chat will be locked\n"
-            " - `forwardall` = Forwarding from channel and user\n"
-            " - `forwardu` = Forwarding from user\n"
-            " - `forwardc` = Forwarding from channel\n"
-            " - `links | url` = Lock links"
-        ),
+        l_t
     )
     return
 
@@ -531,6 +533,11 @@ async def prevent_approved(m: Message):
 __PLUGIN__ = "locks"
 
 __alt_name__ = ["grouplock", "lock", "grouplocks"]
+
+__buttons__ = [
+    [
+        ("Lock Types", "LOCK_TYPES"),
+    ],]
 
 __HELP__ = """
 **Locks**

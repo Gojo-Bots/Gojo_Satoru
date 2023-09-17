@@ -7,16 +7,21 @@ from sys import executable
 from time import gmtime, strftime, time
 from traceback import format_exc
 
+from pyrogram import filters
 from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
                              EntityBoundsInvalid, FloodWait, MessageTooLong,
                              PeerIdInvalid, RPCError)
+from pyrogram.types import InlineKeyboardButton as IKB
+from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
-from Powers import (BOT_TOKEN, DEV_USERS, LOG_DATETIME, LOGFILE, LOGGER,
-                    MESSAGE_DUMP, OWNER_ID, UPTIME)
+from Powers import (BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER, MESSAGE_DUMP,
+                    OWNER_ID, UPTIME, get_support_staff)
 from Powers.bot_class import Gojo
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
+from Powers.database.support_db import SUPPORTS
+from Powers.database.users_db import Users
 from Powers.plugins.clean_db import clean_my_db
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
@@ -24,41 +29,169 @@ from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_markdown
 
 
-@Gojo.on_message(command(["adddev", "rmdev"]))
-async def add_dev(c: Gojo, m:Message):
-    if m.from_user.id != OWNER_ID:
-        await m.reply_text("Only owner can do that")
+def can_change_type(curr, to_user):
+    if curr == "dev" and to_user in ["whitelist","sudo"]:
+        return True
+    elif curr == "sudo" and to_user == "whitelist":
+        return True
+    else:
+        return False
+
+@Gojo.on_message(command(["addsupport"]))
+async def add_support(c: Gojo, m:Message):
+    support = SUPPORTS()
+    curr_user = support.get_support_type(m.from_user.id)
+    if not curr_user:
+        await m.reply_text("Stay in you limit")
         return
-    split = m.text.split(None)
+    split = m.command
     reply_to = m.reply_to_message
-    if len(split) != 2:
-        if not reply_to:
-            await m.reply_text("Reply to message to add the user in dev")
-            return
-    if not reply_to:
-        if len(split) != 2:
-            await m.reply_text("Give me an id")
-            return 
-    elif reply_to:
-        user = reply_to.from_user.id
-    elif len(split) == 2:
+    if reply_to:
         try:
-            user,_,_ = extract_user(c,m)
-        except Exception as e:
-            await m.reply_text(f"Give me id of the user {e}")
+            userr = reply_to.from_user.id
+        except Exception:
+            await m.reply_text("Reply to an user")
             return
-    if m.command[0] == "rmdev":
+        curr = support.get_support_type(userr)
         try:
-            DEV_USERS.remove(user)
-            await m.reply_text(f"Removed {user} from dev")
+            to = split[1].lower()
+        except IndexError:
+            await m.reply_text("**USAGE**\n/addsupport [reply to message | user id] [dev | sudo | whitelist]")
             return
-        except ValueError:
-            await m.reply_text("User is not a dev")
+        if to not in ["dev","sudo","whitelist"]:
+            await m.reply_text("**USAGE**\n/addsupport [reply to message | user id] [dev | sudo | whitelist]")
             return
-    DEV_USERS.append(user)
-    await m.reply_text(f"Added {user} to dev")
+        if m.from_user.id == int(OWNER_ID):
+            if to == curr:
+                await m.reply_text(f"This user is already in {to} users")
+                return
+            elif curr:
+                kb = IKM(
+                    [
+                        [
+                            IKB("Yes",f"change_support_type:{to}"),
+                            IKB("No","change_support_type:no")
+                        ]
+                    ]
+                )
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                return
+            else:
+                support.insert_support_user(userr,to)
+                await m.reply_text(f"This user is now a {to} user")
+                return
+        can_do = can_change_type(curr_user,to)
+        if can_do:
+            if to == curr:
+                await m.reply_text(f"This user is already in {to} users")
+                return
+            elif curr:
+                kb = IKM(
+                    [
+                        [
+                            IKB("Yes",f"change_support_type:{to}"),
+                            IKB("No","change_support_type:no")
+                        ]
+                    ]
+                )
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                return
+            else:
+                support.insert_support_user(userr,to)
+                await m.reply_text(f"This user is now a {to} user")
+                return
+        else:
+            await m.reply_text("Sorry you can't do it")
+            return
+    elif len(split) >= 3:
+        user = split[1]
+        try:
+            userr,_,_ = extract_user(user)
+        except Exception:
+            await m.reply_text("Tell the user to start me first")
+            return
+        curr = support.get_support_type(userr)
+        try:
+            to = m.command[2].lower()
+        except IndexError:
+            await m.reply_text("**USAGE**\n/addsupport [reply to message | user id | username] [dev | sudo | whitelist]")
+            return
+        if to not in ["dev","sudo","whitelist"]:
+            await m.reply_text("**USAGE**\n/addsupport [reply to message | user id] [dev | sudo | whitelist]")
+            return
+        if m.from_user.id == int(OWNER_ID):
+            if to == curr:
+                await m.reply_text(f"This user is already in {to} users")
+                return
+            elif curr:
+                kb = IKM(
+                    [
+                        [
+                            IKB("Yes",f"change_support_type:{to}"),
+                            IKB("No","change_support_type:no")
+                        ]
+                    ]
+                )
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                return
+            else:
+                support.insert_support_user(userr,to)
+                await m.reply_text(f"This user is now a {to} user")
+                return
+        can_do = can_change_type(curr_user,to)
+        if can_do:
+            if to == curr:
+                await m.reply_text(f"This user is already in {to} users")
+                return
+            elif curr:
+                kb = IKM(
+                    [
+                        [
+                            IKB("Yes",f"change_support_type:{to}"),
+                            IKB("No","change_support_type:no")
+                        ]
+                    ]
+                )
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                return
+            else:
+                support.insert_support_user(userr,to)
+                await m.reply_text(f"This user is now a {to} user")
+                return
+        else:
+            await m.reply_text("Sorry you can't do it")
+            return
+
+@Gojo.on_message(command("rmsupport"))
+async def rm_support(c: Gojo, m: Message):
+    support = SUPPORTS()
+    curr_user = support.get_support_type(m.from_user.id)
+    if not curr_user:
+        await m.reply_text("Stay in you limit")
+        return
+    split = m.command
+    reply_to = m.reply_to_message
+
+    if reply_to:
+        try:
+            curr = reply_to.from_user.id
+        except Exception:
+            await m.reply_text("Reply to an user")
+            return
+        support.delete_support_user(curr)
+        await m.reply_text("Done")
+    elif len(split) >= 2:
+        try:
+            user,_,_ = extract_user(split[1])
+        except Exception:
+            await m.reply_text("Dunno who u r talking abt")
+            return
+        support.delete_support_user(user)
+        await m.reply_text("Done")
+    else:
+        await m.reply_text("**USAGE**\n/rmsupport [reply to user | user id | username]")
     return
-      
+
 @Gojo.on_message(command("ping", sudo_cmd=True))
 async def ping(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
@@ -199,7 +332,7 @@ async def evaluate_code(c: Gojo, m: Message):
                 f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
             )
     for j in HARMFUL:
-        if j in evaluation:
+        if j in evaluation.split() or j in cmd:
             if m.from_user.id != OWNER_ID:
                 evaluation = "Bhaag ja bsdk"
                 await c.send_message(
@@ -480,6 +613,58 @@ async def chat_broadcast(c: Gojo, m: Message):
 
     return
 
+@Gojo.on_message(command(["forward","fwd"]),dev_cmd=True)
+async def forward_type_broadcast(c: Gojo, m: Message):
+    repl = m.reply_to_message
+    if not repl:
+        await m.reply_text("Please reply to message to broadcast it")
+        return
+    split = m.command
+    
+    chat = Chats.list_chats_by_id()
+    user = [i["_id"] for i in Users.list_users()]
+    alll = chat + user
+    if len(split) != 2:
+        tag = "all"
+    else:
+        try:
+            if split[0].lower() == "-u":
+                tag = "user"
+            elif split[0].lower() == "-c":
+                tag = "chat"
+            else:
+                tag = "all"
+        except IndexError:
+            pass
+    if tag == "chat":
+        peers = chat
+    elif tag == "user":
+        peers = user
+    else:
+        peers = alll
+    
+    xx = await m.reply_text("Broadcasting...")
+
+    failed = 0
+    total = len(peers)
+    for peer in peers:
+        try:
+            await repl.forward(int(peer))
+            await sleep(0.1)
+        except Exception:
+            failed += 1
+            pass
+    txt = f"Broadcasted message to {total-failed} peers out of {total}\nFailed to broadcast message to {failed} peers"
+    if not failed:
+        txt = f"Broadcasted message to {total} peers"
+    await m.reply_text(txt)
+    try:
+        await xx.delete()
+    except Exception:
+        pass
+    return
+
+
 @Gojo.on_message(command(["cleandb","cleandatabase"],sudo_cmd=True))
 async def cleeeen(c:Gojo,m:Message):
     x = await m.reply_text("Cleaning the database...")
@@ -518,6 +703,11 @@ __HELP__ = """
 • /uptime : Return the uptime of the bot.
 • /leavechat : Bot will leave the provided chat.
 • /chatbroadcast : Broadcast the messge to chats.
+• /forward (/fwd) [tag] : Forward message to peers according to tag. Default to all
+    Available tags:
+     `-u` : For users
+     `-c` : For chats
+     `-all` : For all
 
 **Sudoer's command:**
 • /ping : return the ping of the bot.

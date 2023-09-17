@@ -11,18 +11,20 @@ from pyrogram.errors import (ChatAdminInviteRequired, ChatAdminRequired,
                              UserAdminInvalid)
 from pyrogram.types import ChatPrivileges, Message
 
-from Powers import DEV_USERS, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from Powers import LOGGER, OWNER_ID, get_support_staff
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
 from Powers.utils.caching import (ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK,
                                   admin_cache_reload)
-from Powers.utils.custom_filters import (DEV_LEVEL, admin_filter, command,
-                                         owner_filter, promote_filter)
+from Powers.utils.custom_filters import (admin_filter, command, owner_filter,
+                                         promote_filter)
 from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
 from Powers.vars import Config
 
+SUPPORT_STAFF = get_support_staff()
+DEV_LEVEL = get_support_staff("dev_level")
 
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
@@ -580,6 +582,7 @@ __HELP__ = """
 • /disabledel <yes/off>: Delete disabled commands when used by non-admins.
 • /disabled: List the disabled commands in this chat.
 • /enableall: enable all disabled commands.
+
 **Example:**
 `/promote @username`: this promotes a user to admin."""
 
