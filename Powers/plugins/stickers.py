@@ -64,7 +64,7 @@ async def sticker_id_gib(c: Gojo, m: Message):
 async def kang(c:Gojo, m: Message):
     if not m.reply_to_message:
         return await m.reply_text("Reply to a sticker or image to kang it.")
-    elif not (m.reply_to_message.sticker or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image")):
+    elif not (m.reply_to_message.animation or m.reply_to_message.sticker or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]in["image","video"])):
         return await m.reply_text("Reply to a sticker or image to kang it.")
     if not m.from_user:
         return await m.reply_text("You are anon admin, kang stickers in my pm.")
@@ -92,7 +92,7 @@ async def kang(c:Gojo, m: Message):
 
     # Get the corresponding fileid, resize the file if necessary
     try:
-        if is_requ or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
+        if is_requ or m.reply_to_message.video or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
             sizee = (await get_file_size(m.reply_to_message)).split()
             if (sizee[1] == "mb" and sizee > 10) or sizee[1] == "gb":
                 await m.reply_text("File size is too big")
@@ -113,8 +113,11 @@ async def kang(c:Gojo, m: Message):
         LOGGER.error(format_exc())
         return
     try:
-        if is_requ or not m.reply_to_message.sticker:
+        if is_requ or not m.reply_to_message.sticker or m.reply_to_message.animation or m.reply_to_message.video or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
             # telegram doesn't allow animated and video sticker to be kanged as we do for normal stickers
+            if m.reply_to_message.animation or m.reply_to_message.video or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
+                path = m.reply_to_message.download()
+                path = Vsticker(path)
             sticker = await create_sticker(
                 await upload_document(
                     c, path, m.chat.id
@@ -283,27 +286,40 @@ async def get_sticker_from_file(c: Gojo, m: Message):
         await m.reply_text("Reply to a sticker or file")
         return
     repl = m.reply_to_message
-    if not (repl.sticker or repl.photo or (repl.document and repl.document.mime_type.split("/")[0]=="image")):
+    to_vid = False
+    if not (repl.sticker.is_animated or repl.video or repl.sticker or repl.photo or (repl.document and repl.document.mime_type.split("/")[0] in ["image","video"])):
         await m.reply_text("I only support conversion of plain stickers and images for now")
         return
-    if repl.sticker and (repl.sticker.is_video or repl.sticker.is_animated):
-        await m.reply_text("I only support conversion of plain stickers for now")
-        return
+    if repl.video or (repl.document and repl.document.mime_type.split("/")[0]=="video"):
+        to_vid = True
     x = await m.reply_text("Converting...")
+    upp = await repl.download()
     if repl.sticker:
-        upp = await repl.download()
-        up = toimage(upp,is_direc=True)
-        await x.delete()
-        await m.reply_photo(up,caption=Caption)
-        os.remove(up)
-        return
+        if repl.sticker.is_animated:
+            up = tgs_to_gif(upp,True)
+            await x.delete()
+            await m.reply_animation(up,caption=Caption)
+        elif repl.sticker.is_video:
+            up = webm_to_gif(upp)
+            await x.delete()
+            await m.reply_animation(up,caption=Caption)
+        else:
+            up = toimage(upp,is_direc=True)
+            await x.delete()
+            await m.reply_photo(up,caption=Caption)
+            os.remove(up)
+            return
     elif repl.photo:
-        upp = await repl.download()
         up = tosticker(upp,is_direc=True)
         await x.delete()
-        await m.reply_sticker(up,caption=Caption)
+        await m.reply_sticker(up)
         os.remove(up)
         return
+    
+    elif to_vid:
+        up = Vsticker(upp)
+        await x.delete()
+        await m.reply_sticker(up)
 
         
 __PLUGIN__ = "sticker"
