@@ -8,9 +8,23 @@ from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import errors, raw
 from pyrogram.file_id import FileId
+from pyrogram.types import Message
 
 from Powers.bot_class import Gojo
 
+
+async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
+    args = shlex.split(cmd)
+    process = await asyncio.create_subprocess_exec(
+        *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+    )
+    stdout, stderr = await process.communicate()
+    return (
+        stdout.decode("utf-8", "replace").strip(),
+        stderr.decode("utf-8", "replace").strip(),
+        process.returncode,
+        process.pid,
+    )
 
 async def get_sticker_set_by_name(
     client: Gojo, name: str
@@ -97,7 +111,39 @@ async def resize_file_to_sticker_size(file_path: str,length:int=512,width:int=51
     im.save(file_pathh)
     os.remove(file_path)
     return file_pathh
+
+async def tgs_to_gif(file, tgs=False, video=False):
+    if tgs:
+        cmd = f"lottie_convert.py '{file}' 'gojo_satoru.gif'"
+    elif video:
+        cmd = f"ffmpeg -i '{file}' -c copy 'gojo_satoru.gif'"
+    await runcmd(cmd)
+    os.remove(file)
+    return 'gojo_satoru.gif'
+
+async def webm_to_gif(file):
+    cmd = f"ffmpeg -i '{file}' 'goJo.gif'"
+    await runcmd(cmd)
+    os.remove(file)
+    return "goJo.gif"
         
+async def Vsticker(c: Gojo, file: Message):
+    if file.animation:
+        file = file.animation
+    elif file.video:
+        file = file.video
+    _width_ = file.width
+    _height_ = file.height
+    if _height_ > _width_:
+        _height_, _width_ = (512, -1)
+    else:
+        _height_, _width_ = (-1, 512)
+    file = await c.download_media(file)
+    await runcmd(
+        f"ffmpeg -to 00:00:02.900 -i '{file}' -vf scale={_width_}:{_height_} -c:v libvpx-vp9 -crf 30 -b:v 560k -maxrate 560k -bufsize 256k -an 'VideoSticker.webm'"
+    )
+    os.remove(file)
+    return "VideoSticker.webm"
 
 
 async def upload_document(
@@ -183,7 +229,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
 #     img = Image.open(image_path)
 #     i_width, i_height = img.size
 #     m_font = ImageFont.truetype(
-#         "./extras/comic.ttf", int((70 / 640) * i_width)
+#         "./extras/comic.ttf", int(i_width / 11)
 #     )
 #     if ";" in text:
 #         upper_text, lower_text = text.split(";")

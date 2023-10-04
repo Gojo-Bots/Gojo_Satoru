@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime, timedelta
 from html import escape
 from re import compile as compile_re
@@ -192,3 +193,24 @@ async def remove_escapes(text: str) -> str:
         else:
             res += text[counter]
     return res
+
+async def encode_decode(string: str,to_do="encode"):
+    """
+    Function to encode or decode strings
+    string: string to be decoded or encoded
+    to_do: encode to encode the string or decode to decode the string
+    """
+    if to_do.lower() == "encode":
+        encodee = string.encode("ascii")
+        base64_ = base64.b64encode(encodee)
+        B64 = base64_.decode("ascii")
+    
+    elif to_do.lower() == "decode":
+        decodee = string.encode("ascii")
+        base64_ = base64.b64decode(decodee)
+        B64 = base64_.decode("ascii")
+
+    else:
+        B64 = None
+
+    return B64

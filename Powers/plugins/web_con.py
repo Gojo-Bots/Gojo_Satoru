@@ -262,7 +262,7 @@ async def song_down_up(c: Gojo, m: Message):
         query = splited
     XnX = await m.reply_text("⏳")
     try:
-        x = await youtube_downloader(c,m,query,is_direct,"a")
+        await youtube_downloader(c,m,query,is_direct,"a")
         await XnX.delete()
         return
     except KeyError:

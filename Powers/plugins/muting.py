@@ -9,8 +9,9 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID, SUPPORT_STAFF
+from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -19,6 +20,7 @@ from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.vars import Config
 
+SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(command("tmute") & restrict_filter)
 async def tmute_usr(c: Gojo, m: Message):
@@ -90,8 +92,6 @@ async def tmute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         if mutetime:
             txt += f"\n<b>Muted for</b>: {time_val}"
         keyboard = InlineKeyboardMarkup(
@@ -203,8 +203,6 @@ async def dtmute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         if mutetime:
             txt += f"\n<b>Muted for</b>: {time_val}"
         keyboard = InlineKeyboardMarkup(
@@ -384,8 +382,6 @@ async def mute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -543,8 +539,6 @@ async def dmute_usr(c: Gojo, m: Message):
         txt = f"Admin {admin} muted {muted}!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        else:
-            txt += "\n<b>Reason</b>: Not Specified"
         keyboard = InlineKeyboardMarkup(
             [
                 [

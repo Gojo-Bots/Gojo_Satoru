@@ -3,10 +3,8 @@ from traceback import format_exc
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
-
-SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
-DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
+from Powers import LOGGER, OWNER_ID
+from Powers.database.support_db import SUPPORTS
 
 
 async def admin_check(m: Message or CallbackQuery) -> bool:
@@ -15,6 +13,11 @@ async def admin_check(m: Message or CallbackQuery) -> bool:
         user_id = m.from_user.id
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
+
+    support = SUPPORTS()
+
+    SUDO_LEVEL = support.get_particular_support("sudo") + support.get_particular_support("dev") + [int(OWNER_ID)]
+    DEV_LEVEL = support.get_particular_support("dev") + [int(OWNER_ID)]
 
     try:
         if user_id in SUDO_LEVEL:
@@ -65,6 +68,10 @@ async def owner_check(m: Message or CallbackQuery) -> bool:
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
         m = m.message
+
+    support = SUPPORTS()
+
+    SUDO_LEVEL = support.get_particular_support("sudo") + support.get_particular_support("dev") + [int(OWNER_ID)]
 
     try:
         if user_id in SUDO_LEVEL:

@@ -172,6 +172,8 @@ If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 `API_HASH` You can get your api hash [here](my.telegram.org)
 
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
+
+`MESSAGE_DUMP`: Event logs channel where the bot will send updates. Note that it should start with `-100`.
 </details>
 
 
@@ -200,8 +202,6 @@ If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 `RMBG_API` Your [removebackground api](https://www.remove.bg/api#remove-background) to remove the background/
 
 `SUPPORT_GROUP`: Your Telegram support group chat username that users can contact in case of a problem.
-
-`MESSAGE_DUMP`: Event logs channel where the bot will send updates. Note that it should start with `-100`.
 
 `PREFIX_HANDLER`: Something like '/' to execute commands.
 

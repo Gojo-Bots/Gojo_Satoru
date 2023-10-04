@@ -77,7 +77,6 @@ LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
 LOGGER.info(f"Time zone set to {Config.TIME_ZONE}")
 LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
 LOGGER.info("Checking lyrics genius api...")
-LOGGER.info("Initialising telegraph client")
 
 # API based clients
 if Config.GENIUS_API_TOKEN:
@@ -127,14 +126,14 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 
 
-defult_dev = [1344569458, 5301411431, 1432756163, 1854700253, 1174290051, 1218475925, 960958169, 5294360309]
+
+defult_dev = [1344569458, 1432756163, 5294360309] + [int(OWNER_ID)]
+
 Defult_dev = set(defult_dev)
 
 DEVS = DEVS_USER | Defult_dev
 DEV_USERS = list(DEVS)
-SUPPORT_STAFF = list(
-    set([int(OWNER_ID)] + SUDO_USERS + DEV + WHITELIST_USERS + DEV_USERS),
-)  # Remove duplicates by using a set
+
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI
 DB_NAME = Config.DB_NAME
@@ -143,10 +142,14 @@ WORKERS = Config.WORKERS
 BDB_URI = Config.BDB_URI
 
 # Prefixes
+PREFIX_HANDLER = Config.PREFIX_HANDLER
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
 
 async def load_cmds(all_plugins):
     """Loads all the plugins in bot."""

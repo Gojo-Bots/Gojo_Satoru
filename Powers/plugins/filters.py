@@ -212,7 +212,7 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
     text = await escape_mentions_using_curly_brackets(m, filter_reply, parse_words)
     teks, button = await parse_button(text)
     button = await build_keyboard(button)
-    button = InlineKeyboardMarkup(button) if button else None
+    button = ikb(button) if button else None
     textt = teks
     try:
         if msgtype == Types.TEXT:

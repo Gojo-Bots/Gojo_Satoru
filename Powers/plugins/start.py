@@ -1,3 +1,4 @@
+import os
 from random import choice
 from time import gmtime, strftime, time
 
@@ -12,11 +13,13 @@ from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
 from Powers import (HELP_COMMANDS, LOGGER, PYROGRAM_VERSION, PYTHON_VERSION,
                     UPTIME, VERSION)
 from Powers.bot_class import Gojo
+from Powers.database.captcha_db import CAPTCHA_DATA
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb, get_help_msg,
                                       get_private_note, get_private_rules)
+from Powers.utils.string import encode_decode
 from Powers.vars import Config
 
 
@@ -103,10 +106,27 @@ async def start(c: Gojo, m: Message):
                         quote=True,
                     )
                     return
+                elif help_option.split("_",1)[0] == "qrcaptcha":
+                    decoded = encode_decode(help_option.split("_",1)[1],"decode")
+                    decode = decoded.split(":")
+                    chat = decode[0]
+                    user = decode[1]
+                    if m.from_user.id != int(user):
+                        await m.reply_text("Not for you Baka")
+                        return
+                    try:
+                        await c.unban_chat_member(int(chat),int(user))
+                        try:
+                            os.remove(f"captcha_verification{chat}_{user}.png")
+                        except Exception:
+                            pass
+                        return
+                    except Exception:
+                        return
         try:
             cpt = f"""
 Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! I am Gojo ✨.
-I'm here to help you manage your groups!
+I'm here to help you manage your group(s)!
 Hit /help to find out more about how to use me in my full potential!
 
 Join my [News Channel](https://t.me/gojo_bots_network) to get information on all the latest updates."""
@@ -145,7 +165,7 @@ async def start_back(_, q: CallbackQuery):
     try:
         cpt = f"""
 Hey [{q.from_user.first_name}](http://t.me/{q.from_user.username})! I am Gojo ✨.
-I'm here to help you manage your groups!
+I'm here to help you manage your group(s)!
 Hit /help to find out more about how to use me in my full potential!
 
 Join my [News Channel](http://t.me/gojo_bots_network) to get information on all the latest updates."""
@@ -167,7 +187,7 @@ async def commands_menu(_, q: CallbackQuery):
     try:
         cpt = f"""
 Hey **[{q.from_user.first_name}](http://t.me/{q.from_user.username})**! I am Gojo✨.
-I'm here to help you manage your groups!
+I'm here to help you manage your group(s)!
 Commands available:
 × /start: Start the bot
 × /help: Give's you this message.
@@ -240,7 +260,7 @@ async def help_menu(_, m: Message):
             keyboard = ikb(ou, True)
             msg = f"""
 Hey **[{m.from_user.first_name}](http://t.me/{m.from_user.username})**!I am Gojo✨.
-I'm here to help you manage your groups!
+I'm here to help you manage your group(s)!
 Commands available:
 × /start: Start the bot
 × /help: Give's you this message."""

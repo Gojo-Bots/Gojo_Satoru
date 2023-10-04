@@ -1,6 +1,8 @@
 from threading import RLock
+
 from Powers import LOGGER
 from Powers.database import MongoDB
+
 INSERTION_LOCK = RLock()
 class Approve(MongoDB):
     """Class for managing Approves in Chats in Bot."""
