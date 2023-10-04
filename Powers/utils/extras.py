@@ -695,6 +695,15 @@ StartPic = [
     "https://graph.org/file/6d18195f6e0e55af91228.png",
     "https://i.imgur.com/8l6cByn.jpg",
     "https://graph.org/file/259a92d3482fc8627fe68.png",
+    "https://graph.org/file/d328fb0a7e30b866979d5.jpg",
+    "https://graph.org/file/cdbc22231afb0937e1a5d.jpg",
+    "https://graph.org/file/dd32af83434be92ef4f72.jpg",
+    "https://graph.org/file/9c97627158a8b6c23cd8b.jpg",
+    "https://graph.org/file/0bd63482afbc2844cb77d.jpg",
+    "https://graph.org/file/798a33ee39bca8014116c.jpg",
+    "https://graph.org/file/d0beb924887f45ab1c84e.jpg",
+    "https://graph.org/file/9e92625135caffcadcbae.jpg",
+    "https://graph.org/file/f377781fe8a1fe09fea55.jpg",
 ]
 
 

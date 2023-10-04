@@ -30,3 +30,11 @@ if BDB_URI:
 
     bday_info = Birth_main_db['users_bday']
     bday_cinfo = Birth_main_db["chat_bday"]
+
+from datetime import datetime
+
+
+def till_date(date):
+    form = "%Y-%m-%d %H:%M:%S"
+    z = datetime.strptime(date,form)
+    return z

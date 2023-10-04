@@ -1,11 +1,14 @@
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
-from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
+from Powers import LOGGER, OWNER_ID, WHITELIST_USERS
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.parser import mention_html
 
+DEV_USERS = get_support_staff("dev")
+SUDO_USERS = get_support_staff("sudo")
 
 @Gojo.on_message(command("botstaff", dev_cmd=True))
 async def botstaff(c: Gojo, m: Message):

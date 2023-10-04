@@ -5,13 +5,15 @@ from pyrogram import enums
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
 
-from Powers import DEV_USERS, LOGGER
+from Powers import LOGGER
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils import extras
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import NOWYES as NO
 from Powers.utils.extras import YESWNO as YES
 
+DEV_USERS = get_support_staff("dev")
 
 @Gojo.on_message(command("shout"))
 async def fun_shout(_, m: Message):

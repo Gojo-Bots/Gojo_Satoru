@@ -72,8 +72,8 @@ async def gen_start_kb(q: Message or CallbackQuery):
             ],
             [
                 (
-                    "Join for GFx work",
-                    "https://t.me/psy_Logos",
+                    "Essential",
+                    "https://t.me/+PcVYvdzNt4E1YjM1",
                     "url",
                 ),
                 (

@@ -5,11 +5,11 @@ from traceback import format_exc
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
-from Powers import (LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF,
-                    TIME_ZONE)
+from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, TIME_ZONE
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.users_db import Users
+from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -18,7 +18,7 @@ from Powers.vars import Config
 
 # Initialize
 db = GBan()
-
+SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(command(["gban", "globalban"], sudo_cmd=True))
 async def gban(c: Gojo, m: Message):

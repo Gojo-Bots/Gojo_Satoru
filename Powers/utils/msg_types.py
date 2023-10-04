@@ -50,7 +50,7 @@ async def get_note_type(m: Message):
             data_type = Types.STICKER
 
         elif m.reply_to_message.document:
-            if m.reply_to_message.document.mime_type == "application/x-bad-tgsticker":
+            if m.reply_to_message.document.mime_type in ["application/x-bad-tgsticker", "application/x-tgsticker"]:
                 data_type = Types.ANIMATED_STICKER
             else:
                 data_type = Types.DOCUMENT
@@ -89,7 +89,7 @@ async def get_note_type(m: Message):
 async def get_filter_type(m: Message):
     """Get filter type."""
     if len(m.text.split()) <= 1:
-        return None, None, None, None
+        return None, None, None
 
     data_type = None
     content = None
@@ -118,7 +118,7 @@ async def get_filter_type(m: Message):
             data_type = Types.STICKER
 
         elif m.reply_to_message.document:
-            if m.reply_to_message.document.mime_type == "application/x-bad-tgsticker":
+            if m.reply_to_message.document.mime_type in ["application/x-bad-tgsticker", "application/x-tgsticker"]:
                 data_type = Types.ANIMATED_STICKER
             else:
                 data_type = Types.DOCUMENT
@@ -163,7 +163,7 @@ async def get_wlcm_type(m: Message):
     raw_text = m.text.markdown if m.text else m.caption.markdown
     args = raw_text.split(None, 1)
 
-    if not m.reply_to_message and m.text and len(m.text.split()) >= 2:
+    if not m.reply_to_message and m.text and len(m.text.strip().split()) >= 2:
         content = None
         text = m.text.markdown.split(None, 1)[1]
         data_type = Types.TEXT
@@ -180,15 +180,66 @@ async def get_wlcm_type(m: Message):
         if len(args) >= 1 and m.reply_to_message.text:  # not caption, text
             data_type = Types.TEXT
 
-        elif m.reply_to_message.sticker:
-            content = m.reply_to_message.sticker.file_id
-            data_type = Types.STICKER
+        elif m.reply_to_message.document:
+            data_type = Types.DOCUMENT
+            content = m.reply_to_message.document.file_id
+
+        elif m.reply_to_message.photo:
+            content = m.reply_to_message.photo.file_id  # last elem = best quality
+            data_type = Types.PHOTO
+
+        elif m.reply_to_message.audio:
+            content = m.reply_to_message.audio.file_id
+            data_type = Types.AUDIO
+
+        elif m.reply_to_message.voice:
+            content = m.reply_to_message.voice.file_id
+            data_type = Types.VOICE
+
+        elif m.reply_to_message.video:
+            content = m.reply_to_message.video.file_id
+            data_type = Types.VIDEO
+
+        elif m.reply_to_message.video_note:
+            content = m.reply_to_message.video_note.file_id
+            data_type = Types.VIDEO_NOTE
+
+        elif m.reply_to_message.animation:
+            content = m.reply_to_message.animation.file_id
+            data_type = Types.ANIMATION
+
+    else:
+        text = None
+        data_type = None
+        content = None
+
+    return text, data_type, content
+
+async def get_afk_type(m: Message):
+    data_type = None
+    content = None
+    raw_text = m.text.markdown if m.text else m.caption.markdown
+    args = raw_text.split(None, 1)
+
+    if not m.reply_to_message and m.text and len(m.text.strip().split()) >= 2:
+        content = None
+        text = m.text.markdown.split(None, 1)[1]
+        data_type = Types.TEXT
+
+    elif m.reply_to_message:
+
+        if m.reply_to_message.text:
+            text = m.reply_to_message.text.markdown
+        elif m.reply_to_message.caption:
+            text = m.reply_to_message.caption.markdown
+        else:
+            text = ""
+
+        if len(args) >= 1 and m.reply_to_message.text:  # not caption, text
+            data_type = Types.TEXT
 
         elif m.reply_to_message.document:
-            if m.reply_to_message.document.mime_type == "application/x-bad-tgsticker":
-                data_type = Types.ANIMATED_STICKER
-            else:
-                data_type = Types.DOCUMENT
+            data_type = Types.DOCUMENT
             content = m.reply_to_message.document.file_id
 
         elif m.reply_to_message.photo:

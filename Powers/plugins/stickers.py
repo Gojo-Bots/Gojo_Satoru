@@ -1,4 +1,3 @@
-import imghdr
 import os
 from asyncio import gather
 from random import choice
@@ -64,7 +63,7 @@ async def sticker_id_gib(c: Gojo, m: Message):
 async def kang(c:Gojo, m: Message):
     if not m.reply_to_message:
         return await m.reply_text("Reply to a sticker or image to kang it.")
-    elif not (m.reply_to_message.sticker or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image")):
+    elif not (m.reply_to_message.animation or m.reply_to_message.sticker or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]in["image","video"])):
         return await m.reply_text("Reply to a sticker or image to kang it.")
     if not m.from_user:
         return await m.reply_text("You are anon admin, kang stickers in my pm.")
@@ -92,9 +91,9 @@ async def kang(c:Gojo, m: Message):
 
     # Get the corresponding fileid, resize the file if necessary
     try:
-        if is_requ or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
+        if is_requ or m.reply_to_message.video or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
             sizee = (await get_file_size(m.reply_to_message)).split()
-            if (sizee[1] == "mb" and sizee > 10) or sizee[1] == "gb":
+            if (sizee[1] == "mb" and int(sizee[0]) > 10) or sizee[1] == "gb":
                 await m.reply_text("File size is too big")
                 return
             path = await m.reply_to_message.download()
@@ -113,8 +112,17 @@ async def kang(c:Gojo, m: Message):
         LOGGER.error(format_exc())
         return
     try:
-        if is_requ or not m.reply_to_message.sticker:
+        if is_requ or m.reply_to_message.animation or m.reply_to_message.video or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
             # telegram doesn't allow animated and video sticker to be kanged as we do for normal stickers
+            if m.reply_to_message.animation or m.reply_to_message.video or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
+                path = await Vsticker(c, m.reply_to_message)
+                SIZE = os.path.getsize(path)
+                if SIZE > 261120:
+                    await m.reply_text("File is too big")
+                    os.remove(path)
+                    return
+            else:
+                path = await m.reply_to_message.download()
             sticker = await create_sticker(
                 await upload_document(
                     c, path, m.chat.id
@@ -142,7 +150,7 @@ async def kang(c:Gojo, m: Message):
     # Find an available pack & add the sticker to the pack; create a new pack if needed
     # Would be a good idea to cache the number instead of searching it every single time...
     kang_lim = 120
-    st_in = m.reply_to_message.sticker
+    st_in = m.reply_to_message.sticker 
     st_type = "norm"
     is_anim = is_vid = False
     if st_in:
@@ -154,6 +162,19 @@ async def kang(c:Gojo, m: Message):
             st_type = "vid"
             kang_lim = 50
             is_vid = True
+    elif m.reply_to_message.document:
+        if m.reply_to_message.document.mime_type in ["application/x-bad-tgsticker", "application/x-tgsticker"]:
+            st_type = "ani"
+            kang_lim = 50
+            is_anim = True
+        elif m.reply_to_message.document.mime_type == "video/webm":
+            st_type = "vid"
+            kang_lim = 50
+            is_vid = True
+    elif m.reply_to_message.video or m.reply_to_message.animation or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
+        st_type = "vid"
+        kang_lim = 50
+        is_vid = True
     packnum = 0
     limit = 0
     volume = 0
@@ -279,29 +300,51 @@ async def memify_it(c: Gojo, m: Message):
 @Gojo.on_message(command(["getsticker","getst"]))
 async def get_sticker_from_file(c: Gojo, m: Message):
     Caption = f"Converted by:\n@{Config.BOT_USERNAME}"
-    if not m.reply_to_message:
+    repl = m.reply_to_message
+    if not repl:
         await m.reply_text("Reply to a sticker or file")
         return
-    repl = m.reply_to_message
-    if not (repl.sticker or repl.photo or (repl.document and repl.document.mime_type.split("/")[0]=="image")):
-        await m.reply_text("I only support conversion of plain stickers and images for now")
+    to_vid = False
+    if not (repl.animation or repl.video or repl.sticker or repl.photo or (repl.document and repl.document.mime_type.split("/")[0] in ["image","video"])):
+        await m.reply_text("I only support conversion of plain stickers, images, videos and animation for now")
         return
-    if repl.sticker and (repl.sticker.is_video or repl.sticker.is_animated):
-        await m.reply_text("I only support conversion of plain stickers for now")
-        return
+    if repl.animation or repl.video or (repl.document and repl.document.mime_type.split("/")[0]=="video"):
+        to_vid = True
     x = await m.reply_text("Converting...")
     if repl.sticker:
-        upp = await repl.download()
-        up = toimage(upp,is_direc=True)
-        await x.delete()
-        await m.reply_photo(up,caption=Caption)
-        os.remove(up)
-        return
+        if repl.sticker.is_animated:
+            upp = await repl.download()
+            up = tgs_to_gif(upp,True)
+            await x.delete()
+            await m.reply_animation(up,caption=Caption)
+            os.remove(up)
+            return
+        elif repl.sticker.is_video:
+            upp = await repl.download()
+            up = await webm_to_gif(upp)
+            await x.delete()
+            await m.reply_animation(up,caption=Caption)
+            os.remove(up)
+            return
+        else:
+            upp = await repl.download()
+            up = toimage(upp,is_direc=True)
+            await x.delete()
+            await m.reply_photo(up,caption=Caption)
+            os.remove(up)
+            return
     elif repl.photo:
         upp = await repl.download()
         up = tosticker(upp,is_direc=True)
         await x.delete()
-        await m.reply_sticker(up,caption=Caption)
+        await m.reply_sticker(up)
+        os.remove(up)
+        return
+    
+    elif to_vid:
+        up = await Vsticker(c,repl)
+        await x.delete()
+        await m.reply_sticker(up)
         os.remove(up)
         return
 
@@ -315,7 +358,7 @@ __HELP__ = """
 **User Commands:**
 • /kang (/steal) <emoji>: Reply to a sticker or any supported media
 • /stickerinfo (/stinfo) : Reply to any sticker to get it's info
-• /getsticker (/getst) : Get sticker as photo or vice versa.
+• /getsticker (/getst) : Get sticker as photo, gif or vice versa.
 • /stickerid (/stid) : Reply to any sticker to get it's id
 • /mmf <your text>: Reply to a normal sticker or a photo or video file to memify it. If you want to right text at bottom use `;right your message`
     ■ For e.g. 

@@ -1,8 +1,6 @@
-from datetime import date, datetime, time
-from random import choice
+from datetime import date, datetime
 from traceback import format_exc
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus, ChatType
 from pyrogram.types import CallbackQuery
@@ -18,7 +16,6 @@ if BDB_URI:
     from Powers.plugins import bday_cinfo, bday_info
 
 from Powers.utils.custom_filters import command
-from Powers.utils.extras import birthday_wish
 
 
 def give_date(date,form = "%d/%m/%Y"):
@@ -144,7 +141,7 @@ async def who_is_next(c: Gojo, m: Message):
                 break
     if not users:
         await xx.delete()
-        await m.reply_text("No birthdays found :/")
+        await m.reply_text("There are no upcoming birthdays of any user in this chat:/\nEither all the birthdays are passed or no user from this chat have registered their birthday")
         return
     txt = "🎊 Upcomming Birthdays Are 🎊\n"
     for i in users:
@@ -186,6 +183,7 @@ async def cant_recall_it(c: Gojo, m: Message):
         u_dobm = date(curr.year, u_dob.month, u_dob.day)
         days_left = (u_dobm - curr).days
         txt = f"User's birthday is coming🥳\nDays left : {days_left}"
+        txt += f"\n\nBirthday on: {result['dob']}"
     await m.reply_text(txt)
     return
 
@@ -227,60 +225,7 @@ async def switch_on_off(c:Gojo, q: CallbackQuery):
     await q.edit_message_text(f"Done! I will {'wish' if data == 'yes' else 'not wish'}",reply_markup=IKM([[IKB("Close", "f_close")]]))
     return
 
-scheduler = AsyncIOScheduler()
-scheduler.timezone = TIME_ZONE
-scheduler_time = time(0,0,0)
-async def send_wishish(JJK: Gojo):
-    c_list = Chats.list_chats_by_id()
-    blist = list(bday_info.find())
-    curr = datetime.now(TIME_ZONE).date()
-    cclist = list(bday_cinfo.find())
-    for i in blist:
-        dob = give_date(i["dob"])
-        if dob.month == curr.month and dob.day == curr.day:
-            for j in c_list:
-                if cclist and (j in cclist):
-                    return
-                try:
-                    agee = ""
-                    if i["is_year"]:
-                        agee = curr.year - dob.year
-                        if str(agee).endswith("1"):
-                            agee = f"{agee}st"
-                        elif str(agee).endswith("2"):
-                            agee = f"{agee}nd"
-                        elif str(agee).endswith("3"):
-                            agee = f"{agee}rd"
-                        else:
-                            agee = f"{agee}th"
-                    U = await JJK.get_chat_member(chat_id=j,user_id=i["user_id"])
-                    wish = choice(birthday_wish)
-                    if U.status in [ChatMemberStatus.MEMBER,ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
-                        xXx = await JJK.send_message(j,f"Happy {agee} birthday {U.user.mention}🥳\n{wish}")
-                        try:
-                            await xXx.pin()
-                        except Exception:
-                            pass
-                except Exception:
-                    pass
 
-""""
-from datetime import date, datetime
-
-#form = 
-num = "18/05/2005"
-st = "18 May 2005"
-timm = datetime.strptime(num,"%d/%m/%Y").date()
-x = datetime.now().date()
-if timm.month < x.month:
-    next_b = date(x.year + 1, timm.month, timm.day)
-    days_left = (next_b - x).days
-else:
-    timmm = date(x.year, timm.month, timm.day)
-    days_left = (timmm - x).days
-print(days_left)
-print(x.year - timm.year)
-"""
 
 __PLUGIN__ = "birthday"
 
