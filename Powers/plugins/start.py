@@ -13,13 +13,13 @@ from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
 from Powers import (HELP_COMMANDS, LOGGER, PYROGRAM_VERSION, PYTHON_VERSION,
                     UPTIME, VERSION)
 from Powers.bot_class import Gojo
-from Powers.database.captcha_db import CAPTCHA_DATA
+# from Powers.database.captcha_db import CAPTCHA_DATA
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb, get_help_msg,
                                       get_private_note, get_private_rules)
-from Powers.utils.string import encode_decode
+# from Powers.utils.string import encode_decode
 from Powers.vars import Config
 
 
