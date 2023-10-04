@@ -9,8 +9,9 @@ from pyrogram.types import (CallbackQuery, ChatPrivileges,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID, get_support_staff
+from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -648,7 +649,7 @@ async def unban_usr(c: Gojo, m: Message):
         await m.chat.unban_member(user_id)
         admin = m.from_user.mention
         unbanned = await mention_html(user_first_name, user_id)
-        chat_title = (m.chat.title,)
+        chat_title = m.chat.title
         txt = f"{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"

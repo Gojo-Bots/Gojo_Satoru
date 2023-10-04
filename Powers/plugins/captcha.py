@@ -1,16 +1,18 @@
-import os
 from random import shuffle
 from traceback import format_exc
 
+import pyrogram  # don't remove
 from pyrogram import filters
+from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.types import CallbackQuery, ChatMemberUpdated, ChatPermissions
 from pyrogram.types import InlineKeyboardButton as ikb
 from pyrogram.types import InlineKeyboardMarkup as ikm
 from pyrogram.types import Message
 
-from Powers import LOGGER, get_support_staff
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.captcha_db import CAPTCHA, CAPTCHA_DATA
+from Powers.supports import get_support_staff
 from Powers.utils.captcha_helper import (genrator, get_image_captcha,
                                          get_qr_captcha)
 from Powers.utils.custom_filters import admin_filter, command
@@ -30,7 +32,7 @@ async def start_captcha(c: Gojo, m: Message):
         await m.reply_text(txt)
         return
     else:
-        on_off = split[1]
+        on_off = split[1].lower()
         if on_off in ["on","yes","enable"]:
             captcha.insert_captcha(m.chat.id)
             await m.reply_text("Captcha verification is now **on** for this chat")
@@ -70,20 +72,47 @@ async def set_captcha_mode(c: Gojo, m: Message):
             await m.reply_text("**USAGE**\n/captchamode [qr | image]")
             return
 
-@Gojo.on_chat_member_updated(filters.group & filters.service,18)
-async def joinss(c: Gojo, u: ChatMemberUpdated, m: Message):
+@Gojo.on_chat_member_updated(filters.group,18)
+async def joinss(c: Gojo, u: ChatMemberUpdated):
     chat = u.chat.id
-    user = u.from_user.id
 
-    is_qr = CAPTCHA().is_captcha()
+    if (
+        u.new_chat_member
+    ):
+        pass
+    else:
+        return
+
+    user = u.new_chat_member.user.id
+    userr = u.new_chat_member.user
+
+    is_qr = CAPTCHA().is_captcha(chat)
     if not is_qr:
         return
-    
+
     captcha = CAPTCHA()
     cap_data = CAPTCHA_DATA()
 
     if user in SUPPORT_STAFF:
         return
+
+    captcha_type = captcha.get_captcha(chat)
+
+    is_already = cap_data.is_already_data(chat, user)
+    
+    mess = False
+    try:
+        if is_already:
+            mess = await c.get_messages(chat,int(is_already))
+    except Exception:
+        cap_data.del_message_id(chat,is_already)
+        mess = False
+        is_already = False
+
+    if is_already and not mess:
+        cap_data.del_message_id(chat,is_already)
+        return
+
     try:
         await c.restrict_chat_member(chat,user,ChatPermissions())
     except Exception as e:
@@ -91,48 +120,16 @@ async def joinss(c: Gojo, u: ChatMemberUpdated, m: Message):
         LOGGER.error(format_exc())
         return
 
-    captcha_type = captcha.get_captcha(chat)
-
-    if captcha_type == "qr":
-        is_already = cap_data.is_already_data(chat, user)
-
-        try:
-            if is_already:
-                mess = await c.get_messages(chat,int(is_already))
-        except Exception:
-            cap_data.del_message_id(chat,is_already)
-            is_already = False
-
-        if not is_already:
-            pic = get_qr_captcha(chat, user)
-            cap = f"Please {u.from_user.mention} scan this qr code with your phone to verify that you are human"
-            ms = await m.reply_photo(pic,caption=cap)
+    if not is_already:
+        if captcha_type == "qr":
+            pic = await get_qr_captcha(chat, user)
+            cap = f"Please {userr.mention} scan this qr code with your phone to verify that you are human"
+            ms = await c.send_photo(chat,pic,caption=cap)
             cap_data.store_message_id(chat,user,ms.id)
             return
-        else:
-            kb = ikm(
-                [
-                    [
-                        ikb("Click here to verify",url=mess.link)
-                    ]
-                ]
-            )
-            await m.reply_text("You verification is already pending",reply_markup=kb)
-            return
-    
-    elif captcha_type == "image":
-        is_already = cap_data.is_already_data(chat, user)
-
-        try:
-            if is_already:
-                mess = await c.get_messages(chat,int(is_already))
-        except Exception:
-            cap_data.del_message_id(chat,is_already)
-            is_already = False
-
-        if not is_already:
-            img, code = get_image_captcha(chat, user)
-            cap = f"Please {u.from_user.mention} please choose the correct code from the one given bellow\nYou have three tries if you get all three wrong u will be kicked from the chat.\nTries left: 3"
+        elif captcha_type == "image":
+            img, code = await get_image_captcha(chat, user)
+            cap = f"Please {userr.mention} please choose the correct code from the one given bellow\nYou have three tries if you get all three wrong u will be kicked from the chat.\nTries left: 3"
             cap_data.load_cap_data(chat, user, code)
             rand = [code]
             while len(rand) != 5:
@@ -145,33 +142,38 @@ async def joinss(c: Gojo, u: ChatMemberUpdated, m: Message):
 
             kb = ikm(
                 [
-                    ikb(rand[0],ini+rand[0])
-                ],
-                [
-                    ikb(rand[1],ini+rand[1])
-                ],
-                [
-                    ikb(rand[2],ini+rand[2])
-                ],
-                [
-                    ikb(rand[3],ini+rand[3])
-                ],
-                [
-                    ikb(rand[4],ini+rand[4])
-                ]
-            )
-            await m.reply_photo(img,caption=cap,reply_markup=kb)
-            return
-        else:
-            kb = ikm(
-                [
                     [
-                        ikb("Click here to verify",url=mess.link)
+                        ikb(rand[0],ini+rand[0])
+                    ],
+                    [
+                        ikb(rand[1],ini+rand[1])
+                    ],
+                    [
+                        ikb(rand[2],ini+rand[2])
+                    ],
+                    [
+                        ikb(rand[3],ini+rand[3])
+                    ],
+                    [
+                        ikb(rand[4],ini+rand[4])
                     ]
                 ]
             )
-            await m.reply_text("You verification is already pending",reply_markup=kb)
+            await c.send_photo(chat,img,caption=cap,reply_markup=kb)
             return
+    elif is_already and mess:
+        kb = ikm(
+            [
+                [
+                    ikb("Click here to verify",url=mess.link)
+                ]
+            ]
+        )
+        await c.send_message(f"{userr.mention} your verification is already pending",reply_markup=kb)
+        return
+    else:
+        await c.unban_chat_member(chat,user)
+        return
 
 @Gojo.on_callback_query(filters.regex("^captcha_"))
 async def captcha_codes_check(c: Gojo, q: CallbackQuery):
@@ -191,23 +193,23 @@ async def captcha_codes_check(c: Gojo, q: CallbackQuery):
     if code_ == code:
         cap = "You guessed the captcha right...Now you can talk in the chat with no restrictions"
         c_data.remove_cap_data(chat,user)
-        await q.answer(cap)
+        await q.answer(cap,True)
         try:
             await q.message.chat.unban_member(user)
         except Exception as e:
             await q.message.reply_text(f"Unable to unmute {q.from_user.mention} this user")
             await q.message.reply_text(e)
             return
-        await c.send_message(f"{q.from_user.mention} now you are free to talk")
+        await c.send_message(chat,f"{q.from_user.mention} now you are free to talk")
         await q.message.delete()
         return
     else:
-        await q.answer("Wrong")
         caps = q.message.caption.split(":")
         tries = int(caps[1].strip()) - 1
         caps.pop(-1)
         caps.append(f" {tries}")
         new_cap = ":".join(caps)
+        await q.answer(f"Wrong\nTries left: {tries}", True)
         if not tries:
             new_cap = f"You have zero tries left now. I am going to kick you know coz you failed to solve captcha...see yaa {q.from_user.mention}"
             try:
@@ -220,5 +222,13 @@ async def captcha_codes_check(c: Gojo, q: CallbackQuery):
             await c.unban_chat_member(chat,user)
 
         else:
-            await q.edit_message_caption(new_cap)
+            await q.edit_message_caption(new_cap,reply_markup=q.message.reply_markup)
             return
+
+
+__PLUGIN__ = "captcha"
+
+__HELP__ = """
+• /captcha [on|yes|enable|off|no|disable] : To enable or disable captcha verification
+• /captchamode [qr|image] : To change captcha mode
+"""

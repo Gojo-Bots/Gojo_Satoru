@@ -10,10 +10,11 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, SUPPORT_GROUP, get_support_staff
+from Powers import LOGGER, SUPPORT_GROUP
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.flood_db import Floods
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
 from Powers.utils.kbhelpers import ikb

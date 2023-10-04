@@ -2,21 +2,18 @@ from platform import python_version
 from threading import RLock
 from time import gmtime, strftime, time
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
 
 from Powers import (API_HASH, API_ID, BDB_URI, BOT_TOKEN, LOG_DATETIME,
-                    LOGFILE, LOGGER, MESSAGE_DUMP, NO_LOAD, OWNER_ID,
-                    TIME_ZONE, UPTIME, WORKERS, load_cmds, load_support_users)
+                    LOGFILE, LOGGER, MESSAGE_DUMP, NO_LOAD, OWNER_ID, UPTIME,
+                    WORKERS, load_cmds, scheduler)
 from Powers.database import MongoDB
 from Powers.plugins import all_plugins
-from Powers.plugins.birthday import send_wishish
-from Powers.plugins.clean_db import clean_my_db
+from Powers.plugins.scheduled_jobs import *
+from Powers.supports import *
 from Powers.vars import Config
-
-scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
 
 INITIAL_LOCK = RLock()
 
@@ -59,10 +56,6 @@ class Gojo(Client):
         Config.BOT_ID = meh.id
         Config.BOT_NAME = meh.first_name
         Config.BOT_USERNAME = meh.username
-        scheduler.add_job(clean_my_db,'cron',[self],hour=3,minute=0,second=0)
-        if BDB_URI:
-            scheduler.add_job(send_wishish,'cron',[self],hour=0,minute=0,second=0)
-        scheduler.start()
         startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Show in Log that bot has started
@@ -75,7 +68,10 @@ class Gojo(Client):
         cmd_list = await load_cmds(await all_plugins())
         await load_support_users()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
-
+        scheduler.add_job(clean_my_db,'cron',[self],hour=3,minute=0,second=0)
+        if BDB_URI:
+            scheduler.add_job(send_wishish,'cron',[self],hour=0,minute=0,second=0)
+            scheduler.start()
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
         await startmsg.edit_text(

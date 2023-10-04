@@ -9,8 +9,9 @@ from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import OWNER_ID, get_support_staff
+from Powers import OWNER_ID, PREFIX_HANDLER
 from Powers.database.disable_db import Disabling
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.vars import Config
 
@@ -60,7 +61,7 @@ def command(
         if not text:
             return False
         regex = r"^[{prefix}](\w+)(@{bot_name})?(?: |$)(.*)".format(
-            prefix="|".join(escape(x) for x in Config.PREFIX_HANDLER),
+            prefix="|".join(escape(x) for x in PREFIX_HANDLER),
             bot_name=Config.BOT_USERNAME,
         )
         matches = compile_re(regex).search(text)

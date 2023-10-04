@@ -210,12 +210,7 @@ async def unapproveall_callback(_, q: CallbackQuery):
             show_alert=True,
         )
         return
-    if user_status != "creator":
-        await q.answer(
-            "You're just an admin, not owner\nStay in your limits!",
-            show_alert=True,
-        )
-        return
+
     db.unapprove_all()
     for i in approved_people:
         await q.message.chat.restrict_member(

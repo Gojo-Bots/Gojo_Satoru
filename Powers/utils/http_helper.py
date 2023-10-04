@@ -6,6 +6,8 @@ import requests
 
 def get(url: str, *args, **kwargs):
     resp = requests.get(url, *args, **kwargs)
+    if resp.status_code != 200:
+        return resp.status_code
     try:
         data = resp.json()
     except Exception:
@@ -24,6 +26,8 @@ def head(url: str, *args, **kwargs):
 
 def post(url: str, *args, **kwargs):
     resp = requests.post(url, *args, **kwargs)
+    if resp.status_code != 200:
+        return resp.status_code
     try:
         data = resp.json()
     except Exception:

@@ -3,10 +3,11 @@ import os
 from traceback import format_exc
 from urllib import parse
 
-import yt_dlp
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
+# import yt_dlp
+from pytube import YouTube
 from youtubesearchpython.__future__ import Video, VideosSearch
 
 from Powers.bot_class import LOGGER, MESSAGE_DUMP, Gojo
@@ -24,6 +25,12 @@ async def get_file_size(file: Message):
         size = file.audio.file_size/1024
     elif file.sticker:
         size = file.sticker.file_size/1024
+    elif file.animation:
+        size = file.animation.file_size/1024
+    elif file.voice:
+        size = file.voice.file_size/1024
+    elif file.video_note:
+        size = file.video_note.file_size/1024
         
     if size <= 1024:
         return f"{round(size)} kb"
@@ -36,6 +43,13 @@ async def get_file_size(file: Message):
             return f"{round(size)} gb"
 
 
+def get_duration_in_sec(dur: str):
+    duration = dur.split(":")
+    if len(duration) == 2:
+        dur = (int(duration[0]) * 60) + int(duration[1])
+    else:
+        dur = int(duration[0])
+    return dur
 
 # Gets yt result of given query.
 async def song_search(query, is_direct, max_results=1):
@@ -49,9 +63,7 @@ async def song_search(query, is_direct, max_results=1):
         videos = VideosSearch(query,max_results)
         results = await videos.next()
     except Exception as e:
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return e
+        print(e)
            
     nums = 1
     for i in results["result"]:
@@ -70,7 +82,8 @@ async def song_search(query, is_direct, max_results=1):
                 "views": i["viewCount"]["short"],
                 "channel": i["channel"]["link"],
                 "duration": i["accessibility"]['duration'],
-                "thumbnail": i["richThumbnail"],
+                "DURATION": i["duration"],
+                "thumbnail": i["richThumbnail"]["url"],
                 "published": i["publishedTime"],
                 "uploader": i ["channel"]["name"]
                 }
@@ -80,7 +93,7 @@ async def song_search(query, is_direct, max_results=1):
             pass
     return yt_dict
 
-song_opts = {
+"""song_opts = {
     "format": "bestaudio",
     "addmetadata": True,
     "key": "FFmpegMetadata",
@@ -117,20 +130,20 @@ video_opts = {
     "outtmpl": "%(id)s.mp4",
     "logtostderr": False,
     "quiet": True,
-}
+}"""
 
 
 
 async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str):
     if type_ == "a":
-        opts = song_opts
+        # opts = song_opts
         video = False
         song = True
     elif type_ == "v":
-        opts = video_opts
+        # opts = video_opts
         video = True
         song = False
-    ydl = yt_dlp.YoutubeDL(opts)
+    # ydl = yt_dlp.YoutubeDL(opts)
     dicti = await song_search(query, is_direct,1)
     if not dicti and type(dicti) != str:
         await m.reply_text("File with duration less than or equals to 5 minutes is allowed only")
@@ -140,33 +153,27 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     try:
         query = dicti[1]['link']
     except KeyError:
-        z = "KeyError"
-        return z
-    
+        return
+    yt = YouTube(query)
+    dicti = dicti[1]
     f_name = dicti["title"]
     views = dicti["views"]
     up_url = dicti["channel"]
     uploader = dicti["uploader"]
+    dura = dicti["duration"]
     thumb = dicti["thumbnail"]
-    published_on = dicti["publishedON"]
-
-    FILE = ydl.extract_info(query,download=video)
+    vid_dur = get_duration_in_sec(dicti["DURATION"])
+    published_on = dicti["published"]
+    thumb_ = await c.send_photo(-1001586309125,thumb)
+    # FILE = ydl.extract_info(query,download=video)
     url = query
-    thumb_ = await c.send_photo(MESSAGE_DUMP, thumb)
     thumb = await thumb_.download()
     await thumb_.delete()
-    if song:
-        f_down = ydl.prepare_filename(FILE)
-        f_path = f"{f_down}.mp3"
-        ydl.download([query])
-        ext = ".mp3"
-    elif video:
-        f_path = open(f"{FILE['id']}.mp4","rb")
-        ext = ".mp4"
     cap = f"""
 ⤷ Name: `{f_name}`
+⤷ Duration: `{dura}`
 ⤷ Views: `{views}`
-⤷ Published date: `{published_on}`
+⤷ Published: `{published_on}`
 """
     kb = IKM(
         [
@@ -178,20 +185,21 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
             ]
         ]
     )
-
-    file_path = f_name.strip() + ext
-    os.rename(f_path,file_path)
-
-
-    if video:
-        await m.reply_video(file_path,caption=cap,reply_markup=kb,duration=int(FILE['duration']))
+    if song:
+        audio_stream= yt.streams.filter(only_audio=True).first()
+        f_path = audio_stream.download("/youtube_downloads")
+        file_path = f"/youtube_downloads/{f_name.strip()}.mp3"
+        os.rename(f_path,file_path)
+        await m.reply_audio(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb,title=f_name)
+        os.remove(f_path)
         os.remove(file_path)
         os.remove(thumb)
         return
-    elif song:
-        await m.reply_audio(file_path,caption=cap,reply_markup=kb,duration=int(FILE['duration']),thumb=thumb,title=f_name)
-        os.remove(f_path)
+    elif video:
+        video_stream = yt.streams.get_highest_resolution()
+        video_stream.download("/youtube_downloads",f"{f_name}.mp4")
+        file_path = f"/youtube_downloads/{f_name}.mp4"
+        await m.reply_video(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb)
+        os.remove(file_path)
         os.remove(thumb)
         return
-
-

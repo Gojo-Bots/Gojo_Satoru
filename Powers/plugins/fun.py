@@ -5,8 +5,9 @@ from pyrogram import enums
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
 
-from Powers import LOGGER, get_support_staff
+from Powers import LOGGER
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils import extras
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import NOWYES as NO

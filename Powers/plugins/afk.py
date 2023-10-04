@@ -5,20 +5,16 @@ from pyrogram import filters
 from pyrogram.enums import ParseMode as PM
 from pyrogram.types import Message
 
-# from Powers import LOGGER
+from Powers import LOGGER, PREFIX_HANDLER
 from Powers.bot_class import Gojo
 from Powers.database.afk_db import AFK
 from Powers.plugins import till_date
 from Powers.utils.cmd_senders import send_cmd
 from Powers.utils.custom_filters import command
-from Powers.utils.msg_types import Types, get_wlcm_type
+from Powers.utils.msg_types import Types, get_afk_type
 from Powers.vars import Config
 
 # from traceback import format_exc
-
-
-
-cmds = Config.PREFIX_HANDLER
 
 res = [
     "{first} is resting for a while...",
@@ -42,36 +38,39 @@ async def going_afk(c: Gojo, m: Message):
     user = m.from_user.id
     chat = m.chat.id
     afk = AFK()
-    text, data_type, content = await get_wlcm_type(m)
-
+    text, data_type, content = await get_afk_type(m)
+    
     time = str(datetime.now()).rsplit(".",1)[0]
 
-    if not text and not data_type:
+    if len(m.command) == 1:
         text = choice(res)
-        data_type = Types.TEXT
 
-    elif data_type and not text:
-        text = choice(res)
+    elif len(m.command) > 1:
+        text = m.text.markdown.split(None,1)[1]
+
+    if not data_type:
+        data_type = Types.TEXT
 
     afk.insert_afk(chat,user,str(time),text,data_type,content)
 
     await m.reply_text(f"{m.from_user.mention} is now AFK")
+
     return
 
 async def get_hours(hour:str):
     tim = hour.strip().split(":")
-
+    txt = ""
     if int(tim[0]):
-        hour = tim[0] + "hours"
+        txt += tim[0] + " hours "
     if int(tim[1]):
-        minute = tim[1] + " minutes"
-    if int(tim[2]):
-        second = tim[2] + " seconds"
+        txt += tim[1] + " minutes "
+    if int(round(float(tim[2]))):
+        txt += str(round(float(tim[2]))) + " seconds"
     
-    return hour + minute + second
+    return txt
 
 
-@Gojo.on_message(filters.group,group=18)
+@Gojo.on_message(filters.group,group=-18)
 async def afk_checker(c: Gojo, m: Message):
     if not m.from_user:
         return
@@ -88,29 +87,35 @@ async def afk_checker(c: Gojo, m: Message):
         rep_user = False
 
     is_afk = afk.check_afk(chat,user)
-
+    is_rep_afk = False
     if rep_user:
         is_rep_afk = afk.check_afk(chat,rep_user)
 
-    if is_rep_afk:
+    if is_rep_afk and rep_user != user:
         con = afk.get_afk(chat,rep_user)
-        reason = con["reason"].format(repl.from_user.first_name)
         time = till_date(con["time"])
         media = con["media"]
         media_type = con["media_type"]
         tim_ = datetime.now() - time
         tim_ = str(tim_).split(",")
         tim = await get_hours(tim_[-1])
-
-        tims = tim_[0] + " " + tim
-        txt = reason + f"\nAfk since: {tims}"
+        if len(tim_) == 1:
+            tims = tim
+        elif len(tim_) == 2:
+            tims = tim_[0] + " " + tim
+        reason = f"{repl.from_user.first_name} is afk since {tims}\n"
+        if con['reason'] not in res:
+            reason += f"\nDue to: {con['reason'].format(first=repl.from_user.first_name)}"
+        else:
+            reason += f"\n{con['reason'].format(first=repl.from_user.first_name)}"
+        txt = reason
 
         if media_type == Types.TEXT:        
             await (await send_cmd(c,media_type))(
                 chat,
                 txt,
                 parse_mode=PM.MARKDOWN,
-                reply_to_message_id=repl.id,
+                reply_to_message_id=m.id,
             )
         else:
             await (await send_cmd(c,media_type))(
@@ -122,12 +127,13 @@ async def afk_checker(c: Gojo, m: Message):
             )
     
     if is_afk:
-        txt = m.text
+        txt = False
+        try:
+            txt = m.command[0]
+        except Exception:
+            pass
 
-        for cmd in cmds:
-            txt = txt.strip(cmd)
-
-        if txt in ["afk","brb"]:
+        if txt and txt in ["afk","brb"]:
             return
         else:
             con = afk.get_afk(chat,user)
@@ -135,8 +141,12 @@ async def afk_checker(c: Gojo, m: Message):
             tim_ = datetime.now() - time
             tim_ = str(tim_).split(",")
             tim = await get_hours(tim_[-1])
-            tims = tim_[0] + " " + tim
-            txt = back_.fromat(m.from_user.mention) + f"\nAfk for: {tims}"
+            if len(tim_) == 1:
+                tims = tim
+            elif len(tim_) == 2:
+                tims = tim_[0] + " " + tim
+            txt = back_.format(first=m.from_user.mention) + f"\n\nAfk for: {tims}"
+            await m.reply_text(txt)
         afk.delete_afk(chat,user)
     return
 

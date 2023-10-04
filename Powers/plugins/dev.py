@@ -16,13 +16,14 @@ from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
 from Powers import (BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER, MESSAGE_DUMP,
-                    OWNER_ID, UPTIME, get_support_staff)
+                    OWNER_ID, UPTIME)
 from Powers.bot_class import Gojo
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
 from Powers.database.support_db import SUPPORTS
 from Powers.database.users_db import Users
-from Powers.plugins.clean_db import clean_my_db
+from Powers.plugins.scheduled_jobs import clean_my_db
+from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -179,7 +180,7 @@ async def rm_support(c: Gojo, m: Message):
             await m.reply_text("Reply to an user")
             return
         support.delete_support_user(curr)
-        await m.reply_text("Done")
+        await m.reply_text("Done! User now no longer belongs to the support staff")
     elif len(split) >= 2:
         try:
             user,_,_ = extract_user(split[1])
@@ -187,7 +188,7 @@ async def rm_support(c: Gojo, m: Message):
             await m.reply_text("Dunno who u r talking abt")
             return
         support.delete_support_user(user)
-        await m.reply_text("Done")
+        await m.reply_text("Done! User now no longer belongs to the support staff")
     else:
         await m.reply_text("**USAGE**\n/rmsupport [reply to user | user id | username]")
     return
@@ -613,7 +614,7 @@ async def chat_broadcast(c: Gojo, m: Message):
 
     return
 
-@Gojo.on_message(command(["forward","fwd"]),dev_cmd=True)
+@Gojo.on_message(command(["forward","fwd"],dev_cmd=True))
 async def forward_type_broadcast(c: Gojo, m: Message):
     repl = m.reply_to_message
     if not repl:
@@ -694,7 +695,7 @@ __HELP__ = """
 • /update : To update the bot with the main stream repo
 
 **Dev's commands:**
-• /adddev : Reply to message or give me user id or username
+• /addsupport [dev | sudo | whitelist] : Reply to message or give me user id or username
 • /logs : Return the logs of bot.
 • /neofetch : Fetch neo.
 • /eval : Evaluate the given python code.

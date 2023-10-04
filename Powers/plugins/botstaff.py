@@ -1,8 +1,9 @@
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
-from Powers import LOGGER, OWNER_ID, WHITELIST_USERS, get_support_staff
+from Powers import LOGGER, OWNER_ID, WHITELIST_USERS
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.parser import mention_html
 

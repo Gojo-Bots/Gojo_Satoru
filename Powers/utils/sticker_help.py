@@ -8,6 +8,7 @@ from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import errors, raw
 from pyrogram.file_id import FileId
+from pyrogram.types import Message
 
 from Powers.bot_class import Gojo
 
@@ -118,7 +119,7 @@ async def tgs_to_gif(file, tgs=False, video=False):
         cmd = f"ffmpeg -i '{file}' -c copy 'gojo_satoru.gif'"
     await runcmd(cmd)
     os.remove(file)
-    return 'hellbot.gif'
+    return 'gojo_satoru.gif'
 
 async def webm_to_gif(file):
     cmd = f"ffmpeg -i '{file}' 'goJo.gif'"
@@ -126,13 +127,18 @@ async def webm_to_gif(file):
     os.remove(file)
     return "goJo.gif"
         
-async def Vsticker(file: str):
-    _width_ = file.file.width
-    _height_ = file.file.height
+async def Vsticker(c: Gojo, file: Message):
+    if file.animation:
+        file = file.animation
+    elif file.video:
+        file = file.video
+    _width_ = file.width
+    _height_ = file.height
     if _height_ > _width_:
         _height_, _width_ = (512, -1)
     else:
         _height_, _width_ = (-1, 512)
+    file = await c.download_media(file)
     await runcmd(
         f"ffmpeg -to 00:00:02.900 -i '{file}' -vf scale={_width_}:{_height_} -c:v libvpx-vp9 -crf 30 -b:v 560k -maxrate 560k -bufsize 256k -an 'VideoSticker.webm'"
     )

@@ -14,8 +14,6 @@ import lyricsgenius
 import pyrogram
 import pytz
 
-from Powers.database.support_db import SUPPORTS
-
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
@@ -79,7 +77,6 @@ LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
 LOGGER.info(f"Time zone set to {Config.TIME_ZONE}")
 LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
 LOGGER.info("Checking lyrics genius api...")
-LOGGER.info("Initialising telegraph client")
 
 # API based clients
 if Config.GENIUS_API_TOKEN:
@@ -135,39 +132,6 @@ Defult_dev = set(defult_dev)
 DEVS = DEVS_USER | Defult_dev
 DEV_USERS = list(DEVS)
 
-async def load_support_users():
-    support = SUPPORTS()
-    for i in DEV_USERS:
-        support.insert_support_user(int(i),"dev")
-    for i in SUDO_USERS:
-        support.insert_support_user(int(i),"sudo")
-    for i in WHITELIST_USERS:
-        support.insert_support_user(int(i),"whitelist")
-    return
-
-def get_support_staff(want = "all"):
-    """
-    dev, sudo, whitelist, dev_level, sudo_level, all
-    """
-    support = SUPPORTS()
-    devs = support.get_particular_support("dev")
-    sudo = support.get_particular_support("sudo")
-    whitelist = support.get_particular_support("whitelist")
-
-    if want == "dev":
-        return devs
-    elif want == "sudo":
-        return sudo
-    elif want == "whitelist":
-        return whitelist
-    elif want == "dev_level":
-        return devs
-    elif want == "sudo_level":
-        return sudo + devs
-    else:
-        return list(set([int(OWNER_ID)] + devs + sudo + whitelist))
-
-
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI
 DB_NAME = Config.DB_NAME
@@ -176,10 +140,14 @@ WORKERS = Config.WORKERS
 BDB_URI = Config.BDB_URI
 
 # Prefixes
+PREFIX_HANDLER = Config.PREFIX_HANDLER
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
 
 async def load_cmds(all_plugins):
     """Loads all the plugins in bot."""

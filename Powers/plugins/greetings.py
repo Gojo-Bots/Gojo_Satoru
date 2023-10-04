@@ -1,17 +1,20 @@
 from html import escape
 from secrets import choice
+from traceback import format_exc
 
 from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import ChatAdminRequired, RPCError
-from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
+from pyrogram.types import ChatMemberUpdated, Message
 
-from Powers import get_support_staff
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
+from Powers.supports import get_support_staff
 from Powers.utils.cmd_senders import send_cmd
 from Powers.utils.custom_filters import admin_filter, bot_admin_filter, command
+from Powers.utils.kbhelpers import ikb
 from Powers.utils.msg_types import Types, get_wlcm_type
 from Powers.utils.parser import escape_markdown, mention_html
 from Powers.utils.string import (build_keyboard, escape_invalid_curly_brackets,
@@ -161,7 +164,7 @@ async def save_wlcm(_, m: Message):
         await m.reply_text("Please provide some data for this to reply with!")
         return
 
-    db.set_welcome_text(text,file)
+    db.set_welcome_text(text,msgtype,file)
     await m.reply_text("Saved welcome!")
     return
 
@@ -199,7 +202,7 @@ async def save_gdbye(_, m: Message):
         await m.reply_text("Please provide some data for this to reply with!")
         return
 
-    db.set_goodbye_text(text,file)
+    db.set_goodbye_text(text,msgtype,file)
     await m.reply_text("Saved goodbye!")
     return
 
@@ -291,7 +294,7 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
     if status:
         tek, button = await parse_button(hmm)
         button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+        button = ikb(button) if button else None
 
         if "%%%" in tek:
             filter_reply = tek.split("%%%")
@@ -324,7 +327,8 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
             if jj:
                 db.set_cleanwlcm_id(int(jj.id))
         except RPCError as e:
-            print(e)
+            LOGGER.error(e)
+            LOGGER.error(format_exc(e))
             return
     else:
         return
@@ -362,7 +366,7 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
     if status:
         tek, button = await parse_button(hmm)
         button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+        button = ikb(button) if button else None
 
         if "%%%" in tek:
             filter_reply = tek.split("%%%")
@@ -402,7 +406,8 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
                 db.set_cleangoodbye_id(int(ooo.id))
             return
         except RPCError as e:
-            print(e)
+            LOGGER.error(e)
+            LOGGER.error(format_exc(e))
             return
     else:
         return
@@ -434,11 +439,11 @@ async def welcome(c: Gojo, m: Message):
             return
         if args[1].lower() == "on":
             db.set_current_welcome_settings(True)
-            await m.reply_text("Turned on!")
+            await m.reply_text("I will greet newly joined member from now on.")
             return
         if args[1].lower() == "off":
             db.set_current_welcome_settings(False)
-            await m.reply_text("Turned off!")
+            await m.reply_text("I will stay quiet when someone joins.")
             return
         await m.reply_text("what are you trying to do ??")
         return
@@ -450,10 +455,25 @@ async def welcome(c: Gojo, m: Message):
     Welcome text:
     """,
     )
+    UwU = db.get_welcome_media()
+    mtype = db.get_welcome_msgtype()
     tek, button = await parse_button(oo)
     button = await build_keyboard(button)
-    button = InlineKeyboardMarkup(button) if button else None
-    await c.send_message(m.chat.id, text=tek, reply_markup=button)
+    button = ikb(button) if button else None
+    if not UwU:
+            await c.send_message(
+            m.chat.id,
+            text=tek,
+            reply_markup=button,
+            disable_web_page_preview=True,
+        )
+    elif UwU:
+            await (await send_cmd(c,mtype))(
+            m.chat.id,
+            UwU,
+            caption=tek,
+            reply_markup=button,
+        )
     return
 
 
@@ -481,11 +501,11 @@ async def goodbye(c: Gojo, m: Message):
             return
         if args[1].lower() == "on":
             db.set_current_goodbye_settings(True)
-            await m.reply_text("Turned on!")
+            await m.reply_text("I don't want but I will say goodbye to the fugitives")
             return
         if args[1].lower() == "off":
             db.set_current_goodbye_settings(False)
-            await m.reply_text("Turned off!")
+            await m.reply_text("I will stay quiet for fugitives")
             return
         await m.reply_text("what are you trying to do ??")
         return
@@ -497,10 +517,26 @@ async def goodbye(c: Gojo, m: Message):
     Goodbye text:
     """,
     )
+    UwU = db.get_goodbye_media()
+    mtype = db.get_goodbye_msgtype()
     tek, button = await parse_button(oo)
     button = await build_keyboard(button)
-    button = InlineKeyboardMarkup(button) if button else None
-    await c.send_message(m.chat.id, text=tek, reply_markup=button)
+    button = ikb(button) if button else None
+    if not UwU:
+            await c.send_message(
+            m.chat.id,
+            text=tek,
+            reply_markup=button,
+            disable_web_page_preview=True,
+        )
+    elif UwU:
+            await (await send_cmd(c,mtype))(
+            m.chat.id,
+            UwU,
+            caption=tek,
+            reply_markup=button,
+        )
+    return
     return
 
 

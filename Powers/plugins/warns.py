@@ -6,11 +6,12 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, TIME_ZONE, get_support_staff
+from Powers import LOGGER, TIME_ZONE
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.database.users_db import Users
 from Powers.database.warns_db import Warns, WarnSettings
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import admin_filter, command, restrict_filter
 from Powers.utils.extract_user import extract_user

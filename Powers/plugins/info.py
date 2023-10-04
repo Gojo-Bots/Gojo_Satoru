@@ -9,9 +9,10 @@ from pyrogram.raw.functions.channels import GetFullChannel
 from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.types import Message
 
-from Powers import LOGGER, OWNER_ID, get_support_staff
+from Powers import LOGGER, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers.vars import Config

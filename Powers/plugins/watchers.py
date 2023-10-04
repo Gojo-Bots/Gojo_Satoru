@@ -7,7 +7,7 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
 
-from Powers import LOGGER, MESSAGE_DUMP, get_support_staff
+from Powers import LOGGER, MESSAGE_DUMP
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import ANTISPAM_BANNED, GBan
 from Powers.database.approve_db import Approve
@@ -15,6 +15,7 @@ from Powers.database.blacklist_db import Blacklist
 from Powers.database.group_blacklist import BLACKLIST_CHATS
 from Powers.database.pins_db import Pins
 from Powers.database.warns_db import Warns, WarnSettings
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.parser import mention_html
 from Powers.utils.regex_utils import regex_searcher

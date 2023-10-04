@@ -59,7 +59,7 @@ class SUPPORTS(MongoDB):
     def get_particular_support(self,support_type):
         curr = self.find_all({"support_type":support_type})
         if curr:
-            return curr
+            return [i['user_id'] for i in curr]
         else:
             return []
 

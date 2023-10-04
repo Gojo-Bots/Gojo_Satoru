@@ -9,8 +9,9 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID, get_support_staff
+from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user

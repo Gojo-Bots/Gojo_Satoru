@@ -14,6 +14,7 @@ from wikipedia.exceptions import DisambiguationError, PageError
 from Powers import *
 from Powers.bot_class import Gojo
 from Powers.database.users_db import Users
+from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -417,7 +418,6 @@ async def reporting_query(c: Gojo, m: Message):
     ppost = z.link
     await c.send_message(OWNER_ID,f"New bug report\n{ppost}",disable_web_page_preview=True)
     return
-
 
 __PLUGIN__ = "utils"
 _DISABLE_CMDS_ = ["paste", "wiki", "id", "gifid", "tr", "github", "git", "bug"]

@@ -11,10 +11,11 @@ from pyrogram.errors import (ChatAdminInviteRequired, ChatAdminRequired,
                              UserAdminInvalid)
 from pyrogram.types import ChatPrivileges, Message
 
-from Powers import LOGGER, OWNER_ID, get_support_staff
+from Powers import LOGGER, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
+from Powers.supports import get_support_staff
 from Powers.utils.caching import (ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK,
                                   admin_cache_reload)
 from Powers.utils.custom_filters import (admin_filter, command, owner_filter,
