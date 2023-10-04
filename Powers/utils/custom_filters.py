@@ -9,11 +9,13 @@ from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import OWNER_ID, PREFIX_HANDLER
+from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
 from Powers.database.disable_db import Disabling
-from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.vars import Config
+
+SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
+DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
 
 
 def command(
@@ -27,8 +29,6 @@ def command(
         if not m:
             return
 
-        SUDO_LEVEL = get_support_staff("sudo_level")
-        DEV_LEVEL = get_support_staff("dev_level")
         date = m.edit_date
         if date:
             return  # reaction
@@ -61,7 +61,7 @@ def command(
         if not text:
             return False
         regex = r"^[{prefix}](\w+)(@{bot_name})?(?: |$)(.*)".format(
-            prefix="|".join(escape(x) for x in PREFIX_HANDLER),
+            prefix="|".join(escape(x) for x in Config.PREFIX_HANDLER),
             bot_name=Config.BOT_USERNAME,
         )
         matches = compile_re(regex).search(text)
@@ -289,7 +289,6 @@ async def can_pin_message_func(_, __, m):
         return True
 
     # Bypass the bot devs, sudos and owner
-    SUDO_LEVEL = get_support_staff("sudo_level")
     if m.from_user.id in SUDO_LEVEL:
         return True
 
