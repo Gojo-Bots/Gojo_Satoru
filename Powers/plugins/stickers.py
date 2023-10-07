@@ -123,6 +123,7 @@ async def kang(c:Gojo, m: Message):
                     return
             else:
                 path = await m.reply_to_message.download()
+                path = await resize_file_to_sticker_size(path)
             sticker = await create_sticker(
                 await upload_document(
                     c, path, m.chat.id
@@ -137,6 +138,9 @@ async def kang(c:Gojo, m: Message):
                 ),
                 sticker_emoji
             )
+        else:
+          await m.reply_text("Unsupported media file...")
+          return
     except ShortnameOccupyFailed:
         await m.reply_text("Change Your Name Or Username")
         return
@@ -248,6 +252,8 @@ async def kang(c:Gojo, m: Message):
     except Exception as e:
         await msg.delete()
         await m.reply_text(f"Error occured\n{e}")
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
     return
 
 
