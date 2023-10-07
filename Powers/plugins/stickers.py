@@ -91,28 +91,7 @@ async def kang(c:Gojo, m: Message):
 
     # Get the corresponding fileid, resize the file if necessary
     try:
-        if is_requ or m.reply_to_message.video or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0]=="image"):
-            sizee = (await get_file_size(m.reply_to_message)).split()
-            if (sizee[1] == "mb" and int(sizee[0]) > 10) or sizee[1] == "gb":
-                await m.reply_text("File size is too big")
-                return
-            path = await m.reply_to_message.download()
-            if not is_requ:
-                try:
-                    path = await resize_file_to_sticker_size(path)
-                except OSError as e:
-                    await m.reply_text(f"Error\n{e}")
-                    LOGGER.error(e)
-                    LOGGER.error(format_exc)
-                    os.remove(path)
-                    return
-    except Exception as e:
-        await m.reply_text(f"Got an error:\n{e}")
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return
-    try:
-        if is_requ or m.reply_to_message.animation or m.reply_to_message.video or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
+        if is_requ or m.reply_to_message.animation or m.reply_to_message.video or m.reply_to_message.photo or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] in ["video","image"]):
             # telegram doesn't allow animated and video sticker to be kanged as we do for normal stickers
             if m.reply_to_message.animation or m.reply_to_message.video or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
                 path = await Vsticker(c, m.reply_to_message)
@@ -122,6 +101,10 @@ async def kang(c:Gojo, m: Message):
                     os.remove(path)
                     return
             else:
+                sizee = (await get_file_size(m.reply_to_message)).split()
+                if (sizee[1] == "mb" and int(sizee[0]) > 10) or sizee[1] == "gb":
+                    await m.reply_text("File size is too big")
+                    return
                 path = await m.reply_to_message.download()
                 path = await resize_file_to_sticker_size(path)
             sticker = await create_sticker(
