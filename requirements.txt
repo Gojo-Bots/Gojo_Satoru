@@ -23,7 +23,7 @@ pytube==15.0.0
 pytz==2023.3
 pyyaml==6.0.1; python_version >= "3.6"
 qrcode==7.4.2
-regex==2023.8.8; python_version >= "3.6"
+regex==2023.10.3; python_version >= "3.6"
 requests==2.31.0
 rfc3986==1.5.0; python_version >= "3.7"
 search-engine-parser==0.6.8
