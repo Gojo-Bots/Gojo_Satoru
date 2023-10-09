@@ -187,8 +187,8 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     )
     if song:
         audio_stream= yt.streams.filter(only_audio=True).first()
-        f_path = audio_stream.download("/youtube_downloads")
-        file_path = f"/youtube_downloads/{f_name.strip()}.mp3"
+        f_path = audio_stream.download("./youtube_downloads")
+        file_path = f"./youtube_downloads/{f_name.strip()}.mp3"
         os.rename(f_path,file_path)
         await m.reply_audio(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb,title=f_name)
         os.remove(f_path)
@@ -197,8 +197,8 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
         return
     elif video:
         video_stream = yt.streams.get_highest_resolution()
-        video_stream.download("/youtube_downloads",f"{f_name}.mp4")
-        file_path = f"/youtube_downloads/{f_name}.mp4"
+        video_stream.download("./youtube_downloads",f"{f_name}.mp4")
+        file_path = f"./youtube_downloads/{f_name}.mp4"
         await m.reply_video(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb)
         os.remove(file_path)
         os.remove(thumb)
