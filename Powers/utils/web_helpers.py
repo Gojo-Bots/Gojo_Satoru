@@ -187,7 +187,7 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     )
     if song:
         audio_stream= yt.streams.filter(only_audio=True).first()
-        f_path = audio_stream.download("/youtube_downloads")
+        f_path = audio_stream.download()
         file_path = f"./youtube_downloads/{f_name.strip()}.mp3"
         os.rename(f_path,file_path)
         await m.reply_audio(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb,title=f_name)
