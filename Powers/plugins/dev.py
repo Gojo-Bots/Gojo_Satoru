@@ -179,18 +179,22 @@ async def rm_support(c: Gojo, m: Message):
         except Exception:
             await m.reply_text("Reply to an user")
             return
-        support.delete_support_user(curr)
-        await m.reply_text("Done! User now no longer belongs to the support staff")
     elif len(split) >= 2:
         try:
-            user,_,_ = extract_user(split[1])
+            curr,_,_ = extract_user(m)
         except Exception:
             await m.reply_text("Dunno who u r talking abt")
             return
+    else:
+        await m.reply_text("**USAGE**\n/rmsupport [reply to user | user id | username]")
+        return
+    to_user = support.get_support_type(curr)
+    can_user = can_change_type(curr_user,to_user)
+    if m.from_user.id == int(OWNER_ID) or can_user:
         support.delete_support_user(user)
         await m.reply_text("Done! User now no longer belongs to the support staff")
     else:
-        await m.reply_text("**USAGE**\n/rmsupport [reply to user | user id | username]")
+        await m.reply_text("Sorry you can't do that...")
     return
 
 @Gojo.on_message(command("ping", sudo_cmd=True))
