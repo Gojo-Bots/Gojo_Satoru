@@ -63,8 +63,9 @@ async def song_search(query, is_direct, max_results=1):
         videos = VideosSearch(query,max_results)
         results = await videos.next()
     except Exception as e:
-        print(e)
-           
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+        return yt_dict
     nums = 1
     for i in results["result"]:
         durr = i['duration'].split(":")
@@ -164,7 +165,7 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     thumb = dicti["thumbnail"]
     vid_dur = get_duration_in_sec(dicti["DURATION"])
     published_on = dicti["published"]
-    thumb_ = await c.send_photo(-1001586309125,thumb)
+    thumb_ = await c.send_photo(MESSAGE_DUMP,thumb)
     # FILE = ydl.extract_info(query,download=video)
     url = query
     thumb = await thumb_.download()
@@ -188,17 +189,18 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     if song:
         audio_stream= yt.streams.filter(only_audio=True).first()
         f_path = audio_stream.download()
-        file_path = f"./youtube_downloads/{f_name.strip()}.mp3"
+        # file_path = f"./youtube_downloads/{f_name.strip()}.mp3"
+        file_path = f"./{f_name.strip()}.mp3"
         os.rename(f_path,file_path)
         await m.reply_audio(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb,title=f_name)
-        os.remove(f_path)
+        # os.remove(f_path)
         os.remove(file_path)
         os.remove(thumb)
         return
     elif video:
         video_stream = yt.streams.get_highest_resolution()
-        video_stream.download("/youtube_downloads",f"{f_name}.mp4")
-        file_path = f"./youtube_downloads/{f_name}.mp4"
+        file_path = video_stream.download()
+        # file_path = f"./youtube_downloads/{f_name}.mp4"
         await m.reply_video(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb)
         os.remove(file_path)
         os.remove(thumb)

@@ -461,11 +461,12 @@ async def is_approved_user(c:Gojo, m: Message):
         return False
     elif m.forward_from_chat:
         x_chat = (await c.get_chat(m.forward_from_chat.id)).linked_chat
+        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
+            return True
         if not x_chat:
             return False
         elif x_chat and x_chat.id == m.chat.id:
             return True
-        return False
     elif m.from_user:
         if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
             return True

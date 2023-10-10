@@ -50,7 +50,7 @@
       },
       "MESSAGE_DUMP": {
         "description": "Event logs channel where bot will send updates.",
-        "required": false,
+        "required": true,
         "value": ""
       },
       "PREFIX_HANDLER": {
