@@ -179,6 +179,7 @@ async def cant_recall_it(c: Gojo, m: Message):
         next_b = date(curr.year + 1, u_dob.month, u_dob.day)
         days_left = (next_b - curr).days
         txt = f"{men} 's birthday is passed 🫤\nDays left until next one {days_left}"
+        txt += f"\n\nBirthday on: {result['dob']}"
     else:
         u_dobm = date(curr.year, u_dob.month, u_dob.day)
         days_left = (u_dobm - curr).days
