@@ -35,7 +35,7 @@ tswift==0.7.0
 typing-extensions==4.5.0; python_full_version >= "3.6.2" and python_version >= "3.7" and python_version < "3.8"
 ujson==5.8.0; python_version >= "3.7"
 urllib3==1.26.11; python_version >= "3.7" and python_full_version < "3.0.0" and python_version < "4" or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.7"
-uvloop==0.17.0
+uvloop==0.18.0
 wikipedia==1.4.0
 youtube-search-python==1.6.6
 yt-dlp@git+https://github.com/HellBoy-OP/yt-dp-fork.git@af1fd12f675220df6793fc019dff320bc76e8080
