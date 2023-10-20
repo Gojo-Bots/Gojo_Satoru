@@ -317,8 +317,16 @@ async def download_instareels(c: Gojo, m: Message):
         await m.reply_video(Reel_)
         return
     except Exception:
-        await m.reply_text("I am unable to reach to this reel.")
-        return
+        try:
+            await m.reply_photo(Reel_)
+            return
+        except Exception:
+            try:
+                await m.reply_document(Reel_)
+                return
+            except Exception:
+                await m.reply_text("I am unable to reach to this reel.")
+                return
 
 __PLUGIN__ = "web support"
 
