@@ -161,7 +161,8 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
         query = dicti[1]['link']
     except KeyError:
         return
-    yt = YouTube(query)
+    yt = YouTube(query, use_oauth=True,
+        allow_oauth_cache=True)
     dicti = dicti[1]
     f_name = dicti["title"]
     views = dicti["views"]
