@@ -12,7 +12,10 @@ from youtubesearchpython.__future__ import Video, VideosSearch
 
 from Powers.bot_class import LOGGER, MESSAGE_DUMP, Gojo
 from Powers.utils.http_helper import *
+from Powers.utils.sticker_help import resize_file_to_sticker_size
+from Powers.vars import Config
 
+backUP = "https://artfiles.alphacoders.com/160/160160.jpeg"
 
 async def get_file_size(file: Message):
     if file.photo:
@@ -84,10 +87,14 @@ async def song_search(query, is_direct, max_results=1):
                 "channel": i["channel"]["link"],
                 "duration": i["accessibility"]['duration'],
                 "DURATION": i["duration"],
-                "thumbnail": i["richThumbnail"]["url"],
                 "published": i["publishedTime"],
                 "uploader": i ["channel"]["name"]
                 }
+            try:
+                thumb = {"thumbnail": i["richThumbnail"]["url"]}
+            except Exception:
+                thumb = {"thumbnail": None}
+            dict_form.update(thumb)
             yt_dict.update({nums: dict_form})
             nums += 1
         else:
@@ -165,16 +172,23 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     thumb = dicti["thumbnail"]
     vid_dur = get_duration_in_sec(dicti["DURATION"])
     published_on = dicti["published"]
-    thumb_ = await c.send_photo(MESSAGE_DUMP,thumb)
+    if thumb:
+        thumb_ = await c.send_photo(MESSAGE_DUMP,thumb)
+    else:
+        thumb_ = await c.send_photo(MESSAGE_DUMP,backUP)
     # FILE = ydl.extract_info(query,download=video)
     url = query
     thumb = await thumb_.download()
+    if not thumb:
+        thumb = await resize_file_to_sticker_size(thumb,320,320)
     await thumb_.delete()
     cap = f"""
 ⤷ Name: `{f_name}`
 ⤷ Duration: `{dura}`
 ⤷ Views: `{views}`
 ⤷ Published: `{published_on}`
+
+Downloaded by: @{Config.BOT_USERNAME}
 """
     kb = IKM(
         [
