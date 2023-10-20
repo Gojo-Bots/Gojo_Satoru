@@ -70,13 +70,14 @@ async def pin_message(_, m: Message):
 async def unpin_message(c: Gojo, m: Message):
     try:
         if m.reply_to_message:
-            await c.unpin_chat_message(m.chat.id, m.reply_to_message.id)
+            await m.reply_to_message.unpin()
             LOGGER.info(
                 f"{m.from_user.id} unpinned msgid: {m.reply_to_message.id} in {m.chat.id}",
             )
             await m.reply_text(text="Unpinned last message.")
         else:
-            await c.unpin_chat_message(m.chat.id)
+            m_id = (await c.get_chat(m.chat.id)).pinned_message.id
+            await c.unpin_chat_message(m.chat.id,m_id)
             await m.reply_text(text="Unpinned last pinned message!")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
