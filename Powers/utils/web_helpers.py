@@ -13,7 +13,6 @@ from youtubesearchpython.__future__ import Video, VideosSearch
 from Powers.bot_class import LOGGER, MESSAGE_DUMP, Gojo
 from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import resize_file_to_sticker_size
-from Powers.vars import Config
 
 backUP = "https://artfiles.alphacoders.com/160/160160.jpeg"
 
@@ -188,7 +187,7 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
 ⤷ Views: `{views}`
 ⤷ Published: `{published_on}`
 
-Downloaded by: @{Config.BOT_USERNAME}
+Downloaded by: @{c.me.username}
 """
     kb = IKM(
         [
