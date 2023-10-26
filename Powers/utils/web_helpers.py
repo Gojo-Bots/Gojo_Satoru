@@ -153,7 +153,7 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     # ydl = yt_dlp.YoutubeDL(opts)
     dicti = await song_search(query, is_direct,1)
     if not dicti and type(dicti) != str:
-        await m.reply_text("File with duration less than or equals to 5 minutes is allowed only")
+        await m.reply_text("File with duration less than or equals to 10 minutes is allowed only")
     elif type(dicti) == str:
         await m.reply_text(dicti)
         return
