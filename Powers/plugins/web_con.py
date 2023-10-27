@@ -283,7 +283,7 @@ async def video_down_up(c: Gojo, m: Message):
         return
     if splited.startswith("https://youtube.com"):
         is_direct = True
-        query = splited
+        query = splited.split("?")[0]
     else:
         is_direct = False
         query = splited
