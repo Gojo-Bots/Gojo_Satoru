@@ -191,7 +191,7 @@ async def rm_support(c: Gojo, m: Message):
     to_user = support.get_support_type(curr)
     can_user = can_change_type(curr_user,to_user)
     if m.from_user.id == int(OWNER_ID) or can_user:
-        support.delete_support_user(user)
+        support.delete_support_user(curr)
         await m.reply_text("Done! User now no longer belongs to the support staff")
     else:
         await m.reply_text("Sorry you can't do that...")
@@ -353,11 +353,12 @@ async def evaluate_code(c: Gojo, m: Message):
                         f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}"
                     )
       
-    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
 
     try:
+        final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```python\n{evaluation}```</code> \n"
         await sm.edit(final_output)
     except MessageTooLong:
+        final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
         with BytesIO(str.encode(await remove_markdown_and_html(final_output))) as f:
             f.name = "py.txt"
             await m.reply_document(
