@@ -308,6 +308,8 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
                 await c.delete_messages(member.chat.id, int(ifff))
             except RPCError:
                 pass
+        if not teks:
+            teks = "Hey {first}, welcome to {chatname}"
         try:
             if not UwU:
                 jj = await c.send_message(
@@ -386,6 +388,8 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
                 "Will miss you master :(",
             )
             return
+        if not teks:
+            teks = "Sad to see you leaving {first}\nTake Care!"
         try:
             if not UwU:
                 ooo = await c.send_message(

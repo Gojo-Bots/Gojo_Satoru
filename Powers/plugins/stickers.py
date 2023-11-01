@@ -100,6 +100,8 @@ async def kang(c:Gojo, m: Message):
                     await m.reply_text("File is too big")
                     os.remove(path)
                     return
+            elif is_requ:
+                path = await m.reply_to_message.download() 
             else:
                 sizee = (await get_file_size(m.reply_to_message)).split()
                 if (sizee[1] == "mb" and int(sizee[0]) > 10) or sizee[1] == "gb":
@@ -114,7 +116,7 @@ async def kang(c:Gojo, m: Message):
                 sticker_emoji
             )
             os.remove(path)
-        elif m.reply_to_message.sticker:
+        elif m.reply_to_message.sticker and not is_requ:
             sticker = await create_sticker(
                 await get_document_from_file_id(
                     m.reply_to_message.sticker.file_id

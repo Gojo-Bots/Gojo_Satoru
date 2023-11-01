@@ -472,7 +472,7 @@ async def is_approved_user(c:Gojo, m: Message):
             return True
         return False
 
-@Gojo.on_message(filters.all & ~filters.me,18)
+@Gojo.on_message(filters.group & ~filters.me,18)
 async def lock_del_mess(c:Gojo, m: Message):
     lock = LOCKS()
     all_chats = lock.get_lock_channel()
