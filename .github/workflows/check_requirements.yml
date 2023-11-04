@@ -11,6 +11,8 @@ jobs:
         python-version: [">=3.10.7"]
     
     steps:
+    - name: Install required
+      uses: sudo apt-get install libxml2-dev libxslt-dev python-dev lib32z1-dev
     - name: Checkout code
       uses: actions/checkout@v4
       
