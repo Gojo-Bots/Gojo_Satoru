@@ -21,21 +21,21 @@ class Config:
         for i in config(
             "DEV_USERS",
             default="",
-        ).split(" ")
+        ).split("")
     ]
     SUDO_USERS = [
         int(i)
         for i in config(
             "SUDO_USERS",
             default="",
-        ).split(" ")
+        ).split("")
     ]
     WHITELIST_USERS = [
         int(i)
         for i in config(
             "WHITELIST_USERS",
             default="",
-        ).split(" ")
+        ).split("")
     ]
     GENIUS_API_TOKEN = config("GENIUS_API",default=None)
     AuDD_API = config("AuDD_API",default=None)
