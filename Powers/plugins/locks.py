@@ -478,7 +478,7 @@ async def lock_del_mess(c:Gojo, m: Message):
     all_chats = lock.get_lock_channel()
     if not all_chats:
         return
-    if m.chat.id not in all_chats:
+    if m.chat and m.chat.id not in all_chats:
         return
     if m.sender_chat and not (m.forward_from_chat or m.forward_from):
         if m.sender_chat.id == m.chat.id:

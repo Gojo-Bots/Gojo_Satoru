@@ -2,7 +2,7 @@ from html import escape
 from secrets import choice
 from traceback import format_exc
 
-from pyrogram import enums, filters
+from pyrogram import emoji, enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, Message
@@ -301,6 +301,10 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
             teks = choice(filter_reply)
         else:
             teks = tek
+
+        if not teks:
+            teks = f"A wild {user.mention} appeared in {member.chat.title}! Everyone be aware."
+
         ifff = db.get_current_cleanwelcome_id()
         gg = db.get_current_cleanwelcome_settings()
         if ifff and gg:
@@ -375,6 +379,10 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
             teks = choice(filter_reply)
         else:
             teks = tek
+
+        if not teks: #Just in case
+            teks = f"Thanks for being part of this group {user.mention}. But I don't like your arrogance and leaving the group {emoji.EYES}"
+       
         ifff = db.get_current_cleangoodbye_id()
         iii = db.get_current_cleangoodbye_settings()
         if ifff and iii:

@@ -1,4 +1,4 @@
-import time
+import time as TIME
 from asyncio import sleep
 from traceback import format_exc
 
@@ -28,7 +28,7 @@ async def clean_my_db(c:Client,is_cmd=False, id=None):
     to_clean = list()
     chats_list = Chats.list_chats_by_id()
     to_clean.clear()
-    start = time.time()
+    start = TIME.time()
     for chats in chats_list:
         try:
             stat = await c.get_chat_member(chat_id=chats,user_id=Config.BOT_ID)
@@ -60,7 +60,7 @@ async def clean_my_db(c:Client,is_cmd=False, id=None):
     x = len(to_clean)
     txt = f"#INFO\n\nCleaned db:\nTotal chats removed: {x}"
     to_clean.clear()
-    nums = time.time()-start
+    nums = TIME.time()-start
     if is_cmd:
         txt += f"\nClean type: Forced\nInitiated by: {(await c.get_users(user_ids=id)).mention}"
         txt += f"\nClean type: Manual\n\tTook {round(nums,2)} seconds to complete the process"

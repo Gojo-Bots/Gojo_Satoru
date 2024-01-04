@@ -3,7 +3,7 @@ from traceback import format_exc
 
 from pyrogram import enums
 from pyrogram.errors import (ChatAdminRequired, PeerIdInvalid, RightForbidden,
-                             RPCError, UserAdminInvalid)
+                             RPCError, UserAdminInvalid, UserNotParticipant)
 from pyrogram.filters import regex
 from pyrogram.types import (CallbackQuery, ChatPrivileges,
                             InlineKeyboardButton, InlineKeyboardMarkup,
@@ -137,6 +137,8 @@ async def tban_usr(c: Gojo, m: Message):
         await m.reply_text(
             text="Cannot act on this user, maybe I wasn't the one who changed their permissions."
         )
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
@@ -227,6 +229,8 @@ async def stban_usr(c: Gojo, m: Message):
         await m.reply_text(
             text="Cannot act on this user, maybe I wasn't the one who changed their permissions."
         )
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
@@ -444,6 +448,8 @@ async def kick_usr(c: Gojo, m: Message):
         await m.reply_text(
             text="Cannot act on this user, maybe I wasn't the one who changed their permissions."
         )
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to ban this user.")
     except RPCError as ef:
@@ -512,6 +518,8 @@ async def skick_usr(c: Gojo, m: Message):
         await m.reply_text(
             text="Cannot act on this user, maybe I wasn't the one who changed their permissions."
         )
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to kick this user.")
     except RPCError as ef:
@@ -601,6 +609,8 @@ async def dkick_usr(c: Gojo, m: Message):
         )
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to kick this user.")
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except RPCError as ef:
         await m.reply_text(
             text=f"""Some error occured, report it using `/bug`
@@ -730,6 +740,8 @@ async def sban_usr(c: Gojo, m: Message):
         )
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to ban this user.")
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except RPCError as ef:
         await m.reply_text(
             text=f"""Some error occured, report it using `/bug`
@@ -830,6 +842,8 @@ async def dban_usr(c: Gojo, m: Message):
         )
     except RightForbidden:
         await m.reply_text(text="I don't have enough rights to ban this user.")
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except RPCError as ef:
         await m.reply_text(
             text=f"""Some error occured, report it using `/bug`
@@ -938,6 +952,8 @@ async def ban_usr(c: Gojo, m: Message):
         await m.reply_text(
             "I have not seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
+    except UserNotParticipant:
+        await m.reply_text("User is not part of the group")
     except UserAdminInvalid:
         await m.reply_text(
             text="Cannot act on this user, maybe I wasn't the one who changed their permissions."
@@ -968,7 +984,7 @@ async def unbanbutton(c: Gojo, q: CallbackQuery):
         )
         return
 
-    if not user.privileges.can_restrict_members and q.from_user.id != OWNER_ID:
+    elif user and not user.privileges.can_restrict_members and q.from_user.id != OWNER_ID:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,
