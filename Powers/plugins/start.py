@@ -1,4 +1,3 @@
-import os
 from random import choice
 from time import gmtime, strftime, time
 
@@ -6,16 +5,18 @@ from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType
 from pyrogram.errors import (MediaCaptionTooLong, MessageNotModified,
-                             QueryIdInvalid, UserIsBlocked)
+                             QueryIdInvalid, RPCError, UserIsBlocked)
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
-from Powers import (HELP_COMMANDS, LOGGER, PYROGRAM_VERSION, PYTHON_VERSION,
-                    UPTIME, VERSION)
+from Powers import (HELP_COMMANDS, LOGGER, OWNER_ID, PYROGRAM_VERSION,
+                    PYTHON_VERSION, UPTIME, VERSION, WHITELIST_USERS)
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
+from Powers.utils.parser import mention_html
 from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb, get_help_msg,
                                       get_private_note, get_private_rules)
 from Powers.vars import Config
@@ -301,3 +302,53 @@ async def get_module_info(c: Gojo, q: CallbackQuery):
       await c.send_message(chat_id=q.message.chat.id,text=help_msg,)
     await q.answer()
     return
+
+DEV_USERS = get_support_staff("dev")
+SUDO_USERS = get_support_staff("sudo")
+
+@Gojo.on_callback_query(filters.regex("^give_bot_staffs$"))
+async def give_bot_staffs(c: Gojo, q: CallbackQuery):
+    try:
+        owner = await c.get_users(OWNER_ID)
+        reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"
+    except RPCError:
+        pass
+    true_dev = list(set(DEV_USERS) - {OWNER_ID})
+    reply += "\n<b>Developers ⚡️:</b>\n"
+    if not true_dev:
+        reply += "No Dev Users\n"
+    else:
+        for each_user in true_dev:
+            user_id = int(each_user)
+            try:
+                user = await c.get_users(user_id)
+                reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
+            except RPCError:
+                pass
+    true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
+    reply += "\n<b>Sudo Users 🐉:</b>\n"
+    if true_sudo == []:
+        reply += "No Sudo Users\n"
+    else:
+        for each_user in true_sudo:
+            user_id = int(each_user)
+            try:
+                user = await c.get_users(user_id)
+                reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
+            except RPCError:
+                pass
+    reply += "\n<b>Whitelisted Users 🐺:</b>\n"
+    if WHITELIST_USERS == []:
+        reply += "No additional whitelisted users\n"
+    else:
+        for each_user in WHITELIST_USERS:
+            user_id = int(each_user)
+            try:
+                user = await c.get_users(user_id)
+                reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
+            except RPCError:
+                pass
+
+    await q.edit_message_caption(reply,reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("« Back","start_back")]]))
+    return
+

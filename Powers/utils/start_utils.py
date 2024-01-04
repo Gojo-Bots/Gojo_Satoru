@@ -44,9 +44,8 @@ async def gen_start_kb(q: Message or CallbackQuery):
                     "url",
                 ),
                 (
-                    "Support 👥",
-                    f"https://t.me/{SUPPORT_GROUP}",
-                    "url",
+                    "Bot Staffs 🚔",
+                    f"give_bot_staffs",
                 ),
             ],
             [

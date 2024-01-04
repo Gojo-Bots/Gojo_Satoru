@@ -6,7 +6,7 @@ from os import remove
 import aiofiles
 from gpytranslate import Translator
 from pyrogram import enums, filters
-from pyrogram.errors import MessageTooLong, PeerIdInvalid
+from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
@@ -20,6 +20,9 @@ from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers.utils.http_helper import *
 from Powers.utils.parser import mention_html
+
+DEV_USERS = get_support_staff("dev")
+SUDO_USERS = get_support_staff("sudo")
 
 
 @Gojo.on_message(command("wiki"))
@@ -331,8 +334,8 @@ async def paste_func(_, message: Message):
             content = r.text
             exe = "txt"
         if r.document:
-            if r.document.file_size > 40000:
-                return await m.edit("You can only paste files smaller than 40KB.")
+            # if r.document.file_size > 40000:
+            #     return await m.edit("You can only paste files smaller than 40KB.")
 
             if not pattern.search(r.document.mime_type):
                 return await m.edit("Only text files can be pasted.")
@@ -419,6 +422,54 @@ async def reporting_query(c: Gojo, m: Message):
     await c.send_message(OWNER_ID,f"New bug report\n{ppost}",disable_web_page_preview=True)
     return
 
+
+@Gojo.on_message(command("botstaffs"))
+async def botstaff(c: Gojo, m: Message):
+    try:
+        owner = await c.get_users(OWNER_ID)
+        reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"
+    except RPCError:
+        pass
+    true_dev = list(set(DEV_USERS) - {OWNER_ID})
+    reply += "\n<b>Developers ⚡️:</b>\n"
+    if not true_dev:
+        reply += "No Dev Users\n"
+    else:
+        for each_user in true_dev:
+            user_id = int(each_user)
+            try:
+                user = await c.get_users(user_id)
+                reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
+            except RPCError:
+                pass
+    true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
+    reply += "\n<b>Sudo Users 🐉:</b>\n"
+    if true_sudo == []:
+        reply += "No Sudo Users\n"
+    else:
+        for each_user in true_sudo:
+            user_id = int(each_user)
+            try:
+                user = await c.get_users(user_id)
+                reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
+            except RPCError:
+                pass
+    reply += "\n<b>Whitelisted Users 🐺:</b>\n"
+    if WHITELIST_USERS == []:
+        reply += "No additional whitelisted users\n"
+    else:
+        for each_user in WHITELIST_USERS:
+            user_id = int(each_user)
+            try:
+                user = await c.get_users(user_id)
+                reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
+            except RPCError:
+                pass
+    await m.reply_text(reply)
+    LOGGER.info(f"{m.from_user.id} fetched botstaff in {m.chat.id}")
+    return
+
+
 __PLUGIN__ = "utils"
 _DISABLE_CMDS_ = ["paste", "wiki", "id", "gifid", "tr", "github", "git", "bug"]
 __alt_name__ = ["util", "misc", "tools"]
@@ -429,7 +480,6 @@ __HELP__ = """
 Some utils provided by bot to make your tasks easy!
 
 • /id: Get the current group id. If used by replying to a message, get that user's id.
-• /info: Get information about a user.
 • /gifid: Reply to a gif to me to tell you its file ID.
 • /lyrics `<song name>`-`<artist name>` : Find your song and give the lyrics of the song
 • /wiki: `<query>`: wiki your query.
@@ -437,6 +487,7 @@ Some utils provided by bot to make your tasks easy!
 • /git `<username>`: Search for the user using github api!
 • /weebify `<text>` or `<reply to message>`: To weebify the text.
 • /bug <reply to text message> : To report a bug
+• /botstaffs : Give the list of the bot staffs.
 
 **Example:**
 `/git iamgojoof6eyes`: this fetches the information about a user from the database."""

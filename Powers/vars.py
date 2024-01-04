@@ -38,7 +38,7 @@ class Config:
         ).split(None)
     ]
     GENIUS_API_TOKEN = config("GENIUS_API",default=None)
-    AuDD_API = config("AuDD_API",default=None)
+    # AuDD_API = config("AuDD_API",default=None)
     RMBG_API = config("RMBG_API",default=None)
     DB_URI = config("DB_URI", default="")
     DB_NAME = config("DB_NAME", default="gojo_satarou")

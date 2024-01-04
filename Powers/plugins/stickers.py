@@ -241,6 +241,32 @@ async def kang(c:Gojo, m: Message):
         LOGGER.error(format_exc())
     return
 
+@Gojo.on_message(command(["rmsticker", "removesticker"]))
+async def remove_sticker_from_pack(c: Gojo, m: Message):
+    if not m.reply_to_message or not m.reply_to_message.sticker:
+        return await m.reply_text(
+            "Reply to a sticker to remove it from the pack."
+        )
+    
+    sticker = m.reply_to_message.sticker
+
+    to_modify = await m.reply_text(f"Removing the sticker from your pack")
+    sticker_set = await get_sticker_set_by_name(c, sticker.set_name)
+
+    if not sticker_set:
+        await to_modify.edit_text("This sticker is not part for your pack")
+        return
+    
+    try:
+        await remove_sticker(c, sticker.file_id)
+        await to_modify.edit_text(f"Successfully removed [sticker]({m.reply_to_message.link}) from {sticker_set.set.title}")
+    except Exception as e:
+        await to_modify.delete()
+        await m.reply_text(f"Failed to remove sticker due to:\n{e}\nPlease report this bug using `/bug`")
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+    return
+    
 
 @Gojo.on_message(command(["mmfb","mmfw","mmf"]))
 async def memify_it(c: Gojo, m: Message):

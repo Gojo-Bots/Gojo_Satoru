@@ -3,12 +3,14 @@ import math
 import os
 import shlex
 import textwrap
+from time import time
 from typing import List, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import errors, raw
 from pyrogram.file_id import FileId
 from pyrogram.types import Message
+from unidecode import unidecode
 
 from Powers.bot_class import Gojo
 
@@ -181,6 +183,10 @@ async def get_document_from_file_id(
         file_reference=decoded.file_reference,
     )
 
+async def remove_sticker(c: Gojo, stickerid: str) -> raw.base.messages.StickerSet:
+    sticker = await get_document_from_file_id(stickerid)
+    return await c.invoke(raw.functions.stickers.RemoveStickerFromSet(sticker=sticker))
+
 
 async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> list:
     _split = text.split(";", 1)
@@ -194,19 +200,36 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
     image = Image.open(image_path)
     width, height = image.size
 
-    font_size = int(width / 11)
+    font_size = int((30 / 500) * width)
     font = ImageFont.truetype("./extras/comic.ttf", font_size)
 
     draw = ImageDraw.Draw(image)
 
-    upper_text_width, _ = draw.textsize(upper_text, font=font)
-    lower_text_width, lower_text_height = draw.textsize(lower_text, font=font)
+    curr_height, padding = 20, 5
+    for utext in textwrap.wrap(upper_text, 25):
+        upper_width = draw.textlength(utext, font=font)
+        draw.text(
+            ((width - upper_width) / 2, curr_height),
+            unidecode(utext),
+            (255, 255, 255),
+            font,
+            stroke_width=3,
+            stroke_fill=fiill,
+        )
+        curr_height += font_size + padding
 
-    upper_text_position = ((width - upper_text_width) // 2, height // 10)
-    lower_text_position = ((width - lower_text_width) // 2, height - lower_text_height - (height // 10))
-
-    draw.text(upper_text_position, upper_text, font=font, fill=fiill)
-    draw.text(lower_text_position, lower_text, font=font, fill=fiill)
+    curr_height = height - font_size
+    for ltext in reversed(textwrap.wrap(lower_text, 25)):
+        lower_width = draw.textlength(ltext, font=font)
+        draw.text(
+            ((width - lower_width) / 2, curr_height - font_size),
+            ltext,
+            (255, 255, 255),
+            font,
+            stroke_width=3,
+            stroke_fill=fiill,
+        )
+        curr_height -= font_size + padding
 
     if sticker:
         stick_path = image_path
@@ -214,7 +237,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
         stick_path = await resize_file_to_sticker_size(image_path)
 
     image1 = image_path
-    image2 = tosticker(stick_path,"@memesofdank_memer_hu_vai.webp")
+    image2 = tosticker(stick_path,f"@GojoSuperbot_{int(time())}.webp")
 
     image.save(image1)
     image.save(image2)
@@ -224,113 +247,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
     return [image1, image2]
 
 
-# async def draw_meme(image_path, text:str,stick):
-#     """Hellbot se churaya hai hue hue hue..."""
-#     img = Image.open(image_path)
-#     i_width, i_height = img.size
-#     m_font = ImageFont.truetype(
-#         "./extras/comic.ttf", int(i_width / 11)
-#     )
-#     if ";" in text:
-#         upper_text, lower_text = text.split(";")
-#     else:
-#         upper_text = text
-#         lower_text = ""
-#     draw = ImageDraw.Draw(img)
-#     current_h, pad = 10, 5
-#     if upper_text:
-#         for u_text in textwrap.wrap(upper_text,width=15,subsequent_indent=" "):
-#             u_width, u_height = draw.textsize(u_text, font=m_font)
-#             draw.text(
-#                 xy=(((i_width - u_width) / 2) - 1, int((current_h / 640) * i_width)),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(((i_width - u_width) / 2) + 1, int((current_h / 640) * i_width)),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=((i_width - u_width) / 2, int(((current_h / 640) * i_width)) - 1),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(((i_width - u_width) / 2), int(((current_h / 640) * i_width)) + 1),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=((i_width - u_width) / 2, int((current_h / 640) * i_width)),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(255, 255, 255),
-#             )
-#             current_h += u_height + pad
-#     if lower_text:
-#         for l_text in textwrap.wrap(upper_text,width=15,subsequent_indent=" "):
-#             u_width, u_height = draw.textsize(l_text, font=m_font)
-#             draw.text(
-#                 xy=(
-#                     ((i_width - u_width) / 2) - 1,
-#                     i_height - u_height - int((20 / 640) * i_width),
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     ((i_width - u_width) / 2) + 1,
-#                     i_height - u_height - int((20 / 640) * i_width),
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     (i_width - u_width) / 2,
-#                     (i_height - u_height - int((20 / 640) * i_width)) - 1,
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     (i_width - u_width) / 2,
-#                     (i_height - u_height - int((20 / 640) * i_width)) + 1,
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     (i_width - u_width) / 2,
-#                     i_height - u_height - int((20 / 640) * i_width),
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(255, 255, 255),
-#             )
-#             current_h += u_height + pad
 
-#     hue = image_path
-#     if stick:
-#         stick_path = image_path
-#     else:
-#         stick_path = await resize_file_to_sticker_size(hue)
-#     mee = tosticker(stick_path,"@memesofdank_memer_hu_vai.webp")
-#     img.save(hue)
-#     img.save(mee)
-#     return hue, mee
 
 def toimage(image, filename=None, is_direc=False):
     filename = filename if filename else "gojo.jpg"

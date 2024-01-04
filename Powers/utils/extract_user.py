@@ -98,6 +98,7 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
                             user = await c.get_users(user_r.user_id)
                         except Exception as ef:
                             return await m.reply_text(f"User not found ! Error: {ef}")
+                    user_id = user.id
                     user_first_name = user.first_name
                     user_name = user.username
                     LOGGER.error(ef)

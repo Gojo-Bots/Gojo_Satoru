@@ -7,10 +7,14 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType
 from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery, ChatJoinRequest, Message
 
 from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
+from Powers.database.afk_db import AFK
+from Powers.database.approve_db import Approve
+from Powers.database.autojoin_db import AUTOJOIN
 from Powers.database.disable_db import Disabling
+from Powers.database.flood_db import Floods
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.vars import Config
 
@@ -302,7 +306,75 @@ async def can_pin_message_func(_, __, m):
 
     return status
 
+async def auto_join_check_filter(_, __, j: ChatJoinRequest):
+    chat = j.chat.id
+    aj = AUTOJOIN()
+    join_type = aj.get_autojoin(chat)
+    
+    if not join_type:
+        return False
+    else:
+        return True
 
+async def afk_check_filter(_, __, m: Message):
+    if not m.from_user:
+        return False
+
+    if m.from_user.is_bot:
+        return False
+
+    if m.chat.type == ChatType.PRIVATE:
+        return False
+    
+    afk = AFK()
+    user = m.from_user.id
+    chat = m.chat.id
+    repl = m.reply_to_message
+
+    if repl and repl.from_user:
+        rep_user = repl.from_user.id
+    else:
+        rep_user = False
+
+    is_afk = afk.check_afk(chat,user)
+    is_rep_afk = False
+    if rep_user:
+        is_rep_afk = afk.check_afk(chat,rep_user)
+
+    if not is_rep_afk and not is_afk:
+        return False
+    else:
+        return True
+
+async def flood_check_filter(_, __, m: Message):
+    Flood = Floods()
+    if not m.chat:
+        return False
+
+    if not m.from_user:
+        return False
+    
+    if m.chat.type == ChatType.PRIVATE:
+        return False
+
+    u_id = m.from_user.id
+    c_id = m.chat.id
+    is_flood = Flood.is_chat(c_id)
+    
+    app_users = Approve(m.chat.id).list_approved()
+
+    if not is_flood or u_id in SUDO_LEVEL:
+        return False
+    
+    elif u_id in {i[0] for i in app_users}:
+        return False
+    
+    else:
+        return True
+
+flood_filter = create(flood_check_filter)
+afk_filter = create(afk_check_filter)
+auto_join_filter = create(auto_join_check_filter)
 admin_filter = create(admin_check_func)
 owner_filter = create(owner_check_func)
 restrict_filter = create(restrict_check_func)

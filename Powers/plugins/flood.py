@@ -15,7 +15,7 @@ from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.flood_db import Floods
 from Powers.supports import get_support_staff
-from Powers.utils.custom_filters import admin_filter, command
+from Powers.utils.custom_filters import admin_filter, command, flood_filter
 from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
 from Powers.utils.kbhelpers import ikb
 from Powers.vars import Config
@@ -330,41 +330,17 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
         return
 
 dic = {}
-@Gojo.on_message(filters.all & ~filters.bot | ~filters.private, 10)
+@Gojo.on_message(flood_filter & ~admin_filter)
 async def flood_watcher(c: Gojo, m: Message):
     c_id = m.chat.id
     
-    if not m.chat:
-        return
-    
     Flood = Floods()
     
-    try:
-        u_id = m.from_user.id
-    except AttributeError:
-        return # Get this error when the message received is not by an user and return
+    u_id = m.from_user.id
     
     is_flood = Flood.is_chat(c_id)
     
-    if not is_flood:
-        return # return of chat is not in anti flood protection
-    
-    app_users = Approve(m.chat.id).list_approved()
-    
-    if u_id in {i[0] for i in app_users}:
-        return #return if the user is approved
-    
-    if not is_flood or u_id in SUPPORT_STAFF:
-        return #return if the user is in support_staff
-    
-    try:
-        user_status = (await m.chat.get_member(m.from_user.id)).status
-    except Exception:
-        return
-    
-    if user_status in [CMS.OWNER, CMS.ADMINISTRATOR]:
-        return #return if the user is owner or admin
-    
+
     action = is_flood[2]
     limit = int(is_flood[0])
     within = int(is_flood[1])
