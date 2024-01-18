@@ -2,7 +2,7 @@ aiofiles==23.2.1; python_full_version >= "3.7"
 anyio==4.2.0; python_full_version >= "3.6.2" and python_version >= "3.6"
 apscheduler==3.10.4
 asyncio==3.4.3
-beautifulsoup4==4.12.2; python_full_version >= "3.6"
+beautifulsoup4==4.12.3; python_full_version >= "3.6"
 cachetools==5.2.0; python_version >= "3.7" and python_version < "4.0"
 captcha==0.5.0
 certifi==2023.7.22; python_version >= "3.7" and python_version < "4"
