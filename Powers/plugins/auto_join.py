@@ -10,7 +10,6 @@ from Powers.database.autojoin_db import AUTOJOIN
 from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, auto_join_filter, command
 
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(command(["joinreq"]) & admin_filter)
 async def accept_join_requests(c: Gojo, m: Message):
@@ -20,6 +19,9 @@ async def accept_join_requests(c: Gojo, m: Message):
 
     split = m.command
     a_j = AUTOJOIN()
+
+    try:
+        await 
 
     if len(split) == 1:
         txt = "**USAGE**\n/joinreq [on | off]"
@@ -84,7 +86,8 @@ async def join_request_handler(c: Gojo, j: ChatJoinRequest):
     chat = j.chat.id
     aj = AUTOJOIN()
     join_type = aj.get_autojoin(chat)
-    
+    SUPPORT_STAFF = get_support_staff()
+
     if not join_type:
         return
     if join_type == "auto" or user in SUPPORT_STAFF:

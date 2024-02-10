@@ -181,10 +181,13 @@ async def rm_support(c: Gojo, m: Message):
             return
     elif len(split) >= 2:
         try:
-            curr,_,_ = extract_user(m)
+            curr = int(split[1])
         except Exception:
-            await m.reply_text("Dunno who u r talking abt")
-            return
+            try:
+                curr,_,_ = extract_user(m)
+            except Exception:
+                await m.reply_text("Dunno who u r talking abt")
+                return
     else:
         await m.reply_text("**USAGE**\n/rmsupport [reply to user | user id | username]")
         return

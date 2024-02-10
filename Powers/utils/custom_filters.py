@@ -18,9 +18,6 @@ from Powers.database.flood_db import Floods
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.vars import Config
 
-SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
-DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
-
 
 def command(
     commands: Union[str, List[str]],
@@ -52,11 +49,11 @@ def command(
         if owner_cmd and (m.from_user.id != OWNER_ID):
             # Only owner allowed to use this...!
             return False
-
+        DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
             # Only devs allowed to use this...!
             return False
-
+        SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
         if sudo_cmd and (m.from_user.id not in SUDO_LEVEL):
             # Only sudos and above allowed to use it
             return False
@@ -73,7 +70,7 @@ def command(
             m.command = [matches.group(1)]
             if matches.group(1) not in flt.commands:
                 return False
-            if bool(m.chat and m.chat.type in {ChatType.SUPERGROUP}):
+            if bool(m.chat and m.chat.type in {ChatType.SUPERGROUP, ChatType.GROUP}):
                 try:
                     user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
@@ -293,6 +290,7 @@ async def can_pin_message_func(_, __, m):
         return True
 
     # Bypass the bot devs, sudos and owner
+    SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
     if m.from_user.id in SUDO_LEVEL:
         return True
 
@@ -362,7 +360,8 @@ async def flood_check_filter(_, __, m: Message):
     is_flood = Flood.is_chat(c_id)
     
     app_users = Approve(m.chat.id).list_approved()
-
+    SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
+    
     if not is_flood or u_id in SUDO_LEVEL:
         return False
     

@@ -20,7 +20,6 @@ from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.vars import Config
 
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(command("tmute") & restrict_filter)
 async def tmute_usr(c: Gojo, m: Message):
@@ -39,6 +38,8 @@ async def tmute_usr(c: Gojo, m: Message):
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I mute myself?")
         return
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         LOGGER.info(
@@ -152,6 +153,7 @@ async def dtmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
@@ -260,6 +262,7 @@ async def stmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
@@ -353,6 +356,7 @@ async def mute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
@@ -438,6 +442,8 @@ async def smute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
+
     if user_id in SUPPORT_STAFF:
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
@@ -509,6 +515,8 @@ async def dmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
+
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         LOGGER.info(
             f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",

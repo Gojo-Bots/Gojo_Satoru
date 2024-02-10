@@ -14,7 +14,6 @@ from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_html
 
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(
     command("reports") & (filters.private | admin_filter),
@@ -85,7 +84,8 @@ async def report_watcher(c: Gojo, m: Message):
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
             return
-
+            
+        SUPPORT_STAFF = get_support_staff()
         if reported_user.id in SUPPORT_STAFF:
             await m.reply_text("Uh? You reporting my support team?")
             return

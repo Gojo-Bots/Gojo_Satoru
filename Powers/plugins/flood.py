@@ -20,7 +20,6 @@ from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
 from Powers.utils.kbhelpers import ikb
 from Powers.vars import Config
 
-SUPPORT_STAFF = get_support_staff()
 
 on_key = ["on", "start", "disable"]
 off_key = ["off", "end", "enable", "stop"]
@@ -192,6 +191,7 @@ async def flood_set(c: Gojo, m: Message):
 
 @Gojo.on_callback_query(filters.regex("^f_"))
 async def callbacks(c: Gojo, q: CallbackQuery):
+    SUPPORT_STAFF = get_support_staff()
     data = q.data
     if data == "f_close":
         await q.answer("Closed")
@@ -291,6 +291,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
     action = data[1]
     user_id = int(q.data.split("=")[1])
+    SUPPORT_STAFF = get_support_staff()
     if not q.from_user:
         return q.answer("Looks like you are not an user 👀")
     if action == "ban":

@@ -24,8 +24,6 @@ from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
 from Powers.vars import Config
 
-SUPPORT_STAFF = get_support_staff()
-DEV_LEVEL = get_support_staff("dev_level")
 
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
@@ -110,6 +108,7 @@ async def reload_admins(_, m: Message):
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )
+    SUPPORT_STAFF = get_support_staff()
     if (
         (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
         and (m.from_user.id not in SUPPORT_STAFF)
@@ -420,6 +419,8 @@ async def demote_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("invitelink"))
 async def get_invitelink(c: Gojo, m: Message):
     # Bypass the bot devs, sudos and owner
+    
+    DEV_LEVEL = get_support_staff("dev_level")
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
         if not user.privileges.can_invite_users and user.status != CMS.OWNER:

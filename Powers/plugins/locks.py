@@ -15,8 +15,6 @@ from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.vars import Config
 
-SUDO_LEVEL = get_support_staff("sudo_level")
-
 l_t = """
 **Lock Types:**
 - `all` = Everything
@@ -67,10 +65,12 @@ async def lock_perm(c: Gojo, m: Message):
     invite = get_perm.can_invite_users
     pin = get_perm.can_pin_messages
     stickers = animations = games = inlinebots = None
+    lock = LOCKS()
 
     if lock_type == "all":
         try:
             await c.set_chat_permissions(chat_id, ChatPermissions())
+            lock.insert_lock_channel(m.chat.id, "all")
             LOGGER.info(f"{m.from_user.id} locked all permissions in {m.chat.id}")
         except ChatNotModified:
             pass
@@ -80,7 +80,6 @@ async def lock_perm(c: Gojo, m: Message):
         await prevent_approved(m)
         return
 
-    lock = LOCKS()
 
     if lock_type == "msg":
         msg = False
@@ -280,6 +279,7 @@ async def unlock_perm(c: Gojo, m: Message):
         return
 
     if unlock_type == "all":
+        lock = LOCKS()
         try:
             await c.set_chat_permissions(
                 chat_id,
@@ -294,6 +294,7 @@ async def unlock_perm(c: Gojo, m: Message):
                     can_pin_messages=True,
                 ),
             )
+            lock.remove_lock_channel(m.chat.id,"all")
             LOGGER.info(f"{m.from_user.id} unlocked all permissions in {m.chat.id}")
         except ChatNotModified:
             pass
@@ -314,7 +315,6 @@ async def unlock_perm(c: Gojo, m: Message):
     upin = get_uperm.can_pin_messages
     ustickers = uanimations = ugames = uinlinebots = None
 
-    lock = LOCKS()
 
     if unlock_type == "msg":
         umsg = True
@@ -455,6 +455,8 @@ async def is_approved_user(c:Gojo, m: Message):
     except KeyError:
         admins_group = await admin_cache_reload(m, "lock")
     
+    SUDO_LEVEL = get_support_staff("sudo_level")
+
     if m.forward_from:
         if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
             return True

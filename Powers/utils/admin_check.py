@@ -5,9 +5,6 @@ from pyrogram.types import CallbackQuery, Message
 
 from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
 
-SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
-DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
-
 
 async def admin_check(m: Message or CallbackQuery) -> bool:
     """Checks if user is admin or not."""
@@ -15,6 +12,8 @@ async def admin_check(m: Message or CallbackQuery) -> bool:
         user_id = m.from_user.id
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
+
+    SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
 
     try:
         if user_id in SUDO_LEVEL:
@@ -65,6 +64,8 @@ async def owner_check(m: Message or CallbackQuery) -> bool:
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
         m = m.message
+
+    SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
 
     try:
         if user_id in SUDO_LEVEL:

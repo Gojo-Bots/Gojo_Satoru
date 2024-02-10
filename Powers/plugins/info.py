@@ -146,10 +146,15 @@ async def user_info(c: Gojo, user, already=False):
 <b>🔅 Second Name</b>: <code>{last_name}</code>
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
 <b>✍️ Bio</b>: `{about}`
-<b>🧑‍💻 Support</b>: {is_support}
-<b>🥷 Support user type</b>: <code>{omp}</code>
-<b>💣 Gbanned</b>: {gban}
-<b>☠️ Gban reason</b>: <code>{reason}</code>
+<b>🧑‍💻 Support</b>: {is_support}\n"""
+    if is_support:
+        caption += f"<b>🥷 Support user type</b>: <code>{omp}</code>\n<b>💣 Gbanned</b>: {gban}\n"
+    else:
+        caption += f"<b>💣 Gbanned</b>: {gban}\n"
+
+    if gban:
+        caption += f"<b>☠️ Gban reason</b>: <code>{reason}</code>\n"
+    caption += f"""
 <b>🌐 DC ID</b>: {dc_id}
 <b>✋ RESTRICTED</b>: {is_restricted}
 <b>✅ VERIFIED</b>: {is_verified}
@@ -157,7 +162,6 @@ async def user_info(c: Gojo, user, already=False):
 <b>⚠️ SCAM</b> : {is_scam} 
 <b>🤖 BOT</b>: {is_bot}
 <b>👀 Last seen</b>: <code>{last_date}</code>
-
 """
 
     return caption, photo_id

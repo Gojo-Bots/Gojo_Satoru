@@ -53,7 +53,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                     "📚 Commands & Help", "commands"
                 ),
                 (
-                    "👾 Bot info",
+                    "Bot info 👾",
                     "bot_curr_info"
                 )
             ],
@@ -71,12 +71,12 @@ async def gen_start_kb(q: Message or CallbackQuery):
             ],
             [
                 (
-                    "Essential",
+                    "❗️ Essential",
                     "https://t.me/+PcVYvdzNt4E1YjM1",
                     "url",
                 ),
                 (
-                    "Powered by",
+                    "Powered by ⚡️",
                     f"https://{Config.SUPPORT_CHANNEL}.t.me",
                     "url",
                 ),

@@ -22,7 +22,6 @@ from Powers.utils.regex_utils import regex_searcher
 
 # Initialise
 gban_db = GBan()
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(filters.linked_channel)
 async def antichanpin_cleanlinked(c: Gojo, m: Message):
@@ -124,7 +123,8 @@ async def bl_watcher(_, m: Message):
                     ),
                 )
             return
-
+        
+        SUPPORT_STAFF = get_support_staff()
         if m.from_user.id in SUPPORT_STAFF:
             # Don't work on Support Staff!
             return

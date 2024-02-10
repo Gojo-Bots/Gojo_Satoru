@@ -18,7 +18,6 @@ from Powers.vars import Config
 
 # Initialize
 db = GBan()
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(command(["gban", "globalban"], sudo_cmd=True))
 async def gban(c: Gojo, m: Message):
@@ -38,6 +37,8 @@ async def gban(c: Gojo, m: Message):
         gban_reason = m.text.split(None, 1)[1]
     else:
         gban_reason = m.text.split(None, 2)[2]
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")
@@ -91,6 +92,8 @@ async def ungban(c: Gojo, m: Message):
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")
@@ -169,3 +172,18 @@ async def gban_list(_, m: Message):
     LOGGER.info(f"{m.from_user.id} exported gbanlist in {m.chat.id}")
 
     return
+
+__PLUGIN__ = "global"
+
+__alt_name__ = ["antispam", "global"]
+
+
+__HELP__ = """
+**Global**
+
+**Sudo commands:**
+• /gban [reply to user | user id | username]: Add the user in the global ban watchlist.
+• /ungban [reply to user | user id | username]: Remove the user from the global ban watchlist.
+• /numgbans : Give number of users who are banned globally.
+• /gbanlist : Give list of globally banned users.
+"""

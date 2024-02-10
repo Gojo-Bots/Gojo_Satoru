@@ -148,3 +148,23 @@ async def enablealll(_, q: CallbackQuery):
     LOGGER.info(f"{user_id} enabled all in {q.message.chat.id}")
     await q.message.edit_text("Enabled all!", show_alert=True)
     return
+
+
+__PLUGIN__ = "disable able"
+
+__alt_name__ = ["disable commands", "disable"]
+
+
+__HELP__ = """
+**Disable commands**
+
+**Admin commands:**
+• /disable [command]: To disable the given command.
+• /disabledel [on | off]: Will delete the command which is disabled.
+• /enable [command]: To enable the given command.
+• /disableable : Give all disableable commands.
+• /disabled : Give all disabled commands.
+
+**Owner command:**
+• /enableall : Enable all the disabled commands.
+"""

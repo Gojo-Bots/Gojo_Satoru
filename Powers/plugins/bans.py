@@ -20,7 +20,6 @@ from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
 from Powers.vars import Config
 
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(command("tban") & restrict_filter)
 async def tban_usr(c: Gojo, m: Message):
@@ -39,6 +38,8 @@ async def tban_usr(c: Gojo, m: Message):
     if user_id == Config.BOT_ID:
         await m.reply_text("WTF??  Why would I ban myself?")
         await m.stop_propagation()
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -160,6 +161,8 @@ async def stban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
+    SUPPORT_STAFF = get_support_staff()
+
     try:
         user_id, _, _ = await extract_user(c, m)
     except Exception:
@@ -265,6 +268,8 @@ async def dtban_usr(c: Gojo, m: Message):
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="I am not going to ban one of my support staff")
@@ -394,6 +399,8 @@ async def kick_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
+    SUPPORT_STAFF = get_support_staff()
+
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -483,6 +490,8 @@ async def skick_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
+    SUPPORT_STAFF = get_support_staff()
+
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -554,6 +563,8 @@ async def dkick_usr(c: Gojo, m: Message):
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -704,6 +715,8 @@ async def sban_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
+    SUPPORT_STAFF = get_support_staff()
+
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -782,6 +795,8 @@ async def dban_usr(c: Gojo, m: Message):
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -881,6 +896,8 @@ async def ban_usr(c: Gojo, m: Message):
     if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
+
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(

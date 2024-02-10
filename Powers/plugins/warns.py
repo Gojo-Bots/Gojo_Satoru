@@ -18,7 +18,6 @@ from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
 from Powers.vars import Config
 
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(
     command(["warn", "swarn", "dwarn"]) & restrict_filter,
@@ -49,6 +48,7 @@ async def warn(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -151,6 +151,7 @@ async def reset_warn(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             "They are support users, cannot be restriced, how am I then supposed to unrestrict them?",
@@ -186,6 +187,7 @@ async def list_warns(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user has no warns!")
         LOGGER.info(
@@ -234,6 +236,7 @@ async def remove_warn(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user has no warns!")
         LOGGER.info(
@@ -300,15 +303,17 @@ async def remove_last_warn_btn(c: Gojo, q: CallbackQuery):
         )
     if action == "kick":
         try:
-            timee = timeee = datetime.now(TIME_ZONE) + timedelta(minutes=45)
+            timee = datetime.now(TIME_ZONE) + timedelta(minutes=45)
             await c.ban_chat_member(chat_id, user_id, until_date=timee)
             await q.message.edit_text(
                 (
                     f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
-                    "kicked user "
+                    "kicked user they can't join the chat for 45 minutes"
                     f"{(await mention_html(user_first_name, user_id))} for last warning!"
                 ),
             )
+            warn_db = Warns(q.message.chat.id)
+            warn_db.reset_warns(user_id)
         except RPCError as err:
             await q.message.edit_text(
                 f"🛑 Failed to Kick\n<b>Error:</b>\n</code>{err}</code>",
@@ -387,6 +392,8 @@ __HELP__ = """
 • /warnings: Get the chat's warning settings.
 • /warnmode `<ban/kick/mute>`: Set the chat's warn mode.
 • /warnlimit `<number>`: Set the number of warnings before users are punished.
+
+**IF THE USER IS KICKED THEN THEY WILL BE TEMPORARILY BANNED FOR 45 MINUTES**
 
 **Examples:**
 `/warn @user`: this warns a user in the chat."""
