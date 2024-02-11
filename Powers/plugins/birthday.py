@@ -177,7 +177,7 @@ async def cant_recall_it(c: Gojo, m: Message):
     u_dob = give_date(result["dob"])
     formatted = str(u_dob.strftime('%d' + '%B %Y'))[2:-5]
     day = int(result["dob"].split('/')[0])
-    suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(day if day < 20 else day % 10, 'th')
+    suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
     bday_on = f"{day}{suffix} {formatted}"
     if u_dob.month < curr.month:
         next_b = date(curr.year + 1, u_dob.month, u_dob.day)

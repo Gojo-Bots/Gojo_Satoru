@@ -20,7 +20,6 @@ from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
 from Powers.utils.kbhelpers import ikb
 from Powers.vars import Config
 
-
 on_key = ["on", "start", "disable"]
 off_key = ["off", "end", "enable", "stop"]
 

@@ -5,7 +5,7 @@ from Powers.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-lock_t = ["anti_c_send", "anti_fwd", "anti_fwd_u", "anti_fwd_c", "anti_links"]
+lock_t = ["bot", "anti_c_send", "anti_fwd", "anti_fwd_u", "anti_fwd_c", "anti_links"]
 class LOCKS(MongoDB):
     """Class to store locks"""
     
@@ -16,7 +16,7 @@ class LOCKS(MongoDB):
 
     def insert_lock_channel(self, chat: int, locktype: str):
         """
-        locktypes: all, anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links
+        locktypes: all, bot, anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links
         """
         if locktype == "all":
             for i in lock_t:
@@ -39,7 +39,7 @@ class LOCKS(MongoDB):
 
     def remove_lock_channel(self, chat: int, locktype: str):
         """
-        locktypes: all, anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links
+        locktypes: all, bot, anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links
         """
         if locktype == "all":
             for i in lock_t:
@@ -55,23 +55,34 @@ class LOCKS(MongoDB):
         else:
             return False
 
-    def get_lock_channel(self, locktype: str="all"):
+    def get_lock_channel(self, locktype: str="all", chat:int = 0):
         """
-        locktypes: anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links
+        locktypes: anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links, bot
         """
-        if locktype not in ["anti_c_send","anti_fwd","anti_fwd_u","anti_fwd_c","anti_links", "all"]:
+        if locktype not in ["anti_c_send","anti_fwd","anti_fwd_u","anti_fwd_c","anti_links", "bot", "all"]:
             return False
         else:
             if locktype == "all":
                 find = {}
             else:
                 find = {"locktype":locktype}
-            curr = self.find_all(find)
-            if not curr:
-                list_ = []
-            else:
-                list_ = [i["chat_id"] for i in curr]
-            return list_
+            if chat:
+                if find:
+                    curr = self.find_one({"chat_id":chat, "locktype":locktype})
+                    return bool(curr)
+                else:
+                    to_return = []
+                    for i in lock_t:
+                        curr = self.find_one({"chat_id":chat, "locktype":i})
+                        to_return.append(bool(curr))
+                    return all(to_return)
+            else:    
+                curr = self.find_all(find)
+                if not curr:
+                    list_ = []
+                else:
+                    list_ = [i["chat_id"] for i in curr]
+                return list_
 
     def merge_u_and_c(self, chat: int, locktype: str):
         if locktype == "anti_fwd_u":
