@@ -215,6 +215,7 @@ async def get_wlcm_type(m: Message):
 
     return text, data_type, content
 
+
 async def get_afk_type(m: Message):
     data_type = None
     content = None

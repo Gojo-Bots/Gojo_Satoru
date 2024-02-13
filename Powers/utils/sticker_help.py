@@ -28,6 +28,7 @@ async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
         process.pid,
     )
 
+
 async def get_sticker_set_by_name(
     client: Gojo, name: str
 ) -> raw.base.messages.StickerSet:
@@ -42,15 +43,14 @@ async def get_sticker_set_by_name(
         return None
 
 
-
 async def create_sticker_set(
     client: Gojo,
     owner: int,
     title: str,
     short_name: str,
     stickers: List[raw.base.InputStickerSetItem],
-    animated:bool=False,
-    video:bool=False
+    animated: bool = False,
+    video: bool = False
 ) -> raw.base.messages.StickerSet:
     return await client.invoke(
         raw.functions.stickers.CreateStickerSet(
@@ -85,11 +85,10 @@ async def create_sticker(
     return raw.types.InputStickerSetItem(document=sticker, emoji=emoji)
 
 
-
 STICKER_DIMENSIONS = (512, 512)
 
 
-async def resize_file_to_sticker_size(file_path: str,length:int=512,width:int=512) -> str:
+async def resize_file_to_sticker_size(file_path: str, length: int = 512, width: int = 512) -> str:
     im = Image.open(file_path)
     if (im.width, im.height) < STICKER_DIMENSIONS:
         size1 = im.width
@@ -114,6 +113,7 @@ async def resize_file_to_sticker_size(file_path: str,length:int=512,width:int=51
     os.remove(file_path)
     return file_pathh
 
+
 async def tgs_to_gif(file, tgs=False, video=False):
     if tgs:
         cmd = f"lottie_convert.py '{file}' 'gojo_satoru.gif'"
@@ -123,12 +123,14 @@ async def tgs_to_gif(file, tgs=False, video=False):
     os.remove(file)
     return 'gojo_satoru.gif'
 
+
 async def webm_to_gif(file):
     cmd = f"ffmpeg -i '{file}' 'goJo.gif'"
     await runcmd(cmd)
     os.remove(file)
     return "goJo.gif"
-        
+
+
 async def Vsticker(c: Gojo, file: Message):
     if file.animation:
         file = file.animation
@@ -155,7 +157,8 @@ async def upload_document(
         raw.functions.messages.UploadMedia(
             peer=await client.resolve_peer(chat_id),
             media=raw.types.InputMediaUploadedDocument(
-                mime_type=client.guess_mime_type(file_path) or "application/zip",
+                mime_type=client.guess_mime_type(
+                    file_path) or "application/zip",
                 file=await client.save_file(file_path),
                 attributes=[
                     raw.types.DocumentAttributeFilename(
@@ -182,6 +185,7 @@ async def get_document_from_file_id(
         access_hash=decoded.access_hash,
         file_reference=decoded.file_reference,
     )
+
 
 async def remove_sticker(c: Gojo, stickerid: str) -> raw.base.messages.StickerSet:
     sticker = await get_document_from_file_id(stickerid)
@@ -237,7 +241,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
         stick_path = await resize_file_to_sticker_size(image_path)
 
     image1 = image_path
-    image2 = tosticker(stick_path,f"@GojoSuperbot_{int(time())}.webp")
+    image2 = tosticker(stick_path, f"@GojoSuperbot_{int(time())}.webp")
 
     image.save(image1)
     image.save(image2)
@@ -247,12 +251,10 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
     return [image1, image2]
 
 
-
-
 def toimage(image, filename=None, is_direc=False):
     filename = filename if filename else "gojo.jpg"
     if is_direc:
-        os.rename(image,filename)
+        os.rename(image, filename)
         return filename
     img = Image.open(image)
     if img.mode != "RGB":
@@ -265,7 +267,7 @@ def toimage(image, filename=None, is_direc=False):
 def tosticker(response, filename=None, is_direc=False):
     filename = filename if filename else "gojo.webp"
     if is_direc:
-        os.rename(response,filename)
+        os.rename(response, filename)
         return filename
     image = Image.open(response)
     if image.mode != "RGB":

@@ -146,9 +146,11 @@ class Disabling(MongoDB):
                     "commands": [],
                     "action": "none",
                 }
-                DISABLED_CMDS[self.chat_id] = {"commands": [], "action": "none"}
+                DISABLED_CMDS[self.chat_id] = {
+                    "commands": [], "action": "none"}
                 self.insert_one(new_data)
-                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(
+                    f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
             DISABLED_CMDS[self.chat_id] = chat_data
         return chat_data
@@ -163,7 +165,7 @@ class Disabling(MongoDB):
 
     def clean_disable(self):
         with INSERTION_LOCK:
-            return self.delete_one({"_id":self.chat_id})
+            return self.delete_one({"_id": self.chat_id})
 
     @staticmethod
     def repair_db(collection):

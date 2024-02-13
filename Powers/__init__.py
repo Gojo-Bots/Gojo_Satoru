@@ -13,6 +13,7 @@ from traceback import format_exc
 import lyricsgenius
 import pyrogram
 import pytz
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -55,7 +56,7 @@ except Exception as ef:
     LOGGER.error(ef)  # Print Error
     LOGGER.error(format_exc())
     sysexit(1)
-#time zone
+# time zone
 TIME_ZONE = pytz.timezone(Config.TIME_ZONE)
 
 path = "./Version"
@@ -126,7 +127,6 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 
 
-
 defult_dev = [1344569458, 1432756163, 5294360309] + [int(OWNER_ID)]
 
 Defult_dev = set(defult_dev)
@@ -147,16 +147,17 @@ PREFIX_HANDLER = Config.PREFIX_HANDLER
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
+
 
 async def load_cmds(all_plugins):
     """Loads all the plugins in bot."""
     for single in all_plugins:
         # If plugin in NO_LOAD, skip the plugin
         if single.lower() in [i.lower() for i in Config.NO_LOAD]:
-            LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
+            LOGGER.warning(
+                f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
 
         imported_module = imp_mod(f"Powers.plugins.{single}")
@@ -197,6 +198,7 @@ async def load_cmds(all_plugins):
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
-        ", ".join((i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys()))
+        ", ".join((i.split(".")[1]).capitalize()
+                  for i in list(HELP_COMMANDS.keys()))
         + "\n"
     )

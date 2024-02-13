@@ -37,18 +37,18 @@ class Config:
             default="",
         ).split(None)
     ]
-    GENIUS_API_TOKEN = config("GENIUS_API",default=None)
+    GENIUS_API_TOKEN = config("GENIUS_API", default=None)
     # AuDD_API = config("AuDD_API",default=None)
-    RMBG_API = config("RMBG_API",default=None)
+    RMBG_API = config("RMBG_API", default=None)
     DB_URI = config("DB_URI", default="")
     DB_NAME = config("DB_NAME", default="gojo_satarou")
-    BDB_URI = config("BDB_URI",default=None)
+    BDB_URI = config("BDB_URI", default=None)
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_bots_network")
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_bots_network")
     WORKERS = int(config("WORKERS", default=16))
-    TIME_ZONE = config("TIME_ZONE",default='Asia/Kolkata')
+    TIME_ZONE = config("TIME_ZONE", default='Asia/Kolkata')
     BOT_USERNAME = ""
     BOT_ID = ""
     BOT_NAME = ""
@@ -73,7 +73,7 @@ class Development:
     NO_LOAD = []
     GENIUS_API_TOKEN = ""
     RMBG_API = ""
-    PREFIX_HANDLER = ["!", "/","$"]
+    PREFIX_HANDLER = ["!", "/", "$"]
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     VERSION = "VERSION"

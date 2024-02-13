@@ -68,7 +68,7 @@ class Pins(MongoDB):
 
     def clean_pins(self):
         with INSERTION_LOCK:
-            return self.delete_one({"_id":self.chat_id})
+            return self.delete_one({"_id": self.chat_id})
 
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):

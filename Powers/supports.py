@@ -5,14 +5,15 @@ from Powers.database.support_db import SUPPORTS
 async def load_support_users():
     support = SUPPORTS()
     for i in DEV_USERS:
-        support.insert_support_user(int(i),"dev")
+        support.insert_support_user(int(i), "dev")
     for i in SUDO_USERS:
-        support.insert_support_user(int(i),"sudo")
+        support.insert_support_user(int(i), "sudo")
     for i in WHITELIST_USERS:
-        support.insert_support_user(int(i),"whitelist")
+        support.insert_support_user(int(i), "whitelist")
     return
 
-def get_support_staff(want = "all"):
+
+def get_support_staff(want="all"):
     """
     dev, sudo, whitelist, dev_level, sudo_level, all
     """
@@ -21,7 +22,7 @@ def get_support_staff(want = "all"):
     sudo = support.get_particular_support("sudo")
     whitelist = support.get_particular_support("whitelist")
 
-    if want in ["dev","dev_level"]:
+    if want in ["dev", "dev_level"]:
         wanted = devs
     elif want == "sudo":
         wanted = sudo

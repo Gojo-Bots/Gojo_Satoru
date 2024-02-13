@@ -73,10 +73,12 @@ This will show button 1 and 2 on the same line, while 3 will be underneath."""
                 parse_mode=enums.ParseMode.HTML,
             )
         except MediaCaptionTooLong:
+            kb = ikb([[("Back", "DELETEEEE")]])
             await c.send_message(
                 chat_id=q.message.chat.id,
                 text=txt,
-                parse_mode=enums.ParseMode.HTML,)
+                parse_mode=enums.ParseMode.HTML,
+                reply_markup=kb)
     elif cmd == "fillings":
         await q.edit_message_caption(
             caption="""<b>Fillings</b>

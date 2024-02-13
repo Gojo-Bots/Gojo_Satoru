@@ -16,6 +16,7 @@ from Powers.utils.sticker_help import resize_file_to_sticker_size
 
 backUP = "https://artfiles.alphacoders.com/160/160160.jpeg"
 
+
 async def get_file_size(file: Message):
     if file.photo:
         size = file.photo.file_size/1024
@@ -33,7 +34,7 @@ async def get_file_size(file: Message):
         size = file.voice.file_size/1024
     elif file.video_note:
         size = file.video_note.file_size/1024
-        
+
     if size <= 1024:
         return f"{round(size)} kb"
     elif size > 1024:
@@ -54,6 +55,8 @@ def get_duration_in_sec(dur: str):
     return dur
 
 # Gets yt result of given query.
+
+
 async def song_search(query, is_direct, max_results=1):
     yt_dict = {}
     try:
@@ -62,7 +65,7 @@ async def song_search(query, is_direct, max_results=1):
             query = vid["title"]
         else:
             query = query
-        videos = VideosSearch(query,max_results)
+        videos = VideosSearch(query, max_results)
         results = await videos.next()
     except Exception as e:
         LOGGER.error(e)
@@ -87,8 +90,8 @@ async def song_search(query, is_direct, max_results=1):
                 "duration": i["accessibility"]['duration'],
                 "DURATION": i["duration"],
                 "published": i["publishedTime"],
-                "uploader": i ["channel"]["name"]
-                }
+                "uploader": i["channel"]["name"]
+            }
             try:
                 thumb = {"thumbnail": i["richThumbnail"]["url"]}
             except Exception:
@@ -140,8 +143,7 @@ video_opts = {
 }"""
 
 
-
-async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str):
+async def youtube_downloader(c: Gojo, m: Message, query: str, is_direct: bool, type_: str):
     if type_ == "a":
         # opts = song_opts
         video = False
@@ -151,7 +153,7 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
         video = True
         song = False
     # ydl = yt_dlp.YoutubeDL(opts)
-    dicti = await song_search(query, is_direct,1)
+    dicti = await song_search(query, is_direct, 1)
     if not dicti and type(dicti) != str:
         await m.reply_text("File with duration less than or equals to 10 minutes is allowed only")
     elif type(dicti) == str:
@@ -172,14 +174,14 @@ async def youtube_downloader(c:Gojo,m:Message,query:str,is_direct:bool,type_:str
     vid_dur = get_duration_in_sec(dicti["DURATION"])
     published_on = dicti["published"]
     if thumb:
-        thumb_ = await c.send_photo(MESSAGE_DUMP,thumb)
+        thumb_ = await c.send_photo(MESSAGE_DUMP, thumb)
     else:
-        thumb_ = await c.send_photo(MESSAGE_DUMP,backUP)
+        thumb_ = await c.send_photo(MESSAGE_DUMP, backUP)
     # FILE = ydl.extract_info(query,download=video)
     url = query
     thumb = await thumb_.download()
     if not thumb:
-        thumb = await resize_file_to_sticker_size(thumb,320,320)
+        thumb = await resize_file_to_sticker_size(thumb, 320, 320)
     await thumb_.delete()
     cap = f"""
 ⤷ Name: `{f_name}`
@@ -192,7 +194,7 @@ Downloaded by: @{c.me.username}
     kb = IKM(
         [
             [
-                IKB(f"✘ {uploader.capitalize()} ✘",url=f"{up_url}")
+                IKB(f"✘ {uploader.capitalize()} ✘", url=f"{up_url}")
             ],
             [
                 IKB(f"✘ Youtube url ✘", url=f"{url}")
@@ -200,12 +202,12 @@ Downloaded by: @{c.me.username}
         ]
     )
     if song:
-        audio_stream= yt.streams.filter(only_audio=True).first()
+        audio_stream = yt.streams.filter(only_audio=True).first()
         f_path = audio_stream.download()
         # file_path = f"./youtube_downloads/{f_name.strip()}.mp3"
         file_path = f"./{f_name.strip()}.mp3"
-        os.rename(f_path,file_path)
-        await m.reply_audio(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb,title=f_name)
+        os.rename(f_path, file_path)
+        await m.reply_audio(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, title=f_name)
         # os.remove(f_path)
         os.remove(file_path)
         os.remove(thumb)
@@ -214,7 +216,7 @@ Downloaded by: @{c.me.username}
         video_stream = yt.streams.get_highest_resolution()
         file_path = video_stream.download()
         # file_path = f"./youtube_downloads/{f_name}.mp4"
-        await m.reply_video(file_path,caption=cap,reply_markup=kb,duration=vid_dur,thumb=thumb)
+        await m.reply_video(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb)
         os.remove(file_path)
         os.remove(thumb)
         return

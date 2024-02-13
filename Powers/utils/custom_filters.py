@@ -186,7 +186,7 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
 
     if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return False
-    
+
     if not m.from_user:
         return False
 
@@ -264,7 +264,6 @@ async def changeinfo_check_func(_, __, m):
     if m.sender_chat:
         return True
 
-
     user = await m.chat.get_member(m.from_user.id)
 
     if user.status in [CMS.ADMINISTRATOR, CMS.OWNER] and user.privileges.can_change_info:
@@ -304,15 +303,17 @@ async def can_pin_message_func(_, __, m):
 
     return status
 
+
 async def auto_join_check_filter(_, __, j: ChatJoinRequest):
     chat = j.chat.id
     aj = AUTOJOIN()
     join_type = aj.get_autojoin(chat)
-    
+
     if not join_type:
         return False
     else:
         return True
+
 
 async def afk_check_filter(_, __, m: Message):
     if not m.from_user:
@@ -323,7 +324,7 @@ async def afk_check_filter(_, __, m: Message):
 
     if m.chat.type == ChatType.PRIVATE:
         return False
-    
+
     afk = AFK()
     user = m.from_user.id
     chat = m.chat.id
@@ -334,15 +335,16 @@ async def afk_check_filter(_, __, m: Message):
     else:
         rep_user = False
 
-    is_afk = afk.check_afk(chat,user)
+    is_afk = afk.check_afk(chat, user)
     is_rep_afk = False
     if rep_user:
-        is_rep_afk = afk.check_afk(chat,rep_user)
+        is_rep_afk = afk.check_afk(chat, rep_user)
 
     if not is_rep_afk and not is_afk:
         return False
     else:
         return True
+
 
 async def flood_check_filter(_, __, m: Message):
     Flood = Floods()
@@ -351,23 +353,23 @@ async def flood_check_filter(_, __, m: Message):
 
     if not m.from_user:
         return False
-    
+
     if m.chat.type == ChatType.PRIVATE:
         return False
 
     u_id = m.from_user.id
     c_id = m.chat.id
     is_flood = Flood.is_chat(c_id)
-    
+
     app_users = Approve(m.chat.id).list_approved()
     SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
-    
+
     if not is_flood or u_id in SUDO_LEVEL:
         return False
-    
+
     elif u_id in {i[0] for i in app_users}:
         return False
-    
+
     else:
         return True
 

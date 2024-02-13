@@ -30,7 +30,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
     cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = [cmd.lower() for cmd in cmds]
 
-    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    return [kb[i: i + 3] for i in range(0, len(kb), 3)]
 
 
 async def gen_start_kb(q: Message or CallbackQuery):
@@ -238,7 +238,7 @@ async def get_private_rules(_, m: Message, help_option: str):
     return ""
 
 
-async def get_help_msg(m: Message or CallbackQuery, help_option: str):
+async def get_help_msg(c: Gojo, m: Message or CallbackQuery, help_option: str):
     """Helper function for getting help_msg and it's keyboard."""
     help_msg = None
     help_kb = None
@@ -266,12 +266,12 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )
     else:
-        if isinstance(m,CallbackQuery):
+        if isinstance(m, CallbackQuery):
             mes = m.message
         else:
             mes = m
         help_msg = f"""
-Hey **[{mes.from_user.first_name}](http://t.me/{mes.from_user.username})**!I am Gojo✨.
+Hey **[{mes.from_user.first_name}](http://t.me/{mes.from_user.username})**!I am {c.me.first_name}✨.
 I'm here to help you manage your groups!
 Commands available:
 × /start: Start the bot

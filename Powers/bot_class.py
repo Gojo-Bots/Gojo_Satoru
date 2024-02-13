@@ -24,7 +24,6 @@ if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
     )
 
 
-
 class Gojo(Client):
     """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m Powers'"""
 
@@ -45,10 +44,11 @@ class Gojo(Client):
         await super().start()
         await self.set_bot_commands(
             [
-                BotCommand("start", "To check weather the bot is alive or not"),
+                BotCommand(
+                    "start", "To check weather the bot is alive or not"),
                 BotCommand("help", "To get help menu"),
                 BotCommand("donate", "To buy me a coffee"),
-                BotCommand("bug","To report bugs")
+                BotCommand("bug", "To report bugs")
             ]
         )
         meh = await self.get_me()  # Get bot info from pyrogram client
@@ -68,9 +68,11 @@ class Gojo(Client):
         cmd_list = await load_cmds(await all_plugins())
         await load_support_users()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
-        scheduler.add_job(clean_my_db,'cron',[self],hour=3,minute=0,second=0)
+        scheduler.add_job(clean_my_db, 'cron', [
+                          self], hour=3, minute=0, second=0)
         if BDB_URI:
-            scheduler.add_job(send_wishish,'cron',[self],hour=0,minute=0,second=0)
+            scheduler.add_job(send_wishish, 'cron', [
+                              self], hour=0, minute=0, second=0)
             scheduler.start()
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!

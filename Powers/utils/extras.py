@@ -514,7 +514,8 @@ TOSS = (
 )
 
 
-DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?", "No one give a damn about it")
+DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?",
+          "No one give a damn about it")
 
 INSULT_STRINGS = [
     "`Owww ... Such a stupid idiot.`",
@@ -707,7 +708,7 @@ StartPic = [
 ]
 
 
-birthday_wish =  [
+birthday_wish = [
     "Wishing you a happy birthday filled with love and joy.",
     "Hope your birthday is as wonderful as you are.",
     "Happy birthday to someone who deserves an exceptional day.",
@@ -783,4 +784,4 @@ birthday_wish =  [
     "Happy birthday to someone who brings a smile to my face every day, may your day be as wonderful as you are.",
     "Sending you all my love and warmest wishes on your special day, may your year be filled with love and happiness.",
     "May your birthday be a time to appreciate all the people who make your life special, and cherish all the memories you've created.",
-    "Wishing you a birthday that's as beautiful as you are, filled with joy and celebration.",]
+    "Wishing you a birthday that's as beautiful as you are, filled with joy and celebration.", ]

@@ -67,7 +67,8 @@ class Users(MongoDB):
     def __ensure_in_db(self):
         chat_data = self.find_one({"_id": self.user_id})
         if not chat_data:
-            new_data = {"_id": self.user_id, "username": "", "name": "unknown_till_now"}
+            new_data = {"_id": self.user_id,
+                        "username": "", "name": "unknown_till_now"}
             self.insert_one(new_data)
             LOGGER.info(f"Initialized User Document for {self.user_id}")
             return new_data

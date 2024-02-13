@@ -634,14 +634,14 @@ async def unmutebutton(c: Gojo, q: CallbackQuery):
     user_id = int(splitter[1])
     user = await q.message.chat.get_member(q.from_user.id)
 
-    if not user:
+    if not user or not user.privileges:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,
         )
         return
 
-    if not user.privileges.can_restrict_members and user.id != OWNER_ID:
+    if not user.privileges.can_restrict_members:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,
