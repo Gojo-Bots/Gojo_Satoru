@@ -111,7 +111,7 @@ Hey [{m.from_user.first_name}](http://t.me/{m.from_user.username})! I am Noxious
 I'm here to help you manage your group(s)!
 Hit /help to find out more about how to use me in my full potential!
 
-Join my [News Channel](https://t.me/gojo_bots_network) to get information on all the latest updates."""
+Join my [News Channel](https://t.me/lundlelobsdkmera) to get information on all the latest updates."""
 
             await m.reply_photo(
                 photo=str(choice(StartPic)),
