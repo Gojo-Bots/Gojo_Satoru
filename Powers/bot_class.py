@@ -2,7 +2,7 @@ from platform import python_version
 from threading import RLock
 from time import gmtime, strftime, time
 
-from pyrogram import PyroClient, __version__
+from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
 
