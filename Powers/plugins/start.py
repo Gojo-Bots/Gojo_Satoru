@@ -32,7 +32,7 @@ Your donation might also me get me a new feature or two, which I wasn't able to 
 
 All the fund would be put into my services such as database, storage and hosting!
 
-You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes)
+You can donate by contacting my owner: [ABOUTNOXIOUS](http://t.me/paytonoxious)
      """
 
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
