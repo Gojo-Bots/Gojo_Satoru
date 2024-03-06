@@ -317,8 +317,9 @@ Aliases for filters can be too set, just put '|' between the filternames you wan
 `/filter "filtername1|filtername2" Reply Text`
 Using the you can make a single filter work on 2 filternames without manually adding another one.
 
-• /stop `<filter keyword>`: Stop that filter.
+• /stop `<filter keyword>`: Stop that filter."""
 
+more = """ 
 **Note:**
 For filters with aliases, if you stop one alias, the filter will stop working on other aliases too.
 
@@ -331,3 +332,17 @@ If you stop the "filtername1" from above example, the bot will not respond to "f
 **Note:**
 Currently there is a limit of 50 filters and 120 aliases per chat.
 All filter keywords are in lowercase."""
+
+
+@Gojo.on_callback_query(filters.regex("^FILTER_MORE"))
+async def filter_more_callback(c: Gojo, q: CallbackQuery):
+  await q.edit_message_caption(
+    more,
+    reply_markup=ikb(
+      [
+        [
+          ("« Back", "plugins.filters")
+        ]
+      ]
+    )
+  )
