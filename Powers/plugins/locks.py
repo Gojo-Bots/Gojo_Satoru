@@ -579,19 +579,15 @@ Allows you to lock and unlock permission types in the chat.
 `/lock media`: this locks all the media messages in the chat."""
 
 
-@Gojo.on_callback_query(filters.regex("^LOCK_TYPES"))
-async def lock_types_callback(c: Gojo, q: CallbackQuery):
-    data = q.data
-
-    if data == "LOCK_TYPES":
-        kb = ikb([[("Back", "LOCK_TYPES_back")]])
-        await q.edit_message_caption(
-            l_t,
-            reply_markup=kb
-        )
-    else:
-        kb = ikb([[("Lock Types", "LOCK_TYPES")]])
-        await q.edit_message_caption(
-            __HELP__,
-            reply_markup=kb
-        )
+@Gojo.on_callback_query(filters.regex("^FILTER_MORE"))
+async def filter_more_callback(c: Gojo, q: CallbackQuery):
+  await q.edit_message_caption(
+    more,
+    reply_markup=ikb(
+      [
+        [
+          ("« Back", "plugins.filters")
+        ]
+      ]
+    )
+  )
