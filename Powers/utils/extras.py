@@ -640,7 +640,7 @@ NO       NO   NONONO            NONO
 ]
 
 StartPic = [
-    "https://graph.org/file/b0c2c167e12d1398c9860.jpg"
+    "https://graph.org/file/99d969ea6b1d4819e82e8.jpg"
 ]
 
 
