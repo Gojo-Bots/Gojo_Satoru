@@ -1,3 +1,4 @@
+import shutil
 from datetime import datetime
 from importlib import import_module as imp_mod
 from logging import (INFO, WARNING, FileHandler, StreamHandler, basicConfig,
@@ -20,6 +21,9 @@ LOGDIR = f"{__name__}/logs"
 
 # Make Logs directory if it does not exixts
 if not path.isdir(LOGDIR):
+    mkdir(LOGDIR)
+else:
+    shutil.rmtree(LOGDIR)
     mkdir(LOGDIR)
 
 LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}_log.txt"
@@ -59,9 +63,9 @@ except Exception as ef:
 # time zone
 TIME_ZONE = pytz.timezone(Config.TIME_ZONE)
 
-path = "./Version"
+Vpath = "./Version"
 version = []
-for i in listdir(path):
+for i in listdir(Vpath):
     if i.startswith("version") and i.endswith("md"):
         version.append(i)
     else:
@@ -134,6 +138,9 @@ Defult_dev = set(defult_dev)
 DEVS = DEVS_USER | Defult_dev
 DEV_USERS = list(DEVS)
 
+CHROME_BIN = Config.CHROME_BIN
+CHROME_DRIVER = Config.CHROME_DRIVER
+
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI
 DB_NAME = Config.DB_NAME
@@ -147,6 +154,14 @@ PREFIX_HANDLER = Config.PREFIX_HANDLER
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
 
+
+#Make dir
+youtube_dir = "./Youtube/"
+if not path.isdir(youtube_dir):
+    mkdir(youtube_dir)
+else:
+    shutil.rmtree(youtube_dir)
+    mkdir(youtube_dir)
 
 scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
 

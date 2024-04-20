@@ -36,7 +36,9 @@ l_t = """
 - `forwardall` = Forwarding from channel and user
 - `forwardu` = Forwarding from user
 - `forwardc` = Forwarding from channel
-- `links | url` = Lock links"""
+- `links | url` = Lock links
+- `bot` = Adding bot will be forbidden
+"""
 
 
 @Gojo.on_message(command("locktypes"))

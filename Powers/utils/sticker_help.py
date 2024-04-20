@@ -85,11 +85,10 @@ async def create_sticker(
     return raw.types.InputStickerSetItem(document=sticker, emoji=emoji)
 
 
-STICKER_DIMENSIONS = (512, 512)
-
 
 async def resize_file_to_sticker_size(file_path: str, length: int = 512, width: int = 512) -> str:
     im = Image.open(file_path)
+    STICKER_DIMENSIONS = (length, width)
     if (im.width, im.height) < STICKER_DIMENSIONS:
         size1 = im.width
         size2 = im.height

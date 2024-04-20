@@ -518,6 +518,7 @@ DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?",
           "No one give a damn about it")
 
 INSULT_STRINGS = [
+    "Tell me\nYou are gay becauce you are you or you are you that's why you are gay?"
     "`Owww ... Such a stupid idiot.`",
     "`Don't drink and type.`",
     "`Command not found. Just like your brain.`",

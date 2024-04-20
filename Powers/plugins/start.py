@@ -18,8 +18,9 @@ from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_html
-from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb, get_help_msg,
-                                      get_private_note, get_private_rules)
+from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb,
+                                      get_private_note, get_private_rules,
+                                      iter_msg)
 from Powers.utils.string import encode_decode
 from Powers.vars import Config
 
@@ -85,7 +86,7 @@ async def start(c: Gojo, m: Message):
                 await get_private_rules(c, m, help_option)
                 return
 
-            help_msg, help_kb = await get_help_msg(c, m, help_option)
+            help_msg, help_kb = await iter_msg(c, m, help_option)
 
             if not help_msg:
                 return
@@ -219,7 +220,7 @@ async def help_menu(c: Gojo, m: Message):
     if len(m.text.split()) >= 2:
         textt = m.text.replace(" ", "_",).replace("_", " ", 1)
         help_option = (textt.split(None)[1]).lower()
-        help_msg, help_kb = await get_help_msg(c, m, help_option)
+        help_msg, help_kb = await iter_msg(c, m, help_option)
 
         if not help_msg:
             LOGGER.error(
@@ -291,6 +292,64 @@ Commands available:
     return
 
 
+async def get_divided_msg(plugin_name: str, page:int=1, back_to_do = None):
+    msg = HELP_COMMANDS[plugin_name]["help_msg"]
+    msg = msg.split("\n")
+    l = len(msg)
+    new_msg = ""
+    total = l // 10
+    first = 10 * (page - 1)
+    last = 10 * page
+
+    if not first:
+        for i in msg[first:last]:
+            new_msg += f"{i}\n"
+        kb = [
+            [
+                ("Next page ▶️", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page+1}")
+            ]
+        ]
+    else:
+        first += 1
+        if page == total:
+            for i in msg[first:]:
+                new_msg += f"{i}\n"
+            kb = [
+                [
+                    ("◀️ Previous page", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page-1}")
+                ]
+            ]
+        else:
+            for i in msg[first:last]:
+                new_msg += f"{i}\n"
+            kb = [
+                    [
+                        ("◀️ Previous page", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page-1}"),
+                        ("Next page ▶️", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page+1}")
+                    ]
+                ]
+    if back_to_do:  
+        kb = ikb(kb, True, back_to_do)
+    else:
+        kb = ikb(kb)
+
+    return new_msg, kb
+    
+@Gojo.on_callback_query(filters.regex(r"^iter_page_.*[0-9]$"))
+async def helppp_page_iter(c: Gojo, q: CallbackQuery):
+    data = q.data.split("_")
+    plugin_ = data[2]
+    try:
+        back_to = data[-2]
+    except:
+        back_to = None
+    curr_page = int(data[-1])
+    msg, kb = await get_divided_msg(plugin_, curr_page, back_to_do=back_to)
+
+    await q.edit_message_caption(msg, reply_markup=kb)
+    return
+
+
 @Gojo.on_callback_query(filters.regex("^bot_curr_info$"))
 async def give_curr_info(c: Gojo, q: CallbackQuery):
     start = time()
@@ -323,17 +382,20 @@ async def get_module_info(c: Gojo, q: CallbackQuery):
             reply_markup=ikb(help_kb, True, todo="commands"),
         )
     except MediaCaptionTooLong:
-        kb = ikb([[("Back", "DELETEEEE")]])
-        await c.send_message(chat_id=q.message.chat.id, text=help_msg, reply_markup=kb)
+        caption, kb = await get_divided_msg(f"plugins.{module}", back_to_do="commands")
+        await q.edit_message_caption(
+            caption,
+            parse_mode=enums.ParseMode.MARKDOWN,
+            reply_markup=kb
+        )
     await q.answer()
     return
-
-DEV_USERS = get_support_staff("dev")
-SUDO_USERS = get_support_staff("sudo")
 
 
 @Gojo.on_callback_query(filters.regex("^give_bot_staffs$"))
 async def give_bot_staffs(c: Gojo, q: CallbackQuery):
+    DEV_USERS = get_support_staff("dev")
+    SUDO_USERS = get_support_staff("sudo")  
     try:
         owner = await c.get_users(OWNER_ID)
         reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"

@@ -487,7 +487,7 @@ async def skick_usr(c: Gojo, m: Message):
         return
 
     if user_id == Config.BOT_ID:
-        await m.reply_text("Huh, why would I kick myself?")
+        await m.reply_text("Nuh Hu, why would I kick myself?")
         await m.stop_propagation()
 
     SUPPORT_STAFF = get_support_staff()

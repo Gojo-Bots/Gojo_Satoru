@@ -213,6 +213,10 @@ If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 
 `WHITELIST_USERS`: A space-separated list of user IDs whitelisted, cannot be restricted.
 
+`CHROME_BIN`: Location of your chrome bin.
+
+`CHROME_DRIVER`: Location of your chrome driver.
+
 ⚠️ **Note:** In case you are passing more than one value separate them using whitespace (space) for example If I want to pass more than one PREFIX_HANDLER
 I'll pass it like `'/' '.' '!'` this.
 

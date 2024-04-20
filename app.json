@@ -104,6 +104,16 @@
         "required": false,
         "value": "8"
       },
+      "CHROME_DRIVER": {
+        "description": "Location of chrome driver",
+        "required": false,
+        "value": "/app/.chromedriver/bin/chromedriver"
+      },
+      "CHROME_BIN" : {
+        "description": "Location of chrome bin",
+        "required": false,
+        "value": "/app/.apt/usr/bin/google-chrome"
+      },
       "ENV": {
         "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
         "required": true,
@@ -113,6 +123,15 @@
     "buildpacks": [
       {
         "url":"https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+      },
+      {
+        "url": "https://github.com/chrismytton/heroku-buildpack-jq"
+      },
+      {
+        "url":"https://github.com/heroku/heroku-buildpack-google-chrome"
+      },
+      {
+        "url":"https://github.com/heroku/heroku-buildpack-chromedriver"
       },
       {
         "url": "heroku/python"

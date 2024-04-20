@@ -1,3 +1,4 @@
+from email.policy import default
 from os import getcwd
 
 from prettyconf import Configuration
@@ -34,9 +35,11 @@ class Config:
         int(i)
         for i in config(
             "WHITELIST_USERS",
-            default="",
+            default=""
         ).split(None)
     ]
+    CHROME_BIN = config("CHROME_BIN", "/app/.apt/usr/bin/google-chrome")
+    CHROME_DRIVER = config("CHROME_DRIVER", default="/app/.chromedriver/bin/chromedriver")
     GENIUS_API_TOKEN = config("GENIUS_API", default=None)
     # AuDD_API = config("AuDD_API",default=None)
     RMBG_API = config("RMBG_API", default=None)
@@ -80,3 +83,5 @@ class Development:
     TIME_ZONE = 'Asia/Kolkata'
     BDB_URI = ""
     WORKERS = 8
+    CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
+    CHROME_DRIVER = "/app/.chromedriver/bin/chromedriver"

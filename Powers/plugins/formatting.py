@@ -39,14 +39,7 @@ async def markdownhelp(_, m: Message):
     return
 
 
-@Gojo.on_callback_query(filters.regex("^formatting."))
-async def get_formatting_info(c: Gojo, q: CallbackQuery):
-    cmd = q.data.split(".")[1]
-    kb = ikb([[("Back", "back.formatting")]])
-
-    if cmd == "md_formatting":
-        
-        txt = """<b>Markdown Formatting</b>
+md_txt = """<b>Markdown Formatting</b>
 You can format your message using <b>bold</b>, <i>italic</i>, <u>underline</u>, <strike>strike</strike> and much more. Go ahead and experiment!
 
 **Note**: It supports telegram user based formatting as well as html and markdown formattings.
@@ -66,19 +59,74 @@ If you would like to send buttons on the same row, use the <code>:same</code> fo
 <code>[button 2](buttonurl://example.com:same)</code>
 <code>[button 3](buttonurl://example.com)</code>
 This will show button 1 and 2 on the same line, while 3 will be underneath."""
+
+async def get_splited_formatting(msg, page=1):
+    msg = msg.split("\n")
+    l = len(msg)
+    new_msg = ""
+    total = l // 10
+    first = 10 * (page - 1)
+    last = 10 * page
+    if not first:
+        for i in msg[first:last]:
+            new_msg += f"{i}\n"
+        kb = [
+            [
+                ("Next page ▶️", f"next_format_{page+1}")
+            ]
+        ]
+    else:
+        first += 1
+        if page == total:
+            for i in msg[first:]:
+                new_msg += f"{i}\n"
+            kb = [
+                [
+                    ("◀️ Previous page", f"next_format_{page-1}")
+                ]
+            ]
+        else:
+            for i in msg[first:last]:
+                new_msg += f"{i}\n"
+            kb = [
+                    [
+                        ("◀️ Previous page", f"next_format_{page-1}"),
+                        ("Next page ▶️", f"next_format_{page+1}")
+                    ]
+                ]
+
+
+    kb = ikb(kb, True, "back.formatting")
+
+    return new_msg, kb
+
+@Gojo.on_callback_query(filters.regex(r"^next_format_.*[0-9]$"))
+async def change_formatting_page(c: Gojo, q: CallbackQuery):
+    page = q.data.split("_")[-1]
+    txt, kb = await get_splited_formatting(md_txt, int(page))
+    await q.edit_message_caption(txt, reply_markup=kb,parse_mode=enums.ParseMode.HTML,)
+    return
+
+@Gojo.on_callback_query(filters.regex("^formatting."))
+async def get_formatting_info(c: Gojo, q: CallbackQuery):
+    cmd = q.data.split(".")[1]
+    kb = ikb([[("Back", "back.formatting")]])
+
+    if cmd == "md_formatting":
+        
         try:
+            await q.edit_message_caption(
+                caption=md_txt,
+                reply_markup=kb,
+                parse_mode=enums.ParseMode.HTML,
+            )
+        except MediaCaptionTooLong:
+            txt, kb = await get_splited_formatting(md_txt)
             await q.edit_message_caption(
                 caption=txt,
                 reply_markup=kb,
                 parse_mode=enums.ParseMode.HTML,
             )
-        except MediaCaptionTooLong:
-            kb = ikb([[("Back", "DELETEEEE")]])
-            await c.send_message(
-                chat_id=q.message.chat.id,
-                text=txt,
-                parse_mode=enums.ParseMode.HTML,
-                reply_markup=kb)
     elif cmd == "fillings":
         await q.edit_message_caption(
             caption="""<b>Fillings</b>

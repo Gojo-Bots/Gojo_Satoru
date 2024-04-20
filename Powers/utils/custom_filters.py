@@ -154,7 +154,7 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
         return False
 
     # Telegram and GroupAnonyamousBot
-    if m.sender_chat:
+    if m.sender_chat and m.sender_chat.id == m.chat.id:
         return True
 
     if not m.from_user:

@@ -1,20 +1,21 @@
 import asyncio
 import os
+import shutil
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
-from pyrogram.types import Message
+from pyrogram.types import InputMediaPhoto, InputMediaVideo, Message
 
-from Powers import (LOGGER, RMBG, Audd, genius_lyrics, is_audd,
-                    is_genius_lyrics, is_rmbg)
+from Powers import LOGGER, RMBG, genius_lyrics, is_genius_lyrics, is_rmbg
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import toimage
 from Powers.utils.web_helpers import *
+from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
 
 # @Gojo.on_message(command(["songname","insong","songinfo","whichsong","rsong","reversesong"]))
 # • /whichsong (/songname, /songinfo, /insong, /rsong, /reversesong) : Reply to file to get the song playing in it.
@@ -254,15 +255,15 @@ async def song_down_up(c: Gojo, m: Message):
     except IndexError:
         await m.reply_text("**USAGE**\n /song [song name | link]")
         return
-    if splited.startswith("https://youtube.com"):
-        is_direct = True
-        query = splited.split("?")[0]
+    _id = get_video_id(splited)
+    if not _id:
+        await m.reply_text("Invalid youtube link")
+        return
     else:
-        is_direct = False
-        query = splited
+        query = _id
     XnX = await m.reply_text("⏳")
     try:
-        await youtube_downloader(c,m,query,is_direct,"a")
+        await youtube_downloader(c,m,query, "a")
         await XnX.delete()
         return
     except KeyError:
@@ -281,15 +282,15 @@ async def video_down_up(c: Gojo, m: Message):
     except IndexError:
         await m.reply_text("**USAGE**\n /vsong [song name | link]")
         return
-    if splited.startswith("https://youtube.com"):
-        is_direct = True
-        query = splited.split("?")[0]
+    _id = get_video_id(splited)
+    if not _id:
+        await m.reply_text("Invalid youtube link")
+        return
     else:
-        is_direct = False
-        query = splited
+        query = _id
     XnX = await m.reply_text("⏳")
     try:
-        await youtube_downloader(c,m,query,is_direct,"v")
+        await youtube_downloader(c,m,query,"v")
         await XnX.delete()
         return
     except KeyError:
@@ -306,27 +307,44 @@ async def download_instareels(c: Gojo, m: Message):
     try:
         reel_ = m.command[1]
     except IndexError:
-        await m.reply_text("Give me an link to download it...")
+        await m.reply_text("Give me an instagram link to download it...")
         return
-    if not reel_.startswith("https://www.instagram.com/reel/"):
-        await m.reply_text("In order to obtain the requested reel, a valid link is necessary. Kindly provide me with the required link.")
+    
+    insta = INSTAGRAM(reel_)
+
+    if not insta.is_correct_link():
+        await m.reply_text("The link you have provided is not of instagram")
         return
-    OwO = reel_.split(".",1)
-    Reel_ = ".dd".join(OwO)
-    try:
-        await m.reply_video(Reel_)
+
+    to_edit = await m.reply_text("Trying to fetch data from the link")
+
+    content = insta.get_all()
+
+    if type(content) == str:
+        await to_edit.edit_text(content)
         return
-    except Exception:
-        try:
-            await m.reply_photo(Reel_)
-            return
-        except Exception:
-            try:
-                await m.reply_document(Reel_)
-                return
-            except Exception:
-                await m.reply_text("I am unable to reach to this reel.")
-                return
+    elif not content:
+        await to_edit.edit_text("Failed to get any media from the link")
+
+    videos = content["video"]
+    images = content["image"]
+
+    to_delete = await to_edit.edit_text("Found media in the link trying to download and upload them please wait")
+
+    to_send = []
+    if images:
+        scrapped_images = SCRAP_DATA(images).get_images()
+        for i in scrapped_images:
+            to_send.append(InputMediaPhoto(i))
+    if videos:
+        scrapped_videos = SCRAP_DATA(videos).get_videos()
+        for i in scrapped_videos:
+            to_send.append(InputMediaVideo(i))
+
+    await m.reply_media_group(to_send)
+    await to_delete.delete()
+    shutil.rmtree("./scrapped/")
+    
 
 __PLUGIN__ = "web support"
 
