@@ -6,9 +6,9 @@ from traceback import format_exc
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ChatType
-from pyrogram.errors import (ChatAdminInviteRequired, ChatAdminRequired,
-                             FloodWait, RightForbidden, RPCError,
-                             UserAdminInvalid)
+from pyrogram.errors import (BotChannelsNa, ChatAdminInviteRequired,
+                             ChatAdminRequired, FloodWait, RightForbidden,
+                             RPCError, UserAdminInvalid)
 from pyrogram.types import ChatPrivileges, Message
 
 from Powers import LOGGER, OWNER_ID
@@ -407,6 +407,8 @@ async def demote_usr(c: Gojo, m: Message):
         await m.reply_text(
             "Cannot act on this user, maybe I wasn't the one who changed their permissions."
         )
+    except BotChannelsNa:
+        await m.reply_text("May be the user is bot and due to telegram restrictions I can't demote them. Please do it manually")
     except RPCError as ef:
         await m.reply_text(
             f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"

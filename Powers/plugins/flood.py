@@ -1,4 +1,5 @@
 import time
+from datetime import datetime, timedelta
 from random import choice
 from traceback import format_exc
 
@@ -10,18 +11,47 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, SUPPORT_GROUP
+from Powers import LOGGER
 from Powers.bot_class import Gojo
-from Powers.database.approve_db import Approve
 from Powers.database.flood_db import Floods
 from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, command, flood_filter
 from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
-from Powers.utils.kbhelpers import ikb
 from Powers.vars import Config
 
 on_key = ["on", "start", "disable"]
 off_key = ["off", "end", "enable", "stop"]
+
+async def get_what_temp(what):
+    temp_duration = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "5 minutes",
+                    f"f_temp_{what}_5min"
+                ),
+                InlineKeyboardButton(
+                    "10 minute",
+                    f"f_temp_{what}_10min",
+                ),
+                InlineKeyboardButton(
+                    "30 minute",
+                    f"f_temp_{what}_30min"
+                ),
+                InlineKeyboardButton(
+                    "1 hour",
+                    f"f_temp_{what}_60min"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "« Back",
+                    "f_temp_back"
+                )
+            ]
+        ]
+    )
+    return temp_duration
 
 close_kb =InlineKeyboardMarkup(
     [
@@ -48,6 +78,16 @@ action_kb = InlineKeyboardMarkup(
             InlineKeyboardButton(
                 "Kick 🦿",
                 callback_data="f_kick"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "Temp Mute 🔇",
+                "f_temp_mute"
+            ),
+            InlineKeyboardButton(
+                "Temp Ban 🚷",
+                "f_temp_ban"
             )
         ],
         [
@@ -228,6 +268,28 @@ async def callbacks(c: Gojo, q: CallbackQuery):
                     f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
                     reply_markup=limit_kb
                 )
+        elif data.startswith("f_temp_"):
+            splited = data.split("_")
+            if len(splited) == 3:
+                to_do = splited[-1]
+                if to_do == "back":
+                    kb = action_kb
+                    await q.edit_message_text(
+                        f"Choose a action given bellow to do when flood happens.\n **CURRENT ACTION** is {saction}",
+                        reply_markup=action_kb
+                    )
+                    return
+                kb = await get_what_temp(to_do)
+                await q.answer(f"Choose temp {to_do} time", True)
+                await q.edit_message_text(f"What shoud be temp {to_do} time?", reply_markup=kb)
+            else:
+                change = f"{splited[-2]}_{splited[-1]}"
+                Flood.save_flood(c_id, slimit, swithin, change)
+                await q.edit_message_text(
+                    f"Set the limit of message after the flood protection will be activated\n **CURRENT LIMIT** {slimit} messages",
+                    reply_markup=limit_kb
+                )
+                return
         elif data in ["f_5", "f_10", "f_15", "f_f_f_skip"]:
             try:
                 change = int(data.split("_")[-1])
@@ -374,6 +436,98 @@ async def flood_watcher(c: Gojo, m: Message):
     
     if len(dic[c_id][u_id][1]) == limit:
         if y-x <= within:
+            action = action.split("_")
+            if len(action) == 2:
+                to_do = action[0]
+                for_tim = int(action[1].replace("min",""))
+                for_how_much = datetime.now() + timedelta(minutes=for_tim)
+                if to_do == "ban":
+                    try:
+                        await m.chat.ban_member(u_id, until_date=for_how_much)
+                        keyboard = InlineKeyboardMarkup(
+                            [
+                                [
+                                    InlineKeyboardButton(
+                                        "Unban",
+                                        callback_data=f"un_ban_={u_id}",
+                                    ),
+                                ],
+                            ],
+                        )
+                        txt = "Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: Baned\nReason: Spaming"
+                        await m.reply_animation(
+                            animation=str(choice(BAN_GIFS)),
+                            caption=txt,
+                            reply_markup=keyboard,
+                        )
+                        dic[c_id][u_id][1].clear()
+                        dic[c_id][u_id][0].clear()
+                        return
+
+                    except UserAdminInvalid:
+                        await m.reply_text(
+                            "I can't protect this chat from this user",
+                            )
+                        dic[c_id][u_id][1].clear()
+                        dic[c_id][u_id][0].clear()
+                        return
+                    except RPCError as ef:
+                        await m.reply_text(
+                            text=f"""Some error occured, report it using `/bug`
+
+                            <b>Error:</b> <code>{ef}</code>"""
+                            )
+                        LOGGER.error(ef)
+                        LOGGER.error(format_exc())
+                        dic[c_id][u_id][1].clear()
+                        dic[c_id][u_id][0].clear()
+                        return
+                else:
+                    try:
+                        await m.chat.restrict_member(
+                            u_id,
+                            ChatPermissions(),
+                            until_date=for_how_much
+                        )
+                        keyboard = InlineKeyboardMarkup(
+                            [
+                                [
+                                    InlineKeyboardButton(
+                                        "Unmute",
+                                        callback_data=f"un_mute_={u_id}",
+                                    ),
+                                ],
+                            ],
+                        )
+                        txt = "Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: Muted\nReason: Spaming"
+                        await m.reply_animation(
+                            animation=str(choice(MUTE_GIFS)),
+                            caption=txt,
+                            reply_markup=keyboard,
+                        )
+                        dic[c_id][u_id][1].clear()
+                        dic[c_id][u_id][0].clear()
+                        return
+                    except UserAdminInvalid:
+                        await m.reply_text(
+                            "I can't protect this chat from this user",
+                        )
+                        dic[c_id][u_id][1].clear()
+                        dic[c_id][u_id][0].clear()
+                        return
+                    except RPCError as ef:
+                        await m.reply_text(
+                            text=f"""Some error occured, report it using `/bug`
+
+                            <b>Error:</b> <code>{ef}</code>"""
+                        )
+                        LOGGER.error(ef)
+                        LOGGER.error(format_exc())
+                        dic[c_id][u_id][1].clear()
+                        dic[c_id][u_id][0].clear()
+                        return
+            else:
+                action = action[0]
             if action == "ban":
                 try:
                     await m.chat.ban_member(u_id)

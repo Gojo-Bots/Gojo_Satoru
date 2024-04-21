@@ -147,8 +147,8 @@ async def who_is_next(c: Gojo, m: Message):
     for i in users:
         DOB = give_date(i["dob"])
         dete = date(curr.year, DOB.month, DOB.day)
-        leff = (dete - curr).days
-        txt += f"`{i['user_id']}` : {leff} days left"
+        leff = (dete - curr).days 
+        txt += f"`{i['user_id']}` : {leff} days left\n"
     txt += "\n\nYou can use /info [user id] to get info about the user"
     await xx.delete()
     await m.reply_text(txt)
@@ -179,12 +179,14 @@ async def cant_recall_it(c: Gojo, m: Message):
     day = int(result["dob"].split('/')[0])
     suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
     bday_on = f"{day}{suffix} {formatted}"
-    if u_dob.month < curr.month:
+    if (u_dob.day,u_dob.month) < (curr.day,curr.month):
         next_b = date(curr.year + 1, u_dob.month, u_dob.day)
         days_left = (next_b - curr).days
         txt = f"{men} 's birthday is passed 🫤\nDays left until next one {days_left}"
         txt += f"\nBirthday on: {bday_on}"
         txt += f"\n\nDate of birth: {result['dob']}"
+    elif (u_dob.day,u_dob.month) == (curr.day,curr.month):
+        txt = f"Today is {men}'s birthday."
     else:
         u_dobm = date(curr.year, u_dob.month, u_dob.day)
         days_left = (u_dobm - curr).days
