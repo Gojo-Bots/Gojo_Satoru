@@ -406,7 +406,7 @@ async def reporting_query(c: Gojo, m: Message):
     txt = "#BUG\n"
     txt += repl.text.html
     txt += f"\nReported by: {m.from_user.id} ({m.from_user.mention})"
-    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Update channel",url=f"https://t.me/{SUPPORT_GROUP}")],[InlineKeyboardButton("Report on github",url="https://github.com/Gojo-Bots/Gojo_Satoru/issues/new/choose")]])
+    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Update channel",url=f"https://t.me/{SUPPORT_GROUP}")],[InlineKeyboardButton("Report on github",url="https;//t.me/lundlelobsdk")]])
     try:
         z = await c.send_message(MESSAGE_DUMP,txt,parse_mode=enums.ParseMode.HTML)
     except Exception:
@@ -439,4 +439,4 @@ Some utils provided by bot to make your tasks easy!
 • /bug <reply to text message> : To report a bug
 
 **Example:**
-`/git iamgojoof6eyes`: this fetches the information about a user from the database."""
+`/git noxiousxnoob`: this fetches the information about a user from the database."""
