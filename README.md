@@ -50,7 +50,7 @@ Mainly:
   
 This is a powerful Group Management bot with awesome plugins and features.
  
-  **If you counter any problem or face any bugs for help join 🌟 [ɢօʝօ ɮօȶֆ](https://telegram.dog/gojo_bots_network) 🌟 and then join the gc and ask your problem.**
+  **If you counter any problem or face any bugs for help You Can Dm me 🌟 [• 𝐑α𝚍ι𝛖ϻ ꭙ𝚍 ‹𝟹](https://t.me/II_R4dium_xd_II) 🌟 
 
 ## Features
   
@@ -60,9 +60,9 @@ This is a powerful Group Management bot with awesome plugins and features.
 * Fully open-source
 * Frequently updated
   
-***Can be found on Telegram as __[@GojoSuperbot](https://telegram.dog/GojoSuperbot)__***
+***Our Bot Network ㅤ⌯‌⁪⁬⁮⁮⁮𝐁ᴏᴛ ꭙ𝚍 𝐇ᴜʙ(https://t.me/Bots_x_Hub)__***
   
-* Feel free to give ideas for next update. Drop your ideas [here](https://github.com/Gojo-Bots/Gojo_Satoru/discussions/new?category=ideas)
+* Feel free to give ideas for next update. Drop your ideas [here](https://t.me/Alice_x_support)
 
 -------
 
