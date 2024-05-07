@@ -196,44 +196,6 @@ If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 ⚠️ **Note:** In case you are passing more than one value separate them using whitespace (space) for example If I want to pass more than one PREFIX_HANDLER
 I'll pass it like `'/' '.' '!'` this.
 
-YOU CAN ALSO HAVE A LOOK AT [VARS FILE](https://github.com/Gojo-Bots/Gojo_Satoru/blob/main/Powers/vars.py)
-
-</details>
-
----------
-  
-# Adding your own plugin
-
-To add your very own plugin just use the format given below and go through the [utils](https://github.com/Gojo-Bots/Gojo_Satoru/blob/master/Powers/utils) and [custom_filters](https://github.com/Gojo-Bots/Gojo_Satoru/blob/master/Powers/utils/custom_filters.py)
-  
-  ```python
-  from traceback import format_exc
-  
-  from Powers.utils.custom_filters import command 
-  from Powers import LOGGER
-  from Powers.bot_class import Gojo 
-  # All the import provided above is mandatory in case you don't want to use logger remove the first and third import 
-  # Import more functions and modules as per your need
-  
-  @Gojo.on_message(command("<your command>")) # Pass additional filters if you need
-  async def <function name>(<arguments to take>):
-    <your code>
-      
-    '''use logger to add log info using LOGGER.info(<string>) in the platform on which bot is running 
-      and error as LOGGER.error(<string>) and after LOGGER.error() use        
-      LOGGER.error(format_exc())'''
-      
-  __PLUGIN__ = <name of plugin> # Pass the name of your plugin as string
-  _DISABLE_CMDS_ = [<command as string>] # Enter the commands if you want so that they can be disabled if needed.
-
-  __alt_name__ = [<command as string>] # Alternative name of the plugin
-      
-  __HELP__ = <string> # To tell about your plugin and commands you must use it
-  
- 
-  # See any plugin to get more information about how to make a plugin 
-  
- 
   ```
   # Add plugins in [plugin](https://github.com/Gojo-Bots/Gojo_Satoru/tree/master/Powers/plugins) section
   ##  **Note** : Don't use <> this bracket while writing the code...
@@ -267,7 +229,7 @@ Some special thanks to the person/repo who/which helped and motivated me to crea
 
 ---------
 
-# Powered by [ɢօʝօ ɮօȶֆ](https://github.com/Gojo-Bots)
+# Powered by [• 𝐑α𝚍ι𝛖ϻ ꭙ𝚍 ‹𝟹](https://te.legra.ph/file/0fb9b5e8c7d4946b0522e.jpg)
 
 
 <p align='left'>
