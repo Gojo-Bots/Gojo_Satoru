@@ -1,9 +1,9 @@
 <h1 align="center">
-  <b> Gojo_Satoru </b>
+  <b> • 𝐑α𝚍ι𝛖ϻ ꭙ𝚍 ‹𝟹 </b>
 <!---</h1>
 <h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1>--->
 
-<!---<h1 align="center"><img src="https://te.legra.ph/file/4bf3b88115068d41efadd.jpg" /></h1>--->
+<!---<h1 align="center"><img src="https://te.legra.ph/file/0fb9b5e8c7d4946b0522e.jpg" /></h1>--->
   
 <h1 align="center"><img src="./extras/gojo_satoru__psd__by_at_yomiko_deyaec4-pre.jpg" /></h1>
 
@@ -31,26 +31,16 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 
 
 
----------  
-
-## Inspiration ✨
-Not a particular inspiration, inspired by many bots
-
-Mainly:
-
-* [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
-
-
----------
+--------- 
 
 ## About 
   
   <h1 align="center"><img src="./extras/original.gif" /></h1>
   
   
-The Gojo Satoru is a powerful Group Management bot with awesome plugins and features.
+This is a powerful Group Management bot with awesome plugins and features.
  
-  **If you counter any problem or face any bugs for help join 🌟 [ɢօʝօ ɮօȶֆ](https://telegram.dog/gojo_bots_network) 🌟 and then join the gc and ask your problem.**
+  **If you counter any problem or face any bugs for help You Can Dm me 🌟 [• 𝐑α𝚍ι𝛖ϻ ꭙ𝚍 ‹𝟹](https://t.me/II_R4dium_xd_II) 🌟 
 
 ## Features
   
@@ -60,21 +50,11 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 * Fully open-source
 * Frequently updated
   
-***Can be found on Telegram as __[@GojoSuperbot](https://telegram.dog/GojoSuperbot)__***
+Our Bot Network ㅤ[⌯‌⁪⁬⁮⁮⁮𝐁ᴏᴛ ꭙ𝚍 𝐇ᴜb](https://t.me/Bots_x_Hub)
   
-* Feel free to give ideas for next update. Drop your ideas [here](https://github.com/Gojo-Bots/Gojo_Satoru/discussions/new?category=ideas)
-
--------
-
-## License
-[![GPLv3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-<br>Licensed Under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3</a>
-
-
+* Feel free to give ideas for next update. Drop your ideas [here](https://t.me/Alice_x_support)
 
 ---------
-
-
 
 # DEPLOYMENT 🚀
 ## Deploy To Heroku
@@ -116,7 +96,7 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
   * Vars are [given below](#Variables)
   * ***If you want to add more data of yours just go to the variable section and add the key and values to it then hit on `relaunch`*** 
   
-  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
+ In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes
 
 --------  
 
@@ -216,44 +196,6 @@ If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 ⚠️ **Note:** In case you are passing more than one value separate them using whitespace (space) for example If I want to pass more than one PREFIX_HANDLER
 I'll pass it like `'/' '.' '!'` this.
 
-YOU CAN ALSO HAVE A LOOK AT [VARS FILE](https://github.com/Gojo-Bots/Gojo_Satoru/blob/main/Powers/vars.py)
-
-</details>
-
----------
-  
-# Adding your own plugin
-
-To add your very own plugin just use the format given below and go through the [utils](https://github.com/Gojo-Bots/Gojo_Satoru/blob/master/Powers/utils) and [custom_filters](https://github.com/Gojo-Bots/Gojo_Satoru/blob/master/Powers/utils/custom_filters.py)
-  
-  ```python
-  from traceback import format_exc
-  
-  from Powers.utils.custom_filters import command 
-  from Powers import LOGGER
-  from Powers.bot_class import Gojo 
-  # All the import provided above is mandatory in case you don't want to use logger remove the first and third import 
-  # Import more functions and modules as per your need
-  
-  @Gojo.on_message(command("<your command>")) # Pass additional filters if you need
-  async def <function name>(<arguments to take>):
-    <your code>
-      
-    '''use logger to add log info using LOGGER.info(<string>) in the platform on which bot is running 
-      and error as LOGGER.error(<string>) and after LOGGER.error() use        
-      LOGGER.error(format_exc())'''
-      
-  __PLUGIN__ = <name of plugin> # Pass the name of your plugin as string
-  _DISABLE_CMDS_ = [<command as string>] # Enter the commands if you want so that they can be disabled if needed.
-
-  __alt_name__ = [<command as string>] # Alternative name of the plugin
-      
-  __HELP__ = <string> # To tell about your plugin and commands you must use it
-  
- 
-  # See any plugin to get more information about how to make a plugin 
-  
- 
   ```
   # Add plugins in [plugin](https://github.com/Gojo-Bots/Gojo_Satoru/tree/master/Powers/plugins) section
   ##  **Note** : Don't use <> this bracket while writing the code...
@@ -287,7 +229,7 @@ Some special thanks to the person/repo who/which helped and motivated me to crea
 
 ---------
 
-# Powered by [ɢօʝօ ɮօȶֆ](https://github.com/Gojo-Bots)
+# Powered by [• 𝐑α𝚍ι𝛖ϻ ꭙ𝚍 ‹𝟹](https://te.legra.ph/file/0fb9b5e8c7d4946b0522e.jpg)
 
 
 <p align='left'>
