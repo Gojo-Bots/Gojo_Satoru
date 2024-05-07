@@ -1,5 +1,5 @@
 <h1 align="center">
-  <b> Gojo_Satoru </b>
+  <b> • 𝐑α𝚍ι𝛖ϻ ꭙ𝚍 ‹𝟹 </b>
 <!---</h1>
 <h1 align="center"><img src="https://media.giphy.com/media/GL42TduR8AkNq1xRog/giphy.gif" /></h1>--->
 
@@ -48,7 +48,7 @@ Mainly:
   <h1 align="center"><img src="./extras/original.gif" /></h1>
   
   
-The Gojo Satoru is a powerful Group Management bot with awesome plugins and features.
+This is a powerful Group Management bot with awesome plugins and features.
  
   **If you counter any problem or face any bugs for help join 🌟 [ɢօʝօ ɮօȶֆ](https://telegram.dog/gojo_bots_network) 🌟 and then join the gc and ask your problem.**
 
