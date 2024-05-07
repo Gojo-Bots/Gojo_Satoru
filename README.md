@@ -96,7 +96,7 @@ Our Bot Network ㅤ[⌯‌⁪⁬⁮⁮⁮𝐁ᴏᴛ ꭙ𝚍 𝐇ᴜb](https://t.
   * Vars are [given below](#Variables)
   * ***If you want to add more data of yours just go to the variable section and add the key and values to it then hit on `relaunch`*** 
   
-  ***In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes***
+ In case the button doesn't work just fork the repo give it a star open okteto login using github give okteto access to your github account repo search for your bot repo add the key and values provided [below](#Variables) and wait for few minutes
 
 --------  
 
