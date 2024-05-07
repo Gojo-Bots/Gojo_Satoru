@@ -60,7 +60,7 @@ This is a powerful Group Management bot with awesome plugins and features.
 * Fully open-source
 * Frequently updated
   
-***Our Bot Network ㅤ⌯‌⁪⁬⁮⁮⁮𝐁ᴏᴛ ꭙ𝚍 𝐇ᴜʙ(https://t.me/Bots_x_Hub)__***
+***Our Bot Network ㅤ[⌯‌⁪⁬⁮⁮⁮𝐁ᴏᴛ ꭙ𝚍 𝐇ᴜb](https://t.me/Bots_x_Hub)__***
   
 * Feel free to give ideas for next update. Drop your ideas [here](https://t.me/Alice_x_support)
 
