@@ -31,17 +31,7 @@ If you like the bot make sure to give a ⭐ __star__ ⭐ to this respository and
 
 
 
----------  
-
-## Inspiration ✨
-Not a particular inspiration, inspired by many bots
-
-Mainly:
-
-* [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
-
-
----------
+--------- 
 
 ## About 
   
@@ -60,21 +50,11 @@ This is a powerful Group Management bot with awesome plugins and features.
 * Fully open-source
 * Frequently updated
   
-***Our Bot Network ㅤ[⌯‌⁪⁬⁮⁮⁮𝐁ᴏᴛ ꭙ𝚍 𝐇ᴜb](https://t.me/Bots_x_Hub)__***
+Our Bot Network ㅤ[⌯‌⁪⁬⁮⁮⁮𝐁ᴏᴛ ꭙ𝚍 𝐇ᴜb](https://t.me/Bots_x_Hub)
   
 * Feel free to give ideas for next update. Drop your ideas [here](https://t.me/Alice_x_support)
 
--------
-
-## License
-[![GPLv3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-<br>Licensed Under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3</a>
-
-
-
 ---------
-
-
 
 # DEPLOYMENT 🚀
 ## Deploy To Heroku
