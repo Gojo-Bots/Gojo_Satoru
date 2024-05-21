@@ -3,7 +3,7 @@ from os import remove
 
 from pyrogram import filters
 
-from Powers.toggle_mongo import is_nsfw_on, nsfw_off, nsfw_on
+from Powers.utils.toggle_mongo import is_nsfw_on, nsfw_off, nsfw_on
 from Powers import BOT_USERNAME, get_support_staff, app
 from Powers.state import arq
 from Powers.utils.can_restrict import can_restrict
