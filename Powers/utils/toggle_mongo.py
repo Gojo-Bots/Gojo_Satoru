@@ -1,8 +1,5 @@
 from Powers.database import MongoDB
 
-dwelcomedb = dbname.dwelcome
-nsfwdb = dbname.nsfw
-nekomodedb = dbname.nekomode
 
 
 async def is_dwelcome_on(chat_id: int) -> bool:
