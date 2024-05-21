@@ -1,4 +1,4 @@
-from database.mongodb.db import *
+from Powers.database import MongoDB
 
 dwelcomedb = dbname.dwelcome
 nsfwdb = dbname.nsfw
