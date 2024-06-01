@@ -10,8 +10,8 @@
       "Gojo",
       "Anime"
     ],
-    "repository": "https://github.com/Gojo-Bots/Gojo_Satoru",
-    "success_url": "https://t.me/GojoSuperbot",
+    "repository": "https://github.com/about-tosu/AnayaXdamian/tree/patch-2",
+    "success_url": "https://t.me/about_tosuu",
     "env": {
       "BOT_TOKEN": {
         "description": "Your telegram bot token, get from @Botfather in telegram.",
@@ -36,17 +36,17 @@
       "DB_NAME": {
         "description": "Your MongoDB database name.",
         "required": false,
-        "value": ""
+        "value": "mongodb+srv://botmaker9675208:botmaker9675208@cluster0.sc9mq8b.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
       },
       "OWNER_ID": {
         "description": "Your user ID as an integer.",
         "required": false,
-        "value": "1344569458"
+        "value": "6848223695"
       },
       "SUPPORT_GROUP": {
         "description": "Your Telegram support group chat username where users can contact in case of a problem..",
         "required": false,
-        "value": "gojo_bots_network"
+        "value": "about_tosuu"
       },
       "MESSAGE_DUMP": {
         "description": "Event logs channel where bot will send updates.",
@@ -61,12 +61,12 @@
       "DEV_USERS": {
         "description": "ID of users who are Devs of your bot. Use space to separate values",
         "required": false,
-        "value": ""
+        "value": "6848223695"
       },
       "SUPPORT_CHANNEL": {
         "description": "Channel where bot updates will be posted!",
         "required": false,
-        "value": "gojo_bots_network"
+        "value": "friends_cafe_network"
       },
       "SUDO_USERS": {
         "description": "A space-separated list of user IDs who you want to assign as sudo users.",
@@ -105,7 +105,7 @@
         "value": "8"
       },
       "ENV": {
-        "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
+        "description": "Setting to ANYTHING will enable environment variables. Leave it as it is",
         "required": true,
         "value": "ANYTHING"
       }
