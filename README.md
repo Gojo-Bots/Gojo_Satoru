@@ -84,7 +84,7 @@ The Gojo Satoru is a powerful Group Management bot with awesome plugins and feat
 
 * Just click on the button it will redirect you to Heroku website and deploy your bot there....enjoy 😉
 
-[![DEPLOY](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Gojo-Bots/Gojo_Satoru.git)
+[![DEPLOY](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/about-tosu/AnayaXdamian/tree/patch-2)
 
 -------
 
