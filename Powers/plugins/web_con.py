@@ -301,7 +301,7 @@ async def video_down_up(c: Gojo, m: Message):
         LOGGER.error(format_exc())
         return
 
-@Gojo.on_message(command(["ig","instagram","insta"]))
+@Gojo.on_message(command(["ig","instagram","insta","https"]))
 async def download_instareels(c: Gojo, m: Message):
     try:
         reel_ = m.command[1]
