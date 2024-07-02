@@ -150,7 +150,7 @@ Join my [News Channel](https://t.me/gojo_bots_network) to get information on all
                 [
                     InlineKeyboardButton(
                         "Connect me to pm",
-                        url=f"https://{Config.BOT_USERNAME}.t.me/",
+                        url=f"https://{c.me.username}.t.me/",
                     ),
                 ],
             ],
@@ -253,7 +253,7 @@ async def help_menu(c: Gojo, m: Message):
                         [
                             InlineKeyboardButton(
                                 "Help",
-                                url=f"t.me/{Config.BOT_USERNAME}?start={help_option}",
+                                url=f"t.me/{c.me.username}?start={help_option}",
                             ),
                         ],
                     ],
@@ -276,7 +276,7 @@ Commands available:
                     [
                         InlineKeyboardButton(
                             "Help",
-                            url=f"t.me/{Config.BOT_USERNAME}?start=start_help",
+                            url=f"t.me/{c.me.username}?start=start_help",
                         ),
                     ],
                 ],

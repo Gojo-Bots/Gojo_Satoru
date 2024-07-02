@@ -1,12 +1,10 @@
 import time
-from asyncio import sleep
 from traceback import format_exc
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pyrogram.enums import ChatMemberStatus as CMS
-from pyrogram.errors import PeerIdInvalid, UserNotParticipant
+from pyrogram.errors import UserNotParticipant
 
-from Powers import LOGGER, MESSAGE_DUMP, TIME_ZONE
+from Powers import LOGGER, MESSAGE_DUMP
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.blacklist_db import Blacklist
@@ -20,18 +18,17 @@ from Powers.database.pins_db import Pins
 from Powers.database.reporting_db import Reporting
 # from Powers.database.users_db import Users
 from Powers.database.warns_db import Warns, WarnSettings
-from Powers.utils.custom_filters import command
 from Powers.vars import Config
 
 
-async def clean_my_db(c:Gojo,is_cmd=False, id=None):
+async def clean_my_db(c: Gojo, is_cmd=False, id=None):
     to_clean = list()
     chats_list = Chats.list_chats_by_id()
     to_clean.clear()
     start = time.time()
     for chats in chats_list:
         try:
-            stat = await c.get_chat_member(chat_id=chats,user_id=Config.BOT_ID)
+            stat = await c.get_chat_member(chat_id=chats, user_id=c.me.id)
             if stat.status not in [CMS.MEMBER, CMS.ADMINISTRATOR, CMS.OWNER]:
                 to_clean.append(chats)
         except UserNotParticipant:
@@ -64,12 +61,9 @@ async def clean_my_db(c:Gojo,is_cmd=False, id=None):
     if is_cmd:
         txt += f"\nClean type: Forced\nInitiated by: {(await c.get_users(user_ids=id)).mention}"
         txt += f"\nClean type: Manual\n\tTook {round(nums,2)} seconds to complete the process"
-        await c.send_message(chat_id=MESSAGE_DUMP,text=txt)
+        await c.send_message(chat_id=MESSAGE_DUMP, text=txt)
         return txt
     else:
         txt += f"\nClean type: Auto\n\tTook {round(nums,2)} seconds to complete the process"
-        await c.send_message(chat_id=MESSAGE_DUMP,text=txt)
+        await c.send_message(chat_id=MESSAGE_DUMP, text=txt)
         return txt
-    
-
-

@@ -35,7 +35,7 @@ async def tban_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("WTF??  Why would I ban myself?")
         await m.stop_propagation()
 
@@ -171,7 +171,7 @@ async def stban_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("What the heck? Why would I ban myself?")
         await m.stop_propagation()
 
@@ -265,7 +265,7 @@ async def dtban_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -395,7 +395,7 @@ async def kick_usr(c: Gojo, m: Message):
         await m.reply_text("Cannot find user to kick")
         return
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
@@ -486,7 +486,7 @@ async def skick_usr(c: Gojo, m: Message):
         await m.reply_text("Cannot find user to kick")
         return
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Nuh Hu, why would I kick myself?")
         await m.stop_propagation()
 
@@ -560,7 +560,7 @@ async def dkick_usr(c: Gojo, m: Message):
         await m.reply_text("Cannot find user to kick")
         return
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
@@ -711,7 +711,7 @@ async def sban_usr(c: Gojo, m: Message):
     if user_id == m.chat.id:
         await m.reply_text("That's an admin!")
         await m.stop_propagation()
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -792,7 +792,7 @@ async def dban_usr(c: Gojo, m: Message):
     if user_id == m.chat.id:
         await m.reply_text("That's an admin!")
         await m.stop_propagation()
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -893,7 +893,7 @@ async def ban_usr(c: Gojo, m: Message):
     if user_id == m.chat.id:
         await m.reply_text("That's an admin!")
         await m.stop_propagation()
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 

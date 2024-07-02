@@ -152,7 +152,7 @@ limit_kb = InlineKeyboardMarkup(
 @Gojo.on_message(command(['floodaction','actionflood']) & admin_filter)
 async def flood_action(c: Gojo, m: Message):
     Flood = Floods()
-    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
+    bot = await c.get_chat_member(m.chat.id, c.me.id)
     status = bot.status
     if not status in [CMS.OWNER, CMS.ADMINISTRATOR]:
       if not bot.privileges.can_restrict_members:
@@ -189,7 +189,7 @@ async def flood_on_off(c: Gojo, m: Message):
 
 @Gojo.on_message(command(['setflood']) & ~filters.bot & admin_filter)
 async def flood_set(c: Gojo, m: Message):
-    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
+    bot = await c.get_chat_member(m.chat.id, c.me.id)
     Flood = Floods()
     status = bot.status
     if not status in [CMS.OWNER, CMS.ADMINISTRATOR]:

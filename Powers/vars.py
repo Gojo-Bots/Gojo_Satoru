@@ -52,10 +52,9 @@ class Config:
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_bots_network")
     WORKERS = int(config("WORKERS", default=16))
     TIME_ZONE = config("TIME_ZONE", default='Asia/Kolkata')
-    BOT_USERNAME = ""
-    BOT_ID = ""
-    BOT_NAME = ""
-    owner_username = ""
+    BOT_USERNAME = "" # Leave it as it is
+    BOT_ID = ""    # Leave it as it is
+    BOT_NAME = ""  # Leave it as it is
 
 
 class Development:

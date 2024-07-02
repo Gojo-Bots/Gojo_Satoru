@@ -84,7 +84,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
                     [
                         (
                             "Click Me!",
-                            f"https://t.me/{Config.BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
+                            f"https://t.me/{c.me.username}?start=note_{m.chat.id}_{note_hash}",
                             "url",
                         ),
                     ],
@@ -323,7 +323,7 @@ async def priv_notes(_, m: Message):
 
 
 @Gojo.on_message(command("notes") & filters.group & ~filters.bot)
-async def local_notes(_, m: Message):
+async def local_notes(c: Gojo, m: Message):
     LOGGER.info(f"{m.from_user.id} listed all notes in {m.chat.id}")
     getnotes = db.get_all_notes(m.chat.id)
 
@@ -341,7 +341,7 @@ async def local_notes(_, m: Message):
                 [
                     (
                         "All Notes",
-                        f"https://t.me/{Config.BOT_USERNAME}?start=notes_{m.chat.id}",
+                        f"https://t.me/{c.me.username}?start=notes_{m.chat.id}",
                         "url",
                     ),
                 ],

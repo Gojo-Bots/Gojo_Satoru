@@ -44,7 +44,7 @@ async def warn(c: Gojo, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I warn myself?")
         return
 
@@ -102,7 +102,7 @@ async def warn(c: Gojo, m: Message):
     if rules:
         kb = InlineKeyboardButton(
             "Rules 📋",
-            url=f"https://t.me/{Config.BOT_USERNAME}?start=rules_{m.chat.id}",
+            url=f"https://t.me/{c.me.username}?start=rules_{m.chat.id}",
         )
     else:
         kb = InlineKeyboardButton(
@@ -147,7 +147,7 @@ async def reset_warn(c: Gojo, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I warn myself?")
         return
 
@@ -183,7 +183,7 @@ async def list_warns(c: Gojo, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I warn myself?")
         return
 
@@ -232,7 +232,7 @@ async def remove_warn(c: Gojo, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I warn myself?")
         return
 

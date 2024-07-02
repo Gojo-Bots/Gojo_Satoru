@@ -31,7 +31,7 @@ async def clean_my_db(c:Client,is_cmd=False, id=None):
     start = TIME.time()
     for chats in chats_list:
         try:
-            stat = await c.get_chat_member(chat_id=chats,user_id=Config.BOT_ID)
+            stat = await c.get_chat_member(chat_id=chats,user_id=c.me.id)
             if stat.status not in [CMS.MEMBER, CMS.ADMINISTRATOR, CMS.OWNER]:
                 to_clean.append(chats)
         except UserNotParticipant:

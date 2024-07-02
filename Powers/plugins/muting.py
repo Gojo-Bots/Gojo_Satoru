@@ -35,7 +35,7 @@ async def tmute_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute !")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -149,7 +149,7 @@ async def dtmute_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute !")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -258,7 +258,7 @@ async def stmute_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute !")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -352,7 +352,7 @@ async def mute_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -438,7 +438,7 @@ async def smute_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -511,7 +511,7 @@ async def dmute_usr(c: Gojo, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute")
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -595,7 +595,7 @@ async def unmute_usr(c: Gojo, m: Message):
     except Exception:
         return
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Huh, why would I unmute myself if you are using me?")
         return
     try:

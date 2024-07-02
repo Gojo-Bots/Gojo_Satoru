@@ -9,14 +9,14 @@ from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, ChatJoinRequest, Message
 
-from Powers import DEV_USERS, OWNER_ID, SUDO_USERS
+from Powers import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
+from Powers.bot_class import Gojo
 from Powers.database.afk_db import AFK
 from Powers.database.approve_db import Approve
 from Powers.database.autojoin_db import AUTOJOIN
 from Powers.database.disable_db import Disabling
 from Powers.database.flood_db import Floods
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
-from Powers.vars import Config
 
 
 def command(
@@ -26,7 +26,7 @@ def command(
     dev_cmd: bool = False,
     sudo_cmd: bool = False,
 ):
-    async def func(flt, _, m: Message):
+    async def func(flt, c: Gojo, m: Message):
         if not m:
             return
 
@@ -62,8 +62,8 @@ def command(
         if not text:
             return False
         regex = r"^[{prefix}](\w+)(@{bot_name})?(?: |$)(.*)".format(
-            prefix="|".join(escape(x) for x in Config.PREFIX_HANDLER),
-            bot_name=Config.BOT_USERNAME,
+            prefix="|".join(escape(x) for x in PREFIX_HANDLER),
+            bot_name=c.me.username,
         )
         matches = compile_re(regex).search(text)
         if matches:
@@ -111,7 +111,7 @@ def command(
     )
 
 
-async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
+async def bot_admin_check_func(_, c: Gojo, m: Message or CallbackQuery):
     """Check if bot is Admin or not."""
 
     if isinstance(m, CallbackQuery):
@@ -135,7 +135,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
         if ("The chat_id" and "belongs to a user") in ef:
             return True
 
-    if Config.BOT_ID in admin_group:
+    if c.me.id in admin_group:
         return True
 
     await m.reply_text(

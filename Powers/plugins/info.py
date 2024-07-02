@@ -96,17 +96,17 @@ async def user_info(c: Gojo, user, already=False):
     is_restricted = user.is_restricted
     photo_id = user.photo.big_file_id if user.photo else None
     is_support = True if user_id in SUPPORT_STAFF else False
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         is_support = "A person is a great support to himself"
     omp = "Hmmm.......Who is that again?"
-    if is_support or Config.BOT_ID:
+    if is_support or c.me.id:
         if user_id in DEV_USERS:
             omp = "Dev"
         elif user_id in SUDO_USERS:
             omp = "Sudoer"
         elif user_id in WHITELIST_USERS:
             omp = "Whitelist"
-        elif user_id == Config.BOT_ID:
+        elif user_id == c.me.id:
             omp = "I am the targeted user"
         elif user_id == OWNER_ID:
             omp = "Owner of the bot"

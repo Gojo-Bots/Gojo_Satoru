@@ -1,6 +1,7 @@
 import subprocess as subp
 import sys
 from asyncio import create_subprocess_shell, sleep, subprocess
+from importlib.metadata import PackageNotFoundError, metadata
 from io import BytesIO, StringIO
 from os import execvp
 from sys import executable
@@ -209,6 +210,52 @@ async def ping(_, m: Message):
     await replymsg.edit_text(f"<b>Pong!</b>\n{delta_ping * 1000:.3f} ms")
     return
 
+"""
+
+['Metadata-Version', 'Name', 'Version', 'Summary', 'Home-page', 'Author', 'Author-email', 'License', 'Download-URL', 'Project-URL', 'Project-URL', 'Project-URL', 'Project-URL', 'Keywords', 'Platform', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Requires-Python', 'Description-Content-Type', 'License-File', 'License-File', 'License-File', 'Requires-Dist', 'Requires-Dist', 'Description']
+
+"""
+
+@Gojo.on_message(command(["minfo", "moduleinfo"], dev_cmd=True))
+async def check_module_info(_, m: Message):
+    if len(m.command) != 2:
+        await m.reply_text("**USAGE**\n/minfo [module name]")
+        return
+    
+    module = m.command[-1]
+
+    try:
+        minfo = metadata(module)
+    except PackageNotFoundError:
+        await m.reply_text(f"No module found with name {module}")
+        return
+    
+    name = minfo["Name"]
+    version = minfo["Version"]
+    summary = minfo["Summary"]
+    home_page = minfo["Home-Page"]
+    author = minfo["Author"]
+    license = minfo["License"]
+    download = minfo["Download-URL"]
+
+    txt = f"""
+Here are the info about the module **{name}**
+• Version: {version}
+
+• Summary: {summary}
+
+• Home page: {home_page}
+
+• Author: {author}
+
+• License: {license}
+
+• Download: {download}
+"""
+    await m.reply_text(txt, disable_web_page_preview=True)
+    return
+
+    
 
 @Gojo.on_message(command("logs", dev_cmd=True))
 async def send_log(c: Gojo, m: Message):

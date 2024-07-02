@@ -110,7 +110,7 @@ async def add_filter(_, m: Message):
 async def stop_filter(_, m: Message):
     args = m.command
 
-    if len(args) < 1:
+    if len(args) <= 1:
         return await m.reply_text("What should I stop replying to?")
 
     chat_filters = db.get_all_filters(m.chat.id)
@@ -283,7 +283,6 @@ async def filters_watcher(c: Gojo, m: Message):
         if match:
             try:
                 msgtype = await send_filter_reply(c, m, trigger)
-                LOGGER.info(f"Replied with {msgtype} to {trigger} in {m.chat.id}")
             except Exception as ef:
                 await m.reply_text(f"Error: {ef}")
                 LOGGER.error(ef)

@@ -3,10 +3,12 @@ from asyncio import gather
 from random import choice
 from traceback import format_exc
 
+from pyrogram import filters
 from pyrogram.errors import (PeerIdInvalid, ShortnameOccupyFailed,
                              StickerEmojiInvalid, StickerPngDimensions,
                              StickerPngNopng, StickerTgsNotgs,
                              StickerVideoNowebm, UserIsBlocked)
+from pyrogram.types import CallbackQuery
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
@@ -15,8 +17,8 @@ from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.sticker_help import *
+from Powers.utils.string import encode_decode
 from Powers.utils.web_helpers import get_file_size
-from Powers.vars import Config
 
 
 @Gojo.on_message(command(["stickerinfo","stinfo"]))
@@ -171,22 +173,25 @@ async def kang(c:Gojo, m: Message):
     
     try:
         while not packname_found:
-            packname = f"CE{str(m.from_user.id)}{st_type}{packnum}_by_{Config.BOT_USERNAME}"
-            kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {st_type} {('vOl '+str(volume)) if volume else ''} by @{Config.BOT_USERNAME}"
+            packname = f"CE{str(m.from_user.id)}{st_type}{packnum}_by_{c.me.username}"
+            kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {st_type} {('vOl '+str(volume)) if volume else ''} by @{c.me.username}"
             if limit >= 50: # To prevent this loop from running forever
                 await m.reply_text("Failed to kang\nMay be you have made more than 50 sticker packs with me try deleting some")
                 return
             sticker_set = await get_sticker_set_by_name(c,packname)
             if not sticker_set:
-                sticker_set = await create_sticker_set(
-                    client=c,
-                    owner=m.from_user.id,
-                    title=kangpack,
-                    short_name=packname,
-                    stickers=[sticker],
-                    animated=is_anim,
-                    video=is_vid
-                )
+                try:
+                    sticker_set = await create_sticker_set(
+                        client=c,
+                        owner=m.from_user.id,
+                        title=kangpack,
+                        short_name=packname,
+                        stickers=[sticker],
+                        animated=is_anim,
+                        video=is_vid
+                    )
+                except StickerEmojiInvalid:
+                    return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
             elif sticker_set.set.count >= kang_lim:
                 packnum += 1
                 limit += 1
@@ -213,7 +218,7 @@ async def kang(c:Gojo, m: Message):
         )
     except (PeerIdInvalid, UserIsBlocked):
         keyboard = IKM(
-            [[IKB("Start me first", url=f"t.me/{Config.BOT_USERNAME}")]]
+            [[IKB("Start me first", url=f"t.me/{c.me.username}")]]
         )
         await msg.delete()
         await m.reply_text(
@@ -316,7 +321,7 @@ async def memify_it(c: Gojo, m: Message):
 
 @Gojo.on_message(command(["getsticker","getst"]))
 async def get_sticker_from_file(c: Gojo, m: Message):
-    Caption = f"Converted by:\n@{Config.BOT_USERNAME}"
+    Caption = f"Converted by:\n@{c.me.username}"
     repl = m.reply_to_message
     if not repl:
         await m.reply_text("Reply to a sticker or file")
@@ -365,6 +370,62 @@ async def get_sticker_from_file(c: Gojo, m: Message):
         os.remove(up)
         return
 
+@Gojo.on_message(command(["rmsticker", "rmst", "removesticker"]))
+async def remove_from_MY_pack(c: Gojo, m: Message):
+    if not m.reply_to_message or not m.reply_to_message.sticker:
+        await m.reply_text("Please reply to a sticker to remove it from your pack")
+        return
+    
+    sticker = m.reply_to_message.sticker
+    sticker_set = await get_sticker_set_by_name(c, sticker.set_name)
+
+    if not sticker_set:
+        await m.reply_text("This sticker is not part of your pack")
+        return
+
+    try:
+        await remove_sticker(c, sticker.file_id)
+        await m.reply_text(f"Deleted [this]({m.reply_to_message.link}) from pack: {sticker_set.et.title}")
+        return
+    except Exception as e:
+        await m.reply_text(f"Error\n{e}\nReport it using /bug")
+        LOGGER.error(e)
+        LOGGER.error(format_exc(e))
+        return
+
+@Gojo.on_message(command(["getmypacks", "mypacks", "mysets", "stickerset", "stset"]))
+async def get_my_sticker_sets(c: Gojo, m: Message):
+    to_del = await m.reply_text("Please wait while I fetch all the sticker set I have created for you.")
+    st_types = ["norm", "ani", "vid"]
+    
+    txt, kb = await get_all_sticker_packs(c, m.from_user.id, "norm")
+
+    await to_del.delete()
+    if not txt:
+        await m.reply_text("Looks like you haven't made any sticker using me...")
+        return
+    await m.reply_text(txt, reply_markup=kb)
+
+@Gojo.on_callback_query(filters.regex(r"^stickers_(norm|vid|ani)_.*"))
+async def sticker_callbacks(c: Gojo, q: CallbackQuery):
+    data = q.data.split("_")
+    st_type = data[1]
+    decoded = await encode_decode(data[-1], "decode")
+    user = int(decoded.split("_")[-1])
+    offset = int(decoded.split("_")[0])
+
+    if q.from_user.id != user:
+        await q.answer("This is not for you")
+        return
+    else:
+        txt, kb = await get_all_sticker_packs(c, q.from_user.id, st_type, offset)
+        if not txt:
+            await q.answer("No sticker pack found....")
+            return
+        else:
+            await q.answer(f"Showing your {st_type}")
+            await q.edit_message_text(txt, reply_markup=kb)
+            return
         
 __PLUGIN__ = "sticker"
 __alt_name__ = [
@@ -377,6 +438,7 @@ __HELP__ = """
 • /stickerinfo (/stinfo) : Reply to any sticker to get it's info
 • /getsticker (/getst) : Get sticker as photo, gif or vice versa.
 • /stickerid (/stid) : Reply to any sticker to get it's id
+• /mypacks : Get all of your current sticker pack you have made via me.
 • /mmf <your text>: Reply to a normal sticker or a photo or video file to memify it. If you want to right text at bottom use `;right your message`
     ■ For e.g. 
     ○ /mmf Hello freinds : this will add text to the top

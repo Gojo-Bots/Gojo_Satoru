@@ -44,7 +44,7 @@ async def gban(c: Gojo, m: Message):
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")
         return
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text(
             text="You don't dare use that command on me again nigga! \n Go straight and fuck your self......"
         )
@@ -99,7 +99,7 @@ async def ungban(c: Gojo, m: Message):
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")
         return
 
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text(
             text="""You can't gban me nigga!
         Fuck yourself.......!"""
@@ -156,7 +156,8 @@ async def gban_list(_, m: Message):
 
     banfile = "Here are all the globally banned geys!\n\n"
     for user in banned_users:
-        banfile += f"[x] <b>{Users.get_user_info(user['_id'])['name']}</b> - <code>{user['_id']}</code>\n"
+        USER = Users.get_user_info(user['_id'])
+        banfile += f"[x] <b>{USER['name'] if USER else 'Name NA'}</b> - <code>{user['_id']}</code>\n"
         if user["reason"]:
             banfile += f"<b>Reason:</b> {user['reason']}\n"
 

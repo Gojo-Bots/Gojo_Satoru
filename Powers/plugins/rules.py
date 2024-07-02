@@ -11,7 +11,7 @@ from Powers.vars import Config
 
 
 @Gojo.on_message(command("rules") & filters.group)
-async def get_rules(_, m: Message):
+async def get_rules(c: Gojo, m: Message):
     db = Rules(m.chat.id)
     msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
@@ -35,7 +35,7 @@ async def get_rules(_, m: Message):
                 [
                     (
                         "Rules",
-                        f"https://t.me/{Config.BOT_USERNAME}?start=rules_{m.chat.id}",
+                        f"https://t.me/{c.me.username}?start=rules_{m.chat.id}",
                         "url",
                     ),
                 ],

@@ -257,8 +257,7 @@ async def song_down_up(c: Gojo, m: Message):
         return
     _id = get_video_id(splited)
     if not _id:
-        await m.reply_text("Invalid youtube link")
-        return
+        query = splited
     else:
         query = _id
     XnX = await m.reply_text("⏳")
@@ -284,8 +283,7 @@ async def video_down_up(c: Gojo, m: Message):
         return
     _id = get_video_id(splited)
     if not _id:
-        await m.reply_text("Invalid youtube link")
-        return
+        query = splited
     else:
         query = _id
     XnX = await m.reply_text("⏳")

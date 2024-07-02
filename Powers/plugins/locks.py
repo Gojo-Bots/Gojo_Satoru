@@ -473,19 +473,19 @@ async def is_approved_user(c: Gojo, m: Message):
     SUDO_LEVEL = get_support_staff("sudo_level")
 
     if m.forward_from:
-        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
+        if m.from_user and (m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id):
             return True
         return False
     elif m.forward_from_chat:
         x_chat = (await c.get_chat(m.forward_from_chat.id)).linked_chat
-        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
+        if m.from_user and (m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id):
             return True
-        if not x_chat:
-            return False
         elif x_chat and x_chat.id == m.chat.id:
             return True
+        else:
+            return False
     elif m.from_user:
-        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
+        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id:
             return True
         return False
 

@@ -4,7 +4,7 @@ from traceback import format_exc
 
 from pyrogram import emoji, enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
-from pyrogram.errors import ChatAdminRequired, RPCError
+from pyrogram.errors import ChannelPrivate, ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, Message
 
 from Powers import LOGGER
@@ -257,7 +257,7 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
     db = Greetings(member.chat.id)
     banned_users = gdb.check_gban(user.id)
     try:
-        if user.id == Config.BOT_ID:
+        if user.id == c.me.id:
             return
         if user.id in DEV_USERS:
             await c.send_animation(
@@ -332,6 +332,8 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
 
             if jj:
                 db.set_cleanwlcm_id(int(jj.id))
+        except ChannelPrivate:
+            return
         except RPCError as e:
             LOGGER.error(e)
             LOGGER.error(format_exc(e))

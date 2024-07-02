@@ -5,7 +5,7 @@ from traceback import format_exc
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
+from Powers import HELP_COMMANDS, LOGGER, OWNER_ID, SUPPORT_CHANNEL
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
@@ -65,7 +65,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Owner ❤️",
-                    Config.OWNER_ID,
+                    OWNER_ID,
                     "user_id",
                 ),
             ],
@@ -77,7 +77,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Powered by ⚡️",
-                    f"https://{Config.SUPPORT_CHANNEL}.t.me",
+                    f"https://{SUPPORT_CHANNEL}.t.me",
                     "url",
                 ),
             ],
@@ -95,7 +95,7 @@ async def get_private_note(c: Gojo, m: Message, help_option: str):
         chat_title = Chats.get_chat_info(chat_id)["chat_name"]
         rply = f"Notes in {chat_title}:\n\n"
         note_list = [
-            f"- [{note[0]}](https://t.me/{Config.BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
+            f"- [{note[0]}](https://t.me/{c.me.username}?start=note_{chat_id}_{note[1]})"
             for note in all_notes
         ]
         rply = f"Available notes in {chat_title}\n"

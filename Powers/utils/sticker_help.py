@@ -9,10 +9,89 @@ from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import errors, raw
 from pyrogram.file_id import FileId
+from pyrogram.types import InlineKeyboardButton as ikb
+from pyrogram.types import InlineKeyboardMarkup as ikm
 from pyrogram.types import Message
 from unidecode import unidecode
 
 from Powers.bot_class import Gojo
+from Powers.utils.string import encode_decode
+
+
+async def get_all_sticker_packs(c: Gojo, user_id: int, st_type: str, offset: int = 1, limit: int = 25):
+    packnum = 25 * (offset - 1)
+    if st_type == "norm":
+        st_ = "Static"
+    elif st_type == "vid":
+        st_ = "Video"
+    else:
+        st_ = "Animated"
+    txt = f"Here is your {st_} stickers that I have created:\nPage: {offset}\n"
+    while True:
+        packname = f"CE{str(user_id)}{st_type}{packnum}_by_{c.me.username}"
+        sticker_set = await get_sticker_set_by_name(c,packname)
+        if not sticker_set and packnum == 0:
+            txt, kb = None, None
+            break
+        elif sticker_set and packnum <= (packnum + limit - 1):
+            base_ = f"t.me/addstickers/{packname}"
+            txt += f"`{packnum}`. [{sticker_set.set.name}]({base_})\n"
+            packnum += 1
+        else:
+            page = await encode_decode(f"1_{user_id}")
+            if st_type == "norm":
+                st_kb = [
+                    [
+                        ikb("Video stickers", f"stickers_vid_{page}"),
+                        ikb("Animated stickers", f"stickers_ani_{page}"),
+                    ]
+                ]
+            elif st_type == "vid":
+                st_kb = [
+                    [
+                        ikb("Static stickers", f"stickers_norm_{page}"),
+                        ikb("Animated stickers", f"stickers_ani_{page}"),
+                    ]
+                ]
+            else:
+                st_kb = [
+                    [
+                        ikb("Static stickers", f"stickers_norm_{page}"),
+                        ikb("Video stickers", f"stickers_vid_{page}"),
+                    ]
+                ]
+
+            b64_next = await encode_decode(f"{offset+1}_{user_id}")
+            b64_prev = await encode_decode(f"{offset-1}_{user_id}")
+
+            if (packnum > (packnum + limit - 1)) and offset >= 2:
+                kb = [
+                    [
+                        ikb("Previous", f"stickers_{st_type}_{b64_prev}"),
+                        ikb("Next", f"stickers_{st_type}_{b64_next}")
+                    ],
+                ]
+                kb.extend(st_kb)
+            elif offset >= 2 and (packnum <= (packnum + limit - 1)):
+                kb = [
+                    [
+                        ikb("Previous", f"stickers_{st_type}_{b64_prev}")
+                    ],
+                ]
+                kb.extend(st_kb)
+            elif packnum > (packnum + limit - 1) and offset == 1:
+                kb = [
+                    [
+                        ikb("Next", f"stickers_{st_type}_{b64_next}")
+                    ],
+                ]
+                kb.extend(st_kb)
+            else:
+                kb = st_kb
+            kb = ikm(kb)
+            break
+    
+    return txt, kb
 
 
 async def runcmd(cmd: str) -> Tuple[str, str, int, int]:

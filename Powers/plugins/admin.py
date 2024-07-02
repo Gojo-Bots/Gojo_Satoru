@@ -81,25 +81,27 @@ async def adminlist_show(_, m: Message):
     return
 
 
+
 @Gojo.on_message(command("zombies") & admin_filter)
 async def zombie_clean(c: Gojo, m: Message):
     zombie = 0
     wait = await m.reply_text("Searching ... and banning ...")
+    failed = 0
     async for member in c.get_chat_members(m.chat.id):
         if member.user.is_deleted:
             zombie += 1
             try:
                 await c.ban_chat_member(m.chat.id, member.user.id)
             except UserAdminInvalid:
-                zombie -= 1
+                failed += 1
             except FloodWait as e:
                 await sleep(e.x)
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
-    return await wait.edit_text(
-        text=f"<b>{zombie}</b> Zombies found and has been banned!",
-    )
-
+    await wait.delete()
+    txt=f"<b>{zombie}</b> Zombies found and {zombie - failed} has been banned!\n{failed} zombies' are immune to me",
+    await m.reply_animation("https://graph.org/file/02a1dcf7788186ffb36cb.mp4", caption=txt)
+    return
 
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
@@ -163,8 +165,8 @@ async def fullpromote_usr(c: Gojo, m: Message):
         user_id, user_first_name, user_name = await extract_user(c, m)
     except Exception:
         return
-    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
-    if user_id == Config.BOT_ID:
+    bot = await c.get_chat_member(m.chat.id, c.me.id)
+    if user_id == c.me.id:
         await m.reply_text("Huh, how can I even promote myself?")
         return
     if not bot.privileges.can_promote_members:
@@ -259,8 +261,8 @@ async def promote_usr(c: Gojo, m: Message):
         user_id, user_first_name, user_name = await extract_user(c, m)
     except Exception:
         return
-    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
-    if user_id == Config.BOT_ID:
+    bot = await c.get_chat_member(m.chat.id, c.me.id)
+    if user_id == c.me.id:
         await m.reply_text("Huh, how can I even promote myself?")
         return
     if not bot.privileges.can_promote_members:
@@ -290,6 +292,8 @@ async def promote_usr(c: Gojo, m: Message):
                 can_pin_messages=bot.privileges.can_pin_messages,
                 can_manage_chat=bot.privileges.can_manage_chat,
                 can_manage_video_chats=bot.privileges.can_manage_video_chats,
+                can_post_messages=bot.privileges.can_post_messages,
+                can_edit_messages=bot.privileges.can_edit_messages
             ),
         )
         title = ""
@@ -358,7 +362,7 @@ async def demote_usr(c: Gojo, m: Message):
         user_id, user_first_name, _ = await extract_user(c, m)
     except Exception:
         return
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         await m.reply_text("Get an admin to demote me!")
         return
     # If user not already admin
@@ -511,7 +515,7 @@ async def set_user_title(c: Gojo, m: Message):
         return
     if not user_id:
         return await m.reply_text("Cannot find user!")
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         return await m.reply_text("Huh, why ?")
     if not reason:
         return await m.reply_text("Read /help please!")
