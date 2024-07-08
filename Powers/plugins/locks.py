@@ -1,3 +1,14 @@
+ this to lock group permissions.
+Allows you to lock and unlock permission types in the chat.
+
+**Usage:**
+• /lock `<type>`: Lock Chat permission.
+• /unlock `<type>`: Unlock Chat permission.
+• /locks: View Chat permission.
+• /locktypes: Check available lock types!
+
+**Example:**
+`/lock media`: this locks all the media messages in the chat."""
 from asyncio import sleep
 from traceback import format_exc
 
@@ -447,14 +458,17 @@ async def delete_messages(c:Gojo, m: Message):
         LOGGER.error(format_exc())
         return
 
-async def is_approved_user(c:Gojo, m: Message):
+async def is_approved_user(c: Gojo, m: Message):
     approved_users = Approve(m.chat.id).list_approved()
     ul = [user[0] for user in approved_users]
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
         admins_group = await admin_cache_reload(m, "lock")
-    
+
+    if not m.from_user:
+        return False
+
     if m.forward_from:
         if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == Config.BOT_ID:
             return True
