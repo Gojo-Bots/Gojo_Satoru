@@ -11,17 +11,17 @@ class Config:
     """Config class for variables."""
 
     LOGGER = True
-    BOT_TOKEN = config("BOT_TOKEN", default="6924002790:AAHaWLtKzjzPBLo6ZovJvBdh6C1I2tLz1d4")
-    API_ID = int(config("API_ID", default="24269862"))
-    API_HASH = config("API_HASH", default="5b1a646f8c8ed40f15af84c9b2dfa9e8")
-    OWNER_ID = int(config("OWNER_ID", default="5154912723"))
+    BOT_TOKEN = config("BOT_TOKEN", default=None)
+    API_ID = int(config("API_ID", default="123"))
+    API_HASH = config("API_HASH", default=None)
+    OWNER_ID = int(config("OWNER_ID", default=1344569458))
     MESSAGE_DUMP = int(config("MESSAGE_DUMP"))
     DEV_USERS = [
         int(i)
         for i in config(
             "DEV_USERS",
             default="",
-        ).split("5154912723")
+        ).split(None)
     ]
     SUDO_USERS = [
         int(i)
@@ -39,14 +39,14 @@ class Config:
     ]
     GENIUS_API_TOKEN = config("GENIUS_API",default=None)
     AuDD_API = config("AuDD_API",default=None)
-    RMBG_API = config("RMBG_API",default="W6KWsRHiQCxedSEvfSLY2Mex")
-    DB_URI = config("DB_URI", default="mongodb+srv://yumlanulmi:hii121itsk@cluster0.gbperk3.mongodb.net/?retryWrites=true&w=majority")
-    DB_NAME = config("DB_NAME", default="Management")
+    RMBG_API = config("RMBG_API",default=None)
+    DB_URI = config("DB_URI", default="")
+    DB_NAME = config("DB_NAME", default="gojo_satarou")
     BDB_URI = config("BDB_URI",default=None)
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
-    SUPPORT_GROUP = config("SUPPORT_GROUP", default="lundlelobsdkmera")
-    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="lundlelobsdk")
+    SUPPORT_GROUP = config("SUPPORT_GROUP", default="gojo_bots_network")
+    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_bots_network")
     WORKERS = int(config("WORKERS", default=16))
     TIME_ZONE = config("TIME_ZONE",default='Asia/Kolkata')
     BOT_USERNAME = ""
@@ -58,6 +58,7 @@ class Config:
 class Development:
     """Development class for variables."""
 
+
     # Fill in these vars if you want to use Traditional method of deploying
     LOGGER = True
     BOT_TOKEN = "6924002790:AAHaWLtKzjzPBLo6ZovJvBdh6C1I2tLz1d4"
@@ -68,8 +69,7 @@ class Development:
     DEV_USERS = [5154912723]
     SUDO_USERS = []
     WHITELIST_USERS = []
-    DB_URI = "mongodb+srv://yumlanulmi:hii121itsk@cluster0.gbperk3.mongodb.net/?retryWrites=true&w=majority
-    "  # Your mongo DB URI
+    DB_URI = "mongodb+srv://yumlanulmi:hii121itsk@cluster0.gbperk3.mongodb.net/?retryWrites=true&w=majority" #Your mongo DB URI
     DB_NAME = "Management"  # Your DB name
     NO_LOAD = []
     GENIUS_API_TOKEN = ""
