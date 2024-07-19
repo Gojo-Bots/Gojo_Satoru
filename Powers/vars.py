@@ -75,8 +75,8 @@ class Development:
     GENIUS_API_TOKEN = ""
     RMBG_API = "W6KWsRHiQCxedSEvfSLY2Mex"
     PREFIX_HANDLER = ["!", "/","$"]
-    SUPPORT_GROUP = "SUPPORT_GROUP"
-    SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
+    SUPPORT_GROUP = "lundlelobsdkmera"
+    SUPPORT_CHANNEL = "lundlelobsdk"
     VERSION = "VERSION"
     TIME_ZONE = 'Asia/Kolkata'
     BDB_URI = "mongodb+srv://b7604190:hii121itsk@cluster0.vtt1cxt.mongodb.net/?retryWrites=true&w=majority"
