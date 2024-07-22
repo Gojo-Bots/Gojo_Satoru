@@ -11,7 +11,7 @@ class Config:
     """Config class for variables."""
 
     LOGGER = True
-    BOT_TOKEN = config("BOT_TOKEN", default=None)
+    BOT_TOKEN = config("6924002790:AAHaWLtKzjzPBLo6ZovJvBdh6C1I2tLz1d4", default=None)
     API_ID = int(config("API_ID", default="123"))
     API_HASH = config("API_HASH", default=None)
     OWNER_ID = int(config("OWNER_ID", default=1344569458))
@@ -61,22 +61,22 @@ class Development:
     # Fill in these vars if you want to use Traditional method of deploying
     LOGGER = True
     BOT_TOKEN = "YOUR BOT_TOKEN"
-    API_ID = 12345  # Your APP_ID from Telegram
-    API_HASH = "YOUR API HASH"  # Your APP_HASH from Telegram
-    OWNER_ID = 1344569458  # Your telegram user id defult to mine
-    MESSAGE_DUMP = -100845454887  # Your Private Group ID for logs
-    DEV_USERS = []
+    API_ID = 24269862  # Your APP_ID from Telegram
+    API_HASH = "5b1a646f8c8ed40f15af84c9b2dfa9e8"  # Your APP_HASH from Telegram
+    OWNER_ID = 5154912723  # Your telegram user id defult to mine
+    MESSAGE_DUMP = -1002052189895  # Your Private Group ID for logs
+    DEV_USERS = [5154912723]
     SUDO_USERS = []
     WHITELIST_USERS = []
-    DB_URI = ""  # Your mongo DB URI
-    DB_NAME = ""  # Your DB name
+    DB_URI = "mongodb+srv://yumlanulmi:hii121itsk@cluster0.gbperk3.mongodb.net/?retryWrites=true&w=majority"  # Your mongo DB URI
+    DB_NAME = "Management"  # Your DB name
     NO_LOAD = []
     GENIUS_API_TOKEN = ""
-    RMBG_API = ""
+    RMBG_API = "W6KWsRHiQCxedSEvfSLY2Mex"
     PREFIX_HANDLER = ["!", "/","$"]
-    SUPPORT_GROUP = "SUPPORT_GROUP"
-    SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
+    SUPPORT_GROUP = "Lundlelobsdkmera"
+    SUPPORT_CHANNEL = "Noxbots"
     VERSION = "VERSION"
     TIME_ZONE = 'Asia/Kolkata'
-    BDB_URI = ""
+    BDB_URI = "mongodb+srv://b7604190:hii121itsk@cluster0.vtt1cxt.mongodb.net/?retryWrites=true&w=majority"
     WORKERS = 8
