@@ -55,7 +55,7 @@ class Development:
     DB_NAME = "Management"  # Your DB name
     NO_LOAD = []
     GENIUS_API_TOKEN = "" # Your genius API token or leave it as it is
-    RMBG_API = "W6KWsRHiQCxedSEvfSLY2Mex" # Your rmbg API token or leave it as it is
+    RMBG_API = "mL1mJVeYSgRpQpUoPewHykgh" # Your rmbg API token or leave it as it is
     PREFIX_HANDLER = ["!", "/","$"]
     SUPPORT_GROUP = "NoxBots" #Username without @
     SUPPORT_CHANNEL = "Lundlelobsdkmera" #Username without @
