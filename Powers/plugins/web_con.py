@@ -8,7 +8,7 @@ from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
-from Powers import (LOGGER, RMBG, Audd, genius_lyrics, is_audd,
+from Powers import (LOGGER, RMBG, genius_lyrics,
                     is_genius_lyrics, is_rmbg)
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
