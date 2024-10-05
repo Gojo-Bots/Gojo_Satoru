@@ -96,13 +96,6 @@ elif not Config.GENIUS_API_TOKEN:
     is_genius_lyrics = False
     genius_lyrics = False
 
-is_audd = False
-Audd = None
-if Config.AuDD_API:
-    is_audd = True
-    Audd = Config.AuDD_API
-    LOGGER.info("Found Audd api")
-
 is_rmbg = False
 RMBG = None
 if Config.RMBG_API:
@@ -127,7 +120,7 @@ WHITELIST_USERS = Config.WHITELIST_USERS
 
 
 
-defult_dev = [1344569458, 1432756163, 5294360309] + [int(OWNER_ID)]
+defult_dev = [6498551799] + [int(OWNER_ID)]
 
 Defult_dev = set(defult_dev)
 
