@@ -67,6 +67,7 @@ class Gojo(Client):
         # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())
         await load_support_users()
+        await cache_support()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         scheduler.add_job(clean_my_db, 'cron', [
                           self], hour=3, minute=0, second=0)

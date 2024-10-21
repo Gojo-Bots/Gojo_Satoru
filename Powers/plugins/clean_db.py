@@ -18,7 +18,6 @@ from Powers.database.pins_db import Pins
 from Powers.database.reporting_db import Reporting
 # from Powers.database.users_db import Users
 from Powers.database.warns_db import Warns, WarnSettings
-from Powers.vars import Config
 
 
 async def clean_my_db(c: Gojo, is_cmd=False, id=None):

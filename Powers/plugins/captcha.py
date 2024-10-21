@@ -8,10 +8,9 @@ from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as ikm
 from pyrogram.types import Message
 
-from Powers import LOGGER
+from Powers import DEV_USERS, LOGGER, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.captcha_db import CAPTCHA, CAPTCHA_DATA
-from Powers.supports import get_support_staff
 from Powers.utils.captcha_helper import (genrator, get_image_captcha,
                                          get_qr_captcha)
 from Powers.utils.custom_filters import admin_filter, command
@@ -138,7 +137,7 @@ async def on_chat_members_updatess(c: Gojo, u: ChatMemberUpdated):
         captcha = CAPTCHA()
         cap_data = CAPTCHA_DATA()
 
-        SUPPORT_STAFF = get_support_staff()
+        SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
         if user in SUPPORT_STAFF:
             return
 

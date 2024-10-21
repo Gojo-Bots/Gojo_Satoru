@@ -18,7 +18,7 @@ from Powers.utils.custom_filters import command
 
 
 @Gojo.on_message(command("stats", dev_cmd=True))
-async def get_stats(_, m: Message):
+async def get_stats(c: Gojo, m: Message):
     # initialise
     bldb = Blacklist
     gbandb = GBan()
@@ -65,5 +65,8 @@ async def get_stats(_, m: Message):
         "<b>Action:</b>\n"
         f"     <b>Del:</b> Applied in <code>{(dsbl.count_action_dis_all('del'))}</code> chats.\n"
     )
-    await replymsg.edit_text(rply, parse_mode=enums.ParseMode.HTML)
+    try:
+        await replymsg.edit_text(rply, parse_mode=enums.ParseMode.HTML)
+    except:
+        await c.send_message(m.chat.id, rply, parse_mode=enums.ParseMode.HTML)
     return

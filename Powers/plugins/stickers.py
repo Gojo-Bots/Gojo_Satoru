@@ -141,40 +141,15 @@ async def kang(c:Gojo, m: Message):
     # Find an available pack & add the sticker to the pack; create a new pack if needed
     # Would be a good idea to cache the number instead of searching it every single time...
     kang_lim = 120
-    st_in = m.reply_to_message.sticker 
-    st_type = "norm"
-    is_anim = is_vid = False
-    if st_in:
-        if st_in.is_animated:
-            st_type = "ani"
-            kang_lim = 50
-            is_anim = True
-        elif st_in.is_video:
-            st_type = "vid"
-            kang_lim = 50
-            is_vid = True
-    elif m.reply_to_message.document:
-        if m.reply_to_message.document.mime_type in ["application/x-bad-tgsticker", "application/x-tgsticker"]:
-            st_type = "ani"
-            kang_lim = 50
-            is_anim = True
-        elif m.reply_to_message.document.mime_type == "video/webm":
-            st_type = "vid"
-            kang_lim = 50
-            is_vid = True
-    elif m.reply_to_message.video or m.reply_to_message.animation or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
-        st_type = "vid"
-        kang_lim = 50
-        is_vid = True
     packnum = 0
     limit = 0
     volume = 0
     packname_found = False
-    
+
     try:
         while not packname_found:
-            packname = f"CE{str(m.from_user.id)}{st_type}{packnum}_by_{c.me.username}"
-            kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {st_type} {('vOl '+str(volume)) if volume else ''} by @{c.me.username}"
+            packname = f"CE{str(m.from_user.id)}{packnum}_by_{c.me.username}"
+            kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {('vOl '+str(volume)) if volume else ''} by @{c.me.username}"
             if limit >= 50: # To prevent this loop from running forever
                 await m.reply_text("Failed to kang\nMay be you have made more than 50 sticker packs with me try deleting some")
                 return
@@ -187,8 +162,6 @@ async def kang(c:Gojo, m: Message):
                         title=kangpack,
                         short_name=packname,
                         stickers=[sticker],
-                        animated=is_anim,
-                        video=is_vid
                     )
                 except StickerEmojiInvalid:
                     return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
@@ -197,13 +170,11 @@ async def kang(c:Gojo, m: Message):
                 limit += 1
                 volume += 1
                 continue
-            else:
-                try:
-                    await add_sticker_to_set(c,sticker_set,sticker)
-                except StickerEmojiInvalid:
-                    return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
-            limit += 1
-            packname_found = True
+            try:
+                await add_sticker_to_set(c,sticker_set,sticker)
+                packname_found = True
+            except StickerEmojiInvalid:
+                return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
         kb = IKM(
             [
                 [
@@ -396,9 +367,8 @@ async def remove_from_MY_pack(c: Gojo, m: Message):
 @Gojo.on_message(command(["getmypacks", "mypacks", "mysets", "stickerset", "stset"]))
 async def get_my_sticker_sets(c: Gojo, m: Message):
     to_del = await m.reply_text("Please wait while I fetch all the sticker set I have created for you.")
-    st_types = ["norm", "ani", "vid"]
     
-    txt, kb = await get_all_sticker_packs(c, m.from_user.id, "norm")
+    txt, kb = await get_all_sticker_packs(c, m.from_user.id)
 
     await to_del.delete()
     if not txt:
@@ -406,10 +376,9 @@ async def get_my_sticker_sets(c: Gojo, m: Message):
         return
     await m.reply_text(txt, reply_markup=kb)
 
-@Gojo.on_callback_query(filters.regex(r"^stickers_(norm|vid|ani)_.*"))
+@Gojo.on_callback_query(filters.regex(r"^stickers_.*"))
 async def sticker_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
-    st_type = data[1]
     decoded = await encode_decode(data[-1], "decode")
     user = int(decoded.split("_")[-1])
     offset = int(decoded.split("_")[0])
@@ -418,12 +387,12 @@ async def sticker_callbacks(c: Gojo, q: CallbackQuery):
         await q.answer("This is not for you")
         return
     else:
-        txt, kb = await get_all_sticker_packs(c, q.from_user.id, st_type, offset)
+        txt, kb = await get_all_sticker_packs(c, q.from_user.id, offset)
         if not txt:
             await q.answer("No sticker pack found....")
             return
         else:
-            await q.answer(f"Showing your {st_type}")
+            await q.answer(f"Showing your sticker set")
             await q.edit_message_text(txt, reply_markup=kb)
             return
         

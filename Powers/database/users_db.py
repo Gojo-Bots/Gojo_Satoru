@@ -70,7 +70,6 @@ class Users(MongoDB):
             new_data = {"_id": self.user_id,
                         "username": "", "name": "unknown_till_now"}
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized User Document for {self.user_id}")
             return new_data
         return chat_data
 

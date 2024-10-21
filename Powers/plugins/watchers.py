@@ -7,7 +7,7 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
 
-from Powers import LOGGER, MESSAGE_DUMP
+from Powers import DEV_USERS, LOGGER, MESSAGE_DUMP, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import ANTISPAM_BANNED, GBan
 from Powers.database.approve_db import Approve
@@ -31,10 +31,8 @@ async def antichanpin_cleanlinked(c: Gojo, m: Message):
         curr = pins_db.get_settings()
         if curr["antichannelpin"]:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
-            LOGGER.info(f"AntiChannelPin: msgid-{m.id} unpinned in {m.chat.id}")
         if curr["cleanlinked"]:
             await c.delete_messages(m.chat.id, msg_id)
-            LOGGER.info(f"CleanLinked: msgid-{m.id} cleaned in {m.chat.id}")
     except ChatAdminRequired:
         await m.reply_text(
             "Disabled antichannelpin as I don't have enough admin rights!",
@@ -124,7 +122,7 @@ async def bl_watcher(_, m: Message):
                 )
             return
         
-        SUPPORT_STAFF = get_support_staff()
+        SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
         if m.from_user.id in SUPPORT_STAFF:
             # Don't work on Support Staff!
             return
@@ -158,9 +156,7 @@ async def bl_watcher(_, m: Message):
             if match:
                 try:
                     await perform_action_blacklist(m, action, trigger)
-                    LOGGER.info(
-                        f"{m.from_user.id} {action}ed for using blacklisted word {trigger} in {m.chat.id}",
-                    )
+                    
                     await m.delete()
                 except RPCError as ef:
                     LOGGER.error(ef)
@@ -192,18 +188,11 @@ async def gban_watcher(c: Gojo, m: Message):
             await m.delete(m.id)  # Delete users message!
             user_gbanned = await mention_html(m.from_user.first_name, m.from_user.id)
             await m.reply_text(
-                text=f"""This user ({user_gbanned}) has been banned globally!
-
-      To get unbanned, appeal at @{SUPPORT_GROUP}"""
-            )
-            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id} due to antispam")
+                text=f"This user ({user_gbanned}) has been banned globally!\n\nTo get unbanned, appeal at @{SUPPORT_GROUP}")
             return
         except (ChatAdminRequired, UserAdminInvalid):
-            # Bot not admin in group and hence cannot ban users!
-            # TO-DO - Improve Error Detection
-            LOGGER.info(
-                f"User ({m.from_user.id}) is admin in group {m.chat.title} ({m.chat.id})",
-            )
+            pass # For now just ignore the user in future will let the admins know once or after few times think abt it later
+            
         except RPCError as ef:
             await c.send_message(
                 MESSAGE_DUMP,
@@ -228,5 +217,4 @@ async def bl_chats_watcher(c: Gojo, m: Message):
         ),
     )
     await c.leave_chat(m.chat.id)
-    LOGGER.info(f"Joined and Left blacklisted chat {m.chat.id}")
     return

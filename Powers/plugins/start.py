@@ -10,10 +10,10 @@ from pyrogram.errors import (MediaCaptionTooLong, MessageNotModified,
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
-from Powers import (HELP_COMMANDS, LOGGER, OWNER_ID, PYROGRAM_VERSION,
-                    PYTHON_VERSION, UPTIME, VERSION, WHITELIST_USERS)
+from Powers import (DEV_USERS, HELP_COMMANDS, LOGGER, OWNER_ID,
+                    PYROGRAM_VERSION, PYTHON_VERSION, SUDO_USERS, UPTIME,
+                    VERSION, WHITELIST_USERS)
 from Powers.bot_class import Gojo
-from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
@@ -22,7 +22,6 @@ from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb,
                                       get_private_note, get_private_rules,
                                       iter_msg)
 from Powers.utils.string import encode_decode
-from Powers.vars import Config
 
 
 @Gojo.on_message(
@@ -39,7 +38,6 @@ All the fund would be put into my services such as database, storage and hosting
 You can donate by contacting my owner: [Captain D. Ezio](http://t.me/iamgojoof6eyes)
      """
 
-    LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
     await m.reply_photo(photo=str(choice(StartPic)), caption=cpt)
     return
 
@@ -81,8 +79,6 @@ async def start(c: Gojo, m: Message):
                 return
 
             if help_option.startswith("rules"):
-                LOGGER.info(
-                    f"{m.from_user.id} fetched privaterules in {m.chat.id}")
                 await get_private_rules(c, m, help_option)
                 return
 
@@ -227,9 +223,6 @@ async def help_menu(c: Gojo, m: Message):
                 f"No help_msg found for help_option - {help_option}!!")
             return
 
-        LOGGER.info(
-            f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
-        )
 
         if m.chat.type == ChatType.PRIVATE:
             if len(help_msg) >= 1026:
@@ -394,8 +387,6 @@ async def get_module_info(c: Gojo, q: CallbackQuery):
 
 @Gojo.on_callback_query(filters.regex("^give_bot_staffs$"))
 async def give_bot_staffs(c: Gojo, q: CallbackQuery):
-    DEV_USERS = get_support_staff("dev")
-    SUDO_USERS = get_support_staff("sudo")  
     try:
         owner = await c.get_users(OWNER_ID)
         reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"

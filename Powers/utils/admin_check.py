@@ -67,14 +67,13 @@ async def owner_check(m: Message or CallbackQuery) -> bool:
 
     SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
 
+    if user_id in SUDO_LEVEL:
+        return True
+    
     try:
-        if user_id in SUDO_LEVEL:
-            return True
-    except Exception as ef:
-        LOGGER.info(ef, m)
-        LOGGER.error(format_exc())
-
-    user = await m.chat.get_member(user_id)
+        user = await m.chat.get_member(user_id)
+    except Exception:
+        return False
 
     if user.status != CMS.OWNER:
         if user.status == CMS.ADMINISTRATOR:

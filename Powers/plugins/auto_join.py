@@ -7,10 +7,9 @@ from pyrogram.types import InlineKeyboardButton as ikb
 from pyrogram.types import InlineKeyboardMarkup as ikm
 from pyrogram.types import Message
 
-from Powers import LOGGER
+from Powers import DEV_USERS, LOGGER, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.autojoin_db import AUTOJOIN
-from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, auto_join_filter, command
 
 
@@ -96,7 +95,7 @@ async def join_request_handler(c: Gojo, j: ChatJoinRequest):
     chat = j.chat.id
     aj = AUTOJOIN()
     join_type = aj.get_autojoin(chat)
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
 
     if not join_type:
         return

@@ -207,9 +207,6 @@ async def get_private_note(c: Gojo, m: Message, help_option: str):
                 getnotes["fileid"],
                 caption=teks,
             )
-    LOGGER.info(
-        f"{m.from_user.id} fetched privatenote {note_hash} (type - {getnotes}) in {m.chat.id}",
-    )
     return
 
 
@@ -262,9 +259,7 @@ async def get_help_msg(c: Gojo, m: Message or CallbackQuery, help_option: str):
         )
         help_kb = ikb(ou, True, "commands")
         help_msg = f"**{(help_option_value)}:**"
-        LOGGER.info(
-            f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
-        )
+        
     else:
         if isinstance(m, CallbackQuery):
             mes = m.message

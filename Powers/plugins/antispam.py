@@ -5,16 +5,15 @@ from traceback import format_exc
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
-from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, TIME_ZONE
+from Powers import (DEV_USERS, LOGGER, MESSAGE_DUMP, SUDO_USERS, SUPPORT_GROUP,
+                    WHITELIST_USERS)
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.users_db import Users
-from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
-from Powers.vars import Config
 
 # Initialize
 db = GBan()
@@ -38,7 +37,7 @@ async def gban(c: Gojo, m: Message):
     else:
         gban_reason = m.text.split(None, 2)[2]
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")
@@ -61,7 +60,6 @@ async def gban(c: Gojo, m: Message):
             f"Added {user_first_name} to GBan List. \n They will now be banned in all groups where I'm admin!"
         )
     )
-    LOGGER.info(f"{m.from_user.id} gbanned {user_id} from {m.chat.id}")
     date = datetime.utcnow().strftime("%H:%M - %d-%m-%Y")
     log_msg = f"#GBAN \n <b>Originated from:</b> {m.chat.id} \n <b>Admin:</b> {await mention_html(m.from_user.first_name, m.from_user.id)} \n <b>Gbanned User:</b> {await mention_html(user_first_name, user_id)} \n <b>Gbanned User ID:</b> {user_id} \\ n<b>Event Stamp:</b> {date}"
     await c.send_message(MESSAGE_DUMP, log_msg)
@@ -71,6 +69,10 @@ async def gban(c: Gojo, m: Message):
             user_id,
             f"You have been added to my global ban list! \n <b>Reason:</b> <code>{gban_reason}</code> \n <b>Appeal Chat:</b> @{SUPPORT_GROUP}",
         )
+        try:
+            await c.ban_chat_member(m.chat.id, user_id)
+        except Exception as e:
+            await m.reply_text(f"Failed to ban this user\n{e}")    
     except UserIsBlocked:
         LOGGER.error("Could not send PM Message, user blocked bot")
     except PeerIdInvalid:
@@ -93,7 +95,7 @@ async def ungban(c: Gojo, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")
@@ -110,7 +112,6 @@ async def ungban(c: Gojo, m: Message):
         db.remove_gban(user_id)
         await m.reply_text(text=f"Removed {user_first_name} from Global Ban List.")
         time = ((datetime.utcnow().strftime("%H:%M - %d-%m-%Y")),)
-        LOGGER.info(f"{m.from_user.id} ungbanned {user_id} from {m.chat.id}")
         log_msg = f"""#UNGBAN
         <b>Originated from:</b> {m.chat.id}
         <b>Admin:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))}
@@ -140,7 +141,6 @@ async def gban_count(_, m: Message):
     await m.reply_text(
         text=f"Number of people gbanned: <code>{(db.count_gbans())}</code>"
     )
-    LOGGER.info(f"{m.from_user.id} counting gbans in {m.chat.id}")
     return
 
 
@@ -170,7 +170,6 @@ async def gban_list(_, m: Message):
                 document=f, caption="Here are all the globally banned geys!\n\n"
             )
 
-    LOGGER.info(f"{m.from_user.id} exported gbanlist in {m.chat.id}")
 
     return
 

@@ -9,13 +9,11 @@ from pyrogram.raw.functions.channels import GetFullChannel
 from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.types import Message
 
-from Powers import LOGGER, OWNER_ID
+from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
-from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.vars import Config
 
 gban_db = GBan()
 
@@ -83,10 +81,7 @@ async def user_info(c: Gojo, user, already=False):
         about = ll.full_user.about
     except Exception:
         pass
-    SUPPORT_STAFF = get_support_staff()
-    DEV_USERS = get_support_staff("dev")
-    SUDO_USERS = get_support_staff("sudo")
-    WHITELIST_USERS = get_support_staff("whitelist")
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     username = user.username
     first_name = user.first_name
     last_name = user.last_name
@@ -246,8 +241,12 @@ async def info_func(c: Gojo, message: Message):
     if message.reply_to_message and message.reply_to_message.sender_chat:
         await message.reply_text("This is not a user, but rather a channel. Use `/chinfo` to fetch its information.")
         return
-    user, _, user_name = await extract_user(c, message)
-
+    try:
+        user, _, user_name = await extract_user(c, message)
+    except:
+        await message.reply_text("Got Some errors failed to fetch user info")
+        LOGGER.error(e)
+        LOGGER.error(format_exc)
     if not user:
         await message.reply_text("Can't find user to fetch info!")
 
@@ -285,6 +284,10 @@ async def info_func(c: Gojo, message: Message):
             LOGGER.error(rpc)
             LOGGER.error(format_exc())
     except Exception as e:
+        if e == "User not found ! Error: 'InputPeerChannel' object has no attribute 'user_id'":
+            await m.reply_text("Looks like you are trying to fetch info of a chat not an user. In that case please use /chinfo")
+            return
+        
         await message.reply_text(text=e)
         LOGGER.error(e)
         LOGGER.error(format_exc())

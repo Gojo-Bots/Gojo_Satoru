@@ -25,8 +25,6 @@ db = Filters()
 
 @Gojo.on_message(command("filters") & filters.group & ~filters.bot)
 async def view_filters(_, m: Message):
-    LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
-
     filters_chat = f"Filters in <b>{m.chat.title}</b>:\n"
     all_filters = db.get_all_filters(m.chat.id)
     actual_filters = [j for i in all_filters for j in i.split("|")]
@@ -66,9 +64,9 @@ async def add_filter(_, m: Message):
     extracted = await split_quotes(args[1])
     keyword = extracted[0].lower()
 
-    for k in keyword.split("|"):
-        if k in actual_filters:
-            return await m.reply_text(f"Filter <code>{k}</code> already exists!")
+    # for k in keyword.split("|"):
+    #     if k in actual_filters:
+    #         return await m.reply_text(f"Filter <code>{k}</code> already exists!")
 
     if not keyword:
         return await m.reply_text(
@@ -98,7 +96,6 @@ async def add_filter(_, m: Message):
         )
 
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
-    LOGGER.info(f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
     if add:
         await m.reply_text(
             f"Saved filter for '<code>{', '.join(keyword.split('|'))}</code>' in <b>{m.chat.title}</b>!",
@@ -122,7 +119,6 @@ async def stop_filter(_, m: Message):
     for keyword in act_filters:
         if keyword == m.text.split(None, 1)[1].lower():
             db.rm_filter(m.chat.id, m.text.split(None, 1)[1].lower())
-            LOGGER.info(f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
             await m.reply_text(
                 f"Okay, I'll stop replying to that filter and it's aliases in <b>{m.chat.title}</b>.",
             )
@@ -171,7 +167,6 @@ async def rm_allfilters_callback(_, q: CallbackQuery):
         return
     db.rm_all_filters(q.message.chat.id)
     await q.message.edit_text(f"Cleared all filters for {q.message.chat.title}")
-    LOGGER.info(f"{user_id} removed all filter from {q.message.chat.id}")
     await q.answer("Cleared all Filters!", show_alert=True)
     return
 

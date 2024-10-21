@@ -149,8 +149,6 @@ class Disabling(MongoDB):
                 DISABLED_CMDS[self.chat_id] = {
                     "commands": [], "action": "none"}
                 self.insert_one(new_data)
-                LOGGER.info(
-                    f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
             DISABLED_CMDS[self.chat_id] = chat_data
         return chat_data

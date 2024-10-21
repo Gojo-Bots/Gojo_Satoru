@@ -37,6 +37,9 @@ def command(
         if m.chat and m.chat.type == ChatType.CHANNEL:
             return
 
+        if m.chat.is_admin:
+            return True #anon admins and admin using send as chat
+
         if m and not m.from_user:
             return False
 
@@ -49,11 +52,11 @@ def command(
         if owner_cmd and (m.from_user.id != OWNER_ID):
             # Only owner allowed to use this...!
             return False
-        DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
+        DEV_LEVEL = DEV_USERS
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
             # Only devs allowed to use this...!
             return False
-        SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
+        SUDO_LEVEL = SUDO_USERS.union(DEV_USERS)
         if sudo_cmd and (m.from_user.id not in SUDO_LEVEL):
             # Only sudos and above allowed to use it
             return False
@@ -79,6 +82,9 @@ def command(
                 except ValueError:
                     # i.e. PM
                     user_status = CMS.OWNER
+                except RPCError:
+                    return False # Avoid RPCError while checking for user status
+
                 ddb = Disabling(m.chat.id)
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
                     CMS.OWNER,
@@ -289,7 +295,7 @@ async def can_pin_message_func(_, __, m):
         return True
 
     # Bypass the bot devs, sudos and owner
-    SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
+    SUDO_LEVEL = DEV_USERS.union(SUDO_USERS)
     if m.from_user.id in SUDO_LEVEL:
         return True
 
@@ -362,7 +368,7 @@ async def flood_check_filter(_, __, m: Message):
     is_flood = Flood.is_chat(c_id)
 
     app_users = Approve(m.chat.id).list_approved()
-    SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
+    SUDO_LEVEL = DEV_USERS.union(SUDO_USERS)
 
     if not is_flood or u_id in SUDO_LEVEL:
         return False

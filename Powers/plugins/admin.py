@@ -11,18 +11,15 @@ from pyrogram.errors import (BotChannelsNa, ChatAdminInviteRequired,
                              RPCError, UserAdminInvalid)
 from pyrogram.types import ChatPrivileges, Message
 
-from Powers import LOGGER, OWNER_ID
+from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
-from Powers.supports import get_support_staff
 from Powers.utils.caching import (ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK,
                                   admin_cache_reload)
-from Powers.utils.custom_filters import (admin_filter, command, owner_filter,
-                                         promote_filter)
+from Powers.utils.custom_filters import admin_filter, command, promote_filter
 from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
-from Powers.vars import Config
 
 
 @Gojo.on_message(command("adminlist"))
@@ -67,7 +64,7 @@ async def adminlist_show(_, m: Message):
         adminstr += "\n\n<b>Bots:</b>\n"
         adminstr += "\n".join(f"- {i}" for i in mention_bots)
         await m.reply_text(adminstr + "\n\n" + note)
-        LOGGER.info(f"Adminlist cmd use in {m.chat.id} by {m.from_user.id}")
+        
     except Exception as ef:
         if str(ef) == str(m.chat.id):
             await m.reply_text(text="Use /admincache to reload admins!")
@@ -95,7 +92,11 @@ async def zombie_clean(c: Gojo, m: Message):
             except UserAdminInvalid:
                 failed += 1
             except FloodWait as e:
-                await sleep(e.x)
+                await sleep(e.value)
+                try:
+                    await c.ban_chat_member(m.chat.id, member.user.id)
+                except:
+                    pass
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
     await wait.delete()
@@ -110,7 +111,7 @@ async def reload_admins(_, m: Message):
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if (
         (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
         and (m.from_user.id not in SUPPORT_STAFF)
@@ -122,7 +123,6 @@ async def reload_admins(_, m: Message):
         await admin_cache_reload(m, "admincache")
         TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "manualblock"
         await m.reply_text(text="Reloaded all admins in this chat!")
-        LOGGER.info(f"Admincache cmd use in {m.chat.id} by {m.from_user.id}")
     except RPCError as ef:
         await m.reply_text(
             text=f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"
@@ -206,9 +206,6 @@ async def fullpromote_usr(c: Gojo, m: Message):
             except Exception as e:
                 LOGGER.error(e)
                 LOGGER.error(format_exc())
-        LOGGER.info(
-            f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
-        )
         await m.reply_text(
             (
                 "{promoter} promoted {promoted} in chat <b>{chat_title}</b> with full rights!"
@@ -311,9 +308,7 @@ async def promote_usr(c: Gojo, m: Message):
             except Exception as e:
                 LOGGER.error(e)
                 LOGGER.error(format_exc())
-        LOGGER.info(
-            f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
-        )
+        
         await m.reply_text(
             ("{promoter} promoted {promoted} in chat <b>{chat_title}</b>!").format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -382,7 +377,6 @@ async def demote_usr(c: Gojo, m: Message):
             user_id=user_id,
             privileges=ChatPrivileges(can_manage_chat=False),
         )
-        LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
         # ----- Remove admin from cache -----
         try:
             admin_list = ADMIN_CACHE[m.chat.id]
@@ -426,7 +420,7 @@ async def demote_usr(c: Gojo, m: Message):
 async def get_invitelink(c: Gojo, m: Message):
     # Bypass the bot devs, sudos and owner
     
-    DEV_LEVEL = get_support_staff("dev_level")
+    DEV_LEVEL = DEV_USERS
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
         if not user.privileges.can_invite_users and user.status != CMS.OWNER:
@@ -438,7 +432,6 @@ async def get_invitelink(c: Gojo, m: Message):
             text=f"Invite Link for Chat <b>{m.chat.id}</b>: {link}",
             disable_web_page_preview=True,
         )
-        LOGGER.info(f"{m.from_user.id} exported invite link in {m.chat.id}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except ChatAdminInviteRequired:

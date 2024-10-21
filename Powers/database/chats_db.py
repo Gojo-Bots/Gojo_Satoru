@@ -107,7 +107,6 @@ class Chats(MongoDB):
         if not chat_data:
             new_data = {"_id": self.chat_id, "chat_name": "", "users": []}
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Chats Document for chat {self.chat_id}")
             return new_data
         return chat_data
 

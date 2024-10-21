@@ -14,15 +14,11 @@ from wikipedia.exceptions import DisambiguationError, PageError
 from Powers import *
 from Powers.bot_class import Gojo
 from Powers.database.users_db import Users
-from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 from Powers.utils.http_helper import *
 from Powers.utils.parser import mention_html
-
-DEV_USERS = get_support_staff("dev")
-SUDO_USERS = get_support_staff("sudo")
 
 
 @Gojo.on_message(command("wiki"))
@@ -66,7 +62,8 @@ async def wiki(_, m: Message):
 
 @Gojo.on_message(command("gdpr"))
 async def gdpr_remove(_, m: Message):
-    if m.from_user.id in get_support_staff():
+    supports = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    if m.from_user.id in supports:
         await m.reply_text(
             "You're in my support staff, I cannot do that unless you are no longer a part of it!",
         )
@@ -208,7 +205,6 @@ Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
 )
 async def get_gifid(_, m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
-        LOGGER.info(f"{m.from_user.id} used gifid cmd in {m.chat.id}")
         await m.reply_text(
             f"Gif ID:\n<code>{m.reply_to_message.animation.file_id}</code>",
             parse_mode=enums.ParseMode.HTML,
@@ -224,7 +220,6 @@ async def get_gifid(_, m: Message):
 async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(maxsplit=1)[1]
-        LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
             f"Usage: <code>/github username</code>",
@@ -466,7 +461,6 @@ async def botstaff(c: Gojo, m: Message):
             except RPCError:
                 pass
     await m.reply_text(reply)
-    LOGGER.info(f"{m.from_user.id} fetched botstaff in {m.chat.id}")
     return
 
 

@@ -4,7 +4,7 @@ from traceback import format_exc
 from pyrogram import enums, filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
+from pyrogram.types import CallbackQuery, Message
 
 from Powers import LOGGER
 from Powers.bot_class import Gojo
@@ -16,7 +16,6 @@ from Powers.utils.msg_types import Types, get_note_type
 from Powers.utils.string import (build_keyboard,
                                  escape_mentions_using_curly_brackets,
                                  parse_button)
-from Powers.vars import Config
 
 # Initialise
 db = Notes()
@@ -60,7 +59,6 @@ async def save_note(_, m: Message):
         return
 
     db.save_note(m.chat.id, note_name, text, data_type, content)
-    LOGGER.info(f"{m.from_user.id} saved note ({note_name}) in {m.chat.id}")
     await m.reply_text(
         f"Saved note <code>{note_name}</code>!\nGet it with <code>/get {note_name}</code> or <code>#{note_name}</code>",
     )
@@ -194,9 +192,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
                 reply_markup=button,
                 reply_to_message_id=reply_msg_id,
             )
-        LOGGER.info(
-            f"{m.from_user.id} fetched note {note_name} (type - {getnotes}) in {m.chat.id}",
-        )
+        
     except Exception as e:
         await m.reply_text(f"Error in notes: {e}")
     return
@@ -245,9 +241,7 @@ async def get_raw_note(c: Gojo, m: Message, note: str):
             parse_mode=enums.ParseMode.DISABLED,
             reply_to_message_id=msg_id,
         )
-    LOGGER.info(
-        f"{m.from_user.id} fetched raw note {note} (type - {getnotes}) in {m.chat.id}",
-    )
+    
     return
 
 
@@ -302,11 +296,9 @@ async def priv_notes(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db_settings.set_privatenotes(chat_id, True)
-            LOGGER.info(f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
             msg = "Set private notes to On"
         elif option in ("off", "no"):
             db_settings.set_privatenotes(chat_id, False)
-            LOGGER.info(f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
             msg = "Set private notes to Off"
         else:
             msg = "Enter correct option"
@@ -314,7 +306,6 @@ async def priv_notes(_, m: Message):
     elif len(m.text.split()) == 1:
         curr_pref = db_settings.get_privatenotes(m.chat.id)
         msg = msg = f"Private Notes: {curr_pref}"
-        LOGGER.info(f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text("Check help on how to use this command!")
@@ -324,7 +315,6 @@ async def priv_notes(_, m: Message):
 
 @Gojo.on_message(command("notes") & filters.group & ~filters.bot)
 async def local_notes(c: Gojo, m: Message):
-    LOGGER.info(f"{m.from_user.id} listed all notes in {m.chat.id}")
     getnotes = db.get_all_notes(m.chat.id)
 
     if not getnotes:
@@ -372,7 +362,6 @@ async def clear_note(_, m: Message):
 
     note = m.text.split()[1].lower()
     getnote = db.rm_note(m.chat.id, note)
-    LOGGER.info(f"{m.from_user.id} cleared note ({note}) in {m.chat.id}")
     if not getnote:
         await m.reply_text("This note does not exist!")
         return
@@ -415,7 +404,6 @@ async def clearallnotes_callback(_, q: CallbackQuery):
         )
         return
     db.rm_all_notes(q.message.chat.id)
-    LOGGER.info(f"{user_id} removed all notes in {q.message.chat.id}")
     await q.message.edit_text("Cleared all notes!")
     return
 

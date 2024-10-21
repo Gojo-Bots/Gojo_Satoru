@@ -20,15 +20,9 @@ from Powers.utils.string import encode_decode
 
 async def get_all_sticker_packs(c: Gojo, user_id: int, st_type: str, offset: int = 1, limit: int = 25):
     packnum = 25 * (offset - 1)
-    if st_type == "norm":
-        st_ = "Static"
-    elif st_type == "vid":
-        st_ = "Video"
-    else:
-        st_ = "Animated"
-    txt = f"Here is your {st_} stickers that I have created:\nPage: {offset}\n"
+    txt = f"Here is your stickers pack that I have created:\nPage: {offset}\n\nNOTE: I may have kanged more sticker sets for you, but since last update I will no longer add stickers in those packs due to recent telegram update in bot api sorry."
     while True:
-        packname = f"CE{str(user_id)}{st_type}{packnum}_by_{c.me.username}"
+        packname = f"CE{str(user_id)}{packnum}_by_{c.me.username}"
         sticker_set = await get_sticker_set_by_name(c,packname)
         if not sticker_set and packnum == 0:
             txt, kb = None, None
@@ -39,55 +33,40 @@ async def get_all_sticker_packs(c: Gojo, user_id: int, st_type: str, offset: int
             packnum += 1
         else:
             page = await encode_decode(f"1_{user_id}")
-            if st_type == "norm":
-                st_kb = [
-                    [
-                        ikb("Video stickers", f"stickers_vid_{page}"),
-                        ikb("Animated stickers", f"stickers_ani_{page}"),
-                    ]
-                ]
-            elif st_type == "vid":
-                st_kb = [
-                    [
-                        ikb("Static stickers", f"stickers_norm_{page}"),
-                        ikb("Animated stickers", f"stickers_ani_{page}"),
-                    ]
-                ]
-            else:
-                st_kb = [
-                    [
-                        ikb("Static stickers", f"stickers_norm_{page}"),
-                        ikb("Video stickers", f"stickers_vid_{page}"),
-                    ]
-                ]
-
             b64_next = await encode_decode(f"{offset+1}_{user_id}")
             b64_prev = await encode_decode(f"{offset-1}_{user_id}")
 
             if (packnum > (packnum + limit - 1)) and offset >= 2:
                 kb = [
                     [
-                        ikb("Previous", f"stickers_{st_type}_{b64_prev}"),
-                        ikb("Next", f"stickers_{st_type}_{b64_next}")
+                        ikb("Previous", f"stickers_{b64_prev}"),
+                        ikb("Next", f"stickers_{b64_next}")
                     ],
                 ]
-                kb.extend(st_kb)
+            
             elif offset >= 2 and (packnum <= (packnum + limit - 1)):
                 kb = [
                     [
-                        ikb("Previous", f"stickers_{st_type}_{b64_prev}")
+                        ikb("Previous", f"stickers_{b64_prev}")
                     ],
                 ]
-                kb.extend(st_kb)
+            
             elif packnum > (packnum + limit - 1) and offset == 1:
                 kb = [
                     [
-                        ikb("Next", f"stickers_{st_type}_{b64_next}")
+                        ikb("Next", f"stickers_{b64_next}")
                     ],
                 ]
-                kb.extend(st_kb)
+            
             else:
-                kb = st_kb
+                kb = [
+                    [
+                        ikb(
+                            "Close ❌",
+                            callback_data="f_close"
+                        )
+                    ]
+                ]
             kb = ikm(kb)
             break
     
@@ -136,9 +115,7 @@ async def create_sticker_set(
             user_id=await client.resolve_peer(owner),
             title=title,
             short_name=short_name,
-            stickers=stickers,
-            animated=animated,
-            videos=video
+            stickers=stickers
         )
     )
 

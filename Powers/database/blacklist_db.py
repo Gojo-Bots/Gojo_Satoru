@@ -110,8 +110,6 @@ class Blacklist(MongoDB):
                 "reason": "Automated blacklisted word: {{}}",
             }
             self.insert_one(new_data)
-            LOGGER.info(
-                f"Initialized Blacklist Document for chat {self.chat_id}")
             return new_data
         return chat_data
 

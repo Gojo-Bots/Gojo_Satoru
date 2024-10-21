@@ -109,8 +109,6 @@ class Warns(MongoDB):
                 "num_warns": 0,
             }
             self.insert_one(new_data)
-            LOGGER.info(
-                f"Initialized Warn Document for {user_id} in {self.chat_id}")
             return new_data
         return chat_data
 
@@ -129,8 +127,6 @@ class WarnSettings(MongoDB):
             new_data = {"_id": self.chat_id,
                         "warn_mode": "none", "warn_limit": 3}
             self.insert_one(new_data)
-            LOGGER.info(
-                f"Initialized Warn Settings Document for {self.chat_id}")
             return new_data
         return chat_data
 

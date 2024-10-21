@@ -310,38 +310,37 @@ async def download_instareels(c: Gojo, m: Message):
     
     insta = INSTAGRAM(reel_)
 
-    if not insta.is_correct_link():
+    if not insta.is_correct_url():
         await m.reply_text("The link you have provided is not of instagram")
         return
 
     to_edit = await m.reply_text("Trying to fetch data from the link")
 
-    content = insta.get_all()
+    content = insta.get_media()
 
-    if type(content) == str:
-        await to_edit.edit_text(content)
+    if content["code"] == 69 or content["message"] != "success":
+        return await m.reply_text(content["message"])
+        
+    try:
+        medias = content["content"]["mediaUrls"]
+
+        to_delete = await to_edit.edit_text("Found media in the link trying to download and upload them please wait")
+
+        to_send = []
+        for media in medias: 
+            if media["type"] == "image":
+                to_send.append(InputMediaPhoto(media["url"]))
+            else:
+                to_send.append(InputMediaVideo(media["url"]))
+
+        await m.reply_media_group(to_send)
+        await to_delete.delete()
+        # shutil.rmtree("./scrapped/")
+    
+    except KeyError:
+        await to_edit.delete()
+        await m.reply_text("Failed to fetch any media from given url")
         return
-    elif not content:
-        await to_edit.edit_text("Failed to get any media from the link")
-
-    videos = content["video"]
-    images = content["image"]
-
-    to_delete = await to_edit.edit_text("Found media in the link trying to download and upload them please wait")
-
-    to_send = []
-    if images:
-        scrapped_images = SCRAP_DATA(images).get_images()
-        for i in scrapped_images:
-            to_send.append(InputMediaPhoto(i))
-    if videos:
-        scrapped_videos = SCRAP_DATA(videos).get_videos()
-        for i in scrapped_videos:
-            to_send.append(InputMediaVideo(i))
-
-    await m.reply_media_group(to_send)
-    await to_delete.delete()
-    shutil.rmtree("./scrapped/")
     
 
 __PLUGIN__ = "web support"

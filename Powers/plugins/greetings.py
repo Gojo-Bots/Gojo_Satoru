@@ -7,11 +7,10 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import ChannelPrivate, ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, Message
 
-from Powers import LOGGER
+from Powers import DEV_USERS, LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
-from Powers.supports import get_support_staff
 from Powers.utils.cmd_senders import send_cmd
 from Powers.utils.custom_filters import admin_filter, bot_admin_filter, command
 from Powers.utils.kbhelpers import ikb
@@ -19,12 +18,9 @@ from Powers.utils.msg_types import Types, get_wlcm_type
 from Powers.utils.parser import escape_markdown, mention_html
 from Powers.utils.string import (build_keyboard, escape_invalid_curly_brackets,
                                  parse_button)
-from Powers.vars import Config
 
 # Initialize
 gdb = GBan()
-
-DEV_USERS = get_support_staff("dev")
 
 ChatType = enums.ChatType
 
@@ -243,11 +239,7 @@ async def cleannnnn(_, m: Message):
 @Gojo.on_chat_member_updated(filters.group, group=69)
 async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
 
-    if (
-        member.new_chat_member
-        and member.new_chat_member.status not in {CMS.BANNED, CMS.LEFT, CMS.RESTRICTED}
-        and not member.old_chat_member
-    ):
+    if member.new_chat_member.status not in {CMS.BANNED, CMS.LEFT, CMS.RESTRICTED}:
         pass
     else:
         return
@@ -263,7 +255,7 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
             await c.send_animation(
                 chat_id=member.chat.id,
                 animation="./extras/william.gif",
-                caption="😳 My **DEV** has also joined the chat!",
+                caption=f"😳 My **DEV** {user.mention} has also joined the chat!",
             )
             return
         if banned_users:
@@ -345,11 +337,7 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
 @Gojo.on_chat_member_updated(filters.group, group=99)
 async def member_has_left(c: Gojo, member: ChatMemberUpdated):
 
-    if (
-        not member.new_chat_member
-        and member.old_chat_member.status not in {CMS.BANNED, CMS.RESTRICTED}
-        and member.old_chat_member
-    ):
+    if member.old_chat_member.status == CMS.LEFT:
         pass
     else:
         return
@@ -395,7 +383,7 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
         if user.id in DEV_USERS:
             await c.send_message(
                 member.chat.id,
-                "Will miss you master :(",
+                f"Will miss you my master {user.mention} :(",
             )
             return
         if not teks:
@@ -419,6 +407,8 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
             if ooo:
                 db.set_cleangoodbye_id(int(ooo.id))
             return
+        except ChannelPrivate:
+            pass
         except RPCError as e:
             LOGGER.error(e)
             LOGGER.error(format_exc(e))
@@ -551,8 +541,6 @@ async def goodbye(c: Gojo, m: Message):
             reply_markup=button,
         )
     return
-    return
-
 
 __PLUGIN__ = "greetings"
 __alt_name__ = ["welcome", "goodbye", "cleanservice"]

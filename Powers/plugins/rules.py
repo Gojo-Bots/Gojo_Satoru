@@ -1,5 +1,5 @@
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
+from pyrogram.types import CallbackQuery, Message
 
 from Powers import LOGGER
 from Powers.bot_class import Gojo
@@ -7,7 +7,6 @@ from Powers.database.rules_db import Rules
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.string import build_keyboard, parse_button
-from Powers.vars import Config
 
 
 @Gojo.on_message(command("rules") & filters.group)
@@ -16,7 +15,6 @@ async def get_rules(c: Gojo, m: Message):
     msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     rules = db.get_rules()
-    LOGGER.info(f"{m.from_user.id} fetched rules in {m.chat.id}")
     if m and not m.from_user:
         return
 
@@ -82,7 +80,6 @@ async def set_rules(_, m: Message):
         await m.reply_text("Rules are truncated to 3950 characters!")
 
     db.set_rules(rules)
-    LOGGER.info(f"{m.from_user.id} set rules in {m.chat.id}")
     await m.reply_text(text="Successfully set rules for this group.")
     return
 
@@ -99,11 +96,9 @@ async def priv_rules(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db.set_privrules(True)
-            LOGGER.info(f"{m.from_user.id} enabled privaterules in {m.chat.id}")
             msg = f"Private Rules have been turned <b>on</b> for chat <b>{m.chat.title}</b>"
         elif option in ("off", "no"):
             db.set_privrules(False)
-            LOGGER.info(f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
             msg = f"Private Rules have been turned <b>off</b> for chat <b>{m.chat.title}</b>"
         else:
             msg = "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
@@ -113,7 +108,6 @@ async def priv_rules(_, m: Message):
         msg = (
             f"Current Preference for Private rules in this chat is: <b>{curr_pref}</b>"
         )
-        LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.reply_text(text="Please check help on how to use this this command.")
@@ -147,7 +141,6 @@ async def clear_rules(_, m: Message):
 async def clearrules_callback(_, q: CallbackQuery):
     Rules(q.message.chat.id).clear_rules()
     await q.message.edit_text(text="Successfully cleared rules for this group!")
-    LOGGER.info(f"{q.from_user.id} cleared rules in {q.message.chat.id}")
     await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return
 

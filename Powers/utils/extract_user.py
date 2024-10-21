@@ -20,7 +20,7 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
         user_first_name = m.reply_to_message.from_user.first_name
         user_name = m.reply_to_message.from_user.username
 
-    elif len(m.text.split()) > 1:
+    elif len(m.command) > 1:
         if len(m.entities) > 1:
             required_entity = m.entities[1]
             if required_entity.type == entity.TEXT_MENTION:

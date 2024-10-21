@@ -9,16 +9,14 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID
+from Powers import DEV_USERS, LOGGER, MESSAGE_DUMP, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
-from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user
 from Powers.utils.extras import MUTE_GIFS
 from Powers.utils.parser import mention_html
 from Powers.utils.string import extract_time
-from Powers.vars import Config
 
 
 @Gojo.on_message(command("tmute") & restrict_filter)
@@ -39,12 +37,10 @@ async def tmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
 
     if user_id in SUPPORT_STAFF:
-        LOGGER.info(
-            f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
-        )
+        
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -87,7 +83,6 @@ async def tmute_usr(c: Gojo, m: Message):
             ChatPermissions(),
             mutetime,
         )
-        LOGGER.info(f"{m.from_user.id} tmuted {user_id} in {m.chat.id}")
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         muted = await mention_html(user_first_name, user_id)
         txt = f"Admin {admin} muted {muted}!"
@@ -153,11 +148,9 @@ async def dtmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if user_id in SUPPORT_STAFF:
-        LOGGER.info(
-            f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
-        )
+        
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -198,7 +191,6 @@ async def dtmute_usr(c: Gojo, m: Message):
             ChatPermissions(),
             mutetime,
         )
-        LOGGER.info(f"{m.from_user.id} dtmuted {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         muted = await mention_html(user_first_name, user_id)
@@ -262,11 +254,8 @@ async def stmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if user_id in SUPPORT_STAFF:
-        LOGGER.info(
-            f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
-        )
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -308,7 +297,6 @@ async def stmute_usr(c: Gojo, m: Message):
             ChatPermissions(),
             mutetime,
         )
-        LOGGER.info(f"{m.from_user.id} stmuted {user_id} in {m.chat.id}")
         await m.delete()
         if m.reply_to_message:
             await m.reply_to_message.delete()
@@ -356,11 +344,9 @@ async def mute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if user_id in SUPPORT_STAFF:
-        LOGGER.info(
-            f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
-        )
+        
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -380,7 +366,6 @@ async def mute_usr(c: Gojo, m: Message):
             user_id,
             ChatPermissions(),
         )
-        LOGGER.info(f"{m.from_user.id} muted {user_id} in {m.chat.id}")
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         muted = await mention_html(user_first_name, user_id)
         txt = f"Admin {admin} muted {muted}!"
@@ -442,12 +427,9 @@ async def smute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
 
     if user_id in SUPPORT_STAFF:
-        LOGGER.info(
-            f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
-        )
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -467,7 +449,6 @@ async def smute_usr(c: Gojo, m: Message):
             user_id,
             ChatPermissions(),
         )
-        LOGGER.info(f"{m.from_user.id} smuted {user_id} in {m.chat.id}")
         await m.delete()
         if m.reply_to_message:
             await m.reply_to_message.delete()
@@ -516,11 +497,8 @@ async def dmute_usr(c: Gojo, m: Message):
         return
 
 
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if user_id in SUPPORT_STAFF:
-        LOGGER.info(
-            f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
-        )
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -540,7 +518,6 @@ async def dmute_usr(c: Gojo, m: Message):
             user_id,
             ChatPermissions(),
         )
-        LOGGER.info(f"{m.from_user.id} dmuted {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         muted = await mention_html(user_first_name, user_id)
@@ -608,7 +585,6 @@ async def unmute_usr(c: Gojo, m: Message):
         LOGGER.exception(format_exc())
     try:
         await m.chat.unban_member(user_id)
-        LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
         admin = await mention_html(m.from_user.first_name, m.from_user.id)
         unmuted = await mention_html(user_first_name, user_id)
         await m.reply_text(text=f"Admin {admin} unmuted {unmuted}!")

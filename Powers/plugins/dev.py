@@ -16,15 +16,15 @@ from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
-from Powers import (BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER, MESSAGE_DUMP,
-                    OWNER_ID, UPTIME)
+from Powers import (BOT_TOKEN, DEV_USERS, LOG_DATETIME, LOGFILE, LOGGER,
+                    MESSAGE_DUMP, OWNER_ID, SUDO_USERS, UPTIME,
+                    WHITELIST_USERS)
 from Powers.bot_class import Gojo
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
 from Powers.database.support_db import SUPPORTS
 from Powers.database.users_db import Users
 from Powers.plugins.scheduled_jobs import clean_my_db
-from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -80,6 +80,12 @@ async def add_support(c: Gojo, m:Message):
                 return
             else:
                 support.insert_support_user(userr,to)
+                if to == "dev":
+                    DEV_USERS.add(userr)
+                elif to == "sudo":
+                    SUDO_USERS.add(userr)
+                else:
+                    WHITELIST_USERS.add(userr)
                 await m.reply_text(f"This user is now a {to} user")
                 return
         can_do = can_change_type(curr_user,to)
@@ -196,6 +202,9 @@ async def rm_support(c: Gojo, m: Message):
     can_user = can_change_type(curr_user,to_user)
     if m.from_user.id == int(OWNER_ID) or can_user:
         support.delete_support_user(curr)
+        DEV_USERS.discard(curr)
+        SUDO_USERS.discard(curr)
+        WHITELIST_USERS.discard(curr)
         await m.reply_text("Done! User now no longer belongs to the support staff")
     else:
         await m.reply_text("Sorry you can't do that...")
@@ -203,7 +212,6 @@ async def rm_support(c: Gojo, m: Message):
 
 @Gojo.on_message(command("ping", sudo_cmd=True))
 async def ping(_, m: Message):
-    LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
     start = time()
     replymsg = await m.reply_text(text="Pinging...", quote=True)
     delta_ping = time() - start
@@ -386,6 +394,10 @@ async def evaluate_code(c: Gojo, m: Message):
                 MESSAGE_DUMP,
                 f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
             )
+            final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
+            await sm.edit(final_output)
+            return
+
     for j in HARMFUL:
         if j in evaluation.split() or j in cmd:
             if m.from_user.id != OWNER_ID:
@@ -393,6 +405,9 @@ async def evaluate_code(c: Gojo, m: Message):
                 await c.send_message(
                     MESSAGE_DUMP,
                     f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}")
+                final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
+                await sm.edit(final_output)
+                return
     for i in evaluation.split():
         for j in i.split("="):
             if j and j[0] in HARMFUL:
@@ -402,10 +417,12 @@ async def evaluate_code(c: Gojo, m: Message):
                         MESSAGE_DUMP,
                         f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}"
                     )
-      
+                    final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
+                    await sm.edit(final_output)
+                    return
 
     try:
-        final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```python\n{evaluation}```</code> \n"
+        final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
         await sm.edit(final_output)
     except MessageTooLong:
         final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"

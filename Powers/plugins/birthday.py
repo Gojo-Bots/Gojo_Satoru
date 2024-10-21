@@ -125,7 +125,7 @@ async def who_is_next(c: Gojo, m: Message):
     if m.chat.type == ChatType.PRIVATE:
         await m.reply_text("Use it in group")
         return
-    curr = datetime.now(TIME_ZONE).date()
+    curr = datetime.now().date()
     xx = await m.reply_text("📆")
     users = []
     if blist:
@@ -173,7 +173,7 @@ async def cant_recall_it(c: Gojo, m: Message):
         await m.reply_text(f"Got an error\n{e}")
         return
     
-    curr = datetime.now(TIME_ZONE).date() 
+    curr = datetime.now().date() 
     u_dob = give_date(result["dob"])
     formatted = str(u_dob.strftime('%d' + '%B %Y'))[2:-5]
     day = int(result["dob"].split('/')[0])
@@ -182,7 +182,7 @@ async def cant_recall_it(c: Gojo, m: Message):
     if (u_dob.day,u_dob.month) < (curr.day,curr.month):
         next_b = date(curr.year + 1, u_dob.month, u_dob.day)
         days_left = (next_b - curr).days
-        txt = f"{men} 's birthday is passed 🫤\nDays left until next one {days_left}"
+        txt = f"{men} 's birthday is passed 🫤\nDays left until next one {abs(days_left)}"
         txt += f"\nBirthday on: {bday_on}"
         txt += f"\n\nDate of birth: {result['dob']}"
     elif (u_dob.day,u_dob.month) == (curr.day,curr.month):
@@ -190,7 +190,7 @@ async def cant_recall_it(c: Gojo, m: Message):
     else:
         u_dobm = date(curr.year, u_dob.month, u_dob.day)
         days_left = (u_dobm - curr).days
-        txt = f"User's birthday is coming🥳\nDays left : {days_left}"
+        txt = f"User's birthday is coming🥳\nDays left: {abs(days_left)}"
         txt += f"\nBirthday on: {bday_on}"
         txt += f"\n\nDate of birth: {result['dob']}"
     txt+= "\n\n**NOTE**:\nDOB may be wrong if user haven't entered his/her birth year"
@@ -218,7 +218,7 @@ async def chat_birthday_settings(c: Gojo, m: Message):
     await m.reply_text("Do you want to wish members for their birthday in the group?",reply_markup=kb)
     return
 
-@Gojo.on_callback_query(filters.regex("^switchh_"))
+@Gojo.on_callback_query(filters.regex(r"^switchh_(yes|no)$"))
 async def switch_on_off(c:Gojo, q: CallbackQuery):
     user = (await q.message.chat.get_member(q.from_user.id)).status
     await q.message.chat.get_member(q.from_user.id)
@@ -227,11 +227,11 @@ async def switch_on_off(c:Gojo, q: CallbackQuery):
         return
     data = q.data.split("_")[1]
     chats = q.message.chat.id
-    xXx = {"chat_id":chats}
+    query = {"chat_id":chats}
     if data == "yes":
-        bday_cinfo.delete_one(xXx)
+        bday_cinfo.delete_one(query)
     elif data == "no":
-        bday_cinfo.insert_one(xXx)
+        bday_cinfo.insert_one(query)
     await q.edit_message_text(f"Done! I will {'wish' if data == 'yes' else 'not wish'}",reply_markup=IKM([[IKB("Close", "f_close")]]))
     return
 

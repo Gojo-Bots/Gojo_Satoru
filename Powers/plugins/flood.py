@@ -11,13 +11,11 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import LOGGER
+from Powers import DEV_USERS, LOGGER, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.flood_db import Floods
-from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, command, flood_filter
 from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
-from Powers.vars import Config
 
 on_key = ["on", "start", "disable"]
 off_key = ["off", "end", "enable", "stop"]
@@ -230,7 +228,7 @@ async def flood_set(c: Gojo, m: Message):
 
 @Gojo.on_callback_query(filters.regex("^f_"))
 async def callbacks(c: Gojo, q: CallbackQuery):
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     data = q.data
     if data == "f_close":
         await q.answer("Closed")
@@ -352,7 +350,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
     action = data[1]
     user_id = int(q.data.split("=")[1])
-    SUPPORT_STAFF = get_support_staff()
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if not q.from_user:
         return q.answer("Looks like you are not an user 👀")
     if action == "ban":
@@ -572,13 +570,13 @@ async def flood_watcher(c: Gojo, m: Message):
                 
             elif action == "kick":
                 try:
-                    await m.chat.ban_member(u_id)
+                    await m.chat.ban_member(u_id, datetime.now()+timedelta(seconds=10))
                     txt = "Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: kicked\nReason: Spaming"
                     await m.reply_animation(
                         animation=str(choice(KICK_GIFS)),
                         caption=txt,
                     )
-                    await m.chat.unban_member(u_id)
+                    await m.chat.unban_member(m.from_user.id)
                     dic[c_id][u_id][1].clear()
                     dic[c_id][u_id][0].clear()
                     return

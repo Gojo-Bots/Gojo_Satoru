@@ -24,7 +24,15 @@ class Filters(MongoDB):
             # Database update
             curr = self.find_one({"chat_id": chat_id, "keyword": keyword})
             if curr:
-                return False
+                self.update(
+                    {"chat_id": chat_id, "keyword": keyword},
+                    {
+                        "filter_reply": filter_reply,
+                        "msgtype": msgtype,
+                        "fileid": fileid
+                    }
+                )
+                return
             return self.insert_one(
                 {
                     "chat_id": chat_id,
