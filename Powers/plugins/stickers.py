@@ -1,5 +1,4 @@
 import os
-from asyncio import gather
 from random import choice
 from traceback import format_exc
 
@@ -376,6 +375,66 @@ async def get_my_sticker_sets(c: Gojo, m: Message):
         return
     await m.reply_text(txt, reply_markup=kb)
 
+@Gojo.on_message(command("q"))
+async def quote_the_msg(_, m: Message):
+    if not m.reply_to_message:
+        await m.reply_text("Reply to a message to quote it")
+        return
+
+    to_edit = await m.reply_text("Genrating quote...")
+
+    msg_data = []
+    if len(m.command) > 1:
+        reply_msg = m.reply_to_message.reply_to_message
+        if not reply_msg:
+            reply_message = {}
+        elif reply_msg and not reply_msg.text:
+            reply_message = {}
+        else:
+            to_edit = await to_edit.edit_text("Genrating quote with reply to the message...")
+            replied_name = reply_msg.from_user.first_name
+            if reply_msg.from_user.last_name:
+                replied_name += f" {reply_msg.from_user.last_name}"
+
+            reply_message = {
+                "chatId": reply_msg.from_user.id,
+                "entities": get_msg_entities(reply_msg),
+                "name": replied_name,
+                "text": reply_msg.text,
+            }
+
+    name = m.reply_to_message.from_user.first_name
+    if m.reply_to_message.from_user.last_name:
+        name += f" {m.reply_to_message.from_user.last_name}"
+
+    emoji_status = None
+    if m.reply_to_message.from_user.emoji_status:
+        emoji_status = str(m.reply_to_message.from_user.emoji_status.custom_emoji_id)
+
+    msg_data.append(
+        {
+            "entities": get_msg_entities(m.reply_to_message),
+            "avatar": True,
+            "from": {
+                "id": m.reply_to_message.from_user.id,
+                "name": name,
+                "emoji_status": emoji_status,
+            },
+            "text": m.reply_to_message.text,
+            "replyMessage": reply_message,
+        }
+    )
+
+    status, path = quotify(msg_data)
+
+    if not status:
+        await to_edit.edit_text(path)
+        return
+
+    await m.reply_sticker(path)
+    await to_edit.delete()
+    os.remove(path)
+
 @Gojo.on_callback_query(filters.regex(r"^stickers_.*"))
 async def sticker_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
@@ -408,11 +467,10 @@ __HELP__ = """
 • /getsticker (/getst) : Get sticker as photo, gif or vice versa.
 • /stickerid (/stid) : Reply to any sticker to get it's id
 • /mypacks : Get all of your current sticker pack you have made via me.
+• /q <reply to message> : Will quote the replied message
+• /q r <reply to message> : Will quote the replied message and message it was replied to.
 • /mmf <your text>: Reply to a normal sticker or a photo or video file to memify it. If you want to right text at bottom use `;right your message`
     ■ For e.g. 
-    ○ /mmf Hello freinds : this will add text to the top
-    ○ /mmf Hello ; freinds : this will add Hello to the top and freinds at the bottom
-    ○ /mmf ; Hello friends : this will add text at the bottom
     ○ /mmfb <text>: To fill text with black colour
     ○ /mmfw or /mmf <text>: To fill it with white colour
 

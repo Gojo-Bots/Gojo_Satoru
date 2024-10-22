@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import math
 import os
 import shlex
@@ -6,6 +7,7 @@ import textwrap
 from time import time
 from typing import List, Tuple
 
+import requests
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import errors, raw
 from pyrogram.file_id import FileId
@@ -17,6 +19,45 @@ from unidecode import unidecode
 from Powers.bot_class import Gojo
 from Powers.utils.string import encode_decode
 
+
+def quotify(msg_info: List[dict]) -> Tuple[bool, str]:
+    json = {
+        "type": "quote",
+        "format": "webp",
+        "backgroundColor": "#000000",
+        "width": 512,
+        "height": 768,
+        "scale": 2,
+        "messages": msg_info,
+    }
+
+    try:
+        response = requests.post("https://bot.lyo.su/quote/generate", json=json).json()
+        image = base64.b64decode(str(response["result"]["image"]).encode("utf-8"))
+
+        file_name = f"Quote_{int(time())}.webp"
+        with open(file_name, "wb") as f:
+            f.write(image)
+
+        return True, file_name
+    except Exception as e:
+        return False, str(e)
+
+
+def get_msg_entities(m: Message) -> List[dict]:
+    entities = []
+
+    if m.entities:
+        for entity in m.entities:
+            entities.append(
+                {
+                    "type": entity.type.name.lower(),
+                    "offset": entity.offset,
+                    "length": entity.length,
+                }
+            )
+
+    return entities
 
 async def get_all_sticker_packs(c: Gojo, user_id: int, st_type: str, offset: int = 1, limit: int = 25):
     packnum = 25 * (offset - 1)
