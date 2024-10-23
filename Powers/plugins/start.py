@@ -18,9 +18,8 @@ from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_html
-from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb,
-                                      get_private_note, get_private_rules,
-                                      iter_msg)
+from Powers.utils.start_utils import (gen_cmds_kb, gen_start_kb, get_help_msg,
+                                      get_private_note, get_private_rules)
 from Powers.utils.string import encode_decode
 
 
@@ -82,7 +81,7 @@ async def start(c: Gojo, m: Message):
                 await get_private_rules(c, m, help_option)
                 return
 
-            help_msg, help_kb = await iter_msg(c, m, help_option)
+            help_msg, help_kb = await get_help_msg(c, m, help_option)
 
             if not help_msg:
                 return
@@ -216,7 +215,7 @@ async def help_menu(c: Gojo, m: Message):
     if len(m.text.split()) >= 2:
         textt = m.text.replace(" ", "_",).replace("_", " ", 1)
         help_option = (textt.split(None)[1]).lower()
-        help_msg, help_kb = await iter_msg(c, m, help_option)
+        help_msg, help_kb = await get_help_msg(c, m, help_option)
 
         if not help_msg:
             LOGGER.error(

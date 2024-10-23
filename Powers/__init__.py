@@ -97,7 +97,7 @@ if Config.GENIUS_API_TOKEN:
     genius_lyrics.verbose = False
     LOGGER.info("Client setup complete")
 elif not Config.GENIUS_API_TOKEN:
-    LOGGER.error("Genius api not found lyrics command will not work")
+    LOGGER.info("Genius api not found lyrics command will not work")
     is_genius_lyrics = False
     genius_lyrics = False
 
