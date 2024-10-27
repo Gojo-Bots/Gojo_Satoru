@@ -1,7 +1,7 @@
 from datetime import datetime
 from random import choice
 
-from pyrogram import filters
+from pyrogram import ContinuePropagation, filters
 from pyrogram.enums import ParseMode as PM
 from pyrogram.types import Message
 
@@ -67,7 +67,7 @@ async def get_hours(hour:str):
     return txt
 
 
-@Gojo.on_message(afk_filter)
+@Gojo.on_message(afk_filter & filters.group, 10000)
 async def afk_checker(c: Gojo, m: Message):
     afk = AFK()
     back_ = choice(back)
@@ -128,7 +128,7 @@ async def afk_checker(c: Gojo, m: Message):
             pass
 
         if txt and txt in ["afk","brb"]:
-            return
+            raise ContinuePropagation
         else:
             con = afk.get_afk(chat,user)
             time = till_date(con["time"])
@@ -142,7 +142,7 @@ async def afk_checker(c: Gojo, m: Message):
             txt = back_.format(first=m.from_user.mention) + f"\n\nAfk for: {tims}"
             await m.reply_text(txt)
         afk.delete_afk(chat,user)
-    return
+    raise ContinuePropagation
 
 __PLUGIN__ = "afk"
 
@@ -156,6 +156,3 @@ __HELP__ = """
 
 `reply to a message` can be any media or text
 """
-
-
-    

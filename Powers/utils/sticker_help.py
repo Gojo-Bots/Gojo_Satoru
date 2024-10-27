@@ -59,7 +59,7 @@ def get_msg_entities(m: Message) -> List[dict]:
 
     return entities
 
-async def get_all_sticker_packs(c: Gojo, user_id: int, st_type: str, offset: int = 1, limit: int = 25):
+async def get_all_sticker_packs(c: Gojo, user_id: int, offset: int = 1, limit: int = 25):
     packnum = 25 * (offset - 1)
     txt = f"Here is your stickers pack that I have created:\nPage: {offset}\n\nNOTE: I may have kanged more sticker sets for you, but since last update I will no longer add stickers in those packs due to recent telegram update in bot api sorry."
     while True:

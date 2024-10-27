@@ -1,7 +1,7 @@
-import json
+import math
 import os
+import time
 from traceback import format_exc
-from urllib import parse
 
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
@@ -15,6 +15,70 @@ from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import resize_file_to_sticker_size
 
 backUP = "https://artfiles.alphacoders.com/160/160160.jpeg"
+
+def readable_time(seconds: int) -> str:
+    count = 0
+    out_time = ""
+    time_list = []
+    time_suffix_list = ["secs", "mins", "hrs", "days"]
+
+    while count < 4:
+        count += 1
+        remainder, result = divmod(seconds, 60) if count < 3 else divmod(seconds, 24)
+        if seconds == 0 and remainder == 0:
+            break
+        time_list.append(int(result))
+        seconds = int(remainder)
+
+    for x in range(len(time_list)):
+        time_list[x] = str(time_list[x]) + time_suffix_list[x]
+
+    if len(time_list) == 4:
+        out_time += time_list.pop() + ", "
+
+    time_list.reverse()
+    out_time += " ".join(time_list)
+
+    return out_time or "0 secs"
+
+
+def humanbytes(size: int):
+    if not size:
+        return ""
+    power = 2**10
+    number = 0
+    dict_power_n = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
+    while size > power:
+        size /= power
+        number += 1
+    return str(round(size, 2)) + " " + dict_power_n[number] + "B"
+
+async def progress(
+    current: int, total: int, message: Message, start: float, process: str
+):
+    now = time.time()
+    diff = now - start
+    if round(diff % 10.00) == 0 or current == total:
+        percentage = current * 100 / total
+        speed = current / diff
+        elapsed_time = round(diff) * 1000
+        complete_time = round((total - current) / speed) * 1000
+        estimated_total_time = elapsed_time + complete_time
+        progress_str = "**[{0}{1}] : {2}%\n**".format(
+            "".join(["●" for i in range(math.floor(percentage / 10))]),
+            "".join(["○" for i in range(10 - math.floor(percentage / 10))]),
+            round(percentage, 2),
+        )
+        msg = (
+            progress_str
+            + "__{0}__ **𝗈𝖿** __{1}__\n**𝖲𝗉𝖾𝖾𝖽:** __{2}/s__\n**𝖤𝖳𝖠:** __{3}__".format(
+                humanbytes(current),
+                humanbytes(total),
+                humanbytes(speed),
+                readable_time(estimated_total_time / 1000),
+            )
+        )
+        await message.edit_text(f"**{process} ...**\n\n{msg}")
 
 
 async def get_file_size(file: Message):
@@ -94,8 +158,11 @@ async def song_search(query, max_results=1):
                 "duration": i["accessibility"]['duration'],
                 "DURATION": i["duration"],
                 "published": i["publishedTime"],
-                "uploader": i["channel"]["name"]
             }
+            try:
+                dict_form["uploader"] = i["channel"]["name"]
+            except:
+                dict_form["uploader"] = "Captain D. Ezio"
             try:
                 thumb = {"thumbnail": i["thumbnails"][0]["url"]}
             except Exception:
@@ -159,6 +226,7 @@ async def youtube_downloader(c: Gojo, m: Message, query: str, is_direct: bool, t
 
 Downloaded by: @{c.me.username}
 """
+    upload_text = f"**⬆️ 𝖴𝗉𝗅𝗈𝖺𝖽𝗂𝗇𝗀 {'audio' if song else 'video'}** \\**⚘ 𝖳𝗂𝗍𝗅𝖾:** `{f_name[:50]}`\n*⚘ 𝖢𝗁𝖺𝗇𝗇𝖾𝗅:** `{uploader}`"
     kb = IKM(
         [
             [
@@ -170,11 +238,13 @@ Downloaded by: @{c.me.username}
         ]
     )
     if song:
+        msg = await m.reply_text(upload_text)
         audio_stream = yt.streams.filter(only_audio=True).first()
         f_path = audio_stream.download()
         file_path = f"{youtube_dir}{f_name.strip()}.mp3"
         os.rename(f_path, file_path)
-        await m.reply_audio(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, title=f_name,performer=uploader)
+
+        await m.reply_audio(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, title=f_name,performer=uploader, progress=progress, progress_args=(msg, time.time(), upload_text))
         os.remove(file_path)
         os.remove(thumb)
         return
@@ -183,7 +253,7 @@ Downloaded by: @{c.me.username}
         file_path = video_stream.download()
         new_file_path = f"{youtube_dir}{f_name}.mp4"
         os.rename(file_path, new_file_path)
-        await m.reply_video(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb)
+        await m.reply_video(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, progress=progress, progress_args=(msg, time.time(), upload_text))
         os.remove(new_file_path)
         os.remove(thumb)
         return

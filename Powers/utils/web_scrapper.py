@@ -222,5 +222,5 @@ class INSTAGRAM:
             return response
         except Exception as e:
             LOGGER.error(e)
-            LOGGER.error(format_exc(e))
+            LOGGER.error(format_exc())
             return {"code": 69, "message": e}

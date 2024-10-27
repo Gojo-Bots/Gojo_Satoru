@@ -79,10 +79,13 @@ async def kang(c:Gojo, m: Message):
         sticker_emoji = str(args[1])
     elif m.reply_to_message.sticker:
         try:
-          sticker_emoji = m.reply_to_message.sticker.emoji
+            sticker_emoji = m.reply_to_message.sticker.emoji
+            if not sticker_emoji:
+                ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
+                sticker_emoji = choice(ran)
         except Exception:
-          ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
-          sticker_emoji = choice(ran)
+            ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
+            sticker_emoji = choice(ran)
     else:
         edit = await msg.reply_text("No emoji provided choosing a random emoji")
         ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
@@ -147,7 +150,7 @@ async def kang(c:Gojo, m: Message):
 
     try:
         while not packname_found:
-            packname = f"CE{str(m.from_user.id)}{packnum}_by_{c.me.username}"
+            packname = f"CE{m.from_user.id}{packnum}_by_{c.me.username}"
             kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {('vOl '+str(volume)) if volume else ''} by @{c.me.username}"
             if limit >= 50: # To prevent this loop from running forever
                 await m.reply_text("Failed to kang\nMay be you have made more than 50 sticker packs with me try deleting some")
@@ -160,7 +163,7 @@ async def kang(c:Gojo, m: Message):
                         owner=m.from_user.id,
                         title=kangpack,
                         short_name=packname,
-                        stickers=[sticker],
+                        stickers=[sticker]
                     )
                 except StickerEmojiInvalid:
                     return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
@@ -170,6 +173,7 @@ async def kang(c:Gojo, m: Message):
                 volume += 1
                 continue
             try:
+                print(sticker_set)
                 await add_sticker_to_set(c,sticker_set,sticker)
                 packname_found = True
             except StickerEmojiInvalid:
@@ -375,7 +379,7 @@ async def get_my_sticker_sets(c: Gojo, m: Message):
         return
     await m.reply_text(txt, reply_markup=kb)
 
-@Gojo.on_message(command("q"))
+@Gojo.on_message(command(["q", "ss"]))
 async def quote_the_msg(_, m: Message):
     if not m.reply_to_message:
         await m.reply_text("Reply to a message to quote it")
@@ -384,7 +388,7 @@ async def quote_the_msg(_, m: Message):
     to_edit = await m.reply_text("Genrating quote...")
 
     msg_data = []
-    if len(m.command) > 1:
+    if len(m.command) > 1 and m.command[1].lower() == "r":
         reply_msg = m.reply_to_message.reply_to_message
         if not reply_msg:
             reply_message = {}
@@ -402,7 +406,8 @@ async def quote_the_msg(_, m: Message):
                 "name": replied_name,
                 "text": reply_msg.text,
             }
-
+    else:
+        reply_message = {}
     name = m.reply_to_message.from_user.first_name
     if m.reply_to_message.from_user.last_name:
         name += f" {m.reply_to_message.from_user.last_name}"
@@ -467,8 +472,8 @@ __HELP__ = """
 • /getsticker (/getst) : Get sticker as photo, gif or vice versa.
 • /stickerid (/stid) : Reply to any sticker to get it's id
 • /mypacks : Get all of your current sticker pack you have made via me.
-• /q <reply to message> : Will quote the replied message
-• /q r <reply to message> : Will quote the replied message and message it was replied to.
+• /q(/ss) <reply to message> : Will quote the replied message
+• /q(/ss) r <reply to message> : Will quote the replied message and message it was replied to.
 • /mmf <your text>: Reply to a normal sticker or a photo or video file to memify it. If you want to right text at bottom use `;right your message`
     ■ For e.g. 
     ○ /mmfb <text>: To fill text with black colour

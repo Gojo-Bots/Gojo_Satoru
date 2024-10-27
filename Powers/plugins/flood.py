@@ -390,7 +390,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
         return
 
 dic = {}
-@Gojo.on_message(flood_filter & ~admin_filter)
+@Gojo.on_message(flood_filter & ~admin_filter, 18)
 async def flood_watcher(c: Gojo, m: Message):
     c_id = m.chat.id
     

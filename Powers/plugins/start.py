@@ -10,7 +10,7 @@ from pyrogram.errors import (MediaCaptionTooLong, MessageNotModified,
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
-from Powers import (DEV_USERS, HELP_COMMANDS, LOGGER, OWNER_ID,
+from Powers import (DEV_USERS, HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER,
                     PYROGRAM_VERSION, PYTHON_VERSION, SUDO_USERS, UPTIME,
                     VERSION, WHITELIST_USERS)
 from Powers.bot_class import Gojo
@@ -192,7 +192,7 @@ Commands available:
 × /start: Start the bot
 × /help: Give's you this message.
 
-You can use `$` and `!` in placec of `/` as your prefix handler
+You can use {", ".join(PREFIX_HANDLER)} as your prefix handler
 """
 
         await q.edit_message_caption(

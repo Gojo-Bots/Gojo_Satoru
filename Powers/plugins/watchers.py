@@ -168,7 +168,7 @@ async def bl_watcher(_, m: Message):
 
 
 
-@Gojo.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group)
+@Gojo.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group, 5)
 async def gban_watcher(c: Gojo, m: Message):
     from Powers import SUPPORT_GROUP
     

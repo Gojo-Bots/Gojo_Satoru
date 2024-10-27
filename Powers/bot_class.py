@@ -1,6 +1,7 @@
 from platform import python_version
 from threading import RLock
-from time import gmtime, strftime, time
+from time import gmtime, strftime
+from time import time as t
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
@@ -90,24 +91,22 @@ class Gojo(Client):
 
     async def stop(self):
         """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
-        runtime = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
+        runtime = strftime("%Hh %Mm %Ss", gmtime(t() - UPTIME))
         LOGGER.info("Uploading logs before stopping...!\n")
         # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
+        scheduler.remove_all_jobs()
+        if MESSAGE_DUMP:
+            # LOG_CHANNEL is not necessary
+            target = MESSAGE_DUMP
+        else:
+            target = OWNER_ID
         await self.send_document(
-            MESSAGE_DUMP,
+            target,
             document=LOGFILE,
             caption=(
                 "Bot Stopped!\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
             ),
         )
-        scheduler.remove_all_jobs()
-        if MESSAGE_DUMP:
-            # LOG_CHANNEL is not necessary
-            await self.send_document(
-                MESSAGE_DUMP,
-                document=LOGFILE,
-                caption=f"Uptime: {runtime}",
-            )
         await super().stop()
         MongoDB.close()
         LOGGER.info(

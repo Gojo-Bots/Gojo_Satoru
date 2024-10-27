@@ -553,7 +553,7 @@ async def stop_and_send_logger(c:Gojo,is_update=False):
         )
     return
 
-@Gojo.on_message(command(["restart", "update"], owner_cmd=True),group=-100)
+@Gojo.on_message(command(["restart", "update"], owner_cmd=True))
 async def restart_the_bot(c:Gojo,m:Message):
     try:
         cmds = m.command

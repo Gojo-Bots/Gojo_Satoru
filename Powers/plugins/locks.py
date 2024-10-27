@@ -498,7 +498,7 @@ async def servicess(c: Gojo, m: Message):
     return
 
 
-@Gojo.on_message(filters.group & ~filters.me, 18)
+@Gojo.on_message(filters.group & ~filters.me, 3)
 async def lock_del_mess(c: Gojo, m: Message):
     lock = LOCKS()
     chat_locks = lock.get_lock_channel(m.chat.id)

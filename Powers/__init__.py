@@ -5,7 +5,6 @@ from logging import (INFO, WARNING, FileHandler, StreamHandler, basicConfig,
                      getLogger)
 from os import environ, listdir, mkdir, path
 from platform import python_version
-from random import choice
 from sys import exit as sysexit
 from sys import stdout, version_info
 from time import time
@@ -52,7 +51,8 @@ if version_info[0] < 3 or version_info[1] < 7:
 
 # the secret configuration specific things
 try:
-    if environ.get("ENV"):
+    from Powers.vars import is_env
+    if is_env or environ.get("ENV"):
         from Powers.vars import Config
     else:
         from Powers.vars import Development as Config

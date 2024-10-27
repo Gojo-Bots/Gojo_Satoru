@@ -28,19 +28,16 @@ def command(
 ):
     async def func(flt, c: Gojo, m: Message):
         if not m:
-            return
+            return False
 
         date = m.edit_date
         if date:
-            return  # reaction
+            return  False # reaction
 
         if m.chat and m.chat.type == ChatType.CHANNEL:
-            return
+            return False
 
-        if m.chat.is_admin:
-            return True #anon admins and admin using send as chat
-
-        if m and not m.from_user:
+        if m and not (m.from_user or m.chat.is_admin):
             return False
 
         if m.from_user.is_bot:
@@ -334,19 +331,10 @@ async def afk_check_filter(_, __, m: Message):
     afk = AFK()
     user = m.from_user.id
     chat = m.chat.id
-    repl = m.reply_to_message
-
-    if repl and repl.from_user:
-        rep_user = repl.from_user.id
-    else:
-        rep_user = False
 
     is_afk = afk.check_afk(chat, user)
-    is_rep_afk = False
-    if rep_user:
-        is_rep_afk = afk.check_afk(chat, rep_user)
 
-    if not is_rep_afk and not is_afk:
+    if not is_afk:
         return False
     else:
         return True
