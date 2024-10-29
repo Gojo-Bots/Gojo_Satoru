@@ -239,7 +239,7 @@ async def cleannnnn(_, m: Message):
 @Gojo.on_chat_member_updated(filters.group, group=69)
 async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
 
-    if member.new_chat_member.status not in {CMS.BANNED, CMS.LEFT, CMS.RESTRICTED}:
+    if member.old_chat_member.status not in {CMS.MEMBER, CMS.OWNER, CMS.ADMINISTRATOR}:
         pass
     else:
         return
@@ -337,7 +337,7 @@ async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
 @Gojo.on_chat_member_updated(filters.group, group=99)
 async def member_has_left(c: Gojo, member: ChatMemberUpdated):
 
-    if member.old_chat_member.status == CMS.LEFT:
+    if member.old_chat_member.status not in [CMS.LEFT, CMS.BANNED, CMS.RESTRICTED]:
         pass
     else:
         return

@@ -34,7 +34,7 @@ from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
 #         await m.reply_text("Reply to a video or audio file")
 #         return
 #     try:
-#         XnX = await m.reply_text("⏳")
+#         to_edit = await m.reply_text("⏳")
 #         URL = "https://api.audd.io/"
 #         sizee = (await get_file_size(reply)).split()
 #         if (int(sizee[0]) <= 30 and sizee[1] == "mb") or sizee[1] == "kb":
@@ -55,10 +55,10 @@ from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
 #         #     }
 #         #    result = resp_post(URL,data=BASE_AUDD)
 #         else:
-#             await XnX.edit_text("File size too big\nI can only fetch file of size upto 30 mbs for now")
+#             await to_edit.edit_text("File size too big\nI can only fetch file of size upto 30 mbs for now")
 #             return
 #         if result.status_code != 200:
-#             await XnX.edit_text(f"{result.status_code}:{result.text}")
+#             await to_edit.edit_text(f"{result.status_code}:{result.text}")
 #             return
 #         result = result.json()
 #         data = result["result"]
@@ -93,11 +93,11 @@ from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
 #         if is_genius_lyrics:
 #             g_k = [IKB("📝 Lyrics",f"lyrics_{Title}:{Artist}")]
 #             kb.append(g_k)
-#         await XnX.delete()
+#         await to_edit.delete()
 #         os.remove(fpath)
 #         await m.reply_photo(photo,caption=cap,reply_markup=IKM(kb))
 #     except Exception as e:
-#         await XnX.delete()
+#         await to_edit.delete()
 #         await m.reply_text(f"Error\n{e}")
 #         try:
 #             os.remove(fpath)
@@ -209,7 +209,7 @@ async def remove_background(c: Gojo, m: Message):
     elif reply.sticker and (reply.sticker.is_video or reply.sticker.is_animated):
         await m.reply_text("Reply to normal sticker to remove it's background")
         return
-    XnX = await m.reply_text("⏳")
+    to_edit = await m.reply_text("⏳")
     URL = "https://api.remove.bg/v1.0/removebg"
     if reply.sticker:
         filee = await reply.download()
@@ -220,7 +220,7 @@ async def remove_background(c: Gojo, m: Message):
     Data = {'size':'auto'}
     Headers = {'X-Api-Key':RMBG}
     result = resp_post(URL,files=finfo,data=Data,headers=Headers)
-    await XnX.delete()
+    await to_edit.delete()
     contentType = result.headers.get("content-type")
     if result.status_code != 200:
         await m.reply_text(f"{result.status_code}:{result.text}")
@@ -260,16 +260,16 @@ async def song_down_up(c: Gojo, m: Message):
         query = splited
     else:
         query = _id
-    XnX = await m.reply_text("⏳")
+    to_edit = await m.reply_text("⏳")
     try:
         await youtube_downloader(c,m,query, "a")
-        await XnX.delete()
+        await to_edit.delete()
         return
     except KeyError:
-        await XnX.edit_text(f"Failed to find any result")
+        await to_edit.edit_text(f"Failed to find any result")
         return
     except Exception as e:
-        await XnX.edit_text(f"Got an error\n{e}")
+        await to_edit.edit_text(f"Got an error\n{e}")
         LOGGER.error(e)
         LOGGER.error(format_exc())
         return
@@ -286,16 +286,16 @@ async def video_down_up(c: Gojo, m: Message):
         query = splited
     else:
         query = _id
-    XnX = await m.reply_text("⏳")
+    to_edit = await m.reply_text("⏳")
     try:
         await youtube_downloader(c,m,query,"v")
-        await XnX.delete()
+        await to_edit.delete()
         return
     except KeyError:
-        await XnX.edit_text(f"Failed to find any result")
+        await to_edit.edit_text(f"Failed to find any result")
         return
     except Exception as e:
-        await XnX.edit_text(f"Got an error\n{e}")
+        await to_edit.edit_text(f"Got an error\n{e}")
         LOGGER.error(e)
         LOGGER.error(format_exc())
         return

@@ -436,8 +436,11 @@ async def flood_watcher(c: Gojo, m: Message):
         if y-x <= within:
             action = action.split("_")
             if len(action) == 2:
-                to_do = action[0]
-                for_tim = int(action[1].replace("min",""))
+                try:
+                    to_do = action[0]
+                    for_tim = int(action[1].replace("min",""))
+                except:
+                    for_tim = 30
                 for_how_much = datetime.now() + timedelta(minutes=for_tim)
                 if to_do == "ban":
                     try:
@@ -452,7 +455,7 @@ async def flood_watcher(c: Gojo, m: Message):
                                 ],
                             ],
                         )
-                        txt = "Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: Baned\nReason: Spaming"
+                        txt = f"Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: Baned\nReason: Spaming\nUntril: {for_how_much}"
                         await m.reply_animation(
                             animation=str(choice(BAN_GIFS)),
                             caption=txt,
@@ -497,7 +500,7 @@ async def flood_watcher(c: Gojo, m: Message):
                                 ],
                             ],
                         )
-                        txt = "Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: Muted\nReason: Spaming"
+                        txt = f"Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: Muted\nReason: Spaming\nUntil: {for_how_much}"
                         await m.reply_animation(
                             animation=str(choice(MUTE_GIFS)),
                             caption=txt,
@@ -570,7 +573,7 @@ async def flood_watcher(c: Gojo, m: Message):
                 
             elif action == "kick":
                 try:
-                    await m.chat.ban_member(u_id, datetime.now()+timedelta(seconds=10))
+                    await m.chat.ban_member(u_id, datetime.now()+timedelta(seconds=1))
                     txt = "Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: kicked\nReason: Spaming"
                     await m.reply_animation(
                         animation=str(choice(KICK_GIFS)),

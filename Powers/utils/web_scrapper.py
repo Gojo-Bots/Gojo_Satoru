@@ -1,6 +1,5 @@
 import os
 import re
-import time
 from typing import List
 
 import httpx
@@ -23,21 +22,22 @@ class SCRAP_DATA:
 
     def __init__(self, urls: List[str] or str) -> None:
         self.urls = urls
-        self.path = "./scrapped/"
+        self.path = scrap_dir
         if not os.path.isdir(self.path):
-            os.makedirs("./scrapped/")
+            os.makedirs(self.path)
 
     def get_images(self) -> list:
         images = []
         if isinstance(self.urls, str):
             requested = httpx.get(self.urls)
             try:
-                name = self.path + f"img_{time.time()}.jpg"
+                name = self.path + f"img_{str(time()).replace('.','_')}.jpg"
                 with open(name, "wb") as f:
                     f.write(requested.content)
                 images.append(name)
             except Exception as e:
                 LOGGER.error(e)
+                LOGGER.error(format_exc())
                 requested.close()
         else:
             for i in self.urls:
@@ -46,11 +46,12 @@ class SCRAP_DATA:
                 else:
                     continue
                 try:
-                    name = self.path + f"img_{time.time()}.jpg"
+                    name = self.path + f"img_{str(time()).replace('.','_')}.jpg"
                     with open(name, "wb") as f:
                         f.write(requested.content)
                     images.append(name)
                 except Exception as e:
+                    LOGGER.error(format_exc())
                     LOGGER.error(e)
                     requested.close()
                     continue
@@ -64,12 +65,13 @@ class SCRAP_DATA:
             else:
                 return []
             try:
-                name = self.path + f"vid_{time.time()}.mp4"
+                name = self.path + f"vid_{str(time()).replace('.','_')}.mp4"
                 with open(name, "wb") as f:
                     f.write(requested.content)
                 videos.append(name)
             except Exception as e:
                 LOGGER.error(e)
+                LOGGER.error(format_exc())
                 requested.close()
         else:
             for i in self.urls:
@@ -78,12 +80,13 @@ class SCRAP_DATA:
                 else:
                     continue
                 try:
-                    name = self.path + f"vid_{time.time()}.mp4"
+                    name = self.path + f"vid_{str(time()).replace('.','_')}.mp4"
                     with open(name, "wb") as f:
                         f.write(requested.content)
                     videos.append(name)
                 except Exception as e:
                     LOGGER.error(e)
+                    LOGGER.error(format_exc())
                     requested.close()
                     continue
         return videos

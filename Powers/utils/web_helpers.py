@@ -8,11 +8,13 @@ from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 from pytube import YouTube, extract
 from youtubesearchpython.__future__ import VideosSearch
+from yt_dlp import YoutubeDL
 
 from Powers import youtube_dir
-from Powers.bot_class import LOGGER, MESSAGE_DUMP, Gojo
+from Powers.bot_class import LOGGER, Gojo
 from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import resize_file_to_sticker_size
+from Powers.utils.web_scrapper import SCRAP_DATA
 
 backUP = "https://artfiles.alphacoders.com/160/160160.jpeg"
 
@@ -174,16 +176,54 @@ async def song_search(query, max_results=1):
             pass
     return yt_dict
 
+song_opts = {
+    "format": "bestaudio",
+    "addmetadata": True,
+    "key": "FFmpegMetadata",
+    "prefer_ffmpeg": True,
+    "geo_bypass": True,
+    "nocheckcertificate": True,
+    "postprocessors": [
+        {
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "mp3",
+            "preferredquality": "480",
+        }
+    ],
+    "outtmpl": "%(id)s",
+    "quiet": True,
+    "logtostderr": False,
+}
 
-async def youtube_downloader(c: Gojo, m: Message, query: str, is_direct: bool, type_: str):
+video_opts = {
+        "format": "best",
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "prefer_ffmpeg": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [
+            {
+                "key": "FFmpegVideoConvertor",
+                "preferedformat": "mp4",
+            }
+        ],
+        "outtmpl": "%(id)s.mp4",
+        "quiet": True,
+        "logtostderr": False,
+    }
+
+async def youtube_downloader(c: Gojo, m: Message, query: str, type_: str):
     if type_ == "a":
-        # opts = song_opts
+        opts = song_opts
         video = False
         song = True
+        ext = "mp3"
     elif type_ == "v":
-        # opts = video_opts
+        opts = video_opts
         video = True
         song = False
+        ext = "mp4"
     # ydl = yt_dlp.YoutubeDL(opts)
     dicti = await song_search(query, 1)
     if not dicti and type(dicti) != str:
@@ -209,15 +249,22 @@ async def youtube_downloader(c: Gojo, m: Message, query: str, is_direct: bool, t
     vid_dur = get_duration_in_sec(dicti["DURATION"])
     published_on = dicti["published"]
     if thumb:
-        thumb_ = await c.send_photo(MESSAGE_DUMP, thumb)
+        try:
+            thumb = SCRAP_DATA(thumb).get_images()
+            thumb = await resize_file_to_sticker_size(thumb[0], 320, 320)
+        except Exception as e:
+            LOGGER.error(e)
+            LOGGER.error(format_exc())
+            LOGGER.info("Using back up image as thumbnail")
+            thumb = SCRAP_DATA(backUP).get_images()
+            thumb = await resize_file_to_sticker_size(thumb[0], 320, 320)
+            
     else:
-        thumb_ = await c.send_photo(MESSAGE_DUMP, backUP)
+        thumb = SCRAP_DATA(backUP).get_images()
+        thumb = await resize_file_to_sticker_size(thumb[0], 320, 320)
+
     # FILE = ydl.extract_info(query,download=video)
     url = query
-    thumb = await thumb_.download()
-    if not thumb:
-        thumb = await resize_file_to_sticker_size(thumb, 320, 320)
-    await thumb_.delete()
     cap = f"""
 ⤷ Name: `{f_name}`
 ⤷ Duration: `{dura}`
@@ -237,23 +284,41 @@ Downloaded by: @{c.me.username}
             ]
         ]
     )
-    if song:
-        msg = await m.reply_text(upload_text)
-        audio_stream = yt.streams.filter(only_audio=True).first()
-        f_path = audio_stream.download()
-        file_path = f"{youtube_dir}{f_name.strip()}.mp3"
-        os.rename(f_path, file_path)
 
+    def get_my_file(opts, ext):
+        try:
+            with YoutubeDL(opts) as ydl:
+                ydl.download([query])
+                info = ydl.extract_info(query, False)
+            file_name = ydl.prepare_filename(info)
+            if len(file_name.rsplit(".", 1)) == 2:
+                pass
+            else:
+                file_name = f"{file_name}.{ext}"
+            new = info['title'].replace('/','|').replace('\\','|')
+            new_file = f"{youtube_dir}{new}.{ext}"
+            os.rename(file_name, new_file)
+            return True, new_file
+        except Exception as e:
+            return False, str(e)
+
+    if song:
+        success, file_path = get_my_file(opts, ext)
+        if not success:
+            await m.reply_text(file_path)
+            return
+        msg = await m.reply_text(upload_text)
         await m.reply_audio(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, title=f_name,performer=uploader, progress=progress, progress_args=(msg, time.time(), upload_text))
+        await msg.delete()
         os.remove(file_path)
-        os.remove(thumb)
         return
     elif video:
-        video_stream = yt.streams.get_highest_resolution()
-        file_path = video_stream.download()
-        new_file_path = f"{youtube_dir}{f_name}.mp4"
-        os.rename(file_path, new_file_path)
+        success, file_path = get_my_file(opts, ext)
+        if not success:
+            await m.reply_text(file_path)
+            return
+        msg = await m.reply_text(upload_text)
         await m.reply_video(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, progress=progress, progress_args=(msg, time.time(), upload_text))
-        os.remove(new_file_path)
-        os.remove(thumb)
+        await msg.delete()
+        os.remove(file_path)
         return

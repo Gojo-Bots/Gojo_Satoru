@@ -24,7 +24,6 @@ from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
 from Powers.database.support_db import SUPPORTS
 from Powers.database.users_db import Users
-from Powers.plugins.scheduled_jobs import clean_my_db
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -738,23 +737,6 @@ async def forward_type_broadcast(c: Gojo, m: Message):
     return
 
 
-@Gojo.on_message(command(["cleandb","cleandatabase"],sudo_cmd=True))
-async def cleeeen(c:Gojo,m:Message):
-    x = await m.reply_text("Cleaning the database...")
-    try:
-        z = await clean_my_db(c,True,m.from_user.id)
-        try:
-            await x.delete()
-        except Exception:
-            pass
-        await m.reply_text(z)
-        return
-    except Exception as e:
-        await m.reply_text(e)
-        await x.delete()
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return
 
 __PLUGIN__ = "devs"
 

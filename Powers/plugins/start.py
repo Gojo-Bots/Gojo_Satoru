@@ -222,7 +222,6 @@ async def help_menu(c: Gojo, m: Message):
                 f"No help_msg found for help_option - {help_option}!!")
             return
 
-
         if m.chat.type == ChatType.PRIVATE:
             if len(help_msg) >= 1026:
                 await m.reply_text(
@@ -377,8 +376,8 @@ async def get_module_info(c: Gojo, q: CallbackQuery):
         caption, kb = await get_divided_msg(f"plugins.{module}", back_to_do="commands")
         await q.edit_message_caption(
             caption,
-            parse_mode=enums.ParseMode.MARKDOWN,
-            reply_markup=kb
+            enums.ParseMode.MARKDOWN,
+            kb
         )
     await q.answer()
     return

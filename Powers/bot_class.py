@@ -70,8 +70,6 @@ class Gojo(Client):
         await load_support_users()
         await cache_support()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
-        scheduler.add_job(clean_my_db, 'cron', [
-                          self], hour=3, minute=0, second=0)
         if BDB_URI:
             scheduler.add_job(send_wishish, 'cron', [
                               self], hour=0, minute=0, second=0)

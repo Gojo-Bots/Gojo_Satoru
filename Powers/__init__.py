@@ -119,7 +119,7 @@ API_ID = Config.API_ID
 API_HASH = Config.API_HASH
 
 # General Config
-MESSAGE_DUMP = Config.MESSAGE_DUMP
+MESSAGE_DUMP = Config.MESSAGE_DUMP if Config.MESSAGE_DUMP else Config.OWNER_ID
 SUPPORT_GROUP = Config.SUPPORT_GROUP
 SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
 
@@ -151,6 +151,12 @@ else:
     shutil.rmtree(youtube_dir)
     mkdir(youtube_dir)
 
+scrap_dir = "./scrapped/"
+if not path.isdir(scrap_dir):
+    mkdir(scrap_dir)
+else:
+    shutil.rmtree(scrap_dir)
+    mkdir(scrap_dir)
 scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
 
 

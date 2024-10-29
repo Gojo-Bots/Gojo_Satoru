@@ -16,6 +16,7 @@ from pyrogram.types import InlineKeyboardMarkup as ikm
 from pyrogram.types import Message
 from unidecode import unidecode
 
+from Powers import scrap_dir
 from Powers.bot_class import Gojo
 from Powers.utils.string import encode_decode
 
@@ -204,7 +205,7 @@ async def resize_file_to_sticker_size(file_path: str, length: int = 512, width: 
     else:
         im.thumbnail(STICKER_DIMENSIONS)
 
-    file_pathh = "./downloads/resized.png"
+    file_pathh = f"{scrap_dir}r{str(time()).replace('.','_')}.png"
     im.save(file_pathh)
     os.remove(file_path)
     return file_pathh
