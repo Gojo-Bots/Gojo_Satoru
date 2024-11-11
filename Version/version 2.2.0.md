@@ -11,6 +11,8 @@
 - Added quote feature. Now you can quote any message.
 - Added support for join request.
 
+- Changed sticker packname so new kanged sticker will not be added in your previous packs. Number of stickers in a pack is increased to 120 for all sticker pack type.
+
 - Fixed error while kanging stickers.
 - Fixed few bugs in greeting the users.
 - Improved few things in locks.
@@ -19,7 +21,7 @@
 
 - Merged all pull requests.
 
-- Fixed few bugs. (I don't know exactly what bugs and I forgot any changes I made :))
+- Fixed few bugs. (I don't know exactly what bugs and I forgot any more changes I made :))
 - Created few bugs. (unintentional)
 
 ## Report issues [here](https://github.com/Gojo-Bots/Gojo_Satoru/issues/new/choose) if find any
