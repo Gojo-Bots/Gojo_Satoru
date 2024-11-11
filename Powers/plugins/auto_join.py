@@ -48,7 +48,7 @@ async def accept_join_requests(c: Gojo, m: Message):
                 is_al = a_j.load_autojoin(m.chat.id)
                 
                 if is_al:
-                    txt = "Now I will approve all the join request of the chat\nIf you want that I will just notify admins about the join request use command\n//joinreqmode [manual | auto]"
+                    txt = "Now I will approve all the join request of the chat\nIf you want that I will just notify admins about the join request use command\n/joinreqmode [manual | auto]"
                     await m.reply_text(txt)
                     return
                 else:
@@ -102,13 +102,16 @@ async def join_request_handler(c: Gojo, j: ChatJoinRequest):
     if join_type == "auto" or user in SUPPORT_STAFF:
         try:
             await c.approve_chat_join_request(chat,user)
+            await c.send_message(chat, f"Accepted join request of the {userr.mention}")
+            return
         except Exception as ef:
             await c.send_message(chat,f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
             LOGGER.error(ef)
             LOGGER.error(format_exc())
+            return
     elif join_type == "manual":
         txt = "New join request is available\n**USER's INFO**\n"
-        txt += f"Name: {userr.first_name} {userr.last_name if userr.last_name else ''}"
+        txt += f"Name: {userr.full_name}"
         txt += f"Mention: {userr.mention}"
         txt += f"Id: {user}"
         txt += f"Scam: {'True' if  userr.is_scam else 'False'}"
@@ -127,23 +130,30 @@ async def join_request_handler(c: Gojo, j: ChatJoinRequest):
 async def accept_decline_request(c:Gojo, q: CallbackQuery):
     user_id = q.from_user.id
     chat = q.message.chat.id
-    user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {CMS.OWNER, CMS.ADMINISTRATOR}:
-        await q.answer(
-            "You're not even an admin, don't try this explosive shit!",
-            show_alert=True,
-        )
+    try:
+        user_status = (await q.message.chat.get_member(user_id)).status
+        if user_status not in {CMS.OWNER, CMS.ADMINISTRATOR}:
+            await q.answer(
+                "You're not even an admin, don't try this explosive shit!",
+                show_alert=True,
+            )
+            return
+    except:
+        await q.answer("Unknow error occured. You are not admin or owner")
         return
-
     split = q.data.split("_")
     chat = q.message.chat.id
     user = int(split[-1])
     data = split[0]
-
+    try:
+        userr = await c.get_users(user)
+    except:
+        userr = None
     if data == "accept":
         try:
             await c.approve_chat_join_request(chat,user)
-            await q.answer(f"APPROVED: {user}",True)
+            await q.answer(f"Accepted join request of the {userr.mention if userr else user}",True)
+            await q.edit_message_text(f"Accepted join request of the {userr.mention if userr else user}")
         except Exception as ef:
             await c.send_message(chat,f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
             LOGGER.error(ef)
@@ -153,6 +163,7 @@ async def accept_decline_request(c:Gojo, q: CallbackQuery):
         try:
             await c.decline_chat_join_request(chat,user)
             await q.answer(f"DECLINED: {user}")
+            await q.edit_message_text()
         except Exception as ef:
             await c.send_message(chat,f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
             LOGGER.error(ef)

@@ -38,14 +38,12 @@ async def send_wishish(JJK: Client):
                     agee = ""
                     if i["is_year"]:
                         agee = curr.year - dob.year
-                        if str(agee).endswith("1"):
-                            agee = f"{agee}st"
-                        elif str(agee).endswith("2"):
-                            agee = f"{agee}nd"
-                        elif str(agee).endswith("3"):
-                            agee = f"{agee}rd"
+                        suffix = {1: 'st', 2: 'nd', 3: 'rd'}
+                        if int(agee/10) == 1:
+                            suf = "th"
                         else:
-                            agee = f"{agee}th"
+                            suffix.get((agee%10), "th")
+                        agee = f"{agee}{suf}"
                     U = await JJK.get_chat_member(chat_id=j,user_id=i["user_id"])
                     wish = choice(birthday_wish)
                     if U.status in [ChatMemberStatus.MEMBER,ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:

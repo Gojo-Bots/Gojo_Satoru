@@ -14,6 +14,7 @@ from Powers.bot_class import Gojo
 from Powers.database.afk_db import AFK
 from Powers.database.approve_db import Approve
 from Powers.database.autojoin_db import AUTOJOIN
+from Powers.database.captcha_db import CAPTCHA
 from Powers.database.disable_db import Disabling
 from Powers.database.flood_db import Floods
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -329,12 +330,19 @@ async def afk_check_filter(_, __, m: Message):
         return False
 
     afk = AFK()
-    user = m.from_user.id
     chat = m.chat.id
+    is_repl_afk = None
+    if m.reply_to_message:
+        repl_user = m.reply_to_message.from_user
+        if repl_user:
+            repl_user = m.reply_to_message.from_user.id
+            is_repl_afk = afk.check_afk(chat, repl_user)
+
+    user = m.from_user.id
 
     is_afk = afk.check_afk(chat, user)
 
-    if not is_afk:
+    if not (is_afk or is_repl_afk):
         return False
     else:
         return True
@@ -354,19 +362,36 @@ async def flood_check_filter(_, __, m: Message):
     u_id = m.from_user.id
     c_id = m.chat.id
     is_flood = Flood.is_chat(c_id)
-
+    if not is_flood:
+        return False
+    try:
+        admin_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admin_group = {
+            i[0] for i in await admin_cache_reload(m, "custom_filter_update")
+        }
     app_users = Approve(m.chat.id).list_approved()
     SUDO_LEVEL = DEV_USERS.union(SUDO_USERS)
 
-    if not is_flood or u_id in SUDO_LEVEL:
+    if u_id in SUDO_LEVEL:
         return False
 
+    elif u_id in admin_group:
+        return False
+    
     elif u_id in {i[0] for i in app_users}:
         return False
 
     else:
         return True
 
+async def captcha_filt(_, __, m: Message):
+    try:
+        return CAPTCHA().is_captcha(m.chat.id)
+    except:
+        return False
+
+captcha_filter = create(captcha_filt)
 flood_filter = create(flood_check_filter)
 afk_filter = create(afk_check_filter)
 auto_join_filter = create(auto_join_check_filter)

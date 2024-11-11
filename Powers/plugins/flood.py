@@ -212,12 +212,17 @@ async def flood_set(c: Gojo, m: Message):
         c_id = m.chat.id
         if split[1].lower() in on_key:
             if is_flood:    
-                return await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec")
-            Flood.save_flood(m.chat.id, 5, 5, 'mute')
-            await m.reply_text("Flood protection has been started for this group.")
+                saction = is_flood[2]
+                slimit = is_flood[0]
+                swithin = is_flood[1]
+
+            await m.reply_text(f"Flood is on for this chat\n**Action**:{saction}\n**Messages**:{slimit} within {swithin} sec")
             return
         if split[1].lower() in off_key:
             x = Flood.rm_flood(c_id)
+            if not is_flood:
+                await m.reply_text("Flood protection is already off for this chat")
+                return
             if x:
                 await m.reply_text("Flood protection has been stopped for this chat")
                 return
@@ -322,8 +327,8 @@ async def callbacks(c: Gojo, q: CallbackQuery):
                     "Flood protection setting has been updated",
                     reply_markup=close_kb
                 )
-                return
                 await q.answer("skip")
+                return
             if not change == swithin:
                 Flood.save_flood(c_id, slimit, change, saction)
                 await q.answer("Updated", show_alert=True)
@@ -390,7 +395,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
         return
 
 dic = {}
-@Gojo.on_message(flood_filter & ~admin_filter, 18)
+@Gojo.on_message(flood_filter, 18)
 async def flood_watcher(c: Gojo, m: Message):
     c_id = m.chat.id
     
@@ -573,13 +578,14 @@ async def flood_watcher(c: Gojo, m: Message):
                 
             elif action == "kick":
                 try:
-                    await m.chat.ban_member(u_id, datetime.now()+timedelta(seconds=1))
-                    txt = "Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: kicked\nReason: Spaming"
+                    d = datetime.now()+timedelta(seconds=31) #will automatically unban user after 31 seconds kind of fail safe if unban members doesn't work properly
+                    await m.chat.ban_member(u_id, until_date=d)
+                    success = await c.unban_chat_member(m.chat.id, u_id)
+                    txt = f"Don't dare to spam here if I am around! Nothing can escape my 6 eyes\nAction: {'kicked' if success else 'banned for 30 seconds'}\nReason: Spaming"
                     await m.reply_animation(
                         animation=str(choice(KICK_GIFS)),
-                        caption=txt,
+                        caption=txt
                     )
-                    await m.chat.unban_member(m.from_user.id)
                     dic[c_id][u_id][1].clear()
                     dic[c_id][u_id][0].clear()
                     return
@@ -597,6 +603,12 @@ async def flood_watcher(c: Gojo, m: Message):
                         <b>Error:</b> <code>{ef}</code>"""
                     )
                     LOGGER.error(ef)
+                    LOGGER.error(format_exc())
+                    dic[c_id][u_id][1].clear()
+                    dic[c_id][u_id][0].clear()
+                    return
+                except Exception as e:
+                    LOGGER.error(e)
                     LOGGER.error(format_exc())
                     dic[c_id][u_id][1].clear()
                     dic[c_id][u_id][0].clear()

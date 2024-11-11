@@ -173,7 +173,6 @@ async def kang(c:Gojo, m: Message):
                 volume += 1
                 continue
             try:
-                print(sticker_set)
                 await add_sticker_to_set(c,sticker_set,sticker)
                 packname_found = True
             except StickerEmojiInvalid:
@@ -326,7 +325,7 @@ async def get_sticker_from_file(c: Gojo, m: Message):
             upp = await repl.download()
             up = toimage(upp,is_direc=True)
             await x.delete()
-            await m.reply_photo(up,caption=Caption)
+            await m.reply_document(up, caption=Caption)
             os.remove(up)
             return
     elif repl.photo:

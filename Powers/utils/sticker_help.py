@@ -349,14 +349,14 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
 
 
 def toimage(image, filename=None, is_direc=False):
-    filename = filename if filename else "gojo.jpg"
+    filename = filename if filename else "gojo.png"
     if is_direc:
         os.rename(image, filename)
         return filename
     img = Image.open(image)
     if img.mode != "RGB":
         img = img.convert("RGB")
-    img.save(filename, "jpeg")
+    img.save(filename, "png")
     os.remove(image)
     return filename
 

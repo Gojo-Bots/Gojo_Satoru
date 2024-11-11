@@ -101,11 +101,18 @@ class CAPTCHA_DATA(MongoDB):
                 return
         else:
             return
+        
+    def get_message_id(self, chat, user):
+        curr = self.find_one({"chat_id": chat, "user_id": user})
+        if curr:
+            return curr["message_id"]
+        else:
+            return False
 
     def is_already_data(self, chat, user):
         curr = self.find_one({"chat_id": chat, "user_id": user})
         if curr:
-            return curr["message_id"]
+            return curr.get("message_id", False)
         else:
             return False
 
@@ -114,4 +121,5 @@ class CAPTCHA_DATA(MongoDB):
         if curr:
             with INSERTION_LOCK:
                 self.delete_one({"chat_id": chat, "user_id": user})
-        return
+
+        return curr["message_id"]

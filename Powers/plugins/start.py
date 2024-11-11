@@ -14,6 +14,7 @@ from Powers import (DEV_USERS, HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER,
                     PYROGRAM_VERSION, PYTHON_VERSION, SUDO_USERS, UPTIME,
                     VERSION, WHITELIST_USERS)
 from Powers.bot_class import Gojo
+from Powers.database.captcha_db import CAPTCHA_DATA
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
@@ -69,7 +70,8 @@ async def start(c: Gojo, m: Message):
 
     if m.chat.type == ChatType.PRIVATE:
         if len(m.text.strip().split()) > 1:
-            help_option = (m.text.split(None, 1)[1]).lower()
+            arg = m.text.split(None, 1)[1]
+            help_option = arg.lower()
 
             if help_option.startswith("note") and (
                 help_option not in ("note", "notes")
@@ -83,9 +85,7 @@ async def start(c: Gojo, m: Message):
 
             help_msg, help_kb = await get_help_msg(c, m, help_option)
 
-            if not help_msg:
-                return
-            elif help_msg:
+            if help_msg:
                 await m.reply_photo(
                     photo=str(choice(StartPic)),
                     caption=help_msg,
@@ -94,8 +94,8 @@ async def start(c: Gojo, m: Message):
                     quote=True,
                 )
                 return
-            if len(help_option.split("_", 1)) == 2:
-                if help_option.split("_")[1] == "help":
+            if len(arg.split("_", 1)) >= 2:
+                if arg.split("_")[1] == "help":
                     await m.reply_photo(
                         photo=str(choice(StartPic)),
                         caption=help_msg,
@@ -104,9 +104,9 @@ async def start(c: Gojo, m: Message):
                         quote=True,
                     )
                     return
-                elif help_option.split("_", 1)[0] == "qrcaptcha":
+                elif arg.split("_", 1)[0] == "qr":
                     decoded = encode_decode(
-                        help_option.split("_", 1)[1], "decode")
+                        arg.split("_", 1)[1], "decode")
                     decode = decoded.split(":")
                     chat = decode[0]
                     user = decode[1]
@@ -115,9 +115,25 @@ async def start(c: Gojo, m: Message):
                         return
                     try:
                         await c.unban_chat_member(int(chat), int(user))
+                        msg = CAPTCHA_DATA().del_message_id(chat, user)
                         try:
-                            os.remove(f"captcha_verification{chat}_{user}.png")
-                        except Exception:
+                            chat_ = await c.get_chat(chat)
+                            kb = ikb(
+                                [
+                                    [
+                                        "Link to chat",
+                                        f"{chat_.invite_link}",
+                                        "url"
+                                    ]
+                                ]
+                            )
+                        except:
+                            chat_ = False
+                            kb = None
+                        await m.reply_text("You can now talk in the chat", reply_markup=kb)
+                        try:
+                            await c.delete_messages(chat, msg)
+                        except:
                             pass
                         return
                     except Exception:

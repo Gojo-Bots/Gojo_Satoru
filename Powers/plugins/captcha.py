@@ -1,23 +1,28 @@
-from random import shuffle
+import os
+from random import choice, shuffle
 from traceback import format_exc
+from typing import List
 
 import pyrogram
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, ChatMemberUpdated, ChatPermissions
+from pyrogram.enums import ChatMemberStatus as CMS
+from pyrogram.enums import ParseMode as PM
+from pyrogram.types import CallbackQuery, ChatPermissions
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as ikm
-from pyrogram.types import Message
+from pyrogram.types import Message, User
 
-from Powers import DEV_USERS, LOGGER, SUDO_USERS, WHITELIST_USERS
+from Powers import DEV_USERS, LOGGER, MESSAGE_DUMP, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.captcha_db import CAPTCHA, CAPTCHA_DATA
 from Powers.utils.captcha_helper import (genrator, get_image_captcha,
                                          get_qr_captcha)
-from Powers.utils.custom_filters import admin_filter, command
+from Powers.utils.custom_filters import admin_filter, captcha_filter, command
+from Powers.utils.extras import BAN_GIFS
 
 
 @Gojo.on_message(command("captcha") & admin_filter & ~filters.private)
-async def start_captcha(c: Gojo, m: Message):
+async def start_captcha(_, m: Message):
     captcha = CAPTCHA()
     split = m.command
     if len(split) == 1:
@@ -59,8 +64,9 @@ async def set_captcha_mode(c: Gojo, m: Message):
     else:
         type_ = split[1].lower()
         if type_ == "qr":
-            captcha.update_type(m.chat.id, "qr")
-            await m.reply_text("Captcha verification is now changed to qr code")
+            await m.reply_text("This feature is not implemented yet\nUse /captchamode image")
+            # captcha.update_type(m.chat.id, "qr")
+            # await m.reply_text("Captcha verification is now changed to qr code")
             return
         elif type_ == "image":
             captcha.update_type(m.chat.id, "image")
@@ -106,44 +112,73 @@ async def captcha_codes_check(c: Gojo, q: CallbackQuery):
         new_cap = ":".join(caps)
         await q.answer(f"Wrong\nTries left: {tries}", True)
         if not tries:
-            new_cap = f"You have zero tries left now. I am going to kick you know coz you failed to solve captcha...see yaa {q.from_user.mention}"
+            txt = f"{q.from_user.mention} was not able to pass captcha verification thus banned from the group"
             try:
                 await q.message.chat.ban_member(user)
             except Exception as e:
-                await q.message.reply_text("Failed to kick member")
+                await q.message.reply_text("Failed to ban member")
                 return
             await q.message.delete()
-            await q.message.reply_text(new_cap)
-            await c.unban_chat_member(chat, user)
-
+            keyboard = ikm(
+                [
+                    [
+                        IKB(
+                            "Unban",
+                            callback_data=f"unban_={user}",
+                        ),
+                    ],
+                ],
+            )
+            anim = choice(BAN_GIFS)
+            try:
+                await c.send_animation(
+                    chat_id=q.message.chat.id,
+                    animation=str(anim),
+                    caption=txt,
+                    reply_markup=keyboard,
+                    parse_mode=PM.HTML,
+                )
+            except Exception:
+                
+                await c.send_animation(
+                    chat_id=q.message.chat.id,
+                    text=txt,
+                    reply_markup=keyboard,
+                    parse_mode=PM.HTML,
+                )
+                await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
+            c_data.remove_cap_data(chat, user)
+            c_data.del_message_id(q.message.chat.id, user)
+            return
         else:
             await q.edit_message_caption(new_cap, reply_markup=q.message.reply_markup)
             return
 
 
-@Gojo.on_chat_member_updated(filters.group, group=3)
-async def on_chat_members_updatess(c: Gojo, u: ChatMemberUpdated):
-    chat = u.chat.id
+@Gojo.on_message(filters.group & captcha_filter & filters.new_chat_members, group=3)
+async def on_chat_members_updatess(c: Gojo, m: Message):
+    chat = m.chat.id
 
-    if u.new_chat_member:
-
-        user = u.new_chat_member.user.id
-        userr = u.new_chat_member.user
-
-        is_qr = CAPTCHA().is_captcha(chat)
-        if not is_qr:
-            return
-
+    users: List[User] = m.new_chat_members
+    for user in users:
         captcha = CAPTCHA()
         cap_data = CAPTCHA_DATA()
-
+        
+        if user.is_bot:
+            continue
         SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
-        if user in SUPPORT_STAFF:
-            return
 
-        captcha_type = captcha.get_captcha(chat)
-
-        is_already = cap_data.is_already_data(chat, user)
+        try:
+            status = (await m.chat.get_member(user)).status
+            if status in [CMS.OWNER, CMS.ADMINISTRATOR]:
+                continue
+        except:
+            pass
+        if user.id in SUPPORT_STAFF:
+            continue
+        captcha_info = captcha.get_captcha(chat)
+        captcha_type = captcha_info["captcha_type"]
+        is_already = cap_data.is_already_data(chat, user.id)
 
         mess = False
         try:
@@ -154,36 +189,40 @@ async def on_chat_members_updatess(c: Gojo, u: ChatMemberUpdated):
             mess = False
             is_already = False
 
-        if is_already and not mess:
+        if is_already and mess.empty:
             cap_data.del_message_id(chat, is_already)
-            return
+            continue
 
         try:
-            await c.restrict_chat_member(chat, user, ChatPermissions())
+            await c.restrict_chat_member(chat, user.id, ChatPermissions())
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error(format_exc())
-            return
+            continue
 
         if not is_already:
+            captcha_type = "image" # I am not going to apply qr captcha in this update
             if captcha_type == "qr":
-                pic = await get_qr_captcha(chat, user)
-                cap = f"Please {userr.mention} scan this qr code with your phone to verify that you are human"
+                pic = await get_qr_captcha(chat, user.id, c.me.username)
+                cap = f"Please {user.mention} scan this qr code with your phone to verify that you are human"
                 ms = await c.send_photo(chat, pic, caption=cap)
-                cap_data.store_message_id(chat, user, ms.id)
-                return
+                os.remove(pic)
+                cap_data.store_message_id(chat, user.id, ms.id)
+                continue
             elif captcha_type == "image":
-                img, code = await get_image_captcha(chat, user)
-                cap = f"Please {userr.mention} please choose the correct code from the one given bellow\nYou have three tries if you get all three wrong u will be kicked from the chat.\nTries left: 3"
-                cap_data.load_cap_data(chat, user, code)
+                img, code = await get_image_captcha(chat, user.id)
+                cap = f"Please {user.mention} please choose the correct code from the one given bellow\nYou have three tries if you get all three wrong u will be banned from the chat.\nTries left: 3"
+                cap_data.load_cap_data(chat, user.id, code)
                 rand = [code]
                 while len(rand) != 5:
                     hehe = genrator()
+                    if hehe == code:
+                        continue
                     rand.append(hehe)
 
                 shuffle(rand)
 
-                ini = f"captcha_{chat}_{user}_"
+                ini = f"captcha_{chat}_{user.id}_"
 
                 kb = ikm(
                     [
@@ -205,7 +244,8 @@ async def on_chat_members_updatess(c: Gojo, u: ChatMemberUpdated):
                     ]
                 )
                 await c.send_photo(chat, img, caption=cap, reply_markup=kb)
-                return
+                os.remove(img)
+                continue
         elif is_already and mess:
             kb = ikm(
                 [
@@ -214,11 +254,11 @@ async def on_chat_members_updatess(c: Gojo, u: ChatMemberUpdated):
                     ]
                 ]
             )
-            await c.send_message(f"{userr.mention} your verification is already pending", reply_markup=kb)
-            return
+            await c.send_message(f"{user.mention} your verification is already pending", reply_markup=kb)
+            continue
         else:
-            await c.unban_chat_member(chat, user)
-            return
+            await c.unban_chat_member(chat, user.id)
+            continue
 
 
 __PLUGIN__ = "captcha"

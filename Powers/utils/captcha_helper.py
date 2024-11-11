@@ -2,20 +2,17 @@ from random import choice, randint, randrange
 
 import qrcode
 from captcha.image import ImageCaptcha
-from pyrogram.types import InlineKeyboardButton as IKB
-from pyrogram.types import InlineKeyboardMarkup as IKM
 
 from Powers.database.captcha_db import CAPTCHA_DATA
 from Powers.utils.string import encode_decode
-from Powers.vars import Config
 
-initial = f"t.me/{Config.BOT_USERNAME}?start=qrcaptcha_"
 captchaa = CAPTCHA_DATA()
 
 
-async def get_qr_captcha(chat, user):
+async def get_qr_captcha(chat, user, username):
+    initial = f"t.me/{username}?start=qr_"
     encode = f"{chat}:{user}"
-    encoded = encode_decode(encode)
+    encoded = await encode_decode(encode)
     final = initial+encoded
     qr = qrcode.make(final)
     name = f"captcha_verification{chat}_{user}.png"
@@ -42,7 +39,7 @@ def genrator():
     str_ = ""
     while len(str_) != 4:
         OwO = choice(list_)
-        str_ += OwO
+        str_ += str(OwO)
     return str_
 
 
