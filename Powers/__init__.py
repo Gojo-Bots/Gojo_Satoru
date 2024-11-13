@@ -1,10 +1,10 @@
+import shutil
 from datetime import datetime
 from importlib import import_module as imp_mod
 from logging import (INFO, WARNING, FileHandler, StreamHandler, basicConfig,
                      getLogger)
 from os import environ, listdir, mkdir, path
 from platform import python_version
-from random import choice
 from sys import exit as sysexit
 from sys import stdout, version_info
 from time import time
@@ -13,12 +13,16 @@ from traceback import format_exc
 import lyricsgenius
 import pyrogram
 import pytz
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
 # Make Logs directory if it does not exixts
 if not path.isdir(LOGDIR):
+    mkdir(LOGDIR)
+else:
+    shutil.rmtree(LOGDIR)
     mkdir(LOGDIR)
 
 LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}_log.txt"
@@ -47,7 +51,8 @@ if version_info[0] < 3 or version_info[1] < 7:
 
 # the secret configuration specific things
 try:
-    if environ.get("ENV"):
+    from Powers.vars import is_env
+    if is_env or environ.get("ENV"):
         from Powers.vars import Config
     else:
         from Powers.vars import Development as Config
@@ -55,12 +60,12 @@ except Exception as ef:
     LOGGER.error(ef)  # Print Error
     LOGGER.error(format_exc())
     sysexit(1)
-#time zone
+# time zone
 TIME_ZONE = pytz.timezone(Config.TIME_ZONE)
 
-path = "./Version"
+Vpath = "./Version"
 version = []
-for i in listdir(path):
+for i in listdir(Vpath):
     if i.startswith("version") and i.endswith("md"):
         version.append(i)
     else:
@@ -92,16 +97,16 @@ if Config.GENIUS_API_TOKEN:
     genius_lyrics.verbose = False
     LOGGER.info("Client setup complete")
 elif not Config.GENIUS_API_TOKEN:
-    LOGGER.error("Genius api not found lyrics command will not work")
+    LOGGER.info("Genius api not found lyrics command will not work")
     is_genius_lyrics = False
     genius_lyrics = False
 
-is_audd = False
-Audd = None
-if Config.AuDD_API:
-    is_audd = True
-    Audd = Config.AuDD_API
-    LOGGER.info("Found Audd api")
+# is_audd = False
+# Audd = None
+# if Config.AuDD_API:
+#     is_audd = True
+#     Audd = Config.AuDD_API
+#     LOGGER.info("Found Audd api")
 
 is_rmbg = False
 RMBG = None
@@ -114,25 +119,15 @@ API_ID = Config.API_ID
 API_HASH = Config.API_HASH
 
 # General Config
-MESSAGE_DUMP = Config.MESSAGE_DUMP
+MESSAGE_DUMP = Config.MESSAGE_DUMP if Config.MESSAGE_DUMP else Config.OWNER_ID
 SUPPORT_GROUP = Config.SUPPORT_GROUP
 SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
 
-# Users Config
+# Users Config 
 OWNER_ID = Config.OWNER_ID
-DEV = Config.DEV_USERS
-DEVS_USER = set(DEV)
-SUDO_USERS = Config.SUDO_USERS
-WHITELIST_USERS = Config.WHITELIST_USERS
-
-
-
-defult_dev = [1344569458, 1432756163, 5294360309] + [int(OWNER_ID)]
-
-Defult_dev = set(defult_dev)
-
-DEVS = DEVS_USER | Defult_dev
-DEV_USERS = list(DEVS)
+DEV_USERS = set(Config.DEV_USERS)
+SUDO_USERS = set(Config.SUDO_USERS)
+WHITELIST_USERS = set(Config.WHITELIST_USERS)
 
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI
@@ -147,16 +142,31 @@ PREFIX_HANDLER = Config.PREFIX_HANDLER
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+#Make dir
+youtube_dir = "./Youtube/"
+if not path.isdir(youtube_dir):
+    mkdir(youtube_dir)
+else:
+    shutil.rmtree(youtube_dir)
+    mkdir(youtube_dir)
+
+scrap_dir = "./scrapped/"
+if not path.isdir(scrap_dir):
+    mkdir(scrap_dir)
+else:
+    shutil.rmtree(scrap_dir)
+    mkdir(scrap_dir)
 scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
+
 
 async def load_cmds(all_plugins):
     """Loads all the plugins in bot."""
     for single in all_plugins:
         # If plugin in NO_LOAD, skip the plugin
         if single.lower() in [i.lower() for i in Config.NO_LOAD]:
-            LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
+            LOGGER.warning(
+                f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
 
         imported_module = imp_mod(f"Powers.plugins.{single}")
@@ -197,6 +207,7 @@ async def load_cmds(all_plugins):
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
-        ", ".join((i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys()))
+        ", ".join((i.split(".")[1]).capitalize()
+                  for i in list(HELP_COMMANDS.keys()))
         + "\n"
     )

@@ -1,18 +1,17 @@
 *.session
 *.session-journal
-Powers/config.py
-Powers/vars.py
 .vscode/
 postgres-data/
 *.env
 !sample.env
 logs/
 Powers/local_vars.py
-Powers/vars.py
 .idea/
+scrapped/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
+Youtube/
 *.py[cod]
 *$py.class
 
