@@ -39,7 +39,7 @@ Not a particular inspiration, inspired by many bots
 Mainly:
 
 * [Alita_Robot](https://github.com/divideprojects/Alita_Robot)
-
+* [WilliamButcherBot](https://github.com/TheHamkerCat/WilliamButcherBot)
 
 ---------
 
@@ -173,7 +173,7 @@ If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 
 `DB_URI` Your [MongoDB](https://www.mongodb.com/) connection string.
 
-`MESSAGE_DUMP`: Event logs channel where the bot will send updates. Note that it should start with `-100`.
+`MESSAGE_DUMP`: Event logs channel where the bot will send updates. Note that it should start with `-100`. If you don't give it or pass 0 in it your owner id will be the message dump for the bot.
 </details>
 
 
@@ -212,6 +212,10 @@ If all works well, the bot should send a message to the MESSAGE_DUMP Group!--->
 `SUDO_USERS`: A space-separated list of user IDs you want to assign as sudo users.
 
 `WHITELIST_USERS`: A space-separated list of user IDs whitelisted, cannot be restricted.
+
+`CHROME_BIN`: Location of your chrome bin.
+
+`CHROME_DRIVER`: Location of your chrome driver.
 
 ⚠️ **Note:** In case you are passing more than one value separate them using whitespace (space) for example If I want to pass more than one PREFIX_HANDLER
 I'll pass it like `'/' '.' '!'` this.
@@ -284,6 +288,8 @@ Some special thanks to the person/repo who/which helped and motivated me to crea
 * [Anand](https://github.com/HellBoy-OP) for helping me to enhance the bot's security and look and also helping me out with various stuff and bugs and also for motivating me to create this project.
 
 * [Alita_Robot](https://github.com/divideprojects/Alita_Robot) for base code.
+
+* [WilliamButcherBot](https://github.com/TheHamkerCat/WilliamButcherBot) for few plugins inspirations.
 
 ---------
 

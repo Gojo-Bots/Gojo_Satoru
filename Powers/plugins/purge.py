@@ -99,7 +99,6 @@ async def spurge(c: Gojo, m: Message):
 
 @Gojo.on_message(
     command("del") & admin_filter,
-    group=9,
 )
 async def del_msg(c: Gojo, m: Message):
 

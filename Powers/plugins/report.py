@@ -6,15 +6,13 @@ from pyrogram.enums import ChatType
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER
+from Powers import DEV_USERS, LOGGER, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.reporting_db import Reporting
-from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_html
 
-SUPPORT_STAFF = get_support_staff()
 
 @Gojo.on_message(
     command("reports") & (filters.private | admin_filter),
@@ -28,14 +26,9 @@ async def report_setting(_, m: Message):
             option = args[1].lower()
             if option in ("yes", "on", "true"):
                 db.set_settings(True)
-                LOGGER.info(f"{m.from_user.id} enabled reports for them")
-                await m.reply_text(
-                    "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin.",
-                )
 
             elif option in ("no", "off", "false"):
                 db.set_settings(False)
-                LOGGER.info(f"{m.from_user.id} disabled reports for them")
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
@@ -45,7 +38,6 @@ async def report_setting(_, m: Message):
         option = args[1].lower()
         if option in ("yes", "on", "true"):
             db.set_settings(True)
-            LOGGER.info(f"{m.from_user.id} enabled reports in {m.chat.id}")
             await m.reply_text(
                 "Turned on reporting! Admins who have turned on reports will be notified when /report "
                 "or @admin is called.",
@@ -54,7 +46,6 @@ async def report_setting(_, m: Message):
 
         elif option in ("no", "off", "false"):
             db.set_settings(False)
-            LOGGER.info(f"{m.from_user.id} disabled reports in {m.chat.id}")
             await m.reply_text(
                 "Turned off reporting! No admins will be notified on /report or @admin.",
                 quote=True,
@@ -85,7 +76,8 @@ async def report_watcher(c: Gojo, m: Message):
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
             return
-
+            
+        SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
         if reported_user.id in SUPPORT_STAFF:
             await m.reply_text("Uh? You reporting my support team?")
             return
@@ -126,9 +118,7 @@ async def report_watcher(c: Gojo, m: Message):
             ],
         )
 
-        LOGGER.info(
-            f"{m.from_user.id} reported msgid-{m.reply_to_message.id} to admins in {m.chat.id}",
-        )
+        
         await m.reply_text(
             (
                 f"{(await mention_html(m.from_user.first_name, m.from_user.id))} "

@@ -1,5 +1,6 @@
 from traceback import format_exc
 
+from pyrogram.enums import ChatType as CT
 from pyrogram.errors import PeerIdInvalid, RPCError
 from pyrogram.types import Message
 
@@ -17,7 +18,6 @@ async def blacklist_chat(c: Gojo, m: Message):
     if len(m.text.split()) >= 2:
         chat_ids = m.text.split()[1:]
         replymsg = await m.reply_text(f"Adding {len(chat_ids)} chats to blacklist")
-        LOGGER.info(f"{m.from_user.id} blacklisted {chat_ids} groups for bot")
         for chat in chat_ids:
             try:
                 get_chat = await c.get_chat(chat)
@@ -33,6 +33,13 @@ async def blacklist_chat(c: Gojo, m: Message):
         await replymsg.edit_text(
             f"Added the following chats to Blacklist.\n<code>{', '.join(chat_ids)}</code>.",
         )
+    else:
+        if m.chat.type == CT.PRIVATE:
+            await m.reply_text("Use in groups")
+        else:
+            chat_id = m.chat.id
+            db.add_chat(chat_id)
+            await m.reply_text("Added this chat to blacklist chats")
     return
 
 
@@ -43,7 +50,6 @@ async def unblacklist_chat(c: Gojo, m: Message):
     if len(m.text.split()) >= 2:
         chat_ids = m.text.split()[1:]
         replymsg = await m.reply_text(f"Removing {len(chat_ids)} chats from blacklist")
-        LOGGER.info(f"{m.from_user.id} removed blacklisted {chat_ids} groups for bot")
         bl_chats = db.list_all_chats()
         for chat in chat_ids:
             try:
@@ -63,6 +69,16 @@ async def unblacklist_chat(c: Gojo, m: Message):
         await replymsg.edit_text(
             f"Removed the following chats to Blacklist.\n<code>{', '.join(chat_ids)}</code>.",
         )
+    else:
+        if m.chat.type == CT.PRIVATE:
+            await m.reply_text("Use in groups")
+        else:
+            chat_id = m.chat.id
+            bl_chats = bl_chats = db.list_all_chats()
+            if chat_id not in bl_chats:
+                await m.reply_text("This chat is not in my list of blacklisted chats")
+            else:
+                await m.reply_text("Removed this chat from blacklist chats")
     return
 
 
@@ -71,7 +87,6 @@ async def unblacklist_chat(c: Gojo, m: Message):
 )
 async def list_blacklist_chats(_, m: Message):
     bl_chats = db.list_all_chats()
-    LOGGER.info(f"{m.from_user.id} checking group blacklists in {m.chat.id}")
     if bl_chats:
         txt = (
             (
@@ -84,3 +99,17 @@ async def list_blacklist_chats(_, m: Message):
         txt = "No chats are currently blacklisted!"
     await m.reply_text(txt)
     return
+
+
+__PLUGIN__ = "Chat blacklist"
+
+
+
+__HELP__ = """
+**Chat blacklist**
+
+**Dev commands:**
+• /blchat [space separated id or username of chats]: Add chats to black list if given or the current chat.
+• /rmblchat [space separated id or username of chats]: Remove chats from black list if given or the current chat.
+• /blchats: Give the list of blacklisted chats
+"""

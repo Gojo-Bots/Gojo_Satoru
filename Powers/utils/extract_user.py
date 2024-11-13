@@ -20,7 +20,7 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
         user_first_name = m.reply_to_message.from_user.first_name
         user_name = m.reply_to_message.from_user.username
 
-    elif len(m.text.split()) > 1:
+    elif len(m.command) > 1:
         if len(m.entities) > 1:
             required_entity = m.entities[1]
             if required_entity.type == entity.TEXT_MENTION:
@@ -30,7 +30,7 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
             elif required_entity.type in (entity.MENTION, entity.PHONE_NUMBER):
                 # new long user ids are identified as phone_number
                 user_found = m.text[
-                    required_entity.offset : (
+                    required_entity.offset: (
                         required_entity.offset + required_entity.length
                     )
                 ]
@@ -98,6 +98,7 @@ async def extract_user(c: Gojo, m: Message) -> Tuple[int, str, str]:
                             user = await c.get_users(user_r.user_id)
                         except Exception as ef:
                             return await m.reply_text(f"User not found ! Error: {ef}")
+                    user_id = user.id
                     user_first_name = user.first_name
                     user_name = user.username
                     LOGGER.error(ef)

@@ -1,20 +1,21 @@
 import asyncio
 import os
+import shutil
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
-from pyrogram.types import Message
+from pyrogram.types import InputMediaPhoto, InputMediaVideo, Message
 
-from Powers import (LOGGER, RMBG, Audd, genius_lyrics, is_audd,
-                    is_genius_lyrics, is_rmbg)
+from Powers import LOGGER, RMBG, genius_lyrics, is_genius_lyrics, is_rmbg
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import toimage
 from Powers.utils.web_helpers import *
+from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
 
 # @Gojo.on_message(command(["songname","insong","songinfo","whichsong","rsong","reversesong"]))
 # • /whichsong (/songname, /songinfo, /insong, /rsong, /reversesong) : Reply to file to get the song playing in it.
@@ -33,7 +34,7 @@ from Powers.utils.web_helpers import *
 #         await m.reply_text("Reply to a video or audio file")
 #         return
 #     try:
-#         XnX = await m.reply_text("⏳")
+#         to_edit = await m.reply_text("⏳")
 #         URL = "https://api.audd.io/"
 #         sizee = (await get_file_size(reply)).split()
 #         if (int(sizee[0]) <= 30 and sizee[1] == "mb") or sizee[1] == "kb":
@@ -54,10 +55,10 @@ from Powers.utils.web_helpers import *
 #         #     }
 #         #    result = resp_post(URL,data=BASE_AUDD)
 #         else:
-#             await XnX.edit_text("File size too big\nI can only fetch file of size upto 30 mbs for now")
+#             await to_edit.edit_text("File size too big\nI can only fetch file of size upto 30 mbs for now")
 #             return
 #         if result.status_code != 200:
-#             await XnX.edit_text(f"{result.status_code}:{result.text}")
+#             await to_edit.edit_text(f"{result.status_code}:{result.text}")
 #             return
 #         result = result.json()
 #         data = result["result"]
@@ -92,11 +93,11 @@ from Powers.utils.web_helpers import *
 #         if is_genius_lyrics:
 #             g_k = [IKB("📝 Lyrics",f"lyrics_{Title}:{Artist}")]
 #             kb.append(g_k)
-#         await XnX.delete()
+#         await to_edit.delete()
 #         os.remove(fpath)
 #         await m.reply_photo(photo,caption=cap,reply_markup=IKM(kb))
 #     except Exception as e:
-#         await XnX.delete()
+#         await to_edit.delete()
 #         await m.reply_text(f"Error\n{e}")
 #         try:
 #             os.remove(fpath)
@@ -208,7 +209,7 @@ async def remove_background(c: Gojo, m: Message):
     elif reply.sticker and (reply.sticker.is_video or reply.sticker.is_animated):
         await m.reply_text("Reply to normal sticker to remove it's background")
         return
-    XnX = await m.reply_text("⏳")
+    to_edit = await m.reply_text("⏳")
     URL = "https://api.remove.bg/v1.0/removebg"
     if reply.sticker:
         filee = await reply.download()
@@ -219,7 +220,7 @@ async def remove_background(c: Gojo, m: Message):
     Data = {'size':'auto'}
     Headers = {'X-Api-Key':RMBG}
     result = resp_post(URL,files=finfo,data=Data,headers=Headers)
-    await XnX.delete()
+    await to_edit.delete()
     contentType = result.headers.get("content-type")
     if result.status_code != 200:
         await m.reply_text(f"{result.status_code}:{result.text}")
@@ -254,22 +255,21 @@ async def song_down_up(c: Gojo, m: Message):
     except IndexError:
         await m.reply_text("**USAGE**\n /song [song name | link]")
         return
-    if splited.startswith("https://youtube.com"):
-        is_direct = True
-        query = splited.split("?")[0]
-    else:
-        is_direct = False
+    _id = get_video_id(splited)
+    if not _id:
         query = splited
-    XnX = await m.reply_text("⏳")
+    else:
+        query = _id
+    to_edit = await m.reply_text("⏳")
     try:
-        await youtube_downloader(c,m,query,is_direct,"a")
-        await XnX.delete()
+        await youtube_downloader(c,m,query, "a")
+        await to_edit.delete()
         return
     except KeyError:
-        await XnX.edit_text(f"Failed to find any result")
+        await to_edit.edit_text(f"Failed to find any result")
         return
     except Exception as e:
-        await XnX.edit_text(f"Got an error\n{e}")
+        await to_edit.edit_text(f"Got an error\n{e}")
         LOGGER.error(e)
         LOGGER.error(format_exc())
         return
@@ -281,22 +281,21 @@ async def video_down_up(c: Gojo, m: Message):
     except IndexError:
         await m.reply_text("**USAGE**\n /vsong [song name | link]")
         return
-    if splited.startswith("https://youtube.com"):
-        is_direct = True
-        query = splited.split("?")[0]
-    else:
-        is_direct = False
+    _id = get_video_id(splited)
+    if not _id:
         query = splited
-    XnX = await m.reply_text("⏳")
+    else:
+        query = _id
+    to_edit = await m.reply_text("⏳")
     try:
-        await youtube_downloader(c,m,query,is_direct,"v")
-        await XnX.delete()
+        await youtube_downloader(c,m,query,"v")
+        await to_edit.delete()
         return
     except KeyError:
-        await XnX.edit_text(f"Failed to find any result")
+        await to_edit.edit_text(f"Failed to find any result")
         return
     except Exception as e:
-        await XnX.edit_text(f"Got an error\n{e}")
+        await to_edit.edit_text(f"Got an error\n{e}")
         LOGGER.error(e)
         LOGGER.error(format_exc())
         return
@@ -306,27 +305,43 @@ async def download_instareels(c: Gojo, m: Message):
     try:
         reel_ = m.command[1]
     except IndexError:
-        await m.reply_text("Give me an link to download it...")
+        await m.reply_text("Give me an instagram link to download it...")
         return
-    if not reel_.startswith("https://www.instagram.com/reel/"):
-        await m.reply_text("In order to obtain the requested reel, a valid link is necessary. Kindly provide me with the required link.")
+    
+    insta = INSTAGRAM(reel_)
+
+    if not insta.is_correct_url():
+        await m.reply_text("The link you have provided is not of instagram")
         return
-    OwO = reel_.split(".",1)
-    Reel_ = ".dd".join(OwO)
+
+    to_edit = await m.reply_text("Trying to fetch data from the link")
+
+    content = insta.get_media()
+
+    if content["code"] == 69 or content["message"] != "success":
+        return await m.reply_text(content["message"])
+        
     try:
-        await m.reply_video(Reel_)
+        medias = content["content"]["mediaUrls"]
+
+        to_delete = await to_edit.edit_text("Found media in the link trying to download and upload them please wait")
+
+        to_send = []
+        for media in medias: 
+            if media["type"] == "image":
+                to_send.append(InputMediaPhoto(media["url"]))
+            else:
+                to_send.append(InputMediaVideo(media["url"]))
+
+        await m.reply_media_group(to_send)
+        await to_delete.delete()
+        # shutil.rmtree("./scrapped/")
+    
+    except KeyError:
+        await to_edit.delete()
+        await m.reply_text("Failed to fetch any media from given url")
         return
-    except Exception:
-        try:
-            await m.reply_photo(Reel_)
-            return
-        except Exception:
-            try:
-                await m.reply_document(Reel_)
-                return
-            except Exception:
-                await m.reply_text("I am unable to reach to this reel.")
-                return
+    
 
 __PLUGIN__ = "web support"
 
