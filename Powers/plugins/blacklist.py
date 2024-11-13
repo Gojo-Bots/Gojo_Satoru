@@ -4,7 +4,6 @@ from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.blacklist_db import Blacklist
 from Powers.utils.custom_filters import command, owner_filter, restrict_filter
@@ -53,13 +52,13 @@ async def add_blacklist(_, m: Message):
 
     if already_added_words:
         rep_text = (
-            ", ".join([f"<code>{i}</code>" for i in bl_words])
-            + " already added in blacklist, skipped them!"
+                ", ".join([f"<code>{i}</code>" for i in bl_words])
+                + " already added in blacklist, skipped them!"
         )
     trigger = ", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
         text=f"Added <code>{trigger}</code> in blacklist words!"
-        + (f"\n{rep_text}" if rep_text else ""),
+             + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -110,13 +109,13 @@ async def rm_blacklist(_, m: Message):
 
     if non_found_words:
         rep_text = (
-            "Could not find " + ", ".join(f"<code>{i}</code>" for i in non_found_words)
-        ) + " in blcklisted words, skipped them."
+                           "Could not find " + ", ".join(f"<code>{i}</code>" for i in non_found_words)
+                   ) + " in blcklisted words, skipped them."
 
     bl_words = ", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
         text=f"Removed <b>{bl_words}</b> from blacklist words!"
-        + (f"\n{rep_text}" if rep_text else ""),
+             + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -134,8 +133,8 @@ async def set_bl_action(_, m: Message):
         if action not in valid_actions:
             await m.reply_text(
                 (
-                    "Choose a valid blacklist action from "
-                    + ", ".join(f"<code>{i}</code>" for i in valid_actions)
+                        "Choose a valid blacklist action from "
+                        + ", ".join(f"<code>{i}</code>" for i in valid_actions)
                 ),
             )
 

@@ -5,7 +5,7 @@ from re import compile as compile_re
 from typing import List
 
 from pyrogram.enums import ChatType
-from pyrogram.types import InlineKeyboardButton, Message
+from pyrogram.types import Message
 
 from Powers import TIME_ZONE
 from Powers.utils.parser import escape_markdown
@@ -51,7 +51,7 @@ async def parse_button(text: str):
         while to_check > 0 and markdown_note[to_check] == "\\":
             n_escapes += 1
             to_check -= 1
-    
+
         # if even, not escaped -> create button
         if n_escapes % 2 == 0:
             # create a thruple with button label, url, and newline status
@@ -119,9 +119,9 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
 
 
 async def escape_mentions_using_curly_brackets(
-    m: Message,
-    text: str,
-    parse_words: list,
+        m: Message,
+        text: str,
+        parse_words: list,
 ) -> str:
     if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP, ChatType.CHANNEL]:
         chat_name = escape(m.chat.title)
@@ -164,7 +164,7 @@ async def split_quotes(text: str):
         if text[counter] == "\\":
             counter += 1
         elif text[counter] == text[0] or (
-            text[0] == SMART_OPEN and text[counter] == SMART_CLOSE
+                text[0] == SMART_OPEN and text[counter] == SMART_CLOSE
         ):
             break
         counter += 1

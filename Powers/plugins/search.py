@@ -14,11 +14,12 @@ from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
 from Powers.utils.kbhelpers import ikb
 
-#have to add youtube
+# have to add youtube
 
 gsearch = GoogleSearch()
 anisearch = AnimeSearch()
 stsearch = StackSearch()
+
 
 @Gojo.on_message(command('google'))
 async def g_search(c: Gojo, m: Message):
@@ -157,6 +158,7 @@ async def anime_search(c: Gojo, m: Message):
         LOGGER.error(format_exc())
         return
 
+
 @Gojo.on_message(command('stack'))
 async def stack_search(c: Gojo, m: Message):
     split = m.text.split(None, 1)
@@ -240,7 +242,8 @@ async def getText(message: Message):
     except Exception:
         return None
 
-@Gojo.on_message(command(["images","imgs"]))
+
+@Gojo.on_message(command(["images", "imgs"]))
 async def get_image_search(_, m: Message):
     # Credits: https://t.me/NovaXMod
     # https://t.me/NovaXMod/98
@@ -262,8 +265,8 @@ async def get_image_search(_, m: Message):
     except Exception:
         await ab.edit("Error occurred while sending images. Please try again.")
 
-__PLUGIN__ = "search"
 
+__PLUGIN__ = "search"
 
 __alt_name__ = [
     "google",

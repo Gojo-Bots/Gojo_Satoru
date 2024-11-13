@@ -13,12 +13,12 @@ class Filters(MongoDB):
         super().__init__(self.db_name)
 
     def save_filter(
-        self,
-        chat_id: int,
-        keyword: str,
-        filter_reply: str,
-        msgtype: int = Types.TEXT,
-        fileid="",
+            self,
+            chat_id: int,
+            keyword: str,
+            filter_reply: str,
+            msgtype: int = Types.TEXT,
+            fileid="",
     ):
         with INSERTION_LOCK:
             if curr := self.find_one({"chat_id": chat_id, "keyword": keyword}):

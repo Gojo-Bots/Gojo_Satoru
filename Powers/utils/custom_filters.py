@@ -21,11 +21,11 @@ from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 
 def command(
-    commands: Union[str, List[str]],
-    case_sensitive: bool = False,
-    owner_cmd: bool = False,
-    dev_cmd: bool = False,
-    sudo_cmd: bool = False,
+        commands: Union[str, List[str]],
+        case_sensitive: bool = False,
+        owner_cmd: bool = False,
+        dev_cmd: bool = False,
+        sudo_cmd: bool = False,
 ):
     async def func(flt, c: Gojo, m: Message):
         if not m:
@@ -33,7 +33,7 @@ def command(
 
         date = m.edit_date
         if date:
-            return  False # reaction
+            return False  # reaction
 
         if m.chat and m.chat.type == ChatType.CHANNEL:
             return False
@@ -81,13 +81,13 @@ def command(
                     # i.e. PM
                     user_status = CMS.OWNER
                 except RPCError:
-                    return False # Avoid RPCError while checking for user status
+                    return False  # Avoid RPCError while checking for user status
 
                 ddb = Disabling(m.chat.id)
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
-                                    CMS.OWNER,
-                                    CMS.ADMINISTRATOR,
-                                ) and ddb.get_action() == "del":
+                        CMS.OWNER,
+                        CMS.ADMINISTRATOR,
+                ) and ddb.get_action() == "del":
                     try:
                         await m.delete()
                     except RPCError:
@@ -213,7 +213,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
         m = m.message
 
     if (
-        m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]
+            m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]
     ):
         return False
 
@@ -369,18 +369,20 @@ async def flood_check_filter(_, __, m: Message):
 
     elif u_id in admin_group:
         return False
-    
+
     elif u_id in {i[0] for i in app_users}:
         return False
 
     else:
         return True
 
+
 async def captcha_filt(_, __, m: Message):
     try:
         return CAPTCHA().is_captcha(m.chat.id)
     except Exception:
         return False
+
 
 captcha_filter = create(captcha_filt)
 flood_filter = create(flood_check_filter)

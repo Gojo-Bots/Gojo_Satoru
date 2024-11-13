@@ -3,7 +3,6 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.utils.custom_filters import admin_filter, command, owner_filter
@@ -221,7 +220,6 @@ __PLUGIN__ = "approve"
 _DISABLE_CMDS_ = ["approval"]
 
 __alt_name__ = ["approved"]
-
 
 __HELP__ = """
 **Apporve**

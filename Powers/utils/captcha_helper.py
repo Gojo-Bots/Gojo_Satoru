@@ -13,7 +13,7 @@ async def get_qr_captcha(chat, user, username):
     initial = f"t.me/{username}?start=qr_"
     encode = f"{chat}:{user}"
     encoded = await encode_decode(encode)
-    final = initial+encoded
+    final = initial + encoded
     qr = qrcode.make(final)
     name = f"captcha_verification{chat}_{user}.png"
     qr.save(name)

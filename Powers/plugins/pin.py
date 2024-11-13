@@ -5,7 +5,7 @@ from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.filters import regex
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER, SUPPORT_GROUP
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.pins_db import Pins
 from Powers.utils.custom_filters import admin_filter, command
@@ -26,7 +26,6 @@ async def pin_message(_, m: Message):
             await m.reply_to_message.pin(
                 disable_notification=disable_notification,
             )
-
 
             if m.chat.username:
                 # If chat has a username, use this format
@@ -69,11 +68,11 @@ async def unpin_message(c: Gojo, m: Message):
     try:
         if m.reply_to_message:
             await m.reply_to_message.unpin()
-            
+
             await m.reply_text(text="Unpinned last message.")
         else:
             m_id = (await c.get_chat(m.chat.id)).pinned_message.id
-            await c.unpin_chat_message(m.chat.id,m_id)
+            await c.unpin_chat_message(m.chat.id, m_id)
             await m.reply_text(text="Unpinned last pinned message!")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")

@@ -40,7 +40,6 @@ async def tmute_usr(c: Gojo, m: Message):
     SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
 
     if user_id in SUPPORT_STAFF:
-        
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -109,8 +108,8 @@ async def tmute_usr(c: Gojo, m: Message):
                 reply_to_message_id=r_id,
             )
         except Exception:
-            await m.reply_text(txt,reply_markup=keyboard, reply_to_message_id=r_id)
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
+            await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -150,7 +149,6 @@ async def dtmute_usr(c: Gojo, m: Message):
 
     SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if user_id in SUPPORT_STAFF:
-        
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -217,8 +215,8 @@ async def dtmute_usr(c: Gojo, m: Message):
                 reply_markup=keyboard,
             )
         except Exception:
-            await m.reply_text(txt,reply_markup=keyboard)
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
+            await m.reply_text(txt, reply_markup=keyboard)
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -346,7 +344,6 @@ async def mute_usr(c: Gojo, m: Message):
 
     SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if user_id in SUPPORT_STAFF:
-        
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
@@ -390,8 +387,8 @@ async def mute_usr(c: Gojo, m: Message):
                 reply_to_message_id=r_id,
             )
         except Exception:
-            await m.reply_text(txt,reply_markup=keyboard, reply_to_message_id=r_id)
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
+            await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -490,7 +487,6 @@ async def dmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-
     SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -536,8 +532,8 @@ async def dmute_usr(c: Gojo, m: Message):
                 reply_markup=keyboard,
             )
         except Exception:
-            await m.reply_text(txt,reply_markup=keyboard)
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from MUTE_GIFS\n{mutt}")
+            await m.reply_text(txt, reply_markup=keyboard)
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from MUTE_GIFS\n{mutt}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except RightForbidden:
@@ -571,7 +567,7 @@ async def unmute_usr(c: Gojo, m: Message):
         return
     try:
         statu = (await m.chat.get_member(user_id)).status
-        if statu not in [enums.ChatMemberStatus.BANNED,enums.ChatMemberStatus.RESTRICTED]:
+        if statu not in [enums.ChatMemberStatus.BANNED, enums.ChatMemberStatus.RESTRICTED]:
             await m.reply_text("User is not muted in this chat\nOr using this command as reply to his message")
             return
     except Exception as e:

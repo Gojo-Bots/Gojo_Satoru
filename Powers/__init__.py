@@ -48,6 +48,7 @@ if version_info[0] < 3 or version_info[1] < 7:
 # the secret configuration specific things
 try:
     from Powers.vars import is_env
+
     if is_env or environ.get("ENV"):
         from Powers.vars import Config
     else:
@@ -135,8 +136,7 @@ PREFIX_HANDLER = Config.PREFIX_HANDLER
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
 
-
-#Make dir
+# Make dir
 youtube_dir = "./Youtube/"
 if path.isdir(youtube_dir):
     shutil.rmtree(youtube_dir)
@@ -195,7 +195,7 @@ async def load_cmds(all_plugins):
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
-        ", ".join((i.split(".")[1]).capitalize()
-                  for i in list(HELP_COMMANDS.keys()))
-        + "\n"
+            ", ".join((i.split(".")[1]).capitalize()
+                      for i in list(HELP_COMMANDS.keys()))
+            + "\n"
     )

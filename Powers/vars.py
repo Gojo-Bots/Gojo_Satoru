@@ -7,6 +7,7 @@ env_file = f"{getcwd()}/.env"
 config = Configuration(loaders=[Environment(), EnvFile(filename=env_file)])
 is_env = path.isfile(env_file)
 
+
 class Config:
     """Config class for variables."""
 
@@ -15,7 +16,7 @@ class Config:
     API_ID = int(config("API_ID", default="123"))
     API_HASH = config("API_HASH", default=None)
     OWNER_ID = int(config("OWNER_ID", default=1344569458))
-    MESSAGE_DUMP = int(config("MESSAGE_DUMP", default = "0")) # if not given owner id will be msg dump :)
+    MESSAGE_DUMP = int(config("MESSAGE_DUMP", default="0"))  # if not given owner id will be msg dump :)
     DEV_USERS = [
         int(i)
         for i in config(
@@ -51,8 +52,8 @@ class Config:
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="gojo_bots_network")
     WORKERS = int(config("WORKERS", default=16))
     TIME_ZONE = config("TIME_ZONE", default='Asia/Kolkata')
-    BOT_USERNAME = "" # Leave it as it is
-    BOT_ID = ""    # Leave it as it is
+    BOT_USERNAME = ""  # Leave it as it is
+    BOT_ID = ""  # Leave it as it is
     BOT_NAME = ""  # Leave it as it is
 
 

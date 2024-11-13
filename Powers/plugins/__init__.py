@@ -13,6 +13,7 @@ async def all_plugins():
     ]
     return sorted(all_plugs)
 
+
 from sys import exit as exiter
 
 from pymongo import MongoClient
@@ -36,5 +37,4 @@ from datetime import datetime
 
 def till_date(date):
     form = "%Y-%m-%d %H:%M:%S"
-    return datetime.strptime(date,form)
-
+    return datetime.strptime(date, form)

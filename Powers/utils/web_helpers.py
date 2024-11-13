@@ -12,11 +12,11 @@ from yt_dlp import YoutubeDL
 
 from Powers import youtube_dir
 from Powers.bot_class import LOGGER, Gojo
-from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import resize_file_to_sticker_size
 from Powers.utils.web_scrapper import SCRAP_DATA
 
 backUP = "https://artfiles.alphacoders.com/160/160160.jpeg"
+
 
 def readable_time(seconds: int) -> str:
     count = 0
@@ -47,7 +47,7 @@ def readable_time(seconds: int) -> str:
 def humanbytes(size: int):
     if not size:
         return ""
-    power = 2**10
+    power = 2 ** 10
     number = 0
     dict_power_n = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
     while size > power:
@@ -55,8 +55,9 @@ def humanbytes(size: int):
         number += 1
     return f"{str(round(size, 2))} {dict_power_n[number]}B"
 
+
 async def progress(
-    current: int, total: int, message: Message, start: float, process: str
+        current: int, total: int, message: Message, start: float, process: str
 ):
     now = time.time()
     diff = now - start
@@ -72,43 +73,44 @@ async def progress(
             round(percentage, 2),
         )
         msg = (
-            progress_str
-            + "__{0}__ **𝗈𝖿** __{1}__\n**𝖲𝗉𝖾𝖾𝖽:** __{2}/s__\n**𝖤𝖳𝖠:** __{3}__".format(
-                humanbytes(current),
-                humanbytes(total),
-                humanbytes(speed),
-                readable_time(estimated_total_time / 1000),
-            )
+                progress_str
+                + "__{0}__ **𝗈𝖿** __{1}__\n**𝖲𝗉𝖾𝖾𝖽:** __{2}/s__\n**𝖤𝖳𝖠:** __{3}__".format(
+            humanbytes(current),
+            humanbytes(total),
+            humanbytes(speed),
+            readable_time(estimated_total_time / 1000),
+        )
         )
         await message.edit_text(f"**{process} ...**\n\n{msg}")
 
 
 async def get_file_size(file: Message):
     if file.photo:
-        size = file.photo.file_size/1024
+        size = file.photo.file_size / 1024
     elif file.document:
-        size = file.document.file_size/1024
+        size = file.document.file_size / 1024
     elif file.video:
-        size = file.video.file_size/1024
+        size = file.video.file_size / 1024
     elif file.audio:
-        size = file.audio.file_size/1024
+        size = file.audio.file_size / 1024
     elif file.sticker:
-        size = file.sticker.file_size/1024
+        size = file.sticker.file_size / 1024
     elif file.animation:
-        size = file.animation.file_size/1024
+        size = file.animation.file_size / 1024
     elif file.voice:
-        size = file.voice.file_size/1024
+        size = file.voice.file_size / 1024
     elif file.video_note:
-        size = file.video_note.file_size/1024
+        size = file.video_note.file_size / 1024
 
     if size <= 1024:
         return f"{round(size)} kb"
-    size = size/1024
+    size = size / 1024
     if size <= 1024:
         return f"{round(size)} mb"
     elif size > 1024:
-        size = size/1024
+        size = size / 1024
         return f"{round(size)} gb"
+
 
 def get_video_id(url):
     try:
@@ -117,6 +119,7 @@ def get_video_id(url):
     except Exception:
         return None
 
+
 def get_duration_in_sec(dur: str):
     duration = dur.split(":")
     return (
@@ -124,6 +127,7 @@ def get_duration_in_sec(dur: str):
         if len(duration) == 2
         else int(duration[0])
     )
+
 
 # Gets yt result of given query.
 
@@ -141,11 +145,11 @@ async def song_search(query, max_results=1):
     for i in results["result"]:
         durr = i['duration'].split(":")
         if len(durr) == 3:
-            hour_to_sec = int(durr[0])*60*60
-            minutes_to_sec = int(durr[1])*60
+            hour_to_sec = int(durr[0]) * 60 * 60
+            minutes_to_sec = int(durr[1]) * 60
             total = hour_to_sec + minutes_to_sec + int(durr[2])
         if len(durr) == 2:
-            minutes_to_sec = int(durr[0])*60
+            minutes_to_sec = int(durr[0]) * 60
             total = minutes_to_sec + int(durr[1])
         if total <= 600:
             dict_form = {
@@ -170,6 +174,7 @@ async def song_search(query, max_results=1):
             nums += 1
     return yt_dict
 
+
 song_opts = {
     "format": "bestaudio",
     "addmetadata": True,
@@ -190,22 +195,23 @@ song_opts = {
 }
 
 video_opts = {
-        "format": "best",
-        "addmetadata": True,
-        "key": "FFmpegMetadata",
-        "prefer_ffmpeg": True,
-        "geo_bypass": True,
-        "nocheckcertificate": True,
-        "postprocessors": [
-            {
-                "key": "FFmpegVideoConvertor",
-                "preferedformat": "mp4",
-            }
-        ],
-        "outtmpl": "%(id)s.mp4",
-        "quiet": True,
-        "logtostderr": False,
-    }
+    "format": "best",
+    "addmetadata": True,
+    "key": "FFmpegMetadata",
+    "prefer_ffmpeg": True,
+    "geo_bypass": True,
+    "nocheckcertificate": True,
+    "postprocessors": [
+        {
+            "key": "FFmpegVideoConvertor",
+            "preferedformat": "mp4",
+        }
+    ],
+    "outtmpl": "%(id)s.mp4",
+    "quiet": True,
+    "logtostderr": False,
+}
+
 
 async def youtube_downloader(c: Gojo, m: Message, query: str, type_: str):
     if type_ == "a":
@@ -283,7 +289,7 @@ Downloaded by: @{c.me.username}
             file_name = ydl.prepare_filename(info)
             if len(file_name.rsplit(".", 1)) != 2:
                 file_name = f"{file_name}.{ext}"
-            new = info['title'].replace('/','|').replace('\\','|')
+            new = info['title'].replace('/', '|').replace('\\', '|')
             new_file = f"{youtube_dir}{new}.{ext}"
             os.rename(file_name, new_file)
             return True, new_file
@@ -296,7 +302,8 @@ Downloaded by: @{c.me.username}
             await m.reply_text(file_path)
             return
         msg = await m.reply_text(upload_text)
-        await m.reply_audio(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, title=f_name,performer=uploader, progress=progress, progress_args=(msg, time.time(), upload_text))
+        await m.reply_audio(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, title=f_name,
+                            performer=uploader, progress=progress, progress_args=(msg, time.time(), upload_text))
         await msg.delete()
         os.remove(file_path)
         return
@@ -306,7 +313,8 @@ Downloaded by: @{c.me.username}
             await m.reply_text(file_path)
             return
         msg = await m.reply_text(upload_text)
-        await m.reply_video(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, progress=progress, progress_args=(msg, time.time(), upload_text))
+        await m.reply_video(file_path, caption=cap, reply_markup=kb, duration=vid_dur, thumb=thumb, progress=progress,
+                            progress_args=(msg, time.time(), upload_text))
         await msg.delete()
         os.remove(file_path)
         return

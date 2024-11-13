@@ -160,10 +160,10 @@ async def get_private_note(c: Gojo, m: Message, help_option: str):
             await m.reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(m.chat.id, getnotes["fileid"])
     else:

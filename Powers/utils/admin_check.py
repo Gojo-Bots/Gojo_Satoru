@@ -69,7 +69,7 @@ async def owner_check(m: Message or CallbackQuery) -> bool:
 
     if user_id in SUDO_LEVEL:
         return True
-    
+
     try:
         user = await m.chat.get_member(user_id)
     except Exception:

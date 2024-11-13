@@ -1,6 +1,5 @@
 from threading import RLock
 
-from Powers import LOGGER
 from Powers.database import MongoDB
 
 INSERTION_LOCK = RLock()
@@ -18,10 +17,10 @@ class AFK(MongoDB):
             if curr := self.check_afk(chat_id=chat_id, user_id=user_id):
                 if reason:
                     self.update({"chat_id": chat_id, "user_id": user_id}, {
-                                "reason": reason, "time": time})
+                        "reason": reason, "time": time})
                 if media:
                     self.update({"chat_id": chat_id, "user_id": user_id}, {
-                                'media': media, 'media_type': media_type, "time": time})
+                        'media': media, 'media_type': media_type, "time": time})
             else:
                 self.insert_one(
                     {

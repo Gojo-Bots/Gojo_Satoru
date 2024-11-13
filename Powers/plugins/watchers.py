@@ -15,13 +15,13 @@ from Powers.database.blacklist_db import Blacklist
 from Powers.database.group_blacklist import BLACKLIST_CHATS
 from Powers.database.pins_db import Pins
 from Powers.database.warns_db import Warns, WarnSettings
-from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.parser import mention_html
 from Powers.utils.regex_utils import regex_searcher
 
 # Initialise
 gban_db = GBan()
+
 
 @Gojo.on_message(filters.linked_channel)
 async def antichanpin_cleanlinked(c: Gojo, m: Message):
@@ -121,7 +121,7 @@ async def bl_watcher(_, m: Message):
                     ),
                 )
             return
-        
+
         SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
         if m.from_user.id in SUPPORT_STAFF:
             # Don't work on Support Staff!
@@ -156,7 +156,7 @@ async def bl_watcher(_, m: Message):
             if match:
                 try:
                     await perform_action_blacklist(m, action, trigger)
-                    
+
                     await m.delete()
                 except RPCError as ef:
                     LOGGER.error(ef)
@@ -167,11 +167,10 @@ async def bl_watcher(_, m: Message):
         return
 
 
-
 @Gojo.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group, 5)
 async def gban_watcher(c: Gojo, m: Message):
     from Powers import SUPPORT_GROUP
-    
+
     if m and not m.from_user:
         return
 
@@ -191,8 +190,8 @@ async def gban_watcher(c: Gojo, m: Message):
                 text=f"This user ({user_gbanned}) has been banned globally!\n\nTo get unbanned, appeal at @{SUPPORT_GROUP}")
             return
         except (ChatAdminRequired, UserAdminInvalid):
-            pass # For now just ignore the user in future will let the admins know once or after few times think abt it later
-            
+            pass  # For now just ignore the user in future will let the admins know once or after few times think abt it later
+
         except RPCError as ef:
             await c.send_message(
                 MESSAGE_DUMP,
@@ -200,8 +199,6 @@ async def gban_watcher(c: Gojo, m: Message):
         <b>Chat:</b> <code>{m.chat.id}</code>
         <b>Error:</b> <code>{ef}</code>""",
             )
-
-
 
 
 @Gojo.on_message(filters.chat(BLACKLIST_CHATS))

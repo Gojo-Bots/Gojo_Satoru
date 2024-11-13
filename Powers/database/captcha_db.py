@@ -1,6 +1,5 @@
 from threading import RLock
 
-from Powers import LOGGER
 from Powers.database import MongoDB
 
 INSERTION_LOCK = RLock()
@@ -39,7 +38,7 @@ class CAPTCHA(MongoDB):
         with INSERTION_LOCK:
             if curr := self.is_captcha(chat):
                 self.update({"chat_id": chat}, {
-                            "captcha_action": captcha_action})
+                    "captcha_action": captcha_action})
             return
 
     def remove_captcha(self, chat):
@@ -86,7 +85,7 @@ class CAPTCHA_DATA(MongoDB):
             self.insert_one(
                 {"chat_id": chat, "user_id": user, "message_id": message})
             return
-        
+
     def get_message_id(self, chat, user):
         if curr := self.find_one({"chat_id": chat, "user_id": user}):
             return curr["message_id"]

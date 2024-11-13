@@ -5,7 +5,7 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
-from Powers import HELP_COMMANDS, LOGGER
+from Powers import HELP_COMMANDS
 from Powers.bot_class import Gojo
 from Powers.database.disable_db import Disabling
 from Powers.utils.custom_filters import (admin_filter, can_change_filter,
@@ -145,7 +145,6 @@ async def enablealll(_, q: CallbackQuery):
 __PLUGIN__ = "disable able"
 
 __alt_name__ = ["disable commands", "disable"]
-
 
 __HELP__ = """
 **Disable commands**

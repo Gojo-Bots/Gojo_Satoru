@@ -83,7 +83,7 @@ class Disabling(MongoDB):
             collection = MongoDB(Disabling.db_name)
             curr = collection.find_all()
             return sum(bool(chat["commands"])
-                   for chat in curr)
+                       for chat in curr)
 
     def set_action(self, action: str):
         with INSERTION_LOCK:

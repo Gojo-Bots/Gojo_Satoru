@@ -1,9 +1,6 @@
 from threading import RLock
-from traceback import format_exc
 
-from Powers import LOGGER
 from Powers.database import MongoDB
-from Powers.utils.msg_types import Types
 
 INSERTION_LOCK = RLock()
 
@@ -16,11 +13,11 @@ class Floods(MongoDB):
         super().__init__(self.db_name)
 
     def save_flood(
-        self,
-        chat_id: int,
-        limit: int,
-        within: int,
-        action: str,
+            self,
+            chat_id: int,
+            limit: int,
+            within: int,
+            action: str,
     ):
         with INSERTION_LOCK:
             if not (curr := self.find_one({"chat_id": chat_id})):
@@ -33,9 +30,9 @@ class Floods(MongoDB):
                     },
                 )
             if (
-                limit != int(curr['limit'])
-                or within != int(curr['within'])
-                or action != str(curr['action'])
+                    limit != int(curr['limit'])
+                    or within != int(curr['within'])
+                    or action != str(curr['action'])
             ):
                 return self.update(
                     {

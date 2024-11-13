@@ -44,7 +44,7 @@ async def tban_usr(c: Gojo, m: Message):
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
-        
+
         await m.stop_propagation()
 
     r_id = m.reply_to_message.id if m.reply_to_message else m.id
@@ -86,10 +86,11 @@ async def tban_usr(c: Gojo, m: Message):
         await m.chat.ban_member(
             user_id,
             until_date=bantime)
-        t_t=f"{admin} banned {banned} in <b>{chat_title}</b>!",
+        t_t = f"{admin} banned {banned} in <b>{chat_title}</b>!",
         txt = t_t
         if type(t_t) is tuple:
-            txt = t_t[0] # Done this bcuz idk why t_t is tuple type data. SO now if it is tuple this will get text from it
+            txt = t_t[
+                0]  # Done this bcuz idk why t_t is tuple type data. SO now if it is tuple this will get text from it
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
         if time_val:
@@ -114,14 +115,14 @@ async def tban_usr(c: Gojo, m: Message):
                 parse_mode=enums.ParseMode.HTML,
             )
         except Exception:
-            
+
             await m.reply_text(
                 reply_to_message_id=r_id,
                 text=txt,
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from BAN_GFIS\n{anim}")
     # await m.reply_text(txt, reply_markup=keyboard,
     # reply_to_message_id=r_id)
     except ChatAdminRequired:
@@ -175,7 +176,7 @@ async def stban_usr(c: Gojo, m: Message):
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
-        
+
         await m.stop_propagation()
 
     if m.reply_to_message and len(m.text.split()) >= 2:
@@ -266,7 +267,7 @@ async def dtban_usr(c: Gojo, m: Message):
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="I am not going to ban one of my support staff")
-        
+
         await m.stop_propagation()
 
     if m.reply_to_message and len(m.text.split()) >= 2:
@@ -329,13 +330,13 @@ async def dtban_usr(c: Gojo, m: Message):
                 parse_mode=enums.ParseMode.HTML,
             )
         except Exception:
-            
+
             await m.reply_text(
                 txt,
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from BAN_GFIS\n{anim}")
         # await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -430,7 +431,7 @@ async def kick_usr(c: Gojo, m: Message):
                 text=txt,
                 parse_mode=enums.ParseMode.HTML,
             )
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from KICK_GFIS\n{kickk}")
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from KICK_GFIS\n{kickk}")
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -483,7 +484,7 @@ async def skick_usr(c: Gojo, m: Message):
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
         )
-        
+
         await m.stop_propagation()
 
     try:
@@ -587,7 +588,7 @@ async def dkick_usr(c: Gojo, m: Message):
                 txt,
                 parse_mode=enums.ParseMode.HTML,
             )
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from KICK_GFIS\n{kickk}")
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from KICK_GFIS\n{kickk}")
         await m.chat.unban_member(user_id)
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
@@ -641,7 +642,7 @@ async def unban_usr(c: Gojo, m: Message):
 
     try:
         statu = (await m.chat.get_member(user_id)).status
-        if statu not in [enums.ChatMemberStatus.BANNED,enums.ChatMemberStatus.RESTRICTED]:
+        if statu not in [enums.ChatMemberStatus.BANNED, enums.ChatMemberStatus.RESTRICTED]:
             await m.reply_text("User is not banned in this chat\nOr using this command as reply to his message")
             return
     except Exception as e:
@@ -813,8 +814,8 @@ async def dban_usr(c: Gojo, m: Message):
                 m.chat.id, animation=str(animm), caption=txt, reply_markup=keyboard
             )
         except Exception:
-            await c.send_message(m.chat.id,txt,enums.ParseMode.HTML,reply_markup=keyboard)
-            await c.send_messagea(MESSAGE_DUMP,f"#REMOVE from BAN_GIFS\n{animm}")
+            await c.send_message(m.chat.id, txt, enums.ParseMode.HTML, reply_markup=keyboard)
+            await c.send_messagea(MESSAGE_DUMP, f"#REMOVE from BAN_GIFS\n{animm}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
@@ -921,14 +922,14 @@ async def ban_usr(c: Gojo, m: Message):
                 parse_mode=enums.ParseMode.HTML,
             )
         except Exception:
-            
+
             await m.reply_text(
                 reply_to_message_id=r_id,
                 text=txt,
                 reply_markup=keyboard,
                 parse_mode=enums.ParseMode.HTML,
             )
-            await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
+            await c.send_message(MESSAGE_DUMP, f"#REMOVE from BAN_GFIS\n{anim}")
     except ChatAdminRequired:
         await m.reply_text(text="I'm not admin or I don't have rights.")
     except PeerIdInvalid:
@@ -988,7 +989,7 @@ async def unbanbutton(c: Gojo, q: CallbackQuery):
 async def kickme(c: Gojo, m: Message):
     reason = m.text.split(None, 1)[1] if len(m.text.split()) >= 2 else None
     try:
-        mem = await c.get_chat_member(m.chat.id,m.from_user.id)
+        mem = await c.get_chat_member(m.chat.id, m.from_user.id)
         if mem.status in [enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER]:
             try:
                 await c.promote_chat_member(

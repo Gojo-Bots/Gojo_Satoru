@@ -455,14 +455,15 @@ async def is_approved_user(c: Gojo, m: Message):
         return bool(
             m.from_user
             and (
-                m.from_user.id in ul
-                or m.from_user.id in SUDO_LEVEL
-                or m.from_user.id in admins_group
-                or m.from_user.id == c.me.id
+                    m.from_user.id in ul
+                    or m.from_user.id in SUDO_LEVEL
+                    or m.from_user.id in admins_group
+                    or m.from_user.id == c.me.id
             )
         )
     elif m.forward_from_chat:
-        if m.from_user and (m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id):
+        if m.from_user and (
+                m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id):
             return True
         elif m.automatic_forward:
             return True
@@ -470,10 +471,10 @@ async def is_approved_user(c: Gojo, m: Message):
             return False
     elif m.from_user:
         return (
-            m.from_user.id in ul
-            or m.from_user.id in SUDO_LEVEL
-            or m.from_user.id in admins_group
-            or m.from_user.id == c.me.id
+                m.from_user.id in ul
+                or m.from_user.id in SUDO_LEVEL
+                or m.from_user.id in admins_group
+                or m.from_user.id == c.me.id
         )
     else:
         return False
@@ -506,10 +507,10 @@ async def lock_del_mess(c: Gojo, m: Message):
         return
 
     if (
-        chat_locks["anti_channel"]
-        and m.sender_chat
-        and not m.forward_from_chat
-        and not m.forward_from
+            chat_locks["anti_channel"]
+            and m.sender_chat
+            and not m.forward_from_chat
+            and not m.forward_from
     ):
         if m.chat.is_admin:
             return

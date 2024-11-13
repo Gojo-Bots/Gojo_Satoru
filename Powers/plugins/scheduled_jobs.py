@@ -16,12 +16,15 @@ from pyrogram.enums import ChatMemberStatus
 from Powers.utils.extras import birthday_wish
 
 
-def give_date(date,form = "%d/%m/%Y"):
-    return datetime.strptime(date,form).date()
+def give_date(date, form="%d/%m/%Y"):
+    return datetime.strptime(date, form).date()
+
 
 scheduler = AsyncIOScheduler()
 scheduler.timezone = TIME_ZONE
-scheduler_time = time(0,0,0)
+scheduler_time = time(0, 0, 0)
+
+
 async def send_wishish(JJK: Client):
     c_list = Chats.list_chats_by_id()
     blist = list(bday_info.find())
@@ -37,22 +40,23 @@ async def send_wishish(JJK: Client):
                     agee = ""
                     if i["is_year"]:
                         agee = curr.year - dob.year
-                        if int(agee/10) == 1:
+                        if int(agee / 10) == 1:
                             suf = "th"
                         else:
                             suffix = {1: 'st', 2: 'nd', 3: 'rd'}
-                            suffix.get((agee%10), "th")
+                            suffix.get((agee % 10), "th")
                         agee = f"{agee}{suf}"
-                    U = await JJK.get_chat_member(chat_id=j,user_id=i["user_id"])
+                    U = await JJK.get_chat_member(chat_id=j, user_id=i["user_id"])
                     wish = choice(birthday_wish)
-                    if U.status in [ChatMemberStatus.MEMBER,ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
-                        xXx = await JJK.send_message(j,f"Happy {agee} birthday {U.user.mention}🥳\n{wish}")
+                    if U.status in [ChatMemberStatus.MEMBER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
+                        xXx = await JJK.send_message(j, f"Happy {agee} birthday {U.user.mention}🥳\n{wish}")
                         try:
                             await xXx.pin()
                         except Exception:
                             pass
                 except Exception:
                     pass
+
 
 """"
 from datetime import date, datetime
@@ -71,4 +75,3 @@ else:
 print(days_left)
 print(x.year - timm.year)
 """
-

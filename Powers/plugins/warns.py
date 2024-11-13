@@ -6,7 +6,7 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import DEV_USERS, LOGGER, SUDO_USERS, TIME_ZONE, WHITELIST_USERS
+from Powers import DEV_USERS, SUDO_USERS, TIME_ZONE, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.database.users_db import Users
@@ -27,7 +27,7 @@ async def warn(c: Gojo, m: Message):
     else:
         r_id = m.id
         reason = m.text.split(None, 2)[2] if len(m.text.split()) >= 3 else None
-    if not len(m.command) > 1 and not m.reply_to_message:
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -77,7 +77,7 @@ async def warn(c: Gojo, m: Message):
                 f"\n<b>Reason for last warn</b>:\n{reason}"
                 if reason
                 else "\n"
-                f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
+                     f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
             reply_to_message_id=r_id,
         )
@@ -124,7 +124,6 @@ async def warn(c: Gojo, m: Message):
 
 @Gojo.on_message(command("resetwarns") & restrict_filter)
 async def reset_warn(c: Gojo, m: Message):
-
     if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
@@ -161,7 +160,6 @@ async def reset_warn(c: Gojo, m: Message):
 
 @Gojo.on_message(command("warns") & filters.group)
 async def list_warns(c: Gojo, m: Message):
-
     user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id == c.me.id:
@@ -191,7 +189,7 @@ async def list_warns(c: Gojo, m: Message):
     if not warns:
         await m.reply_text("This user has no warns!")
         return
-    msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
+    msg = f"{(await mention_html(user_first_name, user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
     msg += "\n".join([("- No reason" if i is None else f" - {i}") for i in warns])
     await m.reply_text(msg)
     return
@@ -201,7 +199,6 @@ async def list_warns(c: Gojo, m: Message):
     command(["rmwarn", "removewarn"]) & restrict_filter,
 )
 async def remove_warn(c: Gojo, m: Message):
-
     if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text(
             "I can't remove warns of nothing! Tell me user whose warn should be removed!",
@@ -239,7 +236,7 @@ async def remove_warn(c: Gojo, m: Message):
     _, num_warns = warn_db.remove_warn(user_id)
     await m.reply_text(
         (
-            f"{(await mention_html(user_first_name,user_id))} now has <b>{num_warns}</b> warnings!\n"
+            f"{(await mention_html(user_first_name, user_id))} now has <b>{num_warns}</b> warnings!\n"
             "Their last warn was removed."
         ),
     )
@@ -248,7 +245,6 @@ async def remove_warn(c: Gojo, m: Message):
 
 @Gojo.on_callback_query(filters.regex("^warn."))
 async def remove_last_warn_btn(c: Gojo, q: CallbackQuery):
-
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
     except KeyError:

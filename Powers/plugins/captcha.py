@@ -3,7 +3,6 @@ from random import choice, shuffle
 from traceback import format_exc
 from typing import List
 
-import pyrogram
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ParseMode as PM
@@ -53,7 +52,8 @@ async def set_captcha_mode(c: Gojo, m: Message):
     if len(split) == 1:
         if curr := captcha.get_captcha(m.chat.id):
             capatcha_type = curr["captcha_type"]
-            await m.reply_text(f"Current captcha verification methode is {capatcha_type}\nAvailable methodes:\n■ qr\n■ image")
+            await m.reply_text(
+                f"Current captcha verification methode is {capatcha_type}\nAvailable methodes:\n■ qr\n■ image")
         else:
             await m.reply_text("Captcha verification is off for the current chat")
     else:
@@ -137,7 +137,7 @@ async def captcha_codes_check(c: Gojo, q: CallbackQuery):
                     reply_markup=keyboard,
                     parse_mode=PM.HTML,
                 )
-                await c.send_message(MESSAGE_DUMP,f"#REMOVE from BAN_GFIS\n{anim}")
+                await c.send_message(MESSAGE_DUMP, f"#REMOVE from BAN_GFIS\n{anim}")
             c_data.remove_cap_data(chat, user)
             c_data.del_message_id(q.message.chat.id, user)
         else:
@@ -192,7 +192,7 @@ async def on_chat_members_updatess(c: Gojo, m: Message):
             continue
 
         if not is_already:
-            captcha_type = "image" # I am not going to apply qr captcha in this update
+            captcha_type = "image"  # I am not going to apply qr captcha in this update
             if captcha_type == "image":
                 img, code = await get_image_captcha(chat, user.id)
                 cap = f"Please {user.mention} please choose the correct code from the one given bellow\nYou have three tries if you get all three wrong u will be banned from the chat.\nTries left: 3"
@@ -210,19 +210,19 @@ async def on_chat_members_updatess(c: Gojo, m: Message):
                 kb = ikm(
                     [
                         [
-                            IKB(rand[0], ini+rand[0])
+                            IKB(rand[0], ini + rand[0])
                         ],
                         [
-                            IKB(rand[1], ini+rand[1])
+                            IKB(rand[1], ini + rand[1])
                         ],
                         [
-                            IKB(rand[2], ini+rand[2])
+                            IKB(rand[2], ini + rand[2])
                         ],
                         [
-                            IKB(rand[3], ini+rand[3])
+                            IKB(rand[3], ini + rand[3])
                         ],
                         [
-                            IKB(rand[4], ini+rand[4])
+                            IKB(rand[4], ini + rand[4])
                         ]
                     ]
                 )

@@ -86,6 +86,7 @@ class Approve(MongoDB):
             self.insert_one(new_data)
             return new_data
         return chat_data
+
     # Migrate if chat id changes!
 
     def migrate_chat(self, new_chat_id: int):

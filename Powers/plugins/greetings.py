@@ -26,11 +26,11 @@ gdb = GBan()
 ChatType = enums.ChatType
 
 
-async def  escape_mentions_using_curly_brackets_wl(
-    user: User,
-    m: Message,
-    text: str,
-    parse_words: list,
+async def escape_mentions_using_curly_brackets_wl(
+        user: User,
+        m: Message,
+        text: str,
+        parse_words: list,
 ) -> str:
     teks = await escape_invalid_curly_brackets(text, parse_words)
     if teks:
@@ -157,7 +157,7 @@ async def save_wlcm(_, m: Message):
         await m.reply_text("Please provide some data for this to reply with!")
         return
 
-    db.set_welcome_text(text,msgtype,file)
+    db.set_welcome_text(text, msgtype, file)
     await m.reply_text("Saved welcome!")
     return
 
@@ -195,7 +195,7 @@ async def save_gdbye(_, m: Message):
         await m.reply_text("Please provide some data for this to reply with!")
         return
 
-    db.set_goodbye_text(text,msgtype,file)
+    db.set_goodbye_text(text, msgtype, file)
     await m.reply_text("Saved goodbye!")
     return
 
@@ -206,7 +206,7 @@ async def resetgb(_, m: Message):
     if m and not m.from_user:
         return
     text = "Sad to see you leaving {first}.\nTake Care!"
-    db.set_goodbye_text(text,None)
+    db.set_goodbye_text(text, None)
     await m.reply_text("Ok Done!")
     return
 
@@ -217,7 +217,7 @@ async def resetwlcm(_, m: Message):
     if m and not m.from_user:
         return
     text = "Hey {first}, welcome to {chatname}!"
-    db.set_welcome_text(text,None)
+    db.set_welcome_text(text, None)
     await m.reply_text("Done!")
     return
 
@@ -231,6 +231,7 @@ async def cleannnnn(_, m: Message):
             await m.delete()
     except Exception:
         pass
+
 
 @Gojo.on_message(filters.group & filters.new_chat_members & ~captcha_filter, group=69)
 async def member_has_joined(c: Gojo, m: Message):
@@ -256,7 +257,7 @@ async def member_has_joined(c: Gojo, m: Message):
                 )
                 continue
             if user.is_bot:
-                continue # ignore bots
+                continue  # ignore bots
         except ChatAdminRequired:
             continue
         status = db.get_welcome_status()
@@ -306,7 +307,7 @@ async def member_has_joined(c: Gojo, m: Message):
                     disable_web_page_preview=True,
                 )
             else:
-                jj = await (await send_cmd(c,mtype))(
+                jj = await (await send_cmd(c, mtype))(
                     m.chat.id,
                     UwU,
                     caption=teks,
@@ -354,7 +355,7 @@ async def member_has_left(c: Gojo, m: Message):
     else:
         teks = tek
 
-    if not teks: #Just in case
+    if not teks:  # Just in case
         teks = f"Thanks for being part of this group {user.mention}. But I don't like your arrogance and leaving the group {emoji.EYES}"
 
     ifff = db.get_current_cleangoodbye_id()
@@ -375,16 +376,16 @@ async def member_has_left(c: Gojo, m: Message):
     try:
         ooo = (
             await (await send_cmd(c, mtype))(
-                            m.chat.id,
-                            UwU,
-                            caption=teks,
-                            reply_markup=button,
-                        ) if UwU else await c.send_message(
-                            m.chat.id,
-                            text=teks,
-                            reply_markup=button,
-                            disable_web_page_preview=True,
-                        )
+                m.chat.id,
+                UwU,
+                caption=teks,
+                reply_markup=button,
+            ) if UwU else await c.send_message(
+                m.chat.id,
+                text=teks,
+                reply_markup=button,
+                disable_web_page_preview=True,
+            )
         )
         if ooo:
             db.set_cleangoodbye_id(int(ooo.id))
@@ -445,14 +446,14 @@ async def welcome(c: Gojo, m: Message):
     button = await build_keyboard(button)
     button = ikb(button) if button else None
     if not UwU:
-            await c.send_message(
+        await c.send_message(
             m.chat.id,
             text=tek,
             reply_markup=button,
             disable_web_page_preview=True,
         )
     else:
-            await (await send_cmd(c,mtype))(
+        await (await send_cmd(c, mtype))(
             m.chat.id,
             UwU,
             caption=tek,
@@ -507,20 +508,21 @@ async def goodbye(c: Gojo, m: Message):
     button = await build_keyboard(button)
     button = ikb(button) if button else None
     if not UwU:
-            await c.send_message(
+        await c.send_message(
             m.chat.id,
             text=tek,
             reply_markup=button,
             disable_web_page_preview=True,
         )
     else:
-            await (await send_cmd(c,mtype))(
+        await (await send_cmd(c, mtype))(
             m.chat.id,
             UwU,
             caption=tek,
             reply_markup=button,
         )
     return
+
 
 __PLUGIN__ = "greetings"
 __alt_name__ = ["welcome", "goodbye", "cleanservice"]

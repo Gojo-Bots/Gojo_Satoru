@@ -15,16 +15,16 @@ class Notes(MongoDB):
         super().__init__(self.db_name)
 
     def save_note(
-        self,
-        chat_id: int,
-        note_name: str,
-        note_value: str,
-        msgtype: int = Types.TEXT,
-        fileid="",
+            self,
+            chat_id: int,
+            note_name: str,
+            note_value: str,
+            msgtype: int = Types.TEXT,
+            fileid="",
     ):
         with INSERTION_LOCK:
             if curr := self.find_one(
-                {"chat_id": chat_id, "note_name": note_name},
+                    {"chat_id": chat_id, "note_name": note_name},
             ):
                 return False
             hash_gen = md5(
@@ -44,7 +44,7 @@ class Notes(MongoDB):
     def get_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
             if curr := self.find_one(
-                {"chat_id": chat_id, "note_name": note_name},
+                    {"chat_id": chat_id, "note_name": note_name},
             ):
                 return curr
             return "Note does not exist!"
@@ -60,7 +60,7 @@ class Notes(MongoDB):
     def rm_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
             if curr := self.find_one(
-                {"chat_id": chat_id, "note_name": note_name},
+                    {"chat_id": chat_id, "note_name": note_name},
             ):
                 self.delete_one(curr)
                 return True

@@ -6,6 +6,7 @@ import httpx
 
 from Powers import *
 
+
 # import requests
 # from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
@@ -14,7 +15,6 @@ from Powers import *
 # from selenium.webdriver.support.expected_conditions import \
 #     presence_of_element_located
 # from selenium.webdriver.support.wait import WebDriverWait
-
 
 
 class SCRAP_DATA:

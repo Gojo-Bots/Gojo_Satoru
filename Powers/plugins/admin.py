@@ -15,8 +15,7 @@ from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
-from Powers.utils.caching import (ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK,
-                                  admin_cache_reload)
+from Powers.utils.caching import (admin_cache_reload)
 from Powers.utils.custom_filters import admin_filter, command, promote_filter
 from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
@@ -25,7 +24,7 @@ from Powers.utils.parser import mention_html
 @Gojo.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
-    if m.chat.type not in [ChatType.SUPERGROUP,ChatType.GROUP]:
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return await m.reply_text(
             text="This command is made to be used in groups only!",
         )
@@ -78,7 +77,6 @@ async def adminlist_show(_, m: Message):
     return
 
 
-
 @Gojo.on_message(command("zombies") & admin_filter)
 async def zombie_clean(c: Gojo, m: Message):
     zombie = 0
@@ -100,22 +98,23 @@ async def zombie_clean(c: Gojo, m: Message):
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
     await wait.delete()
-    txt=f"<b>{zombie}</b> Zombies found and {zombie - failed} has been banned!\n{failed} zombies' are immune to me",
+    txt = f"<b>{zombie}</b> Zombies found and {zombie - failed} has been banned!\n{failed} zombies' are immune to me",
     await m.reply_animation("https://graph.org/file/02a1dcf7788186ffb36cb.mp4", caption=txt)
     return
+
 
 @Gojo.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
-    if m.chat.type not in [ChatType.SUPERGROUP,ChatType.GROUP]:
+    if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )
     SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     if (
-        (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
-        and (m.from_user.id not in SUPPORT_STAFF)
-        and TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock"
+            (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
+            and (m.from_user.id not in SUPPORT_STAFF)
+            and TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock"
     ):
         await m.reply_text("Can only reload admin cache once per 10 mins!")
         return
@@ -194,9 +193,9 @@ async def fullpromote_usr(c: Gojo, m: Message):
         if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP]:
             title = "Gojo"  # Default fullpromote title
             if len(m.text.split()) == 3 and not m.reply_to_message:
-                title = " ".join(m.text.split()[2:16]) # trim title to 16 characters
+                title = " ".join(m.text.split()[2:16])  # trim title to 16 characters
             elif len(m.text.split()) >= 2 and m.reply_to_message:
-                title = " ".join(m.text.split()[1:16]) # trim title to 16 characters
+                title = " ".join(m.text.split()[1:16])  # trim title to 16 characters
 
             try:
                 await c.set_administrator_title(m.chat.id, user_id, title)
@@ -297,9 +296,9 @@ async def promote_usr(c: Gojo, m: Message):
         if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP]:
             title = "Itadori"  # Deafult title
             if len(m.text.split()) >= 3 and not m.reply_to_message:
-                title = " ".join(m.text.split()[2:16]) # trim title to 16 characters
+                title = " ".join(m.text.split()[2:16])  # trim title to 16 characters
             elif len(m.text.split()) >= 2 and m.reply_to_message:
-                title = " ".join(m.text.split()[1:16]) # trim title to 16 characters
+                title = " ".join(m.text.split()[1:16])  # trim title to 16 characters
             try:
                 await c.set_administrator_title(m.chat.id, user_id, title)
             except RPCError as e:
@@ -308,7 +307,7 @@ async def promote_usr(c: Gojo, m: Message):
             except Exception as e:
                 LOGGER.error(e)
                 LOGGER.error(format_exc())
-        
+
         await m.reply_text(
             ("{promoter} promoted {promoted} in chat <b>{chat_title}</b>!").format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -406,7 +405,8 @@ async def demote_usr(c: Gojo, m: Message):
             "Cannot act on this user, maybe I wasn't the one who changed their permissions."
         )
     except BotChannelsNa:
-        await m.reply_text("May be the user is bot and due to telegram restrictions I can't demote them. Please do it manually")
+        await m.reply_text(
+            "May be the user is bot and due to telegram restrictions I can't demote them. Please do it manually")
     except RPCError as ef:
         await m.reply_text(
             f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"
@@ -419,7 +419,7 @@ async def demote_usr(c: Gojo, m: Message):
 @Gojo.on_message(command("invitelink"))
 async def get_invitelink(c: Gojo, m: Message):
     # Bypass the bot devs, sudos and owner
-    
+
     DEV_LEVEL = DEV_USERS
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
@@ -465,6 +465,7 @@ async def setgtitle(_, m: Message):
     return await m.reply_text(
         f"Successfully Changed Group Title From {m.chat.title} To {gtit}",
     )
+
 
 @Gojo.on_message(command("setgdes") & admin_filter)
 async def setgdes(_, m: Message):
@@ -537,7 +538,7 @@ async def setgpic(c: Gojo, m: Message):
     photo = await m.reply_to_message.download()
     is_vid = bool(m.reply_to_message.video)
     try:
-        await m.chat.set_photo(photo,video=is_vid)
+        await m.chat.set_photo(photo, video=is_vid)
     except Exception as e:
         remove(photo)
         return await m.reply_text(f"Error: {e}")
@@ -583,5 +584,3 @@ __HELP__ = """
 
 **Example:**
 `/promote @username`: this promotes a user to admin."""
-
-

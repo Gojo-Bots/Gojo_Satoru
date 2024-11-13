@@ -87,8 +87,8 @@ async def list_blacklist_chats(_, m: Message):
     if bl_chats := db.list_all_chats():
         txt = (
             (
-                "These Chats are Blacklisted:\n"
-                + "\n".join(f"<code>{i}</code>" for i in bl_chats)
+                    "These Chats are Blacklisted:\n"
+                    + "\n".join(f"<code>{i}</code>" for i in bl_chats)
             ),
         )
 
@@ -99,8 +99,6 @@ async def list_blacklist_chats(_, m: Message):
 
 
 __PLUGIN__ = "Chat blacklist"
-
-
 
 __HELP__ = """
 **Chat blacklist**

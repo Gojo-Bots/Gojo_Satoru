@@ -1,21 +1,16 @@
 import asyncio
-import os
-import shutil
-from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 from pyrogram.types import InlineKeyboardButton as IKB
-from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import InputMediaPhoto, InputMediaVideo, Message
 
-from Powers import LOGGER, RMBG, genius_lyrics, is_genius_lyrics, is_rmbg
-from Powers.bot_class import Gojo
+from Powers import RMBG, genius_lyrics, is_rmbg
 from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
 from Powers.utils.sticker_help import toimage
 from Powers.utils.web_helpers import *
-from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
+from Powers.utils.web_scrapper import INSTAGRAM
 
 # @Gojo.on_message(command(["songname","insong","songinfo","whichsong","rsong","reversesong"]))
 # • /whichsong (/songname, /songinfo, /insong, /rsong, /reversesong) : Reply to file to get the song playing in it.
@@ -107,6 +102,7 @@ from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
 
 songs = {}
 
+
 @Gojo.on_callback_query(filters.regex("^lyrics_"))
 async def lyrics_for_song(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")[1].split(":")
@@ -116,17 +112,17 @@ async def lyrics_for_song(c: Gojo, q: CallbackQuery):
     except IndexError:
         artist = None
     if artist:
-        song = genius_lyrics.search_song(song,artist)
+        song = genius_lyrics.search_song(song, artist)
     else:
         song = genius_lyrics.search_song(song)
         artist = song.artist
     if not song.lyrics:
-        await q.answer("‼️ No lyrics found ‼️",True)
+        await q.answer("‼️ No lyrics found ‼️", True)
         return
     header = f"{songe.capitalize()} by {artist}"
     if song.lyrics:
         await q.answer("Fetching lyrics")
-        reply = song.lyrics.split("\n",1)[1]
+        reply = song.lyrics.split("\n", 1)[1]
     if len(reply) >= 4096:
         cap = f"{header}\n{reply[:4080]}..."
         if artist:
@@ -137,22 +133,23 @@ async def lyrics_for_song(c: Gojo, q: CallbackQuery):
             art = ''
         new_kb = [
             [
-                IKB("Next",f"lyrics_next_{songe}{art}")
+                IKB("Next", f"lyrics_next_{songe}{art}")
             ]
             [
-                IKB("Close","f_close")
+                IKB("Close", "f_close")
             ]
         ]
     else:
         cap = f"{header}\n{reply}"
         new_kb = [
             [
-                IKB("Close","f_close")
+                IKB("Close", "f_close")
             ]
         ]
-    await q.message.reply_to_message.reply_text(cap,reply_markup=new_kb)
+    await q.message.reply_to_message.reply_text(cap, reply_markup=new_kb)
     await q.message.delete()
     return
+
 
 @Gojo.on_callback_query(filters.regex("^lyrics_next_") | filters.regex("^lyrics_prev_"))
 async def lyrics_for_song_next(c: Gojo, q: CallbackQuery):
@@ -171,23 +168,23 @@ async def lyrics_for_song_next(c: Gojo, q: CallbackQuery):
         songe = songs[song][artist] if artist else songs[song]
     except KeyError:
         if artist:
-            songe = genius_lyrics.search_song(song,artist)
+            songe = genius_lyrics.search_song(song, artist)
         else:
             songe = genius_lyrics.search_song(song)
         next_part = songe[4080:] if todo == "next" else songe[:4080]
     next_part = f"{header}\n{next_part}"
     new_kb = [
-            [
-                IKB("Next",f"lyrics_prev_{song}{art}")
-            ]
-            [
-                IKB("Close","f_close")
-            ]
+        [
+            IKB("Next", f"lyrics_prev_{song}{art}")
         ]
+        [
+            IKB("Close", "f_close")
+        ]
+    ]
     await q.edit_message_text(next_part, reply_markup=new_kb)
 
 
-@Gojo.on_message(command(["removebackground","removebg","rmbg"]))
+@Gojo.on_message(command(["removebackground", "removebg", "rmbg"]))
 async def remove_background(c: Gojo, m: Message):
     if not is_rmbg:
         await m.reply_text("Add rmbg api to use this command")
@@ -210,10 +207,10 @@ async def remove_background(c: Gojo, m: Message):
         file = toimage(filee)
     else:
         file = await reply.download()
-    finfo = {'image_file':open(file,'rb')}
-    Data = {'size':'auto'}
-    Headers = {'X-Api-Key':RMBG}
-    result = resp_post(URL,files=finfo,data=Data,headers=Headers)
+    finfo = {'image_file': open(file, 'rb')}
+    Data = {'size': 'auto'}
+    Headers = {'X-Api-Key': RMBG}
+    result = resp_post(URL, files=finfo, data=Data, headers=Headers)
     await to_edit.delete()
     contentType = result.headers.get("content-type")
     if result.status_code != 200:
@@ -226,7 +223,7 @@ async def remove_background(c: Gojo, m: Message):
         return
     to_path = "./downloads"
     to_path = f'{to_path}/no-bg.webp' if reply.sticker else f'{to_path}/no-bg.png'
-    with open(to_path,'wb') as out:
+    with open(to_path, 'wb') as out:
         out.write(result.content)
     if reply.sticker:
         await m.reply_sticker(to_path)
@@ -239,10 +236,11 @@ async def remove_background(c: Gojo, m: Message):
         await asyncio.sleep(5)
     return
 
-@Gojo.on_message(command(["song","yta"]))
+
+@Gojo.on_message(command(["song", "yta"]))
 async def song_down_up(c: Gojo, m: Message):
     try:
-        splited = m.text.split(None,1)[1].strip()
+        splited = m.text.split(None, 1)[1].strip()
     except IndexError:
         await m.reply_text("**USAGE**\n /song [song name | link]")
         return
@@ -250,7 +248,7 @@ async def song_down_up(c: Gojo, m: Message):
     query = _id or splited
     to_edit = await m.reply_text("⏳")
     try:
-        await youtube_downloader(c,m,query, "a")
+        await youtube_downloader(c, m, query, "a")
         await to_edit.delete()
         return
     except KeyError:
@@ -262,10 +260,11 @@ async def song_down_up(c: Gojo, m: Message):
         LOGGER.error(format_exc())
         return
 
-@Gojo.on_message(command(["vsong","ytv"]))
+
+@Gojo.on_message(command(["vsong", "ytv"]))
 async def video_down_up(c: Gojo, m: Message):
     try:
-        splited = m.text.split(None,1)[1].strip()
+        splited = m.text.split(None, 1)[1].strip()
     except IndexError:
         await m.reply_text("**USAGE**\n /vsong [song name | link]")
         return
@@ -273,7 +272,7 @@ async def video_down_up(c: Gojo, m: Message):
     query = _id or splited
     to_edit = await m.reply_text("⏳")
     try:
-        await youtube_downloader(c,m,query,"v")
+        await youtube_downloader(c, m, query, "v")
         await to_edit.delete()
         return
     except KeyError:
@@ -285,14 +284,15 @@ async def video_down_up(c: Gojo, m: Message):
         LOGGER.error(format_exc())
         return
 
-@Gojo.on_message(command(["ig","instagram","insta"]))
+
+@Gojo.on_message(command(["ig", "instagram", "insta"]))
 async def download_instareels(c: Gojo, m: Message):
     try:
         reel_ = m.command[1]
     except IndexError:
         await m.reply_text("Give me an instagram link to download it...")
         return
-    
+
     insta = INSTAGRAM(reel_)
 
     if not insta.is_correct_url():
@@ -305,14 +305,14 @@ async def download_instareels(c: Gojo, m: Message):
 
     if content["code"] == 69 or content["message"] != "success":
         return await m.reply_text(content["message"])
-        
+
     try:
         medias = content["content"]["mediaUrls"]
 
         to_delete = await to_edit.edit_text("Found media in the link trying to download and upload them please wait")
 
         to_send = []
-        for media in medias: 
+        for media in medias:
             if media["type"] == "image":
                 to_send.append(InputMediaPhoto(media["url"]))
             else:
@@ -321,12 +321,12 @@ async def download_instareels(c: Gojo, m: Message):
         await m.reply_media_group(to_send)
         await to_delete.delete()
         # shutil.rmtree("./scrapped/")
-    
+
     except KeyError:
         await to_edit.delete()
         await m.reply_text("Failed to fetch any media from given url")
         return
-    
+
 
 __PLUGIN__ = "web support"
 

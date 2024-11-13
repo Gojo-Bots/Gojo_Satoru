@@ -8,7 +8,6 @@ from sys import executable
 from time import gmtime, strftime, time
 from traceback import format_exc
 
-from pyrogram import filters
 from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
                              EntityBoundsInvalid, FloodWait, MessageTooLong,
                              PeerIdInvalid, RPCError)
@@ -31,15 +30,16 @@ from Powers.utils.parser import mention_markdown
 
 
 def can_change_type(curr, to_user):
-    if curr == "dev" and to_user in ["whitelist","sudo"]:
+    if curr == "dev" and to_user in ["whitelist", "sudo"]:
         return True
     elif curr == "sudo" and to_user == "whitelist":
         return True
     else:
         return False
 
+
 @Gojo.on_message(command(["addsupport"]))
-async def add_support(c: Gojo, m:Message):
+async def add_support(c: Gojo, m: Message):
     support = SUPPORTS()
     curr_user = support.get_support_type(m.from_user.id)
     if not curr_user:
@@ -58,7 +58,7 @@ async def add_support(c: Gojo, m:Message):
         except IndexError:
             await m.reply_text("**USAGE**\n/addsupport [reply to message | user id] [dev | sudo | whitelist]")
             return
-        if to not in ["dev","sudo","whitelist"]:
+        if to not in ["dev", "sudo", "whitelist"]:
             await m.reply_text("**USAGE**\n/addsupport [reply to message | user id] [dev | sudo | whitelist]")
             return
         if m.from_user.id == int(OWNER_ID):
@@ -68,14 +68,15 @@ async def add_support(c: Gojo, m:Message):
                 kb = IKM(
                     [
                         [
-                            IKB("Yes",f"change_support_type:{to}"),
-                            IKB("No","change_support_type:no")
+                            IKB("Yes", f"change_support_type:{to}"),
+                            IKB("No", "change_support_type:no")
                         ]
                     ]
                 )
-                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",
+                                   reply_markup=kb)
             else:
-                support.insert_support_user(userr,to)
+                support.insert_support_user(userr, to)
                 if to == "dev":
                     DEV_USERS.add(userr)
                 elif to == "sudo":
@@ -91,14 +92,15 @@ async def add_support(c: Gojo, m:Message):
                 kb = IKM(
                     [
                         [
-                            IKB("Yes",f"change_support_type:{to}"),
-                            IKB("No","change_support_type:no")
+                            IKB("Yes", f"change_support_type:{to}"),
+                            IKB("No", "change_support_type:no")
                         ]
                     ]
                 )
-                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",
+                                   reply_markup=kb)
             else:
-                support.insert_support_user(userr,to)
+                support.insert_support_user(userr, to)
                 await m.reply_text(f"This user is now a {to} user")
         else:
             await m.reply_text("Sorry you can't do it")
@@ -106,7 +108,7 @@ async def add_support(c: Gojo, m:Message):
     elif len(split) >= 3:
         user = split[1]
         try:
-            userr,_,_ = extract_user(user)
+            userr, _, _ = extract_user(user)
         except Exception:
             await m.reply_text("Tell the user to start me first")
             return
@@ -114,9 +116,10 @@ async def add_support(c: Gojo, m:Message):
         try:
             to = m.command[2].lower()
         except IndexError:
-            await m.reply_text("**USAGE**\n/addsupport [reply to message | user id | username] [dev | sudo | whitelist]")
+            await m.reply_text(
+                "**USAGE**\n/addsupport [reply to message | user id | username] [dev | sudo | whitelist]")
             return
-        if to not in ["dev","sudo","whitelist"]:
+        if to not in ["dev", "sudo", "whitelist"]:
             await m.reply_text("**USAGE**\n/addsupport [reply to message | user id] [dev | sudo | whitelist]")
             return
         if m.from_user.id == int(OWNER_ID):
@@ -126,14 +129,15 @@ async def add_support(c: Gojo, m:Message):
                 kb = IKM(
                     [
                         [
-                            IKB("Yes",f"change_support_type:{to}"),
-                            IKB("No","change_support_type:no")
+                            IKB("Yes", f"change_support_type:{to}"),
+                            IKB("No", "change_support_type:no")
                         ]
                     ]
                 )
-                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",
+                                   reply_markup=kb)
             else:
-                support.insert_support_user(userr,to)
+                support.insert_support_user(userr, to)
                 await m.reply_text(f"This user is now a {to} user")
             return
         if can_do := can_change_type(curr_user, to):
@@ -143,18 +147,20 @@ async def add_support(c: Gojo, m:Message):
                 kb = IKM(
                     [
                         [
-                            IKB("Yes",f"change_support_type:{to}"),
-                            IKB("No","change_support_type:no")
+                            IKB("Yes", f"change_support_type:{to}"),
+                            IKB("No", "change_support_type:no")
                         ]
                     ]
                 )
-                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
+                await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",
+                                   reply_markup=kb)
             else:
-                support.insert_support_user(userr,to)
+                support.insert_support_user(userr, to)
                 await m.reply_text(f"This user is now a {to} user")
         else:
             await m.reply_text("Sorry you can't do it")
         return
+
 
 @Gojo.on_message(command("rmsupport"))
 async def rm_support(c: Gojo, m: Message):
@@ -175,7 +181,7 @@ async def rm_support(c: Gojo, m: Message):
             curr = int(split[1])
         except Exception:
             try:
-                curr,_,_ = extract_user(m)
+                curr, _, _ = extract_user(m)
             except Exception:
                 await m.reply_text("Dunno who u r talking abt")
                 return
@@ -183,7 +189,7 @@ async def rm_support(c: Gojo, m: Message):
         await m.reply_text("**USAGE**\n/rmsupport [reply to user | user id | username]")
         return
     to_user = support.get_support_type(curr)
-    can_user = can_change_type(curr_user,to_user)
+    can_user = can_change_type(curr_user, to_user)
     if m.from_user.id == int(OWNER_ID) or can_user:
         support.delete_support_user(curr)
         DEV_USERS.discard(curr)
@@ -194,6 +200,7 @@ async def rm_support(c: Gojo, m: Message):
         await m.reply_text("Sorry you can't do that...")
     return
 
+
 @Gojo.on_message(command("ping", sudo_cmd=True))
 async def ping(_, m: Message):
     start = time()
@@ -202,18 +209,20 @@ async def ping(_, m: Message):
     await replymsg.edit_text(f"<b>Pong!</b>\n{delta_ping * 1000:.3f} ms")
     return
 
+
 """
 
 ['Metadata-Version', 'Name', 'Version', 'Summary', 'Home-page', 'Author', 'Author-email', 'License', 'Download-URL', 'Project-URL', 'Project-URL', 'Project-URL', 'Project-URL', 'Keywords', 'Platform', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Requires-Python', 'Description-Content-Type', 'License-File', 'License-File', 'License-File', 'Requires-Dist', 'Requires-Dist', 'Description']
 
 """
 
+
 @Gojo.on_message(command(["minfo", "moduleinfo"], dev_cmd=True))
 async def check_module_info(_, m: Message):
     if len(m.command) != 2:
         await m.reply_text("**USAGE**\n/minfo [module name]")
         return
-    
+
     module = m.command[-1]
 
     try:
@@ -221,7 +230,7 @@ async def check_module_info(_, m: Message):
     except PackageNotFoundError:
         await m.reply_text(f"No module found with name {module}")
         return
-    
+
     name = minfo["Name"]
     version = minfo["Version"]
     summary = minfo["Summary"]
@@ -247,7 +256,6 @@ Here are the info about the module **{name}**
     await m.reply_text(txt, disable_web_page_preview=True)
     return
 
-    
 
 @Gojo.on_message(command("logs", dev_cmd=True))
 async def send_log(c: Gojo, m: Message):
@@ -289,6 +297,7 @@ async def neofetch_stats(_, m: Message):
         await m.delete()
     return
 
+
 HARMFUL = [
     "base64",
     "bash",
@@ -306,7 +315,7 @@ HARMFUL = [
     "SSH_CLIENT",
     "SSH_CONNECTION"
     "SSH"
-    
+
 ]
 
 
@@ -326,9 +335,11 @@ async def evaluate_code(c: Gojo, m: Message):
         await c.send_message(
             MESSAGE_DUMP,
             f"@{m.from_user.username} TREID TO USE `while True` \n userid = {m.from_user.id}"
-            )
+        )
         return
-    if m.reply_to_message and m.reply_to_message.document and (m.reply_to_message.document.mime_type.split("/")[1] == "x-python" or m.reply_to_message.document.file_name.endswith("py")):
+    if m.reply_to_message and m.reply_to_message.document and (m.reply_to_message.document.mime_type.split("/")[
+                                                                   1] == "x-python" or m.reply_to_message.document.file_name.endswith(
+            "py")):
         await sm.delete()
         await m.reply_text("Loading external plugin is prohibited")
         return
@@ -362,8 +373,8 @@ async def evaluate_code(c: Gojo, m: Message):
     for i in evaluation.split(None):
         ev = i.strip()
         if (
-            (ev.startswith(initial) or ev.endswith(end))
-            or (BOT_TOKEN in ev)
+                (ev.startswith(initial) or ev.endswith(end))
+                or (BOT_TOKEN in ev)
         ) and m.from_user.id != OWNER_ID:
             evaluation = "Bhaag ja bsdk"
             await c.send_message(
@@ -418,8 +429,6 @@ async def aexec(code, c, m):
     return await locals()["__aexec"](c, m)
 
 
-
-
 @Gojo.on_message(command(["exec", "sh"], dev_cmd=True))
 async def execution(c: Gojo, m: Message):
     protect = BOT_TOKEN.split(":")
@@ -443,9 +452,9 @@ async def execution(c: Gojo, m: Message):
     out = o
     xxx = o.split()
     for OwO in xxx:
-      if OwO.startswith(initial) or OwO.endswith(end):
-          out = "You can't access them"
-          break
+        if OwO.startswith(initial) or OwO.endswith(end):
+            out = "You can't access them"
+            break
     for x in xxx:
         xx = x.split("=")
         if xx and xx[0] in HARMFUL and m.from_user.id != OWNER_ID:
@@ -481,38 +490,41 @@ async def execution(c: Gojo, m: Message):
         await sm.delete()
     return
 
-async def stop_and_send_logger(c:Gojo,is_update=False):
+
+async def stop_and_send_logger(c: Gojo, is_update=False):
     runtime = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     LOGGER.info("Uploading logs before stopping...!\n")
-        # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
+    # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
     await c.send_document(
-            MESSAGE_DUMP,
-            document=LOGFILE,
-            caption=(
-                f"{'Updating and Restarting'if is_update else 'Restarting'} The Bot !\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
-            ),
-        )
+        MESSAGE_DUMP,
+        document=LOGFILE,
+        caption=(
+            f"{'Updating and Restarting' if is_update else 'Restarting'} The Bot !\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
+        ),
+    )
     if MESSAGE_DUMP:
         # LOG_CHANNEL is not necessary
         await c.send_document(
-                MESSAGE_DUMP,
-                document=LOGFILE,
-                caption=f"Uptime: {runtime}",
-            )
+            MESSAGE_DUMP,
+            document=LOGFILE,
+            caption=f"Uptime: {runtime}",
+        )
     MongoDB.close()
     LOGGER.info(
-            f"""Bot Stopped.
+        f"""Bot Stopped.
             Logs have been uploaded to the MESSAGE_DUMP Group!
             Runtime: {runtime}s\n
         """,
-        )
+    )
     return
 
+
 @Gojo.on_message(command(["restart", "update"], owner_cmd=True))
-async def restart_the_bot(c:Gojo,m:Message):
+async def restart_the_bot(c: Gojo, m: Message):
     try:
         cmds = m.command
-        await m.reply_text(f"Restarting{' and updating ' if cmds[0] == 'update' else ' '}the bot...\nType `/ping` after few minutes")
+        await m.reply_text(
+            f"Restarting{' and updating ' if cmds[0] == 'update' else ' '}the bot...\nType `/ping` after few minutes")
         if cmds[0] == "update":
             try:
                 out = subp.check_output(["git", "pull"]).decode("UTF-8")
@@ -522,7 +534,7 @@ async def restart_the_bot(c:Gojo,m:Message):
             except Exception as e:
                 return await m.reply_text(str(e))
             m = await m.reply_text("**Updated with main branch, restarting now.**")
-            await stop_and_send_logger(c,True)
+            await stop_and_send_logger(c, True)
         if cmds[0] == "restart":
             await stop_and_send_logger(c)
         execvp(executable, [executable, "-m", "Powers"])
@@ -531,6 +543,7 @@ async def restart_the_bot(c:Gojo,m:Message):
         LOGGER.error(e)
         LOGGER.error(format_exc())
         return
+
 
 @Gojo.on_message(command("chatlist", dev_cmd=True))
 async def chats(c: Gojo, m: Message):
@@ -641,7 +654,8 @@ async def chat_broadcast(c: Gojo, m: Message):
 
     return
 
-@Gojo.on_message(command(["forward","fwd"],dev_cmd=True))
+
+@Gojo.on_message(command(["forward", "fwd"], dev_cmd=True))
 async def forward_type_broadcast(c: Gojo, m: Message):
     repl = m.reply_to_message
     if not repl:
@@ -681,7 +695,7 @@ async def forward_type_broadcast(c: Gojo, m: Message):
             await sleep(0.1)
         except Exception:
             failed += 1
-    txt = f"Broadcasted message to {total-failed} peers out of {total}\nFailed to broadcast message to {failed} peers"
+    txt = f"Broadcasted message to {total - failed} peers out of {total}\nFailed to broadcast message to {failed} peers"
     if not failed:
         txt = f"Broadcasted message to {total} peers"
     await m.reply_text(txt)
@@ -692,9 +706,7 @@ async def forward_type_broadcast(c: Gojo, m: Message):
     return
 
 
-
 __PLUGIN__ = "devs"
-
 
 __HELP__ = """
 **DEV and SUDOERS commands**

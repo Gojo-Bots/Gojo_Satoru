@@ -1,7 +1,6 @@
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.utils.custom_filters import admin_filter, command

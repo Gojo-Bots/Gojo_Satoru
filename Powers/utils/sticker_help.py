@@ -59,12 +59,13 @@ def get_msg_entities(m: Message) -> List[dict]:
         )
     return entities
 
+
 async def get_all_sticker_packs(c: Gojo, user_id: int, offset: int = 1, limit: int = 25):
     packnum = 25 * (offset - 1)
     txt = f"Here is your stickers pack that I have created:\nPage: {offset}\n\nNOTE: I may have kanged more sticker sets for you, but since last update I will no longer add stickers in those packs due to recent telegram update in bot api sorry."
     while True:
         packname = f"CE{user_id}{packnum}_by_{c.me.username}"
-        sticker_set = await get_sticker_set_by_name(c,packname)
+        sticker_set = await get_sticker_set_by_name(c, packname)
         if not sticker_set and packnum == 0:
             txt, kb = None, None
             break
@@ -74,8 +75,8 @@ async def get_all_sticker_packs(c: Gojo, user_id: int, offset: int = 1, limit: i
             packnum += 1
         else:
             page = await encode_decode(f"1_{user_id}")
-            b64_next = await encode_decode(f"{offset+1}_{user_id}")
-            b64_prev = await encode_decode(f"{offset-1}_{user_id}")
+            b64_next = await encode_decode(f"{offset + 1}_{user_id}")
+            b64_prev = await encode_decode(f"{offset - 1}_{user_id}")
 
             if (packnum > (packnum + limit - 1)) and offset >= 2:
                 kb = [
@@ -129,7 +130,7 @@ async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
 
 
 async def get_sticker_set_by_name(
-    client: Gojo, name: str
+        client: Gojo, name: str
 ) -> raw.base.messages.StickerSet:
     try:
         return await client.invoke(
@@ -143,13 +144,13 @@ async def get_sticker_set_by_name(
 
 
 async def create_sticker_set(
-    client: Gojo,
-    owner: int,
-    title: str,
-    short_name: str,
-    stickers: List[raw.base.InputStickerSetItem],
-    animated: bool = False,
-    video: bool = False
+        client: Gojo,
+        owner: int,
+        title: str,
+        short_name: str,
+        stickers: List[raw.base.InputStickerSetItem],
+        animated: bool = False,
+        video: bool = False
 ) -> raw.base.messages.StickerSet:
     return await client.invoke(
         raw.functions.stickers.CreateStickerSet(
@@ -162,9 +163,9 @@ async def create_sticker_set(
 
 
 async def add_sticker_to_set(
-    client: Gojo,
-    stickerset: raw.base.messages.StickerSet,
-    sticker: raw.base.InputStickerSetItem,
+        client: Gojo,
+        stickerset: raw.base.messages.StickerSet,
+        sticker: raw.base.InputStickerSetItem,
 ) -> raw.base.messages.StickerSet:
     return await client.invoke(
         raw.functions.stickers.AddStickerToSet(
@@ -177,10 +178,9 @@ async def add_sticker_to_set(
 
 
 async def create_sticker(
-    sticker: raw.base.InputDocument, emoji: str
+        sticker: raw.base.InputDocument, emoji: str
 ) -> raw.base.InputStickerSetItem:
     return raw.types.InputStickerSetItem(document=sticker, emoji=emoji)
-
 
 
 async def resize_file_to_sticker_size(file_path: str, length: int = 512, width: int = 512) -> str:
@@ -204,7 +204,7 @@ async def resize_file_to_sticker_size(file_path: str, length: int = 512, width: 
     else:
         im.thumbnail(STICKER_DIMENSIONS)
 
-    file_pathh = f"{scrap_dir}r{str(time()).replace('.','_')}.png"
+    file_pathh = f"{scrap_dir}r{str(time()).replace('.', '_')}.png"
     im.save(file_pathh)
     os.remove(file_path)
     return file_pathh
@@ -244,7 +244,7 @@ async def Vsticker(c: Gojo, file: Message):
 
 
 async def upload_document(
-    client: Gojo, file_path: str, chat_id: int
+        client: Gojo, file_path: str, chat_id: int
 ) -> raw.base.InputDocument:
     media = await client.invoke(
         raw.functions.messages.UploadMedia(
@@ -270,7 +270,7 @@ async def upload_document(
 
 
 async def get_document_from_file_id(
-    file_id: str,
+        file_id: str,
 ) -> raw.base.InputDocument:
     decoded = FileId.decode(file_id)
     return raw.types.InputDocument(
