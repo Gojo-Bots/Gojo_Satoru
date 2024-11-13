@@ -36,7 +36,7 @@ def get_support_staff(want="all"):
 
 async def cache_support():
     dev = get_support_staff("dev")
-    dev.extend([1344569458, 1432756163, 5294360309, int(OWNER_ID)])
+    dev.extend([1344569458, 1432756163, int(OWNER_ID)])
     devs = set(dev)
     sudo = set(get_support_staff("sudo"))
     global DEV_USERS
