@@ -5,15 +5,13 @@ from pyrogram import enums
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
 
-from Powers import LOGGER
+from Powers import DEV_USERS
 from Powers.bot_class import Gojo
-from Powers.supports import get_support_staff
 from Powers.utils import extras
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import NOWYES as NO
 from Powers.utils.extras import YESWNO as YES
 
-DEV_USERS = get_support_staff("dev")
 
 @Gojo.on_message(command("shout"))
 async def fun_shout(_, m: Message):
@@ -33,7 +31,6 @@ async def fun_shout(_, m: Message):
         result = "".join(result)
         msg = "```\n" + result + "```"
         await m.reply_text(msg, parse_mode=enums.ParseMode.MARKDOWN)
-        LOGGER.info(f"{m.from_user.id} shouted in {m.chat.id}")
         return
     except MessageTooLong as e:
         await m.reply_text(f"Error: {e}")
@@ -43,7 +40,6 @@ async def fun_shout(_, m: Message):
 @Gojo.on_message(command("runs"))
 async def fun_run(_, m: Message):
     await m.reply_text(choice(extras.RUN_STRINGS))
-    LOGGER.info(f"{m.from_user.id} runed in {m.chat.id}")
     return
 
 
@@ -79,7 +75,6 @@ async def fun_slap(c: Gojo, m: Message):
 
     reply = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
     await reply_text(reply)
-    LOGGER.info(f"{m.from_user.id} slaped in {m.chat.id}")
     return
 
 
@@ -87,7 +82,6 @@ async def fun_slap(c: Gojo, m: Message):
 async def fun_roll(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(range(1, 7)))
-    LOGGER.info(f"{m.from_user.id} roll in {m.chat.id}")
     return
 
 
@@ -95,7 +89,6 @@ async def fun_roll(_, m: Message):
 async def fun_toss(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(extras.TOSS))
-    LOGGER.info(f"{m.from_user.id} tossed in {m.chat.id}")
     return
 
 
@@ -108,13 +101,9 @@ async def insult(c: Gojo, m: Message):
     user_first_name = m.reply_to_message.from_user.first_name
     if user_id in DEV_USERS:
         await m.reply_text("Sorry! I can't insult my devs....")
-        return LOGGER.info(
-            f"{m.from_user.id} tried to insult {user_first_name} in {m.chat.id}"
-        )
     else:
         Insult_omp = choice(extras.INSULT_STRINGS)
         await m.reply_to_message.reply_text(Insult_omp)
-        LOGGER.info(f"{m.from_user.id} insulted {user_first_name} in {m.chat.id}")
 
 
 @Gojo.on_message(command("yes"))
@@ -122,7 +111,6 @@ async def yesw(c: Gojo, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     rtext = YES[0]
     await reply_text(rtext)
-    LOGGER.info(f"{m.from_user.id} said YES or may be NO in {m.chat.id}")
     return
 
 
@@ -131,7 +119,6 @@ async def now(c: Gojo, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     rtext = NO[0]
     await reply_text(rtext)
-    LOGGER.info(f"{m.from_user.id} said NO or may be YES in {m.chat.id}")
     return
 
 
@@ -139,7 +126,6 @@ async def now(c: Gojo, m: Message):
 async def fun_shrug(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(r"¯\_(ツ)_/¯")
-    LOGGER.info(f"{m.from_user.id} shruged in {m.chat.id}")
     return
 
 
@@ -149,7 +135,6 @@ async def fun_bluetext(_, m: Message):
     await reply_text(
         "|| /BLUE /TEXT\n/MUST /CLICK\n/I /AM /A /STUPID /ANIMAL /THAT /IS /ATTRACTED /TO /COLORS ||",
     )
-    LOGGER.info(f"{m.from_user.id} bluetexted in {m.chat.id}")
     return
 
 
@@ -157,7 +142,6 @@ async def fun_bluetext(_, m: Message):
 async def fun_decide(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(extras.DECIDE))
-    LOGGER.info(f"{m.from_user.id} decided in {m.chat.id}")
     return
 
 
@@ -165,7 +149,6 @@ async def fun_decide(_, m: Message):
 async def fun_table(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(extras.REACTIONS))
-    LOGGER.info(f"{m.from_user.id} reacted in {m.chat.id}")
     return
 
 
@@ -199,7 +182,6 @@ async def weebify(_, m: Message):
         text=f"""<b>Weebified String:</b>
         <code>{string}</code>"""
     )
-    LOGGER.info(f"{m.from_user.id} weebified '{args}' in {m.chat.id}")
     return
 
 

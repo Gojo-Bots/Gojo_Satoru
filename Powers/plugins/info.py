@@ -9,13 +9,11 @@ from pyrogram.raw.functions.channels import GetFullChannel
 from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.types import Message
 
-from Powers import LOGGER, OWNER_ID
+from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
-from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
-from Powers.vars import Config
 
 gban_db = GBan()
 
@@ -83,10 +81,7 @@ async def user_info(c: Gojo, user, already=False):
         about = ll.full_user.about
     except Exception:
         pass
-    SUPPORT_STAFF = get_support_staff()
-    DEV_USERS = get_support_staff("dev")
-    SUDO_USERS = get_support_staff("sudo")
-    WHITELIST_USERS = get_support_staff("whitelist")
+    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
     username = user.username
     first_name = user.first_name
     last_name = user.last_name
@@ -96,17 +91,17 @@ async def user_info(c: Gojo, user, already=False):
     is_restricted = user.is_restricted
     photo_id = user.photo.big_file_id if user.photo else None
     is_support = True if user_id in SUPPORT_STAFF else False
-    if user_id == Config.BOT_ID:
+    if user_id == c.me.id:
         is_support = "A person is a great support to himself"
     omp = "Hmmm.......Who is that again?"
-    if is_support or Config.BOT_ID:
+    if is_support or c.me.id:
         if user_id in DEV_USERS:
             omp = "Dev"
         elif user_id in SUDO_USERS:
             omp = "Sudoer"
         elif user_id in WHITELIST_USERS:
             omp = "Whitelist"
-        elif user_id == Config.BOT_ID:
+        elif user_id == c.me.id:
             omp = "I am the targeted user"
         elif user_id == OWNER_ID:
             omp = "Owner of the bot"
@@ -146,10 +141,15 @@ async def user_info(c: Gojo, user, already=False):
 <b>🔅 Second Name</b>: <code>{last_name}</code>
 <b>🔍 Username</b>: {("@" + username) if username else "NA"}
 <b>✍️ Bio</b>: `{about}`
-<b>🧑‍💻 Support</b>: {is_support}
-<b>🥷 Support user type</b>: <code>{omp}</code>
-<b>💣 Gbanned</b>: {gban}
-<b>☠️ Gban reason</b>: <code>{reason}</code>
+<b>🧑‍💻 Support</b>: {is_support}\n"""
+    if is_support:
+        caption += f"<b>🥷 Support user type</b>: <code>{omp}</code>\n<b>💣 Gbanned</b>: {gban}\n"
+    else:
+        caption += f"<b>💣 Gbanned</b>: {gban}\n"
+
+    if gban:
+        caption += f"<b>☠️ Gban reason</b>: <code>{reason}</code>\n"
+    caption += f"""
 <b>🌐 DC ID</b>: {dc_id}
 <b>✋ RESTRICTED</b>: {is_restricted}
 <b>✅ VERIFIED</b>: {is_verified}
@@ -157,7 +157,6 @@ async def user_info(c: Gojo, user, already=False):
 <b>⚠️ SCAM</b> : {is_scam} 
 <b>🤖 BOT</b>: {is_bot}
 <b>👀 Last seen</b>: <code>{last_date}</code>
-
 """
 
     return caption, photo_id
@@ -242,8 +241,12 @@ async def info_func(c: Gojo, message: Message):
     if message.reply_to_message and message.reply_to_message.sender_chat:
         await message.reply_text("This is not a user, but rather a channel. Use `/chinfo` to fetch its information.")
         return
-    user, _, user_name = await extract_user(c, message)
-
+    try:
+        user, _, user_name = await extract_user(c, message)
+    except:
+        await message.reply_text("Got Some errors failed to fetch user info")
+        LOGGER.error(e)
+        LOGGER.error(format_exc)
     if not user:
         await message.reply_text("Can't find user to fetch info!")
 
@@ -281,6 +284,10 @@ async def info_func(c: Gojo, message: Message):
             LOGGER.error(rpc)
             LOGGER.error(format_exc())
     except Exception as e:
+        if e == "User not found ! Error: 'InputPeerChannel' object has no attribute 'user_id'":
+            await m.reply_text("Looks like you are trying to fetch info of a chat not an user. In that case please use /chinfo")
+            return
+        
         await message.reply_text(text=e)
         LOGGER.error(e)
         LOGGER.error(format_exc())

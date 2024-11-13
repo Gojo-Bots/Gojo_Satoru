@@ -15,8 +15,6 @@ from Powers.utils.kbhelpers import ikb
 async def view_blacklist(_, m: Message):
     db = Blacklist(m.chat.id)
 
-    LOGGER.info(f"{m.from_user.id} checking blacklists in {m.chat.id}")
-
     chat_title = m.chat.title
     blacklists_chat = f"Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     all_blacklisted = db.get_blacklists()
@@ -58,7 +56,6 @@ async def add_blacklist(_, m: Message):
             ", ".join([f"<code>{i}</code>" for i in bl_words])
             + " already added in blacklist, skipped them!"
         )
-    LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
     trigger = ", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
         text=f"Added <code>{trigger}</code> in blacklist words!"
@@ -116,7 +113,6 @@ async def rm_blacklist(_, m: Message):
             "Could not find " + ", ".join(f"<code>{i}</code>" for i in non_found_words)
         ) + " in blcklisted words, skipped them."
 
-    LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
     bl_words = ", ".join(f"<code>{i}</code>" for i in bl_words)
     await m.reply_text(
         text=f"Removed <b>{bl_words}</b> from blacklist words!"
@@ -145,13 +141,9 @@ async def set_bl_action(_, m: Message):
 
             return
         db.set_action(action)
-        LOGGER.info(
-            f"{m.from_user.id} set blacklist action to '{action}' in {m.chat.id}",
-        )
         await m.reply_text(text=f"Set action for blacklist for this to <b>{action}</b>")
     elif len(m.text.split()) == 1:
         action = db.get_action()
-        LOGGER.info(f"{m.from_user.id} checking blacklist action in {m.chat.id}")
         await m.reply_text(
             text=f"""The current action for blacklists in this chat is <i><b>{action}</b></i>
       All blacklist modes delete the message containing blacklist word."""
@@ -201,7 +193,6 @@ async def rm_allbl_callback(_, q: CallbackQuery):
         return
     db.rm_all_blacklist()
     await q.message.delete()
-    LOGGER.info(f"{user_id} removed all blacklists in {q.message.chat.id}")
     await q.answer("Cleared all Blacklists!", show_alert=True)
     return
 

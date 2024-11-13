@@ -5,7 +5,7 @@ from traceback import format_exc
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
+from Powers import HELP_COMMANDS, LOGGER, OWNER_ID, SUPPORT_CHANNEL
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
@@ -30,7 +30,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
     cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = [cmd.lower() for cmd in cmds]
 
-    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    return [kb[i: i + 3] for i in range(0, len(kb), 3)]
 
 
 async def gen_start_kb(q: Message or CallbackQuery):
@@ -44,9 +44,8 @@ async def gen_start_kb(q: Message or CallbackQuery):
                     "url",
                 ),
                 (
-                    "Support 👥",
-                    f"https://t.me/{SUPPORT_GROUP}",
-                    "url",
+                    "Bot Staffs 🚔",
+                    f"give_bot_staffs",
                 ),
             ],
             [
@@ -54,7 +53,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
                     "📚 Commands & Help", "commands"
                 ),
                 (
-                    "👾 Bot info",
+                    "Bot info 👾",
                     "bot_curr_info"
                 )
             ],
@@ -66,19 +65,19 @@ async def gen_start_kb(q: Message or CallbackQuery):
                 ),
                 (
                     "Owner ❤️",
-                    Config.OWNER_ID,
+                    OWNER_ID,
                     "user_id",
                 ),
             ],
             [
                 (
-                    "Essential",
+                    "❗️ Essential",
                     "https://t.me/+PcVYvdzNt4E1YjM1",
                     "url",
                 ),
                 (
-                    "Powered by",
-                    f"https://{Config.SUPPORT_CHANNEL}.t.me",
+                    "Powered by ⚡️",
+                    f"https://{SUPPORT_CHANNEL}.t.me",
                     "url",
                 ),
             ],
@@ -96,7 +95,7 @@ async def get_private_note(c: Gojo, m: Message, help_option: str):
         chat_title = Chats.get_chat_info(chat_id)["chat_name"]
         rply = f"Notes in {chat_title}:\n\n"
         note_list = [
-            f"- [{note[0]}](https://t.me/{Config.BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
+            f"- [{note[0]}](https://t.me/{c.me.username}?start=note_{chat_id}_{note[1]})"
             for note in all_notes
         ]
         rply = f"Available notes in {chat_title}\n"
@@ -208,9 +207,6 @@ async def get_private_note(c: Gojo, m: Message, help_option: str):
                 getnotes["fileid"],
                 caption=teks,
             )
-    LOGGER.info(
-        f"{m.from_user.id} fetched privatenote {note_hash} (type - {getnotes}) in {m.chat.id}",
-    )
     return
 
 
@@ -239,7 +235,7 @@ async def get_private_rules(_, m: Message, help_option: str):
     return ""
 
 
-async def get_help_msg(m: Message or CallbackQuery, help_option: str):
+async def get_help_msg(c: Gojo, m: Message or CallbackQuery, help_option: str):
     """Helper function for getting help_msg and it's keyboard."""
     help_msg = None
     help_kb = None
@@ -263,16 +259,14 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
         )
         help_kb = ikb(ou, True, "commands")
         help_msg = f"**{(help_option_value)}:**"
-        LOGGER.info(
-            f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
-        )
+        
     else:
-        if isinstance(m,CallbackQuery):
+        if isinstance(m, CallbackQuery):
             mes = m.message
         else:
             mes = m
         help_msg = f"""
-Hey **[{mes.from_user.first_name}](http://t.me/{mes.from_user.username})**!I am Gojo✨.
+Hey **[{mes.from_user.first_name}](http://t.me/{mes.from_user.username})**!I am {c.me.first_name}✨.
 I'm here to help you manage your groups!
 Commands available:
 × /start: Start the bot
