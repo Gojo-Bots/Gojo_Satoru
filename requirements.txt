@@ -15,7 +15,7 @@ lxml==4.9.1
 pillow == 10.1.0
 prettyconf==2.2.1
 pyaes==1.6.1
-pymongo==4.6.1
+pymongo==4.6.3
 git+https://github.com/KurimuzonAkuma/pyrogram.git@v2.1.32
 pysocks==1.7.1
 python-dateutil==2.8.2
