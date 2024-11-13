@@ -1,45 +1,38 @@
 from html import escape
 from secrets import choice
 from traceback import format_exc
+from typing import List
 
-from pyrogram import enums, filters
-from pyrogram.enums import ChatMemberStatus as CMS
-from pyrogram.errors import ChatAdminRequired, RPCError
-from pyrogram.types import ChatMemberUpdated, Message
+from pyrogram import emoji, enums, filters
+from pyrogram.errors import ChannelPrivate, ChatAdminRequired, RPCError
+from pyrogram.types import Message, User
 
-from Powers import LOGGER
+from Powers import DEV_USERS, LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
-from Powers.supports import get_support_staff
 from Powers.utils.cmd_senders import send_cmd
-from Powers.utils.custom_filters import admin_filter, bot_admin_filter, command
+from Powers.utils.custom_filters import (admin_filter, bot_admin_filter,
+                                         captcha_filter, command)
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.msg_types import Types, get_wlcm_type
 from Powers.utils.parser import escape_markdown, mention_html
 from Powers.utils.string import (build_keyboard, escape_invalid_curly_brackets,
                                  parse_button)
-from Powers.vars import Config
 
 # Initialize
 gdb = GBan()
 
-DEV_USERS = get_support_staff("dev")
-
 ChatType = enums.ChatType
 
 
-async def escape_mentions_using_curly_brackets_wl(
-    m: ChatMemberUpdated,
-    n: bool,
+async def  escape_mentions_using_curly_brackets_wl(
+    user: User,
+    m: Message,
     text: str,
     parse_words: list,
 ) -> str:
     teks = await escape_invalid_curly_brackets(text, parse_words)
-    if n:
-        user = m.new_chat_member.user if m.new_chat_member else m.from_user
-    else:
-        user = m.old_chat_member.user if m.old_chat_member else m.from_user
     if teks:
         teks = teks.format(
             first=escape(user.first_name),
@@ -239,115 +232,101 @@ async def cleannnnn(_, m: Message):
     except Exception:
         pass
 
-
-@Gojo.on_chat_member_updated(filters.group, group=69)
-async def member_has_joined(c: Gojo, member: ChatMemberUpdated):
-
-    if (
-        member.new_chat_member
-        and member.new_chat_member.status not in {CMS.BANNED, CMS.LEFT, CMS.RESTRICTED}
-        and not member.old_chat_member
-    ):
-        pass
-    else:
-        return
-
-    user = member.new_chat_member.user if member.new_chat_member else member.from_user
-
-    db = Greetings(member.chat.id)
-    banned_users = gdb.check_gban(user.id)
-    try:
-        if user.id == Config.BOT_ID:
-            return
-        if user.id in DEV_USERS:
-            await c.send_animation(
-                chat_id=member.chat.id,
-                animation="./extras/william.gif",
-                caption="😳 My **DEV** has also joined the chat!",
-            )
-            return
-        if banned_users:
-            await member.chat.ban_member(user.id)
-            await c.send_message(
-                member.chat.id,
-                f"{user.mention} was globally banned so i banned!",
-            )
-            return
-        if user.is_bot:
-            return  # ignore bots
-    except ChatAdminRequired:
-        return
-    status = db.get_welcome_status()
-    oo = db.get_welcome_text()
-    UwU = db.get_welcome_media()
-    mtype = db.get_welcome_msgtype()
-    parse_words = [
-        "first",
-        "last",
-        "fullname",
-        "username",
-        "mention",
-        "id",
-        "chatname",
-    ]
-    hmm = await escape_mentions_using_curly_brackets_wl(member, True, oo, parse_words)
-    if status:
-        tek, button = await parse_button(hmm)
-        button = await build_keyboard(button)
-        button = ikb(button) if button else None
-
-        if "%%%" in tek:
-            filter_reply = tek.split("%%%")
-            teks = choice(filter_reply)
-        else:
-            teks = tek
-        ifff = db.get_current_cleanwelcome_id()
-        gg = db.get_current_cleanwelcome_settings()
-        if ifff and gg:
-            try:
-                await c.delete_messages(member.chat.id, int(ifff))
-            except RPCError:
-                pass
-        if not teks:
-            teks = "Hey {first}, welcome to {chatname}"
+@Gojo.on_message(filters.group & filters.new_chat_members & ~captcha_filter, group=69)
+async def member_has_joined(c: Gojo, m: Message):
+    users: List[User] = m.new_chat_members
+    db = Greetings(m.chat.id)
+    for user in users:
+        banned_users = gdb.check_gban(user.id)
         try:
-            if not UwU:
-                jj = await c.send_message(
-                    member.chat.id,
-                    text=teks,
-                    reply_markup=button,
-                    disable_web_page_preview=True,
+            if user.id == c.me.id:
+                continue
+            if user.id in DEV_USERS:
+                await c.send_animation(
+                    chat_id=m.chat.id,
+                    animation="./extras/william.gif",
+                    caption=f"😳 My **DEV** {user.mention} has also joined the chat!",
                 )
-            elif UwU:
-                jj = await (await send_cmd(c,mtype))(
-                    member.chat.id,
-                    UwU,
-                    caption=teks,
-                    reply_markup=button,
+                continue
+            if banned_users:
+                await m.chat.ban_member(user.id)
+                await c.send_message(
+                    m.chat.id,
+                    f"{user.mention} was globally banned so i banned!",
                 )
+                continue
+            if user.is_bot:
+                continue # ignore bots
+        except ChatAdminRequired:
+            continue
+        status = db.get_welcome_status()
+        oo = db.get_welcome_text()
+        UwU = db.get_welcome_media()
+        mtype = db.get_welcome_msgtype()
+        parse_words = [
+            "first",
+            "last",
+            "fullname",
+            "username",
+            "mention",
+            "id",
+            "chatname",
+        ]
+        hmm = await escape_mentions_using_curly_brackets_wl(user, m, oo, parse_words)
+        if status:
+            tek, button = await parse_button(hmm)
+            button = await build_keyboard(button)
+            button = ikb(button) if button else None
 
-            if jj:
-                db.set_cleanwlcm_id(int(jj.id))
-        except RPCError as e:
-            LOGGER.error(e)
-            LOGGER.error(format_exc(e))
-            return
-    else:
-        return
+            if "%%%" in tek:
+                filter_reply = tek.split("%%%")
+                teks = choice(filter_reply)
+            else:
+                teks = tek
+
+            if not teks:
+                teks = f"A wild {user.mention} appeared in {m.chat.title}! Everyone be aware."
+
+            ifff = db.get_current_cleanwelcome_id()
+            gg = db.get_current_cleanwelcome_settings()
+            if ifff and gg:
+                try:
+                    await c.delete_messages(m.chat.id, int(ifff))
+                except RPCError:
+                    pass
+            if not teks:
+                teks = "Hey {first}, welcome to {chatname}"
+            try:
+                if not UwU:
+                    jj = await c.send_message(
+                        m.chat.id,
+                        text=teks,
+                        reply_markup=button,
+                        disable_web_page_preview=True,
+                    )
+                elif UwU:
+                    jj = await (await send_cmd(c,mtype))(
+                        m.chat.id,
+                        UwU,
+                        caption=teks,
+                        reply_markup=button,
+                    )
+
+                if jj:
+                    db.set_cleanwlcm_id(int(jj.id))
+            except ChannelPrivate:
+                continue
+            except RPCError as e:
+                LOGGER.error(e)
+                LOGGER.error(format_exc(e))
+                continue
+        else:
+            continue
 
 
-@Gojo.on_chat_member_updated(filters.group, group=99)
-async def member_has_left(c: Gojo, member: ChatMemberUpdated):
-
-    if (
-        not member.new_chat_member
-        and member.old_chat_member.status not in {CMS.BANNED, CMS.RESTRICTED}
-        and member.old_chat_member
-    ):
-        pass
-    else:
-        return
-    db = Greetings(member.chat.id)
+@Gojo.on_message(filters.group & filters.left_chat_member, group=99)
+async def member_has_left(c: Gojo, m: Message):
+    db = Greetings(m.chat.id)
     status = db.get_goodbye_status()
     oo = db.get_goodbye_text()
     UwU = db.get_goodbye_media()
@@ -362,9 +341,9 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
         "chatname",
     ]
 
-    user = member.old_chat_member.user if member.old_chat_member else member.from_user
+    user = m.left_chat_member if m.left_chat_member else m.from_user
 
-    hmm = await escape_mentions_using_curly_brackets_wl(member, False, oo, parse_words)
+    hmm = await escape_mentions_using_curly_brackets_wl(user, m, oo, parse_words)
     if status:
         tek, button = await parse_button(hmm)
         button = await build_keyboard(button)
@@ -375,17 +354,21 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
             teks = choice(filter_reply)
         else:
             teks = tek
+
+        if not teks: #Just in case
+            teks = f"Thanks for being part of this group {user.mention}. But I don't like your arrogance and leaving the group {emoji.EYES}"
+       
         ifff = db.get_current_cleangoodbye_id()
         iii = db.get_current_cleangoodbye_settings()
         if ifff and iii:
             try:
-                await c.delete_messages(member.chat.id, int(ifff))
+                await c.delete_messages(m.chat.id, int(ifff))
             except RPCError:
                 pass
         if user.id in DEV_USERS:
             await c.send_message(
-                member.chat.id,
-                "Will miss you master :(",
+                m.chat.id,
+                f"Will miss you my master {user.mention} :(",
             )
             return
         if not teks:
@@ -393,14 +376,14 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
         try:
             if not UwU:
                 ooo = await c.send_message(
-                    member.chat.id,
+                    m.chat.id,
                     text=teks,
                     reply_markup=button,
                     disable_web_page_preview=True,
                 )
             elif UwU:
                 ooo = await (await send_cmd(c,mtype))(
-                    member.chat.id,
+                    m.chat.id,
                     UwU,
                     caption=teks,
                     reply_markup=button,
@@ -409,6 +392,8 @@ async def member_has_left(c: Gojo, member: ChatMemberUpdated):
             if ooo:
                 db.set_cleangoodbye_id(int(ooo.id))
             return
+        except ChannelPrivate:
+            pass
         except RPCError as e:
             LOGGER.error(e)
             LOGGER.error(format_exc(e))
@@ -541,8 +526,6 @@ async def goodbye(c: Gojo, m: Message):
             reply_markup=button,
         )
     return
-    return
-
 
 __PLUGIN__ = "greetings"
 __alt_name__ = ["welcome", "goodbye", "cleanservice"]

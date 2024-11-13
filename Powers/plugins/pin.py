@@ -26,9 +26,7 @@ async def pin_message(_, m: Message):
             await m.reply_to_message.pin(
                 disable_notification=disable_notification,
             )
-            LOGGER.info(
-                f"{m.from_user.id} pinned msgid-{m.reply_to_message.id} in {m.chat.id}",
-            )
+            
 
             if m.chat.username:
                 # If chat has a username, use this format
@@ -71,9 +69,7 @@ async def unpin_message(c: Gojo, m: Message):
     try:
         if m.reply_to_message:
             await m.reply_to_message.unpin()
-            LOGGER.info(
-                f"{m.from_user.id} unpinned msgid: {m.reply_to_message.id} in {m.chat.id}",
-            )
+            
             await m.reply_text(text="Unpinned last message.")
         else:
             m_id = (await c.get_chat(m.chat.id)).pinned_message.id
@@ -121,7 +117,6 @@ async def unpinall_calllback(c: Gojo, q: CallbackQuery):
         return
     try:
         await c.unpin_all_chat_messages(q.message.chat.id)
-        LOGGER.info(f"{q.from_user.id} unpinned all messages in {q.message.chat.id}")
         await q.message.edit_text(text="Unpinned all messages in this chat.")
     except ChatAdminRequired:
         await q.message.edit_text(text="I'm not admin or I don't have rights.")
@@ -149,11 +144,9 @@ async def anti_channel_pin(_, m: Message):
     if len(m.text.split()) == 2:
         if m.command[1] in ("yes", "on", "true"):
             pinsdb.antichannelpin_on()
-            LOGGER.info(f"{m.from_user.id} enabled antichannelpin in {m.chat.id}")
             msg = "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
         elif m.command[1] in ("no", "off", "false"):
             pinsdb.antichannelpin_off()
-            LOGGER.info(f"{m.from_user.id} disabled antichannelpin in {m.chat.id}")
             msg = "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
         else:
             await m.reply_text(
@@ -201,11 +194,9 @@ async def clean_linked(_, m: Message):
     if len(m.text.split()) == 2:
         if m.command[1] in ("yes", "on", "true"):
             pinsdb.cleanlinked_on()
-            LOGGER.info(f"{m.from_user.id} enabled CleanLinked in {m.chat.id}")
             msg = "Turned on CleanLinked! Now all the messages from linked channel will be deleted!"
         elif m.command[1] in ("no", "off", "false"):
             pinsdb.cleanlinked_off()
-            LOGGER.info(f"{m.from_user.id} disabled CleanLinked in {m.chat.id}")
             msg = "Turned off CleanLinked! Messages from linked channel will not be deleted!"
         else:
             await m.reply_text(
@@ -220,7 +211,6 @@ async def clean_linked(_, m: Message):
 @Gojo.on_message(command("permapin") & admin_filter)
 async def perma_pin(_, m: Message):
     if m.reply_to_message or len(m.text.split()) > 1:
-        LOGGER.info(f"{m.from_user.id} used permampin in {m.chat.id}")
         if m.reply_to_message:
             text = m.reply_to_message.text
         elif len(m.text.split()) > 1:

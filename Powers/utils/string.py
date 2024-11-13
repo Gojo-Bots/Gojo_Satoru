@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime, timedelta
 from html import escape
 from re import compile as compile_re
@@ -9,7 +10,8 @@ from pyrogram.types import InlineKeyboardButton, Message
 from Powers import TIME_ZONE
 from Powers.utils.parser import escape_markdown
 
-BTN_URL_REGEX = compile_re(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
+BTN_URL_REGEX = compile_re(
+    r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
 
 async def extract_time(m: Message, time_val: str):
@@ -26,7 +28,7 @@ async def extract_time(m: Message, time_val: str):
         elif unit == "h":
             bantime = initial_time + timedelta(hours=int(time_num))
         elif unit == "d":
-            bantime = initial_time + timedelta(days=int(time_num)) 
+            bantime = initial_time + timedelta(days=int(time_num))
         else:
             # how even...?
             return ""
@@ -54,8 +56,9 @@ async def parse_button(text: str):
         # if even, not escaped -> create button
         if n_escapes % 2 == 0:
             # create a thruple with button label, url, and newline status
-            buttons.append((match.group(2), match.group(3), bool(match.group(4))))
-            note_data += markdown_note[prev : match.start(1)]
+            buttons.append(
+                (match.group(2), match.group(3), bool(match.group(4))))
+            note_data += markdown_note[prev: match.start(1)]
             prev = match.end(1)
         # if odd, escaped -> move along
         else:
@@ -98,7 +101,7 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
                     success = True
                     break
             if success:
-                new_text += text[idx : idx + len(v) + 2]
+                new_text += text[idx: idx + len(v) + 2]
                 idx += len(v) + 2
                 continue
             new_text += "{{"
@@ -173,7 +176,7 @@ async def split_quotes(text: str):
     # 1 to avoid starting quote, and counter is exclusive so avoids ending
     key = await remove_escapes(text[1:counter].strip())
     # index will be in range, or `else` would have been executed and returned
-    rest = text[counter + 1 :].strip()
+    rest = text[counter + 1:].strip()
     if not key:
         key = text[0] + text[0]
     return list(filter(None, [key, rest]))
@@ -192,3 +195,25 @@ async def remove_escapes(text: str) -> str:
         else:
             res += text[counter]
     return res
+
+
+async def encode_decode(string: str, to_do="encode"):
+    """
+    Function to encode or decode strings
+    string: string to be decoded or encoded
+    to_do: encode to encode the string or decode to decode the string
+    """
+    if to_do.lower() == "encode":
+        encodee = string.encode("ascii")
+        base64_ = base64.b64encode(encodee)
+        B64 = base64_.decode("ascii")
+
+    elif to_do.lower() == "decode":
+        decodee = string.encode("ascii")
+        base64_ = base64.b64decode(decodee)
+        B64 = base64_.decode("ascii")
+
+    else:
+        B64 = None
+
+    return B64
