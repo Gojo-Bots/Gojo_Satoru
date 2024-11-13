@@ -94,7 +94,7 @@ class Warns(MongoDB):
                     )
                     collection.update(
                         {"chat_id": data["chat_id"],
-                            "user_id": data["user_id"]},
+                         "user_id": data["user_id"]},
                         {key: val},
                     )
 

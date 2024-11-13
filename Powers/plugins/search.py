@@ -14,11 +14,12 @@ from Powers.utils.custom_filters import command
 from Powers.utils.http_helper import *
 from Powers.utils.kbhelpers import ikb
 
-#have to add youtube
+# have to add youtube
 
 gsearch = GoogleSearch()
 anisearch = AnimeSearch()
 stsearch = StackSearch()
+
 
 @Gojo.on_message(command('google'))
 async def g_search(c: Gojo, m: Message):
@@ -157,6 +158,7 @@ async def anime_search(c: Gojo, m: Message):
         LOGGER.error(format_exc())
         return
 
+
 @Gojo.on_message(command('stack'))
 async def stack_search(c: Gojo, m: Message):
     split = m.text.split(None, 1)
@@ -233,17 +235,15 @@ async def getText(message: Message):
     text_to_return = message.text
     if message.text is None:
         return None
-    if " " in text_to_return:
-        try:
-            return message.text.split(None, 1)[1]
-        except IndexError:
-            return None
-        except Exception:
-            return None
-    else:
+    if " " not in text_to_return:
+        return None
+    try:
+        return message.text.split(None, 1)[1]
+    except Exception:
         return None
 
-@Gojo.on_message(command(["images","imgs"]))
+
+@Gojo.on_message(command(["images", "imgs"]))
 async def get_image_search(_, m: Message):
     # Credits: https://t.me/NovaXMod
     # https://t.me/NovaXMod/98
@@ -258,17 +258,15 @@ async def get_image_search(_, m: Message):
         return
     image_urls = resp.get("image_urls", [])[:10]
     ab = await m.reply_text("Getting Your Images... Wait A Min..\nCredits: @NovaXMod")
-    Ok = []
-    for a in image_urls:
-        Ok.append(InputMediaPhoto(a))
+    Ok = [InputMediaPhoto(a) for a in image_urls]
     try:
         await m.reply_media_group(media=Ok)
         await ab.delete()
     except Exception:
         await ab.edit("Error occurred while sending images. Please try again.")
 
-__PLUGIN__ = "search"
 
+__PLUGIN__ = "search"
 
 __alt_name__ = [
     "google",

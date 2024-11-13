@@ -30,40 +30,42 @@ back = [
     "{first} is now finally back from the dead"
 ]
 
-@Gojo.on_message(command(["afk","brb"]) & ~filters.private)
+
+@Gojo.on_message(command(["afk", "brb"]) & ~filters.private)
 async def going_afk(c: Gojo, m: Message):
     user = m.from_user.id
     chat = m.chat.id
     afk = AFK()
     text, data_type, content = await get_afk_type(m)
-    
-    time = str(datetime.now()).rsplit(".",1)[0]
+
+    time = str(datetime.now()).rsplit(".", 1)[0]
 
     if len(m.command) == 1:
         text = choice(res)
 
     elif len(m.command) > 1:
-        text = m.text.markdown.split(None,1)[1]
+        text = m.text.markdown.split(None, 1)[1]
 
     if not data_type:
         data_type = Types.TEXT
 
-    afk.insert_afk(chat,user,str(time),text,data_type,content)
+    afk.insert_afk(chat, user, str(time), text, data_type, content)
 
     await m.reply_text(f"{m.from_user.mention} is now AFK")
 
     return
 
-async def get_hours(hour:str):
+
+async def get_hours(hour: str):
     tim = hour.strip().split(":")
     txt = ""
     if int(tim[0]):
-        txt += tim[0] + " hours "
+        txt += f"{tim[0]} hours "
     if int(tim[1]):
-        txt += tim[1] + " minutes "
+        txt += f"{tim[1]} minutes "
     if int(round(float(tim[2]))):
-        txt += str(round(float(tim[2]))) + " seconds"
-    
+        txt += f"{str(round(float(tim[2])))} seconds"
+
     return txt
 
 
@@ -74,19 +76,12 @@ async def afk_checker(c: Gojo, m: Message):
     user = m.from_user.id
     chat = m.chat.id
     repl = m.reply_to_message
-    
-    if repl and repl.from_user:
-        rep_user = repl.from_user.id
-    else:
-        rep_user = False
 
-    is_afk = afk.check_afk(chat,user)
-    is_rep_afk = False
-    if rep_user:
-        is_rep_afk = afk.check_afk(chat,rep_user)
-
+    rep_user = repl.from_user.id if repl and repl.from_user else False
+    is_afk = afk.check_afk(chat, user)
+    is_rep_afk = afk.check_afk(chat, rep_user) if rep_user else False
     if is_rep_afk and rep_user != user:
-        con = afk.get_afk(chat,rep_user)
+        con = afk.get_afk(chat, rep_user)
         time = till_date(con["time"])
         media = con["media"]
         media_type = con["media_type"]
@@ -96,7 +91,7 @@ async def afk_checker(c: Gojo, m: Message):
         if len(tim_) == 1:
             tims = tim
         elif len(tim_) == 2:
-            tims = tim_[0] + " " + tim
+            tims = f"{tim_[0]} {tim}"
         reason = f"{repl.from_user.first_name} is afk since {tims}\n"
         if con['reason'] not in res:
             reason += f"\nDue to: {con['reason'].format(first=repl.from_user.first_name)}"
@@ -104,22 +99,22 @@ async def afk_checker(c: Gojo, m: Message):
             reason += f"\n{con['reason'].format(first=repl.from_user.first_name)}"
         txt = reason
 
-        if media_type == Types.TEXT:        
-            await (await send_cmd(c,media_type))(
+        if media_type == Types.TEXT:
+            await (await send_cmd(c, media_type))(
                 chat,
                 txt,
                 parse_mode=PM.MARKDOWN,
                 reply_to_message_id=m.id,
             )
         else:
-            await (await send_cmd(c,media_type))(
+            await (await send_cmd(c, media_type))(
                 chat,
                 media,
                 txt,
                 parse_mode=PM.MARKDOWN,
                 reply_to_message_id=repl.id
             )
-    
+
     if is_afk:
         txt = False
         try:
@@ -127,10 +122,10 @@ async def afk_checker(c: Gojo, m: Message):
         except Exception:
             pass
 
-        if txt and txt in ["afk","brb"]:
+        if txt and txt in ["afk", "brb"]:
             raise ContinuePropagation
         else:
-            con = afk.get_afk(chat,user)
+            con = afk.get_afk(chat, user)
             time = till_date(con["time"])
             tim_ = datetime.now() - time
             tim_ = str(tim_).split(",")
@@ -138,15 +133,16 @@ async def afk_checker(c: Gojo, m: Message):
             if len(tim_) == 1:
                 tims = tim
             elif len(tim_) == 2:
-                tims = tim_[0] + " " + tim
-            txt = back_.format(first=m.from_user.mention) + f"\n\nAfk for: {tims}"
+                tims = f"{tim_[0]} {tim}"
+            txt = f"{back_.format(first=m.from_user.mention)}\n\nAfk for: {tims}"
             await m.reply_text(txt)
-        afk.delete_afk(chat,user)
+        afk.delete_afk(chat, user)
     raise ContinuePropagation
+
 
 __PLUGIN__ = "afk"
 
-_DISABLE_CMDS_ = ["afk","brb"]
+_DISABLE_CMDS_ = ["afk", "brb"]
 
 __alt_name__ = ["brb"]
 

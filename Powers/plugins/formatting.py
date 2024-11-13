@@ -4,7 +4,6 @@ from pyrogram import enums, filters
 from pyrogram.errors import MediaCaptionTooLong
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
@@ -59,6 +58,7 @@ If you would like to send buttons on the same row, use the <code>:same</code> fo
 <code>[button 3](buttonurl://example.com)</code>
 This will show button 1 and 2 on the same line, while 3 will be underneath."""
 
+
 async def get_splited_formatting(msg, page=1):
     msg = msg.split("\n")
     l = len(msg)
@@ -71,7 +71,7 @@ async def get_splited_formatting(msg, page=1):
             new_msg += f"{i}\n"
         kb = [
             [
-                ("Next page ▶️", f"next_format_{page+1}")
+                ("Next page ▶️", f"next_format_{page + 1}")
             ]
         ]
     else:
@@ -81,30 +81,31 @@ async def get_splited_formatting(msg, page=1):
                 new_msg += f"{i}\n"
             kb = [
                 [
-                    ("◀️ Previous page", f"next_format_{page-1}")
+                    ("◀️ Previous page", f"next_format_{page - 1}")
                 ]
             ]
         else:
             for i in msg[first:last]:
                 new_msg += f"{i}\n"
             kb = [
-                    [
-                        ("◀️ Previous page", f"next_format_{page-1}"),
-                        ("Next page ▶️", f"next_format_{page+1}")
-                    ]
+                [
+                    ("◀️ Previous page", f"next_format_{page - 1}"),
+                    ("Next page ▶️", f"next_format_{page + 1}")
                 ]
-
+            ]
 
     kb = ikb(kb, True, "back.formatting")
 
     return new_msg, kb
 
+
 @Gojo.on_callback_query(filters.regex(r"^next_format_.*[0-9]$"))
 async def change_formatting_page(c: Gojo, q: CallbackQuery):
     page = q.data.split("_")[-1]
     txt, kb = await get_splited_formatting(md_txt, int(page))
-    await q.edit_message_caption(txt, reply_markup=kb,parse_mode=enums.ParseMode.HTML,)
+    await q.edit_message_caption(txt, reply_markup=kb, parse_mode=enums.ParseMode.HTML, )
     return
+
 
 @Gojo.on_callback_query(filters.regex("^formatting."))
 async def get_formatting_info(c: Gojo, q: CallbackQuery):
@@ -112,7 +113,7 @@ async def get_formatting_info(c: Gojo, q: CallbackQuery):
     kb = ikb([[("Back", "back.formatting")]])
 
     if cmd == "md_formatting":
-        
+
         try:
             await q.edit_message_caption(
                 caption=md_txt,

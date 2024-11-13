@@ -5,7 +5,7 @@ from re import compile as compile_re
 from typing import List
 
 from pyrogram.enums import ChatType
-from pyrogram.types import InlineKeyboardButton, Message
+from pyrogram.types import Message
 
 from Powers import TIME_ZONE
 from Powers.utils.parser import escape_markdown
@@ -46,7 +46,6 @@ async def parse_button(text: str):
     note_data = ""
     buttons = []
     for match in BTN_URL_REGEX.finditer(markdown_note):
-        # Check if btnurl is escaped
         n_escapes = 0
         to_check = match.start(1) - 1
         while to_check > 0 and markdown_note[to_check] == "\\":
@@ -64,8 +63,7 @@ async def parse_button(text: str):
         else:
             note_data += markdown_note[prev:to_check]
             prev = match.start(1) - 1
-    else:
-        note_data += markdown_note[prev:]
+    note_data += markdown_note[prev:]
     return note_data, buttons
 
 
@@ -121,9 +119,9 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
 
 
 async def escape_mentions_using_curly_brackets(
-    m: Message,
-    text: str,
-    parse_words: list,
+        m: Message,
+        text: str,
+        parse_words: list,
 ) -> str:
     if m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP, ChatType.CHANNEL]:
         chat_name = escape(m.chat.title)
@@ -166,7 +164,7 @@ async def split_quotes(text: str):
         if text[counter] == "\\":
             counter += 1
         elif text[counter] == text[0] or (
-            text[0] == SMART_OPEN and text[counter] == SMART_CLOSE
+                text[0] == SMART_OPEN and text[counter] == SMART_CLOSE
         ):
             break
         counter += 1
@@ -206,14 +204,12 @@ async def encode_decode(string: str, to_do="encode"):
     if to_do.lower() == "encode":
         encodee = string.encode("ascii")
         base64_ = base64.b64encode(encodee)
-        B64 = base64_.decode("ascii")
+        return base64_.decode("ascii")
 
     elif to_do.lower() == "decode":
         decodee = string.encode("ascii")
         base64_ = base64.b64decode(decodee)
-        B64 = base64_.decode("ascii")
+        return base64_.decode("ascii")
 
     else:
-        B64 = None
-
-    return B64
+        return None

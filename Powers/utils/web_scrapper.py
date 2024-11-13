@@ -6,6 +6,7 @@ import httpx
 
 from Powers import *
 
+
 # import requests
 # from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
@@ -14,7 +15,6 @@ from Powers import *
 # from selenium.webdriver.support.expected_conditions import \
 #     presence_of_element_located
 # from selenium.webdriver.support.wait import WebDriverWait
-
 
 
 class SCRAP_DATA:
@@ -31,7 +31,7 @@ class SCRAP_DATA:
         if isinstance(self.urls, str):
             requested = httpx.get(self.urls)
             try:
-                name = self.path + f"img_{str(time()).replace('.','_')}.jpg"
+                name = f"{self.path}img_{str(time()).replace('.', '_')}.jpg"
                 with open(name, "wb") as f:
                     f.write(requested.content)
                 images.append(name)
@@ -46,7 +46,7 @@ class SCRAP_DATA:
                 else:
                     continue
                 try:
-                    name = self.path + f"img_{str(time()).replace('.','_')}.jpg"
+                    name = f"{self.path}img_{str(time()).replace('.', '_')}.jpg"
                     with open(name, "wb") as f:
                         f.write(requested.content)
                     images.append(name)
@@ -65,7 +65,7 @@ class SCRAP_DATA:
             else:
                 return []
             try:
-                name = self.path + f"vid_{str(time()).replace('.','_')}.mp4"
+                name = f"{self.path}vid_{str(time()).replace('.', '_')}.mp4"
                 with open(name, "wb") as f:
                     f.write(requested.content)
                 videos.append(name)
@@ -80,7 +80,7 @@ class SCRAP_DATA:
                 else:
                     continue
                 try:
-                    name = self.path + f"vid_{str(time()).replace('.','_')}.mp4"
+                    name = f"{self.path}vid_{str(time()).replace('.', '_')}.mp4"
                     with open(name, "wb") as f:
                         f.write(requested.content)
                     videos.append(name)
@@ -221,8 +221,9 @@ class INSTAGRAM:
 
     def get_media(self):
         try:
-            response = httpx.post(f"https://api.qewertyy.dev/downloaders/instagram?url={self.url}").json()
-            return response
+            return httpx.post(
+                f"https://api.qewertyy.dev/downloaders/instagram?url={self.url}"
+            ).json()
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error(format_exc())

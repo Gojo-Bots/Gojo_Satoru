@@ -1,4 +1,3 @@
-import os
 from random import choice
 from time import gmtime, strftime, time
 
@@ -67,14 +66,13 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Gojo, m: Message):
-
     if m.chat.type == ChatType.PRIVATE:
         if len(m.text.strip().split()) > 1:
             arg = m.text.split(None, 1)[1]
             help_option = arg.lower()
 
             if help_option.startswith("note") and (
-                help_option not in ("note", "notes")
+                    help_option not in ("note", "notes")
             ):
                 await get_private_note(c, m, help_option)
                 return
@@ -127,13 +125,13 @@ async def start(c: Gojo, m: Message):
                                     ]
                                 ]
                             )
-                        except:
+                        except Exception:
                             chat_ = False
                             kb = None
                         await m.reply_text("You can now talk in the chat", reply_markup=kb)
                         try:
                             await c.delete_messages(chat, msg)
-                        except:
+                        except Exception:
                             pass
                         return
                     except Exception:
@@ -229,7 +227,7 @@ You can use {", ".join(PREFIX_HANDLER)} as your prefix handler
 @Gojo.on_message(command("help"))
 async def help_menu(c: Gojo, m: Message):
     if len(m.text.split()) >= 2:
-        textt = m.text.replace(" ", "_",).replace("_", " ", 1)
+        textt = m.text.replace(" ", "_", ).replace("_", " ", 1)
         help_option = (textt.split(None)[1]).lower()
         help_msg, help_kb = await get_help_msg(c, m, help_option)
 
@@ -299,7 +297,7 @@ Commands available:
     return
 
 
-async def get_divided_msg(plugin_name: str, page:int=1, back_to_do = None):
+async def get_divided_msg(plugin_name: str, page: int = 1, back_to_do=None):
     msg = HELP_COMMANDS[plugin_name]["help_msg"]
     msg = msg.split("\n")
     l = len(msg)
@@ -313,7 +311,10 @@ async def get_divided_msg(plugin_name: str, page:int=1, back_to_do = None):
             new_msg += f"{i}\n"
         kb = [
             [
-                ("Next page ▶️", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page+1}")
+                (
+                    "Next page ▶️",
+                    f"iter_page_{plugin_name}_{f'{back_to_do}_' if back_to_do else ''}{page + 1}",
+                )
             ]
         ]
     else:
@@ -323,32 +324,38 @@ async def get_divided_msg(plugin_name: str, page:int=1, back_to_do = None):
                 new_msg += f"{i}\n"
             kb = [
                 [
-                    ("◀️ Previous page", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page-1}")
+                    (
+                        "◀️ Previous page",
+                        f"iter_page_{plugin_name}_{f'{back_to_do}_' if back_to_do else ''}{page - 1}",
+                    )
                 ]
             ]
         else:
             for i in msg[first:last]:
                 new_msg += f"{i}\n"
             kb = [
-                    [
-                        ("◀️ Previous page", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page-1}"),
-                        ("Next page ▶️", f"iter_page_{plugin_name}_{(back_to_do+'_') if back_to_do else ''}{page+1}")
-                    ]
+                [
+                    (
+                        "◀️ Previous page",
+                        f"iter_page_{plugin_name}_{f'{back_to_do}_' if back_to_do else ''}{page - 1}",
+                    ),
+                    (
+                        "Next page ▶️",
+                        f"iter_page_{plugin_name}_{f'{back_to_do}_' if back_to_do else ''}{page + 1}",
+                    ),
                 ]
-    if back_to_do:  
-        kb = ikb(kb, True, back_to_do)
-    else:
-        kb = ikb(kb)
-
+            ]
+    kb = ikb(kb, True, back_to_do) if back_to_do else ikb(kb)
     return new_msg, kb
-    
+
+
 @Gojo.on_callback_query(filters.regex(r"^iter_page_.*[0-9]$"))
 async def helppp_page_iter(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
     plugin_ = data[2]
     try:
         back_to = data[-2]
-    except:
+    except Exception:
         back_to = None
     curr_page = int(data[-1])
     msg, kb = await get_divided_msg(plugin_, curr_page, back_to_do=back_to)
@@ -420,7 +427,7 @@ async def give_bot_staffs(c: Gojo, q: CallbackQuery):
                 pass
     true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
     reply += "\n<b>Sudo Users 🐉:</b>\n"
-    if true_sudo == []:
+    if not true_sudo:
         reply += "No Sudo Users\n"
     else:
         for each_user in true_sudo:
@@ -442,7 +449,8 @@ async def give_bot_staffs(c: Gojo, q: CallbackQuery):
             except RPCError:
                 pass
 
-    await q.edit_message_caption(reply, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("« Back", "start_back")]]))
+    await q.edit_message_caption(reply,
+                                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("« Back", "start_back")]]))
     return
 
 

@@ -22,13 +22,13 @@ async def count(c: Gojo, chat):
     try:
         administrator = []
         async for admin in c.get_chat_members(
-            chat_id=chat, filter=enums.ChatMembersFilter.ADMINISTRATORS
+                chat_id=chat, filter=enums.ChatMembersFilter.ADMINISTRATORS
         ):
             administrator.append(admin)
         total_admin = administrator
         bot = []
         async for tbot in c.get_chat_members(
-            chat_id=chat, filter=enums.ChatMembersFilter.BOTS
+                chat_id=chat, filter=enums.ChatMembersFilter.BOTS
         ):
             bot.append(tbot)
 
@@ -36,7 +36,7 @@ async def count(c: Gojo, chat):
         bot_admin = 0
         ban = []
         async for banned in c.get_chat_members(
-            chat, filter=enums.ChatMembersFilter.BANNED
+                chat, filter=enums.ChatMembersFilter.BANNED
         ):
             ban.append(banned)
 
@@ -90,7 +90,7 @@ async def user_info(c: Gojo, user, already=False):
     is_verified = user.is_verified
     is_restricted = user.is_restricted
     photo_id = user.photo.big_file_id if user.photo else None
-    is_support = True if user_id in SUPPORT_STAFF else False
+    is_support = user_id in SUPPORT_STAFF
     if user_id == c.me.id:
         is_support = "A person is a great support to himself"
     omp = "Hmmm.......Who is that again?"
@@ -107,29 +107,29 @@ async def user_info(c: Gojo, user, already=False):
             omp = "Owner of the bot"
         if user_id in DEV_USERS and user_id == OWNER_ID:
             omp = "Dev and Owner"
-        
+
     is_scam = user.is_scam
     is_bot = user.is_bot
     is_fake = user.is_fake
     status = user.status
     last_date = "Unable to fetch"
     if is_bot is True:
-      last_date = "Targeted user is a bot"
+        last_date = "Targeted user is a bot"
     if status == enums.UserStatus.RECENTLY:
-      last_date = "User was seen recently"
+        last_date = "User was seen recently"
     if status == enums.UserStatus.LAST_WEEK:
-      last_date = "User was seen last week"
+        last_date = "User was seen last week"
     if status == enums.UserStatus.LAST_MONTH:
-      last_date = "User was seen last month"
+        last_date = "User was seen last month"
     if status == enums.UserStatus.LONG_AGO:
-      last_date = "User was seen long ago or may be I am blocked by the user  :("
+        last_date = "User was seen long ago or may be I am blocked by the user  :("
     if status == enums.UserStatus.ONLINE:
-      last_date = "User is online"
-    if status == enums.UserStatus.OFFLINE: 
-      try:
-        last_date = datetime.fromtimestamp(user.status.date).strftime("%Y-%m-%d %H:%M:%S")
-      except Exception:
-        last_date = "User is offline"
+        last_date = "User is online"
+    if status == enums.UserStatus.OFFLINE:
+        try:
+            last_date = datetime.fromtimestamp(user.status.date).strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            last_date = "User is offline"
 
     caption = f"""
 <b><i><u>⚡️ Extracted User info From Telegram ⚡️</b></i></u>
@@ -173,10 +173,10 @@ async def chat_info(c: Gojo, chat, already=False):
                     GetFullChannel(
                         channel=chat_r
                     )
-                )    
+                )
                 u_name = ll.chats[0].usernames
             except Exception:
-                pass 
+                pass
         except Exception:
             try:
                 chat_r = await c.resolve_peer(chat)
@@ -186,7 +186,7 @@ async def chat_info(c: Gojo, chat, already=False):
                         GetFullChannel(
                             channel=chat_r
                         )
-                    )    
+                    )
                     u_name = ll.chats[0].usernames
                 except Exception:
                     pass
@@ -194,10 +194,7 @@ async def chat_info(c: Gojo, chat, already=False):
                 caption = f"Failed to find the chat due to\n{e}"
                 return caption, None
     chat_id = chat.id
-    if u_name:
-        username = " ".join([f"@{i}"for i in u_name])
-    elif not u_name:
-        username = chat.username
+    username = " ".join([f"@{i}" for i in u_name]) if u_name else chat.username
     total_bot, total_admin, total_bot_admin, total_banned = await count(c, chat.id)
     title = chat.title
     type_ = str(chat.type).split(".")[1]
@@ -218,7 +215,7 @@ async def chat_info(c: Gojo, chat, already=False):
 <b>🚀 Chat Title</b>: {title}
 <b>✨ Chat Type</b>: {type_}
 <b>🌐 DataCentre ID</b>: {dc_id}
-<b>🔍 Username</b>: {("@" + username) if username else "NA"}
+<b>🔍 Username</b>: {f"@{username}" if username else "NA"}
 <b>⚜️ Administrators</b>: {total_admin}
 <b>🤖 Bots</b>: {total_bot}
 <b>🚫 Banned</b>: {total_banned}
@@ -243,7 +240,7 @@ async def info_func(c: Gojo, message: Message):
         return
     try:
         user, _, user_name = await extract_user(c, message)
-    except:
+    except Exception:
         await message.reply_text("Got Some errors failed to fetch user info")
         LOGGER.error(e)
         LOGGER.error(format_exc)
@@ -251,7 +248,7 @@ async def info_func(c: Gojo, message: Message):
         await message.reply_text("Can't find user to fetch info!")
 
     m = await message.reply_text(
-        f"Fetching {('@' + user_name) if user_name else 'user'} info from telegram's database..."
+        f"Fetching {f'@{user_name}' if user_name else 'user'} info from telegram's database..."
     )
 
     try:
@@ -285,9 +282,10 @@ async def info_func(c: Gojo, message: Message):
             LOGGER.error(format_exc())
     except Exception as e:
         if e == "User not found ! Error: 'InputPeerChannel' object has no attribute 'user_id'":
-            await m.reply_text("Looks like you are trying to fetch info of a chat not an user. In that case please use /chinfo")
+            await m.reply_text(
+                "Looks like you are trying to fetch info of a chat not an user. In that case please use /chinfo")
             return
-        
+
         await message.reply_text(text=e)
         LOGGER.error(e)
         LOGGER.error(format_exc())
@@ -303,7 +301,7 @@ async def chat_info_func(c: Gojo, message: Message):
     if len(splited) == 1:
         if message.reply_to_message and message.reply_to_message.sender_chat:
             chat = message.reply_to_message.sender_chat.id
-        else:  
+        else:
             chat = message.chat.id
 
     else:
@@ -311,20 +309,19 @@ async def chat_info_func(c: Gojo, message: Message):
 
     try:
         chat = int(chat)
-    except (ValueError, Exception) as ef:
-        if "invalid literal for int() with base 10:" in str(ef):
-            chat = str(chat)
-            if chat.startswith("https://"):
-                chat = '@'+chat.split("/")[-1]
-        else:
+    except Exception as ef:
+        if "invalid literal for int() with base 10:" not in str(ef):
             return await message.reply_text(
                 f"Got and exception {ef}\n**Usage:**/chinfo [USERNAME|ID]"
             )
 
+        chat = str(chat)
+        if chat.startswith("https://"):
+            chat = '@' + chat.split("/")[-1]
     m = await message.reply_text(
-        f"Fetching chat info of chat from telegram's database....."
+        "Fetching chat info of chat from telegram's database....."
     )
-    
+
     try:
         info_caption, photo_id = await chat_info(c, chat=chat)
         if info_caption.startswith("Failed to find the chat due"):

@@ -5,13 +5,14 @@ async def all_plugins():
     from glob import glob
     from os.path import basename, dirname, isfile
 
-    mod_paths = glob(dirname(__file__) + "/*.py")
+    mod_paths = glob(f"{dirname(__file__)}/*.py")
     all_plugs = [
         basename(f)[:-3]
         for f in mod_paths
         if isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
     ]
     return sorted(all_plugs)
+
 
 from sys import exit as exiter
 
@@ -36,6 +37,4 @@ from datetime import datetime
 
 def till_date(date):
     form = "%Y-%m-%d %H:%M:%S"
-    z = datetime.strptime(date,form)
-    return z
-
+    return datetime.strptime(date, form)

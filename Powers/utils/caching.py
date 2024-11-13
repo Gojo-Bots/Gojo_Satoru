@@ -7,8 +7,6 @@ from pyrogram.enums import ChatMembersFilter
 from pyrogram.types import CallbackQuery
 from pyrogram.types.messages_and_media.message import Message
 
-from Powers import LOGGER
-
 THREAD_LOCK = RLock()
 
 # admins stay cached for 30 mins

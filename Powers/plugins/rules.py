@@ -1,7 +1,6 @@
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.utils.custom_filters import admin_filter, command
@@ -25,9 +24,7 @@ async def get_rules(c: Gojo, m: Message):
         )
         return
 
-    priv_rules_status = db.get_privrules()
-
-    if priv_rules_status:
+    if priv_rules_status := db.get_privrules():
         pm_kb = ikb(
             [
                 [
@@ -76,7 +73,7 @@ async def set_rules(_, m: Message):
         return await m.reply_text("Provide some text to set as rules !!")
 
     if len(rules) > 4000:
-        rules = rules[0:3949]  # Split Rules if len > 4000 chars
+        rules = rules[:3949]
         await m.reply_text("Rules are truncated to 3950 characters!")
 
     db.set_rules(rules)

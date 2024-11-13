@@ -23,7 +23,6 @@ from Powers.utils.parser import mention_html
 
 @Gojo.on_message(command("wiki"))
 async def wiki(_, m: Message):
-
     if len(m.text.split()) <= 1:
         return await m.reply_text(
             text="Please check help on how to use this this command."
@@ -81,6 +80,7 @@ async def gdpr_remove(_, m: Message):
     )
     await m.stop_propagation()
 
+
 @Gojo.on_message(
     command("lyrics") & (filters.group | filters.private),
 )
@@ -102,22 +102,19 @@ async def get_lyrics(_, m: Message):
     em = await m.reply_text(text=f"Finding lyrics for <code>{song_name}<code>...")
     try:
         if artist:
-            song = genius_lyrics.search_song(query,artist)
+            song = genius_lyrics.search_song(query, artist)
         else:
             song = genius_lyrics.search_song(query)
     except Exception as e:
         await em.delete()
         await m.reply_text("Connection error try again after sometime")
         return
-        
+
     if song:
         if song.lyrics:
             reply = song.lyrics
-            reply = reply.split("\n",1)[1]
-            if not artist:
-                artist = song.artist
-            else:
-                artist = artist
+            reply = reply.split("\n", 1)[1]
+            artist = artist or song.artist
         else:
             reply = "Couldn't find any lyrics for that song!"
     else:
@@ -136,12 +133,10 @@ async def get_lyrics(_, m: Message):
     return
 
 
-
 @Gojo.on_message(
     command("id") & (filters.group | filters.private),
 )
 async def id_info(c: Gojo, m: Message):
-
     ChatType = enums.ChatType
     user_id, _, _ = await extract_user(c, m)
     try:
@@ -150,7 +145,8 @@ async def id_info(c: Gojo, m: Message):
             await m.reply_text(txt, parse_mode=enums.ParseMode.HTML)
             return
         elif m.chat.type in [ChatType.SUPERGROUP, ChatType.GROUP] and not m.reply_to_message:
-            await m.reply_text(text=f"This Group's ID is <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>")
+            await m.reply_text(
+                text=f"This Group's ID is <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>")
             return
 
         elif m.chat.type == ChatType.PRIVATE and not m.reply_to_message:
@@ -187,15 +183,15 @@ Forwarder - {fwd_sender} (<code>{fwd_id}</code>)""",
                 parse_mode=enums.ParseMode.HTML,
             )
     elif m.chat.type == ChatType.PRIVATE:
-        text=f"Your ID is <code>{m.chat.id}</code>."
+        text = f"Your ID is <code>{m.chat.id}</code>."
         if m.reply_to_message:
             if m.forward_from:
-                text+=f"Forwarded from user ID <code>{m.forward_from.id}</code>."
+                text += f"Forwarded from user ID <code>{m.forward_from.id}</code>."
             elif m.forward_from_chat:
-                text+=f"Forwarded from user ID <code>{m.forward_from_chat.id}</code>."
+                text += f"Forwarded from user ID <code>{m.forward_from_chat.id}</code>."
         await m.reply_text(text)
     else:
-        text=f"Chat ID <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>"
+        text = f"Chat ID <code>{m.chat.id}</code>\nYour ID <code>{m.from_user.id}</code>"
         await m.reply_text(text)
     return
 
@@ -221,9 +217,7 @@ async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(maxsplit=1)[1]
     else:
-        await m.reply_text(
-            f"Usage: <code>/github username</code>",
-        )
+        await m.reply_text("Usage: <code>/github username</code>")
         return
     username = username.split("/")[-1].strip("@")
     URL = f"https://api.github.com/users/{username}"
@@ -234,12 +228,13 @@ async def github(_, m: Message):
     except Exception as e:
         return await m.reply_text(f"ERROR:\n`{e}`")
     if r.status_code != 200:
-        await m.reply_text(f"{username} this user is not available on github\nMake sure you have given correct username")
+        await m.reply_text(
+            f"{username} this user is not available on github\nMake sure you have given correct username")
         return
     r = r.json()
     avtar = r.get("avatar_url", None)
     if avtar:
-        avtar = avtar.rsplit("=",1)
+        avtar = avtar.rsplit("=", 1)
         avtar.pop(-1)
         avtar.append("5")
         avtar = "=".join(avtar)
@@ -250,10 +245,10 @@ async def github(_, m: Message):
     following = r.get("following", 0)
     public_repos = r.get("public_repos", 0)
     bio = r.get("bio", None)
-    created_at = r.get("created_at", "NA").replace("T", " ").replace("Z","")
+    created_at = r.get("created_at", "NA").replace("T", " ").replace("Z", "")
     location = r.get("location", None)
     email = r.get("email", None)
-    updated_at = r.get("updated_at", "NA").replace("T", " ").replace("Z","")
+    updated_at = r.get("updated_at", "NA").replace("T", " ").replace("Z", "")
     blog = r.get("blog", None)
     twitter = r.get("twitter_username", None)
 
@@ -304,6 +299,7 @@ headers = {
     "content-type": "application/json",
 }
 
+
 def paste(content: str):
     data = {"content": content}
     resp = resp_post(f"{BASE}api/v1/pastes", data=json.dumps(data), headers=headers)
@@ -336,7 +332,7 @@ async def paste_func(_, message: Message):
                 return await m.edit("Only text files can be pasted.")
 
             doc = await message.reply_to_message.download()
-            exe = doc.rsplit(".",1)[-1]
+            exe = doc.rsplit(".", 1)[-1]
             async with aiofiles.open(doc, mode="r") as f:
                 fdata = await f.read()
                 content = fdata
@@ -350,13 +346,13 @@ async def paste_func(_, message: Message):
     if not link:
         await m.edit_text("Failed to post!")
         return
-    kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=link + f".{exe}")]]
+    kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=f"{link}.{exe}")]]
     await m.delete()
     try:
         await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
     except Exception as e:
         if link:
-            return await message.reply_text(f"Here's your paste:\n [link]({link + f'.{exe}'})",)
+            return await message.reply_text(f"Here's your paste:\n [link]({link}.{exe})")
         return await message.reply_text(f"Failed to post. Due to following error:\n{e}")
 
 
@@ -364,7 +360,7 @@ async def paste_func(_, message: Message):
 async def tr(_, message):
     trl = Translator()
     if message.reply_to_message and (
-        message.reply_to_message.text or message.reply_to_message.caption
+            message.reply_to_message.text or message.reply_to_message.caption
     ):
         if len(message.text.split()) == 1:
             target_lang = "en"
@@ -392,6 +388,7 @@ async def tr(_, message):
         f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )
 
+
 @Gojo.on_message(command("bug"))
 async def reporting_query(c: Gojo, m: Message):
     repl = m.reply_to_message
@@ -404,17 +401,18 @@ async def reporting_query(c: Gojo, m: Message):
     txt = "#BUG\n"
     txt += repl.text.html
     txt += f"\nReported by: {m.from_user.id} ({m.from_user.mention})"
-    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Update channel",url=f"https://t.me/{SUPPORT_GROUP}")],[InlineKeyboardButton("Report on github",url="https://github.com/Gojo-Bots/Gojo_Satoru/issues/new/choose")]])
+    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Update channel", url=f"https://t.me/{SUPPORT_GROUP}")], [
+        InlineKeyboardButton("Report on github", url="https://github.com/Gojo-Bots/Gojo_Satoru/issues/new/choose")]])
     try:
-        z = await c.send_message(MESSAGE_DUMP,txt,parse_mode=enums.ParseMode.HTML)
+        z = await c.send_message(MESSAGE_DUMP, txt, parse_mode=enums.ParseMode.HTML)
     except Exception:
         txt = repl.text.html
-        z = await c.send_message(MESSAGE_DUMP,txt,parse_mode=enums.ParseMode.HTML)
+        z = await c.send_message(MESSAGE_DUMP, txt, parse_mode=enums.ParseMode.HTML)
         await z.reply_text(f"#BUG\nReported by: {m.from_user.id} ({m.from_user.mention})")
     await repl.delete()
-    await m.reply_photo(photo="./extras/Fire.jpg",caption="Successfully reported your bug",reply_markup=kb)
+    await m.reply_photo(photo="./extras/Fire.jpg", caption="Successfully reported your bug", reply_markup=kb)
     ppost = z.link
-    await c.send_message(OWNER_ID,f"New bug report\n{ppost}",disable_web_page_preview=True)
+    await c.send_message(OWNER_ID, f"New bug report\n{ppost}", disable_web_page_preview=True)
     return
 
 
@@ -439,7 +437,7 @@ async def botstaff(c: Gojo, m: Message):
                 pass
     true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
     reply += "\n<b>Sudo Users 🐉:</b>\n"
-    if true_sudo == []:
+    if not true_sudo:
         reply += "No Sudo Users\n"
     else:
         for each_user in true_sudo:

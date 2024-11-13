@@ -73,7 +73,6 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
         return
 
     if priv_notes_status:
-
         note_hash = next(i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name)
         await reply_text(
             f"Click on the button to get the note <code>{note_name}</code>",
@@ -150,10 +149,10 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
                 )
                 return
         elif msgtype in (
-            Types.STICKER,
-            Types.VIDEO_NOTE,
-            Types.CONTACT,
-            Types.ANIMATED_STICKER,
+                Types.STICKER,
+                Types.VIDEO_NOTE,
+                Types.CONTACT,
+                Types.ANIMATED_STICKER,
         ):
             await (await send_cmd(c, msgtype))(
                 m.chat.id,
@@ -192,7 +191,7 @@ async def get_note_func(c: Gojo, m: Message, note_name, priv_notes_status):
                 reply_markup=button,
                 reply_to_message_id=reply_msg_id,
             )
-        
+
     except Exception as e:
         await m.reply_text(f"Error in notes: {e}")
     return
@@ -222,10 +221,10 @@ async def get_raw_note(c: Gojo, m: Message, note: str):
             teks, parse_mode=enums.ParseMode.DISABLED, reply_to_message_id=msg_id
         )
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
@@ -241,7 +240,7 @@ async def get_raw_note(c: Gojo, m: Message, note: str):
             parse_mode=enums.ParseMode.DISABLED,
             reply_to_message_id=msg_id,
         )
-    
+
     return
 
 
@@ -267,7 +266,6 @@ async def hash_get(c: Gojo, m: Message):
 
 @Gojo.on_message(command("get") & filters.group & ~filters.bot)
 async def get_note(c: Gojo, m: Message):
-
     if len(m.text.split()) == 2:
         priv_notes_status = db_settings.get_privatenotes(m.chat.id)
         note = ((m.text.split())[1]).lower()
@@ -290,7 +288,6 @@ async def get_note(c: Gojo, m: Message):
 
 @Gojo.on_message(command(["privnotes", "privatenotes"]) & admin_filter & ~filters.bot)
 async def priv_notes(_, m: Message):
-
     chat_id = m.chat.id
     if len(m.text.split()) == 2:
         option = (m.text.split())[1]
@@ -323,9 +320,7 @@ async def local_notes(c: Gojo, m: Message):
 
     msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
-    curr_pref = db_settings.get_privatenotes(m.chat.id)
-    if curr_pref:
-
+    if curr_pref := db_settings.get_privatenotes(m.chat.id):
         pm_kb = ikb(
             [
                 [
@@ -355,7 +350,6 @@ async def local_notes(c: Gojo, m: Message):
 
 @Gojo.on_message(command("clear") & admin_filter & ~filters.bot)
 async def clear_note(_, m: Message):
-
     if len(m.text.split()) <= 1:
         await m.reply_text("What do you want to clear?")
         return
@@ -372,7 +366,6 @@ async def clear_note(_, m: Message):
 
 @Gojo.on_message(command("clearall") & owner_filter & ~filters.bot)
 async def clear_allnote(_, m: Message):
-
     all_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
     if not all_notes:
         await m.reply_text("No notes are there in this chat")

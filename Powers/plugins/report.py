@@ -58,7 +58,6 @@ async def report_setting(_, m: Message):
 
 @Gojo.on_message(command("report") & filters.group)
 async def report_watcher(c: Gojo, m: Message):
-
     if m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]:
         return
 
@@ -76,7 +75,7 @@ async def report_watcher(c: Gojo, m: Message):
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
             return
-            
+
         SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
         if reported_user.id in SUPPORT_STAFF:
             await m.reply_text("Uh? You reporting my support team?")
@@ -118,7 +117,6 @@ async def report_watcher(c: Gojo, m: Message):
             ],
         )
 
-        
         await m.reply_text(
             (
                 f"{(await mention_html(m.from_user.first_name, m.from_user.id))} "
@@ -129,7 +127,7 @@ async def report_watcher(c: Gojo, m: Message):
 
         async for admin in c.get_chat_members(m.chat.id, filter=cmf.ADMINISTRATORS):
             if (
-                admin.user.is_bot or admin.user.is_deleted
+                    admin.user.is_bot or admin.user.is_deleted
             ):  # can't message bots or deleted accounts
                 continue
             if Reporting(admin.user.id).get_settings():

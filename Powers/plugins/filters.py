@@ -6,7 +6,7 @@ from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.enums import ParseMode as PM
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
+from pyrogram.types import CallbackQuery, Message
 
 from Powers.bot_class import LOGGER, Gojo
 from Powers.database.filters_db import Filters
@@ -44,7 +44,6 @@ async def view_filters(_, m: Message):
 
 @Gojo.on_message(command(["filter", "addfilter"]) & admin_filter & ~filters.bot)
 async def add_filter(_, m: Message):
-
     args = m.text.split(" ", 1)
     all_filters = db.get_all_filters(m.chat.id)
     actual_filters = {j for i in all_filters for j in i.split("|")}
@@ -95,8 +94,7 @@ async def add_filter(_, m: Message):
             "Please provide data for this filter reply with!",
         )
 
-    add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
-    if add:
+    if add := db.save_filter(m.chat.id, keyword, teks, msgtype, file_id):
         await m.reply_text(
             f"Saved filter for '<code>{', '.join(keyword.split('|'))}</code>' in <b>{m.chat.title}</b>!",
         )
@@ -137,16 +135,15 @@ async def stop_filter(_, m: Message):
     & owner_filter,
 )
 async def rm_allfilters(_, m: Message):
-    all_bls = db.get_all_filters(m.chat.id)
-    if not all_bls:
+    if all_bls := db.get_all_filters(m.chat.id):
+        return await m.reply_text(
+            "Are you sure you want to clear all filters?",
+            reply_markup=ikb(
+                [[("⚠️ Confirm", "rm_allfilters"), ("❌ Cancel", "close_admin")]],
+            ),
+        )
+    else:
         return await m.reply_text("No filters to stop in this chat.")
-
-    return await m.reply_text(
-        "Are you sure you want to clear all filters?",
-        reply_markup=ikb(
-            [[("⚠️ Confirm", "rm_allfilters"), ("❌ Cancel", "close_admin")]],
-        ),
-    )
 
 
 @Gojo.on_callback_query(filters.regex("^rm_allfilters$"))
@@ -239,10 +236,10 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
                 return
 
         elif msgtype in (
-            Types.STICKER,
-            Types.VIDEO_NOTE,
-            Types.CONTACT,
-            Types.ANIMATED_STICKER,
+                Types.STICKER,
+                Types.VIDEO_NOTE,
+                Types.CONTACT,
+                Types.ANIMATED_STICKER,
         ):
             await (await send_cmd(c, msgtype))(
                 m.chat.id,
@@ -268,7 +265,6 @@ async def send_filter_reply(c: Gojo, m: Message, trigger: str):
 
 @Gojo.on_message(filters.text & filters.group & ~filters.bot, group=69)
 async def filters_watcher(c: Gojo, m: Message):
-
     chat_filters = db.get_all_filters(m.chat.id)
     actual_filters = {j for i in chat_filters for j in i.split("|")}
 

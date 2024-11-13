@@ -7,8 +7,8 @@ from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
 
-from Powers import (API_HASH, API_ID, BDB_URI, BOT_TOKEN, LOG_DATETIME,
-                    LOGFILE, LOGGER, MESSAGE_DUMP, NO_LOAD, OWNER_ID, UPTIME,
+from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME,
+                    LOGFILE, LOGGER, MESSAGE_DUMP, NO_LOAD, UPTIME,
                     WORKERS, load_cmds, scheduler)
 from Powers.database import MongoDB
 from Powers.plugins import all_plugins
@@ -72,7 +72,7 @@ class Gojo(Client):
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         if BDB_URI:
             scheduler.add_job(send_wishish, 'cron', [
-                              self], hour=0, minute=0, second=0)
+                self], hour=0, minute=0, second=0)
             scheduler.start()
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
@@ -93,11 +93,7 @@ class Gojo(Client):
         LOGGER.info("Uploading logs before stopping...!\n")
         # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
         scheduler.remove_all_jobs()
-        if MESSAGE_DUMP:
-            # LOG_CHANNEL is not necessary
-            target = MESSAGE_DUMP
-        else:
-            target = OWNER_ID
+        target = MESSAGE_DUMP or OWNER_ID
         await self.send_document(
             target,
             document=LOGFILE,

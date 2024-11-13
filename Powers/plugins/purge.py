@@ -4,14 +4,12 @@ from pyrogram.enums import ChatType
 from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
-from Powers import SUPPORT_GROUP
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import admin_filter, command
 
 
 @Gojo.on_message(command("purge") & admin_filter)
 async def purge(c: Gojo, m: Message):
-
     if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
@@ -21,7 +19,7 @@ async def purge(c: Gojo, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i : i + n]
+                yield l[i: i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))
@@ -58,7 +56,6 @@ async def purge(c: Gojo, m: Message):
 
 @Gojo.on_message(command("spurge") & admin_filter)
 async def spurge(c: Gojo, m: Message):
-
     if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text(text="Cannot purge messages in a basic group")
         return
@@ -68,7 +65,7 @@ async def spurge(c: Gojo, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i : i + n]
+                yield l[i: i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))
@@ -101,7 +98,6 @@ async def spurge(c: Gojo, m: Message):
     command("del") & admin_filter,
 )
 async def del_msg(c: Gojo, m: Message):
-
     if m.chat.type != ChatType.SUPERGROUP:
         return
 

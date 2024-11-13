@@ -34,33 +34,25 @@ async def accept_join_requests(c: Gojo, m: Message):
         return
     if len(split) == 1:
         txt = "**USAGE**\n/joinreq [on | off]"
-        await m.reply_text(txt)
-        return
     else:
         yes_no = split[1].lower()
-        if yes_no not in ["on","off"]:
-            txt = "**USAGE**\n/joinreq [on | off]"
-            await m.reply_text(txt)
-            return
-        
-        else:
-            if yes_no == "on":
-                is_al = a_j.load_autojoin(m.chat.id)
-                
-                if is_al:
-                    txt = "Now I will approve all the join request of the chat\nIf you want that I will just notify admins about the join request use command\n/joinreqmode [manual | auto]"
-                    await m.reply_text(txt)
-                    return
-                else:
-                    txt = "Auto approve join request is already on for this chat\nIf you want that I will just notify admins about the join request use command\n/joinreqmode [manual | auto]"
-                    await m.reply_text(txt)
-                    return
+        if yes_no == "on":
+            is_al = a_j.load_autojoin(m.chat.id)
 
-            elif yes_no == "off":
-                a_j.remove_autojoin(m.chat.id)
-                txt = "Now I will neither auto approve join request nor notify any admins about it"
-                await m.reply_text(txt)
-                return
+            txt = (
+                "Now I will approve all the join request of the chat\nIf you want that I will just notify admins about the join request use command\n/joinreqmode [manual | auto]"
+                if is_al
+                else "Auto approve join request is already on for this chat\nIf you want that I will just notify admins about the join request use command\n/joinreqmode [manual | auto]"
+            )
+        elif yes_no == "off":
+            a_j.remove_autojoin(m.chat.id)
+            txt = "Now I will neither auto approve join request nor notify any admins about it"
+        else:
+            txt = "**USAGE**\n/joinreq [on | off]"
+
+    await m.reply_text(txt)
+    return
+
 
 @Gojo.on_message(command("joinreqmode") & admin_filter)
 async def join_request_mode(c: Gojo, m: Message):
@@ -68,24 +60,22 @@ async def join_request_mode(c: Gojo, m: Message):
         await m.reply_text("Use it in groups")
         return
     u_text = "**USAGE**\n/joinreqmode [auto | manual]\nauto: auto approve joins\nmanual: will notify admin about the join request"
-        
+
     split = m.command
     a_j = AUTOJOIN()
-        
+
     if len(split) == 1:
         await m.reply_text(u_text)
-        return
-
     else:
         auto_manual = split[1]
-        if auto_manual not in ["auto","manual"]:
+        if auto_manual not in ["auto", "manual"]:
             await m.reply_text(u_text)
-            return
         else:
-            a_j.update_join_type(m.chat.id,auto_manual)
+            a_j.update_join_type(m.chat.id, auto_manual)
             txt = "Changed join request type"
             await m.reply_text(txt)
-            return
+
+    return
 
 
 @Gojo.on_chat_join_request(auto_join_filter)
@@ -101,11 +91,12 @@ async def join_request_handler(c: Gojo, j: ChatJoinRequest):
         return
     if join_type == "auto" or user in SUPPORT_STAFF:
         try:
-            await c.approve_chat_join_request(chat,user)
+            await c.approve_chat_join_request(chat, user)
             await c.send_message(chat, f"Accepted join request of the {userr.mention}")
             return
         except Exception as ef:
-            await c.send_message(chat,f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
+            await c.send_message(chat,
+                                 f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
             LOGGER.error(ef)
             LOGGER.error(format_exc())
             return
@@ -114,20 +105,21 @@ async def join_request_handler(c: Gojo, j: ChatJoinRequest):
         txt += f"Name: {userr.full_name}"
         txt += f"Mention: {userr.mention}"
         txt += f"Id: {user}"
-        txt += f"Scam: {'True' if  userr.is_scam else 'False'}"
+        txt += f"Scam: {'True' if userr.is_scam else 'False'}"
         if userr.username:
-            txt+= f"Username: @{userr.username}"
+            txt += f"Username: @{userr.username}"
         kb = [
             [
-                ikb("Accept",f"accept_joinreq_uest_{user}"),
-                ikb("Decline",f"decline_joinreq_uest_{user}")
+                ikb("Accept", f"accept_joinreq_uest_{user}"),
+                ikb("Decline", f"decline_joinreq_uest_{user}")
             ]
         ]
-        await c.send_message(chat,txt,reply_markup=ikm(kb))
+        await c.send_message(chat, txt, reply_markup=ikm(kb))
         return
 
+
 @Gojo.on_callback_query(filters.regex("^accept_joinreq_uest_") | filters.regex("^decline_joinreq_uest_"))
-async def accept_decline_request(c:Gojo, q: CallbackQuery):
+async def accept_decline_request(c: Gojo, q: CallbackQuery):
     user_id = q.from_user.id
     chat = q.message.chat.id
     try:
@@ -138,7 +130,7 @@ async def accept_decline_request(c:Gojo, q: CallbackQuery):
                 show_alert=True,
             )
             return
-    except:
+    except Exception:
         await q.answer("Unknow error occured. You are not admin or owner")
         return
     split = q.data.split("_")
@@ -147,34 +139,36 @@ async def accept_decline_request(c:Gojo, q: CallbackQuery):
     data = split[0]
     try:
         userr = await c.get_users(user)
-    except:
+    except Exception:
         userr = None
     if data == "accept":
         try:
-            await c.approve_chat_join_request(chat,user)
-            await q.answer(f"Accepted join request of the {userr.mention if userr else user}",True)
+            await c.approve_chat_join_request(chat, user)
+            await q.answer(f"Accepted join request of the {userr.mention if userr else user}", True)
             await q.edit_message_text(f"Accepted join request of the {userr.mention if userr else user}")
         except Exception as ef:
-            await c.send_message(chat,f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
+            await c.send_message(chat,
+                                 f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
             LOGGER.error(ef)
             LOGGER.error(format_exc())
-            
+
     elif data == "decline":
         try:
-            await c.decline_chat_join_request(chat,user)
+            await c.decline_chat_join_request(chat, user)
             await q.answer(f"DECLINED: {user}")
             await q.edit_message_text()
         except Exception as ef:
-            await c.send_message(chat,f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
+            await c.send_message(chat,
+                                 f"Some error occured while approving request, report it using `/bug`\n<b>Error:</b> <code>{ef}</code>")
             LOGGER.error(ef)
             LOGGER.error(format_exc())
 
     return
 
+
 __PLUGIN__ = "auto join"
 
 __alt_name__ = ["join_request"]
-
 
 __HELP__ = """
 **Auto join request**

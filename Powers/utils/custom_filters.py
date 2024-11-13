@@ -21,11 +21,11 @@ from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 
 def command(
-    commands: Union[str, List[str]],
-    case_sensitive: bool = False,
-    owner_cmd: bool = False,
-    dev_cmd: bool = False,
-    sudo_cmd: bool = False,
+        commands: Union[str, List[str]],
+        case_sensitive: bool = False,
+        owner_cmd: bool = False,
+        dev_cmd: bool = False,
+        sudo_cmd: bool = False,
 ):
     async def func(flt, c: Gojo, m: Message):
         if not m:
@@ -33,12 +33,12 @@ def command(
 
         date = m.edit_date
         if date:
-            return  False # reaction
+            return False  # reaction
 
         if m.chat and m.chat.type == ChatType.CHANNEL:
             return False
 
-        if m and not (m.from_user or m.chat.is_admin):
+        if m and not m.from_user and not m.chat.is_admin:
             return False
 
         if m.from_user.is_bot:
@@ -81,19 +81,17 @@ def command(
                     # i.e. PM
                     user_status = CMS.OWNER
                 except RPCError:
-                    return False # Avoid RPCError while checking for user status
+                    return False  # Avoid RPCError while checking for user status
 
                 ddb = Disabling(m.chat.id)
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
-                    CMS.OWNER,
-                    CMS.ADMINISTRATOR,
-                ):
-                    if bool(ddb.get_action() == "del"):
-                        try:
-                            await m.delete()
-                        except RPCError:
-                            pass
-                            return False
+                        CMS.OWNER,
+                        CMS.ADMINISTRATOR,
+                ) and ddb.get_action() == "del":
+                    try:
+                        await m.delete()
+                    except RPCError:
+                        return False
             if matches.group(3) == "":
                 return True
             try:
@@ -215,7 +213,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
         m = m.message
 
     if (
-        m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]
+            m.chat.type not in [ChatType.SUPERGROUP, ChatType.GROUP]
     ):
         return False
 
@@ -313,10 +311,7 @@ async def auto_join_check_filter(_, __, j: ChatJoinRequest):
     aj = AUTOJOIN()
     join_type = aj.get_autojoin(chat)
 
-    if not join_type:
-        return False
-    else:
-        return True
+    return bool(join_type)
 
 
 async def afk_check_filter(_, __, m: Message):
@@ -333,8 +328,7 @@ async def afk_check_filter(_, __, m: Message):
     chat = m.chat.id
     is_repl_afk = None
     if m.reply_to_message:
-        repl_user = m.reply_to_message.from_user
-        if repl_user:
+        if repl_user := m.reply_to_message.from_user:
             repl_user = m.reply_to_message.from_user.id
             is_repl_afk = afk.check_afk(chat, repl_user)
 
@@ -342,10 +336,7 @@ async def afk_check_filter(_, __, m: Message):
 
     is_afk = afk.check_afk(chat, user)
 
-    if not (is_afk or is_repl_afk):
-        return False
-    else:
-        return True
+    return bool((is_afk or is_repl_afk))
 
 
 async def flood_check_filter(_, __, m: Message):
@@ -378,18 +369,20 @@ async def flood_check_filter(_, __, m: Message):
 
     elif u_id in admin_group:
         return False
-    
+
     elif u_id in {i[0] for i in app_users}:
         return False
 
     else:
         return True
 
+
 async def captcha_filt(_, __, m: Message):
     try:
         return CAPTCHA().is_captcha(m.chat.id)
-    except:
+    except Exception:
         return False
+
 
 captcha_filter = create(captcha_filt)
 flood_filter = create(flood_check_filter)

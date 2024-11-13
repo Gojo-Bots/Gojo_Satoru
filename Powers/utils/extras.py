@@ -513,7 +513,6 @@ TOSS = (
     "Tails",
 )
 
-
 DECIDE = ("Yes.", "No.", "Maybe.", "Who the hell cares?",
           "No one give a damn about it")
 
@@ -553,7 +552,6 @@ INSULT_STRINGS = [
     "`You left your brain to God go and take it...`",
     "`If you think you are an idiot..............then you are absolutely right...`",
 ]
-
 
 BAN_GIFS = [
     "https://tenor.com/bqhVe.gif",
@@ -599,7 +597,6 @@ KICK_GIFS = [
     "https://media.giphy.com/media/TcliN5WDKBbnUQ15H3/giphy.gif",
     "https://media.giphy.com/media/y9pfUqY3uaT1MPXxYM/giphy.gif",
 ]
-
 
 MUTE_GIFS = [
     "https://media.giphy.com/media/MpCxz9VLh6t8ceRb0r/giphy.gif",
@@ -707,7 +704,6 @@ StartPic = [
     "https://graph.org/file/9e92625135caffcadcbae.jpg",
     "https://graph.org/file/f377781fe8a1fe09fea55.jpg",
 ]
-
 
 birthday_wish = [
     "Wishing you a happy birthday filled with love and joy.",

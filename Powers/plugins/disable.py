@@ -5,7 +5,7 @@ from pyrogram.enums import ChatMemberStatus as CMS
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
-from Powers import HELP_COMMANDS, LOGGER
+from Powers import HELP_COMMANDS
 from Powers.bot_class import Gojo
 from Powers.database.disable_db import Disabling
 from Powers.utils.custom_filters import (admin_filter, can_change_filter,
@@ -41,10 +41,7 @@ async def set_dsbl_action(_, m: Message):
     db = Disabling(m.chat.id)
 
     status = db.get_action()
-    if status == "none":
-        cur = False
-    else:
-        cur = True
+    cur = status != "none"
     args = m.text.split(" ", 1)
 
     if len(args) >= 2:
@@ -80,8 +77,9 @@ async def disabling(_, m: Message):
         for j in [HELP_COMMANDS[i]["disablable"] for i in list(HELP_COMMANDS.keys())]
         for k in j
     )
-    tes = "List of commnds that can be disabled:\n"
-    tes += "\n".join(f" • <code>{escape(i)}</code>" for i in disable_cmd_keys)
+    tes = "List of commnds that can be disabled:\n" + "\n".join(
+        f" • <code>{escape(i)}</code>" for i in disable_cmd_keys
+    )
     return await m.reply_text(tes)
 
 
@@ -92,8 +90,9 @@ async def disabled(_, m: Message):
     if not disable_list:
         await m.reply_text("No disabled items!")
         return
-    tex = "Disabled commands:\n"
-    tex += "\n".join(f" • <code>{escape(i)}</code>" for i in disable_list)
+    tex = "Disabled commands:\n" + "\n".join(
+        f" • <code>{escape(i)}</code>" for i in disable_list
+    )
     return await m.reply_text(tex)
 
 
@@ -146,7 +145,6 @@ async def enablealll(_, q: CallbackQuery):
 __PLUGIN__ = "disable able"
 
 __alt_name__ = ["disable commands", "disable"]
-
 
 __HELP__ = """
 **Disable commands**

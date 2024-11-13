@@ -18,6 +18,7 @@ from Powers.utils.parser import mention_html
 # Initialize
 db = GBan()
 
+
 @Gojo.on_message(command(["gban", "globalban"], sudo_cmd=True))
 async def gban(c: Gojo, m: Message):
     if len(m.text.split()) == 1:
@@ -72,7 +73,7 @@ async def gban(c: Gojo, m: Message):
         try:
             await c.ban_chat_member(m.chat.id, user_id)
         except Exception as e:
-            await m.reply_text(f"Failed to ban this user\n{e}")    
+            await m.reply_text(f"Failed to ban this user\n{e}")
     except UserIsBlocked:
         LOGGER.error("Could not send PM Message, user blocked bot")
     except PeerIdInvalid:
@@ -170,13 +171,12 @@ async def gban_list(_, m: Message):
                 document=f, caption="Here are all the globally banned geys!\n\n"
             )
 
-
     return
+
 
 __PLUGIN__ = "global"
 
 __alt_name__ = ["antispam", "global"]
-
 
 __HELP__ = """
 **Global**
