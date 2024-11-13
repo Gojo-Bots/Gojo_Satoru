@@ -22,10 +22,7 @@ from Powers.utils.web_helpers import get_file_size
 
 @Gojo.on_message(command(["stickerinfo","stinfo"]))
 async def give_st_info(c: Gojo , m: Message):
-    if not m.reply_to_message:
-        await m.reply_text("Reply to a sticker")
-        return
-    elif not m.reply_to_message.sticker:
+    if not m.reply_to_message or not m.reply_to_message.sticker:
         await m.reply_text("Reply to a sticker")
         return
     st_in = m.reply_to_message.sticker
@@ -49,10 +46,7 @@ Pack name : {st_in.set_name}
 
 @Gojo.on_message(command(["stickerid","stid"]))
 async def sticker_id_gib(c: Gojo, m: Message):
-    if not m.reply_to_message:
-        await m.reply_text("Reply to a sticker")
-        return
-    elif not m.reply_to_message.sticker:
+    if not m.reply_to_message or not m.reply_to_message.sticker:
         await m.reply_text("Reply to a sticker")
         return
     st_in = m.reply_to_message.sticker
@@ -70,9 +64,8 @@ async def kang(c:Gojo, m: Message):
         return await m.reply_text("You are anon admin, kang stickers in my pm.")
     msg = await m.reply_text("Kanging Sticker..")
     is_requ = False
-    if m.reply_to_message.sticker:
-        if m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video:
-            is_requ = True
+    if m.reply_to_message.sticker and (m.reply_to_message.sticker.is_animated or m.reply_to_message.sticker.is_video):
+        is_requ = True
     # Find the proper emoji
     args = m.text.split()
     if len(args) > 1:
@@ -120,7 +113,7 @@ async def kang(c:Gojo, m: Message):
                 sticker_emoji
             )
             os.remove(path)
-        elif m.reply_to_message.sticker and not is_requ:
+        elif m.reply_to_message.sticker:
             sticker = await create_sticker(
                 await get_document_from_file_id(
                     m.reply_to_message.sticker.file_id
@@ -128,8 +121,8 @@ async def kang(c:Gojo, m: Message):
                 sticker_emoji
             )
         else:
-          await m.reply_text("Unsupported media file...")
-          return
+            await m.reply_text("Unsupported media file...")
+            return
     except ShortnameOccupyFailed:
         await m.reply_text("Change Your Name Or Username")
         return
@@ -151,7 +144,7 @@ async def kang(c:Gojo, m: Message):
     try:
         while not packname_found:
             packname = f"CE{m.from_user.id}{packnum}_by_{c.me.username}"
-            kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {('vOl '+str(volume)) if volume else ''} by @{c.me.username}"
+            kangpack = f"{f'@{m.from_user.username}' if m.from_user.username else m.from_user.first_name[:10]} {f'vOl {str(volume)}' if volume else ''} by @{c.me.username}"
             if limit >= 50: # To prevent this loop from running forever
                 await m.reply_text("Failed to kang\nMay be you have made more than 50 sticker packs with me try deleting some")
                 return
@@ -225,16 +218,16 @@ async def remove_sticker_from_pack(c: Gojo, m: Message):
         return await m.reply_text(
             "Reply to a sticker to remove it from the pack."
         )
-    
+
     sticker = m.reply_to_message.sticker
 
-    to_modify = await m.reply_text(f"Removing the sticker from your pack")
+    to_modify = await m.reply_text("Removing the sticker from your pack")
     sticker_set = await get_sticker_set_by_name(c, sticker.set_name)
 
     if not sticker_set:
         await to_modify.edit_text("This sticker is not part for your pack")
         return
-    
+
     try:
         await remove_sticker(c, sticker.file_id)
         await to_modify.edit_text(f"Successfully removed [sticker]({m.reply_to_message.link}) from {sticker_set.set.title}")
@@ -269,17 +262,12 @@ async def memify_it(c: Gojo, m: Message):
         await m.reply_text("Give me something to write")
         return
     filll = m.command[0][-1]
-    if filll == "b":
-        fiil = "black"
-    else:
-        fiil = "white"
+    fiil = "black" if filll == "b" else "white"
     x = await m.reply_text("Memifying...")
     meme = m.text.split(None,1)[1].strip()
     name = f"@memesofdank_{m.id}.png"
     path = await rep_to.download(name)
-    is_sticker = False
-    if rep_to.sticker:
-        is_sticker = True
+    is_sticker = bool(rep_to.sticker)
     output = await draw_meme(path,meme,is_sticker,fiil)
     await x.delete()
     xNx = await m.reply_photo(output[0],reply_markup=kb)
@@ -299,12 +287,23 @@ async def get_sticker_from_file(c: Gojo, m: Message):
     if not repl:
         await m.reply_text("Reply to a sticker or file")
         return
-    to_vid = False
-    if not (repl.animation or repl.video or repl.sticker or repl.photo or (repl.document and repl.document.mime_type.split("/")[0] in ["image","video"])):
+    if (
+        not repl.animation
+        and not repl.video
+        and not repl.sticker
+        and not repl.photo
+        and (
+            not repl.document
+            or repl.document.mime_type.split("/")[0] not in ["image", "video"]
+        )
+    ):
         await m.reply_text("I only support conversion of plain stickers, images, videos and animation for now")
         return
-    if repl.animation or repl.video or (repl.document and repl.document.mime_type.split("/")[0]=="video"):
-        to_vid = True
+    to_vid = bool(
+        repl.animation
+        or repl.video
+        or (repl.document and repl.document.mime_type.split("/")[0] == "video")
+    )
     x = await m.reply_text("Converting...")
     if repl.sticker:
         if repl.sticker.is_animated:
@@ -312,22 +311,18 @@ async def get_sticker_from_file(c: Gojo, m: Message):
             up = tgs_to_gif(upp,True)
             await x.delete()
             await m.reply_animation(up,caption=Caption)
-            os.remove(up)
-            return
         elif repl.sticker.is_video:
             upp = await repl.download()
             up = await webm_to_gif(upp)
             await x.delete()
             await m.reply_animation(up,caption=Caption)
-            os.remove(up)
-            return
         else:
             upp = await repl.download()
             up = toimage(upp,is_direc=True)
             await x.delete()
             await m.reply_document(up, caption=Caption)
-            os.remove(up)
-            return
+        os.remove(up)
+        return
     elif repl.photo:
         upp = await repl.download()
         up = tosticker(upp,is_direc=True)
@@ -335,7 +330,7 @@ async def get_sticker_from_file(c: Gojo, m: Message):
         await m.reply_sticker(up)
         os.remove(up)
         return
-    
+
     elif to_vid:
         up = await Vsticker(c,repl)
         await x.delete()
@@ -389,9 +384,7 @@ async def quote_the_msg(_, m: Message):
     msg_data = []
     if len(m.command) > 1 and m.command[1].lower() == "r":
         reply_msg = m.reply_to_message.reply_to_message
-        if not reply_msg:
-            reply_message = {}
-        elif reply_msg and not reply_msg.text:
+        if not reply_msg or not reply_msg.text:
             reply_message = {}
         else:
             to_edit = await to_edit.edit_text("Genrating quote with reply to the message...")
@@ -444,20 +437,19 @@ async def sticker_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
     decoded = await encode_decode(data[-1], "decode")
     user = int(decoded.split("_")[-1])
-    offset = int(decoded.split("_")[0])
-
     if q.from_user.id != user:
         await q.answer("This is not for you")
-        return
     else:
+        offset = int(decoded.split("_")[0])
+
         txt, kb = await get_all_sticker_packs(c, q.from_user.id, offset)
         if not txt:
             await q.answer("No sticker pack found....")
-            return
         else:
-            await q.answer(f"Showing your sticker set")
+            await q.answer("Showing your sticker set")
             await q.edit_message_text(txt, reply_markup=kb)
-            return
+
+    return
         
 __PLUGIN__ = "sticker"
 __alt_name__ = [

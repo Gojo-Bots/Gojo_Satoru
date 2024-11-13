@@ -67,6 +67,6 @@ async def get_stats(c: Gojo, m: Message):
     )
     try:
         await replymsg.edit_text(rply, parse_mode=enums.ParseMode.HTML)
-    except:
+    except Exception:
         await c.send_message(m.chat.id, rply, parse_mode=enums.ParseMode.HTML)
     return

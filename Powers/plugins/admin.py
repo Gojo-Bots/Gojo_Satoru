@@ -64,12 +64,12 @@ async def adminlist_show(_, m: Message):
         adminstr += "\n\n<b>Bots:</b>\n"
         adminstr += "\n".join(f"- {i}" for i in mention_bots)
         await m.reply_text(adminstr + "\n\n" + note)
-        
+
     except Exception as ef:
         if str(ef) == str(m.chat.id):
             await m.reply_text(text="Use /admincache to reload admins!")
         else:
-            ef = str(ef) + f"{admin_list}\n"
+            ef = f"{str(ef)}{admin_list}\n"
             await m.reply_text(
                 text=f"Some error occured, report it using `/bug` \n <b>Error:</b> <code>{ef}</code>"
             )
@@ -95,7 +95,7 @@ async def zombie_clean(c: Gojo, m: Message):
                 await sleep(e.value)
                 try:
                     await c.ban_chat_member(m.chat.id, member.user.id)
-                except:
+                except Exception:
                     pass
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
@@ -499,9 +499,8 @@ async def set_user_title(c: Gojo, m: Message):
     if m.reply_to_message:
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
-    else:
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
+    elif len(m.text.split()) >= 3:
+        reason = m.text.split(None, 2)[2]
     try:
         user_id, _, _ = await extract_user(c, m)
     except Exception:
@@ -536,9 +535,7 @@ async def setgpic(c: Gojo, m: Message):
     if not m.reply_to_message.photo and not m.reply_to_message.document:
         return await m.reply_text("Reply to a photo to set it as chat photo")
     photo = await m.reply_to_message.download()
-    is_vid = False
-    if m.reply_to_message.video:
-        is_vid = True
+    is_vid = bool(m.reply_to_message.video)
     try:
         await m.chat.set_photo(photo,video=is_vid)
     except Exception as e:

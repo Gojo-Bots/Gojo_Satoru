@@ -46,8 +46,7 @@ async def add_support(c: Gojo, m:Message):
         await m.reply_text("Stay in you limit")
         return
     split = m.command
-    reply_to = m.reply_to_message
-    if reply_to:
+    if reply_to := m.reply_to_message:
         try:
             userr = reply_to.from_user.id
         except Exception:
@@ -65,7 +64,6 @@ async def add_support(c: Gojo, m:Message):
         if m.from_user.id == int(OWNER_ID):
             if to == curr:
                 await m.reply_text(f"This user is already in {to} users")
-                return
             elif curr:
                 kb = IKM(
                     [
@@ -76,7 +74,6 @@ async def add_support(c: Gojo, m:Message):
                     ]
                 )
                 await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
-                return
             else:
                 support.insert_support_user(userr,to)
                 if to == "dev":
@@ -86,12 +83,10 @@ async def add_support(c: Gojo, m:Message):
                 else:
                     WHITELIST_USERS.add(userr)
                 await m.reply_text(f"This user is now a {to} user")
-                return
-        can_do = can_change_type(curr_user,to)
-        if can_do:
+            return
+        if can_do := can_change_type(curr_user, to):
             if to == curr:
                 await m.reply_text(f"This user is already in {to} users")
-                return
             elif curr:
                 kb = IKM(
                     [
@@ -102,14 +97,12 @@ async def add_support(c: Gojo, m:Message):
                     ]
                 )
                 await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
-                return
             else:
                 support.insert_support_user(userr,to)
                 await m.reply_text(f"This user is now a {to} user")
-                return
         else:
             await m.reply_text("Sorry you can't do it")
-            return
+        return
     elif len(split) >= 3:
         user = split[1]
         try:
@@ -129,7 +122,6 @@ async def add_support(c: Gojo, m:Message):
         if m.from_user.id == int(OWNER_ID):
             if to == curr:
                 await m.reply_text(f"This user is already in {to} users")
-                return
             elif curr:
                 kb = IKM(
                     [
@@ -140,16 +132,13 @@ async def add_support(c: Gojo, m:Message):
                     ]
                 )
                 await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
-                return
             else:
                 support.insert_support_user(userr,to)
                 await m.reply_text(f"This user is now a {to} user")
-                return
-        can_do = can_change_type(curr_user,to)
-        if can_do:
+            return
+        if can_do := can_change_type(curr_user, to):
             if to == curr:
                 await m.reply_text(f"This user is already in {to} users")
-                return
             elif curr:
                 kb = IKM(
                     [
@@ -160,14 +149,12 @@ async def add_support(c: Gojo, m:Message):
                     ]
                 )
                 await m.reply_text(f"This is user is already in {curr} users\nDo you want to make him {to} user?",reply_markup=kb)
-                return
             else:
                 support.insert_support_user(userr,to)
                 await m.reply_text(f"This user is now a {to} user")
-                return
         else:
             await m.reply_text("Sorry you can't do it")
-            return
+        return
 
 @Gojo.on_message(command("rmsupport"))
 async def rm_support(c: Gojo, m: Message):
@@ -177,9 +164,7 @@ async def rm_support(c: Gojo, m: Message):
         await m.reply_text("Stay in you limit")
         return
     split = m.command
-    reply_to = m.reply_to_message
-
-    if reply_to:
+    if reply_to := m.reply_to_message:
         try:
             curr = reply_to.from_user.id
         except Exception:
@@ -292,12 +277,8 @@ async def neofetch_stats(_, m: Message):
         stderr=subprocess.PIPE,
     )
     stdout, stderr = await process.communicate()
-    e = stderr.decode()
-    if not e:
-        e = "No Error"
-    OUTPUT = stdout.decode()
-    if not OUTPUT:
-        OUTPUT = "No Output"
+    e = stderr.decode() or "No Error"
+    OUTPUT = stdout.decode() or "No Output"
 
     try:
         await m.reply_text(OUTPUT, quote=True)
@@ -347,15 +328,11 @@ async def evaluate_code(c: Gojo, m: Message):
             f"@{m.from_user.username} TREID TO USE `while True` \n userid = {m.from_user.id}"
             )
         return
-    if m.reply_to_message and m.reply_to_message.document:
-        if m.reply_to_message.document.mime_type.split("/")[1] == "x-python" or m.reply_to_message.document.file_name.endswith("py"):
-            await sm.delete()
-            await m.reply_text("Loading external plugin is prohibited")
-            return
-    reply_to_id = m.id
-    if m.reply_to_message:
-        reply_to_id = m.reply_to_message.id
-
+    if m.reply_to_message and m.reply_to_message.document and (m.reply_to_message.document.mime_type.split("/")[1] == "x-python" or m.reply_to_message.document.file_name.endswith("py")):
+        await sm.delete()
+        await m.reply_text("Loading external plugin is prohibited")
+        return
+    reply_to_id = m.reply_to_message.id if m.reply_to_message else m.id
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = StringIO()
@@ -398,27 +375,25 @@ async def evaluate_code(c: Gojo, m: Message):
             return
 
     for j in HARMFUL:
-        if j in evaluation.split() or j in cmd:
-            if m.from_user.id != OWNER_ID:
+        if (j in evaluation.split() or j in cmd) and m.from_user.id != OWNER_ID:
+            evaluation = "Bhaag ja bsdk"
+            await c.send_message(
+                MESSAGE_DUMP,
+                f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}")
+            final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
+            await sm.edit(final_output)
+            return
+    for i in evaluation.split():
+        for j in i.split("="):
+            if j and j[0] in HARMFUL and m.from_user.id != OWNER_ID:
                 evaluation = "Bhaag ja bsdk"
                 await c.send_message(
                     MESSAGE_DUMP,
-                    f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}")
+                    f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}"
+                )
                 final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
                 await sm.edit(final_output)
                 return
-    for i in evaluation.split():
-        for j in i.split("="):
-            if j and j[0] in HARMFUL:
-                if m.from_user.id != OWNER_ID:
-                    evaluation = "Bhaag ja bsdk"
-                    await c.send_message(
-                        MESSAGE_DUMP,
-                        f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}"
-                    )
-                    final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
-                    await sm.edit(final_output)
-                    return
 
     try:
         final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
@@ -456,22 +431,15 @@ async def execution(c: Gojo, m: Message):
     sm = await m.reply_text("`Processing...`\n")
     cmd = m.text.split(maxsplit=1)[1]
 
-    reply_to_id = m.id
-    if m.reply_to_message:
-        reply_to_id = m.reply_to_message.id
-
+    reply_to_id = m.reply_to_message.id if m.reply_to_message else m.id
     process = await create_subprocess_shell(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     stdout, stderr = await process.communicate()
-    e = stderr.decode().strip()
-    if not e:
-        e = "No Error"
-    o = stdout.decode().strip()
-    if not o:
-        o = "No Output"
+    e = stderr.decode().strip() or "No Error"
+    o = stdout.decode().strip() or "No Output"
     out = o
     xxx = o.split()
     for OwO in xxx:
@@ -480,31 +448,19 @@ async def execution(c: Gojo, m: Message):
           break
     for x in xxx:
         xx = x.split("=")
-        if xx and xx[0] in HARMFUL:
-            if m.from_user.id != OWNER_ID:
-                out = "You can't access them"
-                await c.send_message(
-                    MESSAGE_DUMP,
-                    f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
-                )
-            else:
-                pass
-        else:
-            pass
+        if xx and xx[0] in HARMFUL and m.from_user.id != OWNER_ID:
+            out = "You can't access them"
+            await c.send_message(
+                MESSAGE_DUMP,
+                f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
+            )
     for x in HARMFUL:
-        if x in out:
-            if m.from_user.id != OWNER_ID:
-                out = "You can't access them"
-                await c.send_message(
-                    MESSAGE_DUMP,
-                    f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
-                )
-            else:
-                pass
-        else:
-            pass
-    
-
+        if x in out and m.from_user.id != OWNER_ID:
+            out = "You can't access them"
+            await c.send_message(
+                MESSAGE_DUMP,
+                f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
+            )
     OUTPUT = ""
     OUTPUT += f"<b>QUERY:</b>\n<u>Command:</u>\n<code>{cmd}</code> \n"
     OUTPUT += f"<u>PID</u>: <code>{process.pid}</code>\n\n"
@@ -692,7 +648,7 @@ async def forward_type_broadcast(c: Gojo, m: Message):
         await m.reply_text("Please reply to message to broadcast it")
         return
     split = m.command
-    
+
     chat = Chats.list_chats_by_id()
     user = [i["_id"] for i in Users.list_users()]
     alll = chat + user
@@ -714,7 +670,7 @@ async def forward_type_broadcast(c: Gojo, m: Message):
         peers = user
     else:
         peers = alll
-    
+
     xx = await m.reply_text("Broadcasting...")
 
     failed = 0
@@ -725,7 +681,6 @@ async def forward_type_broadcast(c: Gojo, m: Message):
             await sleep(0.1)
         except Exception:
             failed += 1
-            pass
     txt = f"Broadcasted message to {total-failed} peers out of {total}\nFailed to broadcast message to {failed} peers"
     if not failed:
         txt = f"Broadcasted message to {total} peers"

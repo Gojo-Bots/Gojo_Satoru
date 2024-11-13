@@ -33,13 +33,12 @@ async def blacklist_chat(c: Gojo, m: Message):
         await replymsg.edit_text(
             f"Added the following chats to Blacklist.\n<code>{', '.join(chat_ids)}</code>.",
         )
+    elif m.chat.type == CT.PRIVATE:
+        await m.reply_text("Use in groups")
     else:
-        if m.chat.type == CT.PRIVATE:
-            await m.reply_text("Use in groups")
-        else:
-            chat_id = m.chat.id
-            db.add_chat(chat_id)
-            await m.reply_text("Added this chat to blacklist chats")
+        chat_id = m.chat.id
+        db.add_chat(chat_id)
+        await m.reply_text("Added this chat to blacklist chats")
     return
 
 
@@ -69,16 +68,15 @@ async def unblacklist_chat(c: Gojo, m: Message):
         await replymsg.edit_text(
             f"Removed the following chats to Blacklist.\n<code>{', '.join(chat_ids)}</code>.",
         )
+    elif m.chat.type == CT.PRIVATE:
+        await m.reply_text("Use in groups")
     else:
-        if m.chat.type == CT.PRIVATE:
-            await m.reply_text("Use in groups")
+        chat_id = m.chat.id
+        bl_chats = bl_chats = db.list_all_chats()
+        if chat_id in bl_chats:
+            await m.reply_text("Removed this chat from blacklist chats")
         else:
-            chat_id = m.chat.id
-            bl_chats = bl_chats = db.list_all_chats()
-            if chat_id not in bl_chats:
-                await m.reply_text("This chat is not in my list of blacklisted chats")
-            else:
-                await m.reply_text("Removed this chat from blacklist chats")
+            await m.reply_text("This chat is not in my list of blacklisted chats")
     return
 
 
@@ -86,8 +84,7 @@ async def unblacklist_chat(c: Gojo, m: Message):
     command(["blchatlist", "blchats"], dev_cmd=True),
 )
 async def list_blacklist_chats(_, m: Message):
-    bl_chats = db.list_all_chats()
-    if bl_chats:
+    if bl_chats := db.list_all_chats():
         txt = (
             (
                 "These Chats are Blacklisted:\n"

@@ -93,11 +93,7 @@ class Gojo(Client):
         LOGGER.info("Uploading logs before stopping...!\n")
         # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
         scheduler.remove_all_jobs()
-        if MESSAGE_DUMP:
-            # LOG_CHANNEL is not necessary
-            target = MESSAGE_DUMP
-        else:
-            target = OWNER_ID
+        target = MESSAGE_DUMP or OWNER_ID
         await self.send_document(
             target,
             document=LOGFILE,

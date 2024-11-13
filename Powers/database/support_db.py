@@ -30,8 +30,7 @@ class SUPPORTS(MongoDB):
             return
 
     def update_support_user_type(self, user, new_type):
-        curr = self.is_support_user(user)
-        if curr:
+        if curr := self.is_support_user(user):
             with INSERTION_LOCK:
                 self.update(
                     {
@@ -44,27 +43,21 @@ class SUPPORTS(MongoDB):
         return
 
     def is_support_user(self, user_id):
-        curr = self.find_one({"user_id": user_id})
-        if curr:
-            return True
-        return False
+        return bool(curr := self.find_one({"user_id": user_id}))
 
     def delete_support_user(self, user):
-        curr = self.is_support_user(user)
-        if curr:
+        if curr := self.is_support_user(user):
             with INSERTION_LOCK:
                 self.delete_one({"user_id": user})
         return
 
     def get_particular_support(self, support_type):
-        curr = self.find_all({"support_type": support_type})
-        if curr:
+        if curr := self.find_all({"support_type": support_type}):
             return [i['user_id'] for i in curr]
         else:
             return []
 
     def get_support_type(self, user):
-        curr = self.find_one({"user_id": user})
-        if curr:
+        if curr := self.find_one({"user_id": user}):
             return curr["support_type"]
         return False

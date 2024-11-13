@@ -26,11 +26,7 @@ def genrator():
     rand_alpha = choice(alpha)
     if_ = randint(0, 1)
 
-    if if_:
-        new_alpha = rand_alpha.upper()
-    else:
-        new_alpha = rand_alpha
-
+    new_alpha = rand_alpha.upper() if if_ else rand_alpha
     list_ = [new_alpha]
     while len(list_) != 4:
         xXx = randrange(0, 9)

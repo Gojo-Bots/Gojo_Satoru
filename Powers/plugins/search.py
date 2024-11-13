@@ -233,14 +233,11 @@ async def getText(message: Message):
     text_to_return = message.text
     if message.text is None:
         return None
-    if " " in text_to_return:
-        try:
-            return message.text.split(None, 1)[1]
-        except IndexError:
-            return None
-        except Exception:
-            return None
-    else:
+    if " " not in text_to_return:
+        return None
+    try:
+        return message.text.split(None, 1)[1]
+    except Exception:
         return None
 
 @Gojo.on_message(command(["images","imgs"]))
@@ -258,9 +255,7 @@ async def get_image_search(_, m: Message):
         return
     image_urls = resp.get("image_urls", [])[:10]
     ab = await m.reply_text("Getting Your Images... Wait A Min..\nCredits: @NovaXMod")
-    Ok = []
-    for a in image_urls:
-        Ok.append(InputMediaPhoto(a))
+    Ok = [InputMediaPhoto(a) for a in image_urls]
     try:
         await m.reply_media_group(media=Ok)
         await ab.delete()

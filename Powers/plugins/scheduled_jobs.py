@@ -17,8 +17,7 @@ from Powers.utils.extras import birthday_wish
 
 
 def give_date(date,form = "%d/%m/%Y"):
-    datee = datetime.strptime(date,form).date()
-    return datee
+    return datetime.strptime(date,form).date()
 
 scheduler = AsyncIOScheduler()
 scheduler.timezone = TIME_ZONE
@@ -38,10 +37,10 @@ async def send_wishish(JJK: Client):
                     agee = ""
                     if i["is_year"]:
                         agee = curr.year - dob.year
-                        suffix = {1: 'st', 2: 'nd', 3: 'rd'}
                         if int(agee/10) == 1:
                             suf = "th"
                         else:
+                            suffix = {1: 'st', 2: 'nd', 3: 'rd'}
                             suffix.get((agee%10), "th")
                         agee = f"{agee}{suf}"
                     U = await JJK.get_chat_member(chat_id=j,user_id=i["user_id"])

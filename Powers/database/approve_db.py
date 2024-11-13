@@ -41,11 +41,14 @@ class Approve(MongoDB):
     def remove_approve(self, user_id: int):
         with INSERTION_LOCK:
             if self.check_approve(user_id):
-                inde = 0
-                for index, user in enumerate(self.chat_info["users"]):
-                    if user[0] == user_id:
-                        inde = index
-                        break
+                inde = next(
+                    (
+                        index
+                        for index, user in enumerate(self.chat_info["users"])
+                        if user[0] == user_id
+                    ),
+                    0,
+                )
                 self.chat_info["users"].pop(inde)
                 return self.update(
                     {"_id": self.chat_id},

@@ -19,8 +19,7 @@ from Powers.utils.custom_filters import command
 
 
 def give_date(date,form = "%d/%m/%Y"):
-    datee = datetime.strptime(date,form).date()
-    return datee
+    return datetime.strptime(date,form).date()
 
 @Gojo.on_message(command("remember"))
 async def remember_me(c: Gojo, m: Message):
@@ -37,24 +36,10 @@ async def remember_me(c: Gojo, m: Message):
     DOB = splited[1] if len(splited) == 2 else splited[2]
     if len(splited) == 2 and m.reply_to_message:
         user = m.reply_to_message.from_user.id
-    elif not m.reply_to_message:
-        user = m.from_user.id
     else:
-        try:
-            u_id = int(splited[1])
-        except ValueError:
-            pass
-        try:
-            user = await c.get_users(u_id)
-        except Exception:
-            u_u = await c.resolve_peer(u_id)
-            try:
-                user = (await c.get_users(u_u.user_id)).id
-            except KeyError:
-                await m.reply_text("Unable to find the user")
-                return
+        user = m.from_user.id
     DOB = DOB.split("/")
-    if len(DOB) != 3 and len(DOB) != 2:
+    if len(DOB) not in [3, 2]:
         await m.reply_text("DOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
         return
     is_correct = False
@@ -72,15 +57,14 @@ async def remember_me(c: Gojo, m: Message):
         else:
             year = "1900"
             is_year = 0
-        DOB = f"{str(date)}/{str(month)}/{str(year)}"
+        DOB = f"{date}/{str(month)}/{str(year)}"
     except ValueError:
         await m.reply_text("DOB should be numbers only")
         return
 
     data = {"user_id":user,"dob":DOB,"is_year":is_year}
     try:
-        result = bday_info.find_one({"user_id":user})
-        if result:
+        if result := bday_info.find_one({"user_id": user}):
             await m.reply_text("User is already in my database")
             return
     except Exception as e:
@@ -104,14 +88,12 @@ async def who_are_you_again(c: Gojo, m: Message):
         return
     user = m.from_user.id
     try:
-        result = bday_info.find_one({"user_id":user})
-        if not result:
-            await m.reply_text("User is not in my database")
-            return
-        elif result:
+        if result := bday_info.find_one({"user_id": user}):
             bday_info.delete_one({"user_id":user})
             await m.reply_text("Removed your birthday")
-            return
+        else:
+            await m.reply_text("User is not in my database")
+        return
     except Exception as e:
         await m.reply_text(f"Got an error\n{e}")
         return
@@ -133,10 +115,7 @@ async def who_is_next(c: Gojo, m: Message):
             if Chats(m.chat.id).user_is_in_chat(i["user_id"]):
                 dob = give_date(i["dob"])
                 if dob.month >= curr.month:
-                    if (dob.month == curr.month and not dob.day < curr.day) or dob.month >= curr.month:
-                        users.append(i)         
-                elif dob.month < curr.month:
-                    pass
+                    users.append(i)
             if len(users) == 10:
                 break
     if not users:
@@ -210,7 +189,7 @@ async def chat_birthday_settings(c: Gojo, m: Message):
     kb = IKM(
         [
             [
-                IKB(f"{'Yes' if not c_in else 'No'}",f"switchh_{'yes' if not c_in else 'no'}"),
+                IKB(f"{'No' if c_in else 'Yes'}",f"switchh_{'no' if c_in else 'yes'}"),
                 IKB("Close", "f_close")
             ]
         ]

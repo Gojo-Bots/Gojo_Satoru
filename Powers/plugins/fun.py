@@ -24,8 +24,10 @@ async def fun_shout(_, m: Message):
     try:
         text = " ".join(m.text.split(None, 1)[1])
         result = [" ".join(list(text))]
-        for pos, symbol in enumerate(text[1:]):
-            result.append(symbol + " " + "  " * pos + symbol)
+        result.extend(
+            f"{symbol} " + "  " * pos + symbol
+            for pos, symbol in enumerate(text[1:])
+        )
         result = list("\n".join(result))
         result[0] = text[0]
         result = "".join(result)
@@ -50,12 +52,9 @@ async def fun_slap(c: Gojo, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
     curr_user = escape(m.from_user.first_name)
-    if m.reply_to_message:
-        user = m.reply_to_message.from_user
-    else:
-        user = m.from_user
+    user = m.reply_to_message.from_user if m.reply_to_message else m.from_user
     user_id = user.id
-    
+
     if user_id == me.id:
         temp = choice(extras.SLAP_GOJO_TEMPLATES)
     else:
@@ -64,7 +63,7 @@ async def fun_slap(c: Gojo, m: Message):
     if user_id != m.from_user.id:
         user1 = curr_user
         user2 = user.first_name
-        
+
     else:
         user1 = me.first_name
         user2 = curr_user

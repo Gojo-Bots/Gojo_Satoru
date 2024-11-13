@@ -27,38 +27,29 @@ class CAPTCHA(MongoDB):
             return
 
     def is_captcha(self, chat):
-        curr = self.find_one({"chat_id": chat})
-        if curr:
-            return True
-        return False
+        return bool(curr := self.find_one({"chat_id": chat}))
 
     def update_type(self, chat, captcha_type):
         with INSERTION_LOCK:
-            curr = self.is_captcha(chat)
-            if curr:
+            if curr := self.is_captcha(chat):
                 self.update({"chat_id": chat}, {"captcha_type": captcha_type})
             return
 
     def update_action(self, chat, captcha_action):
         with INSERTION_LOCK:
-            curr = self.is_captcha(chat)
-            if curr:
+            if curr := self.is_captcha(chat):
                 self.update({"chat_id": chat}, {
                             "captcha_action": captcha_action})
             return
 
     def remove_captcha(self, chat):
         with INSERTION_LOCK:
-            curr = self.is_captcha(chat)
-            if curr:
+            if curr := self.is_captcha(chat):
                 self.delete_one({"chat_id": chat})
             return
 
     def get_captcha(self, chat):
-        curr = self.find_one({"chat_id": chat})
-        if curr:
-            return curr
-        return False
+        return curr if (curr := self.find_one({"chat_id": chat})) else False
 
 
 class CAPTCHA_DATA(MongoDB):
@@ -69,49 +60,41 @@ class CAPTCHA_DATA(MongoDB):
         super().__init__(self.db_name)
 
     def load_cap_data(self, chat, user, data):
-        curr = self.find_one({"chat_id": chat, "user_id": user})
-        if not curr:
-            with INSERTION_LOCK:
-                self.insert_one(
-                    {"chat_id": chat, "user_id": user, "data": data})
-            return True
-        else:
+        if curr := self.find_one({"chat_id": chat, "user_id": user}):
             return
+        with INSERTION_LOCK:
+            self.insert_one(
+                {"chat_id": chat, "user_id": user, "data": data})
+        return True
 
     def get_cap_data(self, chat, user):
-        curr = self.find_one({"chat_id": chat, "user_id": user})
-        if curr:
+        if curr := self.find_one({"chat_id": chat, "user_id": user}):
             return curr["data"]
         else:
             return False
 
     def remove_cap_data(self, chat, user):
-        curr = self.find_one({"chat_id": chat, "user_id": user})
-        if curr:
+        if curr := self.find_one({"chat_id": chat, "user_id": user}):
             with INSERTION_LOCK:
                 self.delete_one({"chat_id": chat, "user_id": user})
         return
 
     def store_message_id(self, chat, user, message):
-        curr = self.find_one({"chat_id": chat, "user_id": user})
-        if not curr:
-            with INSERTION_LOCK:
-                self.insert_one(
-                    {"chat_id": chat, "user_id": user, "message_id": message})
-                return
-        else:
+        if curr := self.find_one({"chat_id": chat, "user_id": user}):
+            return
+        with INSERTION_LOCK:
+            self.insert_one(
+                {"chat_id": chat, "user_id": user, "message_id": message})
             return
         
     def get_message_id(self, chat, user):
-        curr = self.find_one({"chat_id": chat, "user_id": user})
-        if curr:
+        if curr := self.find_one({"chat_id": chat, "user_id": user}):
             return curr["message_id"]
         else:
             return False
 
     def is_already_data(self, chat, user):
-        curr = self.find_one({"chat_id": chat, "user_id": user})
-        if curr:
+        if curr := self.find_one({"chat_id": chat, "user_id": user}):
             return curr.get("message_id", False)
         else:
             return False

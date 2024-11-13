@@ -5,7 +5,7 @@ async def all_plugins():
     from glob import glob
     from os.path import basename, dirname, isfile
 
-    mod_paths = glob(dirname(__file__) + "/*.py")
+    mod_paths = glob(f"{dirname(__file__)}/*.py")
     all_plugs = [
         basename(f)[:-3]
         for f in mod_paths
@@ -36,6 +36,5 @@ from datetime import datetime
 
 def till_date(date):
     form = "%Y-%m-%d %H:%M:%S"
-    z = datetime.strptime(date,form)
-    return z
+    return datetime.strptime(date,form)
 

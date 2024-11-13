@@ -38,7 +38,7 @@ def command(
         if m.chat and m.chat.type == ChatType.CHANNEL:
             return False
 
-        if m and not (m.from_user or m.chat.is_admin):
+        if m and not m.from_user and not m.chat.is_admin:
             return False
 
         if m.from_user.is_bot:
@@ -85,15 +85,13 @@ def command(
 
                 ddb = Disabling(m.chat.id)
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
-                    CMS.OWNER,
-                    CMS.ADMINISTRATOR,
-                ):
-                    if bool(ddb.get_action() == "del"):
-                        try:
-                            await m.delete()
-                        except RPCError:
-                            pass
-                            return False
+                                    CMS.OWNER,
+                                    CMS.ADMINISTRATOR,
+                                ) and ddb.get_action() == "del":
+                    try:
+                        await m.delete()
+                    except RPCError:
+                        return False
             if matches.group(3) == "":
                 return True
             try:
@@ -313,10 +311,7 @@ async def auto_join_check_filter(_, __, j: ChatJoinRequest):
     aj = AUTOJOIN()
     join_type = aj.get_autojoin(chat)
 
-    if not join_type:
-        return False
-    else:
-        return True
+    return bool(join_type)
 
 
 async def afk_check_filter(_, __, m: Message):
@@ -333,8 +328,7 @@ async def afk_check_filter(_, __, m: Message):
     chat = m.chat.id
     is_repl_afk = None
     if m.reply_to_message:
-        repl_user = m.reply_to_message.from_user
-        if repl_user:
+        if repl_user := m.reply_to_message.from_user:
             repl_user = m.reply_to_message.from_user.id
             is_repl_afk = afk.check_afk(chat, repl_user)
 
@@ -342,10 +336,7 @@ async def afk_check_filter(_, __, m: Message):
 
     is_afk = afk.check_afk(chat, user)
 
-    if not (is_afk or is_repl_afk):
-        return False
-    else:
-        return True
+    return bool((is_afk or is_repl_afk))
 
 
 async def flood_check_filter(_, __, m: Message):
@@ -388,7 +379,7 @@ async def flood_check_filter(_, __, m: Message):
 async def captcha_filt(_, __, m: Message):
     try:
         return CAPTCHA().is_captcha(m.chat.id)
-    except:
+    except Exception:
         return False
 
 captcha_filter = create(captcha_filt)

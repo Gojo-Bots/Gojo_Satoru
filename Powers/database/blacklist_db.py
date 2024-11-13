@@ -21,7 +21,7 @@ class Blacklist(MongoDB):
     def check_word_blacklist_status(self, word: str):
         with INSERTION_LOCK:
             bl_words = self.chat_info["triggers"]
-            return bool(word in bl_words)
+            return word in bl_words
 
     def add_blacklist(self, trigger: str):
         with INSERTION_LOCK:
@@ -62,7 +62,8 @@ class Blacklist(MongoDB):
         with INSERTION_LOCK:
             collection = MongoDB(Blacklist.db_name)
             curr = collection.find_all()
-            return sum(1 for chat in curr if chat["triggers"])
+            return sum(bool(chat["triggers"])
+                   for chat in curr)
 
     def set_action(self, action: str):
         with INSERTION_LOCK:

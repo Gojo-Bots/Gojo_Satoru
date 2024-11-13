@@ -195,9 +195,7 @@ Use /locktypes to get the lock types"""
         pass
     except ChatAdminRequired:
         await m.reply_text(text="I don't have permission to do that")
-    await m.reply_text(
-        "🔒 " + f"Locked <b>{perm}</b> for this Chat.",
-    )
+    await m.reply_text(f"🔒 Locked <b>{perm}</b> for this Chat.")
     await prevent_approved(m)
     return
 
@@ -208,9 +206,7 @@ async def view_locks(_, m: Message):
     v_perm = m.chat.permissions
 
     async def convert_to_emoji(val: bool):
-        if val:
-            return "✅"
-        return "❌"
+        return "✅" if val else "❌"
 
     lock = LOCKS()
     anon = lock.get_lock_channel(m.chat.id, "anti_c_send")
@@ -369,13 +365,11 @@ async def unlock_perm(c: Gojo, m: Message):
         await m.reply_text("Send as chat is now enabled for this chat")
         return
     elif unlock_type in ["links", "url"]:
-        curr = lock.remove_lock_channel(m.chat.id, "anti_links")
-        if curr:
+        if curr := lock.remove_lock_channel(m.chat.id, "anti_links"):
             await m.reply_text("Sending link is now allowed")
-            return
         else:
             await m.reply_text("Sending link is not allowed")
-            return
+        return
     elif unlock_type == "forwardall":
         curr = lock.remove_lock_channel(m.chat.id, "anti_fwd")
 
@@ -432,9 +426,7 @@ async def unlock_perm(c: Gojo, m: Message):
         pass
     except ChatAdminRequired:
         await m.reply_text(text="I don't have permission to do that")
-    await m.reply_text(
-        "🔓 " + f"Unlocked <b>{uperm}</b> for this Chat.",
-    )
+    await m.reply_text(f"🔓 Unlocked <b>{uperm}</b> for this Chat.")
     await prevent_approved(m)
     return
 
@@ -460,9 +452,15 @@ async def is_approved_user(c: Gojo, m: Message):
     SUDO_LEVEL = DEV_USERS.union(SUDO_USERS)
 
     if m.forward_from:
-        if m.from_user and (m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id):
-            return True
-        return False
+        return bool(
+            m.from_user
+            and (
+                m.from_user.id in ul
+                or m.from_user.id in SUDO_LEVEL
+                or m.from_user.id in admins_group
+                or m.from_user.id == c.me.id
+            )
+        )
     elif m.forward_from_chat:
         if m.from_user and (m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id):
             return True
@@ -471,9 +469,12 @@ async def is_approved_user(c: Gojo, m: Message):
         else:
             return False
     elif m.from_user:
-        if m.from_user.id in ul or m.from_user.id in SUDO_LEVEL or m.from_user.id in admins_group or m.from_user.id == c.me.id:
-            return True
-        return False
+        return (
+            m.from_user.id in ul
+            or m.from_user.id in SUDO_LEVEL
+            or m.from_user.id in admins_group
+            or m.from_user.id == c.me.id
+        )
     else:
         return False
 
@@ -504,7 +505,12 @@ async def lock_del_mess(c: Gojo, m: Message):
     if not chat_locks:
         return
 
-    if chat_locks["anti_channel"] and m.sender_chat and not (m.forward_from_chat or m.forward_from):
+    if (
+        chat_locks["anti_channel"]
+        and m.sender_chat
+        and not m.forward_from_chat
+        and not m.forward_from
+    ):
         if m.chat.is_admin:
             return
         await delete_messages(c, m)

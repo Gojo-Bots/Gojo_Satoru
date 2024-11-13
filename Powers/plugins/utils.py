@@ -109,15 +109,12 @@ async def get_lyrics(_, m: Message):
         await em.delete()
         await m.reply_text("Connection error try again after sometime")
         return
-        
+
     if song:
         if song.lyrics:
             reply = song.lyrics
             reply = reply.split("\n",1)[1]
-            if not artist:
-                artist = song.artist
-            else:
-                artist = artist
+            artist = artist or song.artist
         else:
             reply = "Couldn't find any lyrics for that song!"
     else:
@@ -221,9 +218,7 @@ async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(maxsplit=1)[1]
     else:
-        await m.reply_text(
-            f"Usage: <code>/github username</code>",
-        )
+        await m.reply_text("Usage: <code>/github username</code>")
         return
     username = username.split("/")[-1].strip("@")
     URL = f"https://api.github.com/users/{username}"
@@ -350,13 +345,13 @@ async def paste_func(_, message: Message):
     if not link:
         await m.edit_text("Failed to post!")
         return
-    kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=link + f".{exe}")]]
+    kb = [[InlineKeyboardButton(text="📍 Paste 📍", url=f"{link}.{exe}")]]
     await m.delete()
     try:
         await message.reply_text("Here's your paste", reply_markup=InlineKeyboardMarkup(kb))
     except Exception as e:
         if link:
-            return await message.reply_text(f"Here's your paste:\n [link]({link + f'.{exe}'})",)
+            return await message.reply_text(f"Here's your paste:\n [link]({link}.{exe})")
         return await message.reply_text(f"Failed to post. Due to following error:\n{e}")
 
 
@@ -439,7 +434,7 @@ async def botstaff(c: Gojo, m: Message):
                 pass
     true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
     reply += "\n<b>Sudo Users 🐉:</b>\n"
-    if true_sudo == []:
+    if not true_sudo:
         reply += "No Sudo Users\n"
     else:
         for each_user in true_sudo:

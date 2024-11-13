@@ -23,19 +23,10 @@ from Powers.utils.parser import mention_html
 async def warn(c: Gojo, m: Message):
     if m.reply_to_message:
         r_id = m.reply_to_message.id
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
-        else:
-            reason = None
-    elif not m.reply_to_message:
-        r_id = m.id
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
-        else:
-            reason = None
+        reason = m.text.split(None, 1)[1] if len(m.text.split()) >= 2 else None
     else:
-        reason = None
-
+        r_id = m.id
+        reason = m.text.split(None, 2)[2] if len(m.text.split()) >= 3 else None
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
@@ -69,18 +60,17 @@ async def warn(c: Gojo, m: Message):
     warn_settings = warn_settings_db.get_warnings_settings()
     if num >= warn_settings["warn_limit"]:
         timeee = datetime.now(TIME_ZONE) + timedelta(minutes=45)
-        if warn_settings["warn_mode"] == "kick":
+        if warn_settings["warn_mode"] == "kick" or warn_settings[
+            "warn_mode"
+        ] not in ["ban", "mute"]:
             await m.chat.ban_member(user_id, until_date=timeee)
             action = "kicked"
         elif warn_settings["warn_mode"] == "ban":
             await m.chat.ban_member(user_id)
             action = "banned"
-        elif warn_settings["warn_mode"] == "mute":
+        else:
             await m.chat.restrict_member(user_id, ChatPermissions())
             action = "muted"
-        else:
-            await m.chat.ban_member(user_id, until_date=timeee)
-            action = "kicked"
         await m.reply_text(
             (
                 f"Warnings {num}/{warn_settings['warn_limit']}!"
@@ -93,8 +83,7 @@ async def warn(c: Gojo, m: Message):
         )
         await m.stop_propagation()
 
-    rules = Rules(m.chat.id).get_rules()
-    if rules:
+    if rules := Rules(m.chat.id).get_rules():
         kb = InlineKeyboardButton(
             "Rules 📋",
             url=f"https://t.me/{c.me.username}?start=rules_{m.chat.id}",
@@ -136,7 +125,7 @@ async def warn(c: Gojo, m: Message):
 @Gojo.on_message(command("resetwarns") & restrict_filter)
 async def reset_warn(c: Gojo, m: Message):
 
-    if not len(m.command) > 1 and not m.reply_to_message:
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -213,7 +202,7 @@ async def list_warns(c: Gojo, m: Message):
 )
 async def remove_warn(c: Gojo, m: Message):
 
-    if not len(m.command) > 1 and not m.reply_to_message:
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text(
             "I can't remove warns of nothing! Tell me user whose warn should be removed!",
         )
@@ -273,20 +262,9 @@ async def remove_last_warn_btn(c: Gojo, q: CallbackQuery):
     action = args[1]
     user_id = int(args[2])
     chat_id = int(q.message.chat.id)
-    user = Users.get_user_info(int(user_id))
+    user = Users.get_user_info(user_id)
     user_first_name = user["name"]
 
-    if action == "remove":
-        warn_db = Warns(q.message.chat.id)
-        _, num_warns = warn_db.remove_warn(user_id)
-        await q.message.edit_text(
-            (
-                f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
-                "removed last warn for "
-                f"{(await mention_html(user_first_name, user_id))}\n"
-                f"<b>Current Warnings:</b> {num_warns}"
-            ),
-        )
     if action == "kick":
         try:
             timee = datetime.now(TIME_ZONE) + timedelta(minutes=45)
@@ -305,6 +283,17 @@ async def remove_last_warn_btn(c: Gojo, q: CallbackQuery):
                 f"🛑 Failed to Kick\n<b>Error:</b>\n</code>{err}</code>",
             )
 
+    elif action == "remove":
+        warn_db = Warns(q.message.chat.id)
+        _, num_warns = warn_db.remove_warn(user_id)
+        await q.message.edit_text(
+            (
+                f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
+                "removed last warn for "
+                f"{(await mention_html(user_first_name, user_id))}\n"
+                f"<b>Current Warnings:</b> {num_warns}"
+            ),
+        )
     await q.answer()
     return
 

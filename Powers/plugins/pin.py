@@ -18,15 +18,15 @@ async def pin_message(_, m: Message):
     pin_args = m.text.split(None, 1)
     if m.reply_to_message:
         try:
-            disable_notification = True
-
-            if len(pin_args) >= 2 and pin_args[1] in ["alert", "notify", "loud"]:
-                disable_notification = False
-
+            disable_notification = len(pin_args) < 2 or pin_args[1] not in [
+                "alert",
+                "notify",
+                "loud",
+            ]
             await m.reply_to_message.pin(
                 disable_notification=disable_notification,
             )
-            
+
 
             if m.chat.username:
                 # If chat has a username, use this format
@@ -162,8 +162,6 @@ async def anti_channel_pin(_, m: Message):
 async def pinned_message(c: Gojo, m: Message):
     chat_title = m.chat.title
     chat = await c.get_chat(chat_id=m.chat.id)
-    msg_id = m.reply_to_message.id if m.reply_to_message else m.id
-
     if chat.pinned_message:
         pinned_id = chat.pinned_message.id
         if m.chat.username:
@@ -172,6 +170,8 @@ async def pinned_message(c: Gojo, m: Message):
         elif (str(m.chat.id)).startswith("-100"):
             link_chat_id = (str(m.chat.id)).replace("-100", "")
             message_link = f"https://t.me/c/{link_chat_id}/{pinned_id}"
+
+        msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
         await m.reply_text(
             f"The pinned message of {escape_html(chat_title)} is [here]({message_link}).",

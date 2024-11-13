@@ -105,7 +105,7 @@ from Powers.utils.web_scrapper import INSTAGRAM, SCRAP_DATA
 #             pass
 #     return
 
-songs = dict()
+songs = {}
 
 @Gojo.on_callback_query(filters.regex("^lyrics_"))
 async def lyrics_for_song(c: Gojo, q: CallbackQuery):
@@ -117,7 +117,7 @@ async def lyrics_for_song(c: Gojo, q: CallbackQuery):
         artist = None
     if artist:
         song = genius_lyrics.search_song(song,artist)
-    elif not artist:
+    else:
         song = genius_lyrics.search_song(song)
         artist = song.artist
     if not song.lyrics:
@@ -128,10 +128,10 @@ async def lyrics_for_song(c: Gojo, q: CallbackQuery):
         await q.answer("Fetching lyrics")
         reply = song.lyrics.split("\n",1)[1]
     if len(reply) >= 4096:
-        cap = f"{header}\n{reply[0:4080]}..."
+        cap = f"{header}\n{reply[:4080]}..."
         if artist:
             songs[f"{songe}"][f"{artist}"] = reply
-            art = '_'+artist
+            art = f'_{artist}'
         else:
             songs[f"{songe}"] = reply
             art = ''
@@ -162,25 +162,19 @@ async def lyrics_for_song_next(c: Gojo, q: CallbackQuery):
     try:
         artist = split[3]
         header = f"{song.capitalize()} by {artist}"
-        art = '_'+artist
+        art = f'_{artist}'
     except IndexError:
         artist = False
         header = f"{song.capitalize()}"
         art = ''
     try:
-        if artist:
-            songe = songs[song][artist]
-        else:
-            songe = songs[song]
+        songe = songs[song][artist] if artist else songs[song]
     except KeyError:
         if artist:
             songe = genius_lyrics.search_song(song,artist)
-        elif not artist:
-            songe = genius_lyrics.search_song(song)
-        if todo == "next":
-            next_part = songe[4080:]
         else:
-            next_part = songe[:4080]
+            songe = genius_lyrics.search_song(song)
+        next_part = songe[4080:] if todo == "next" else songe[:4080]
     next_part = f"{header}\n{next_part}"
     new_kb = [
             [
@@ -198,7 +192,7 @@ async def remove_background(c: Gojo, m: Message):
     if not is_rmbg:
         await m.reply_text("Add rmbg api to use this command")
         return
-    
+
     reply = m.reply_to_message
     if not reply:
         await m.reply_text("Reply to image/sticker to remove it's background")
@@ -231,10 +225,7 @@ async def remove_background(c: Gojo, m: Message):
         os.remove(file)
         return
     to_path = "./downloads"
-    if reply.sticker:
-        to_path = f'{to_path}/no-bg.webp'
-    else:
-        to_path = f'{to_path}/no-bg.png'
+    to_path = f'{to_path}/no-bg.webp' if reply.sticker else f'{to_path}/no-bg.png'
     with open(to_path,'wb') as out:
         out.write(result.content)
     if reply.sticker:
@@ -256,17 +247,14 @@ async def song_down_up(c: Gojo, m: Message):
         await m.reply_text("**USAGE**\n /song [song name | link]")
         return
     _id = get_video_id(splited)
-    if not _id:
-        query = splited
-    else:
-        query = _id
+    query = _id or splited
     to_edit = await m.reply_text("⏳")
     try:
         await youtube_downloader(c,m,query, "a")
         await to_edit.delete()
         return
     except KeyError:
-        await to_edit.edit_text(f"Failed to find any result")
+        await to_edit.edit_text("Failed to find any result")
         return
     except Exception as e:
         await to_edit.edit_text(f"Got an error\n{e}")
@@ -282,17 +270,14 @@ async def video_down_up(c: Gojo, m: Message):
         await m.reply_text("**USAGE**\n /vsong [song name | link]")
         return
     _id = get_video_id(splited)
-    if not _id:
-        query = splited
-    else:
-        query = _id
+    query = _id or splited
     to_edit = await m.reply_text("⏳")
     try:
         await youtube_downloader(c,m,query,"v")
         await to_edit.delete()
         return
     except KeyError:
-        await to_edit.edit_text(f"Failed to find any result")
+        await to_edit.edit_text("Failed to find any result")
         return
     except Exception as e:
         await to_edit.edit_text(f"Got an error\n{e}")

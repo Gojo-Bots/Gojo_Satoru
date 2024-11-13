@@ -30,15 +30,13 @@ class LOCKS(MongoDB):
                     continue
                 self.insert_one({"chat_id": chat, "locktype": i})
             return True
-        curr = self.find_one({"chat_id": chat, "locktype": locktype})
-        if curr:
+        if curr := self.find_one({"chat_id": chat, "locktype": locktype}):
             return False
-        else:
-            with INSERTION_LOCK:
-                hmm = self.merge_u_and_c(chat, locktype)
-                if not hmm:
-                    self.insert_one({"chat_id": chat, "locktype": locktype})
-            return True
+        with INSERTION_LOCK:
+            hmm = self.merge_u_and_c(chat, locktype)
+            if not hmm:
+                self.insert_one({"chat_id": chat, "locktype": locktype})
+        return True
 
     def remove_lock_channel(self, chat: int, locktype: str):
         """
@@ -46,12 +44,10 @@ class LOCKS(MongoDB):
         """
         if locktype == "all":
             for i in lock_t:
-                curr = self.find_one({"chat_id": chat, "locktype": i})
-                if curr:
+                if curr := self.find_one({"chat_id": chat, "locktype": i}):
                     self.delete_one({"chat_id": chat, "locktype": i})
             return True
-        curr = self.find_one({"chat_id": chat, "locktype": locktype})
-        if curr:
+        if curr := self.find_one({"chat_id": chat, "locktype": locktype}):
             with INSERTION_LOCK:
                 self.delete_one({"chat_id": chat, "locktype": locktype})
             return True
@@ -62,14 +58,22 @@ class LOCKS(MongoDB):
         """
         locktypes: anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links, bot
         """
-        if locktype not in ["anti_c_send", "anti_fwd", "anti_fwd_u", "anti_fwd_c", "anti_links", "bot", "all"]:
+        if locktype not in [
+            "anti_c_send",
+            "anti_fwd",
+            "anti_fwd_u",
+            "anti_fwd_c",
+            "anti_links",
+            "bot",
+            "all",
+        ]:
             return False
+        if locktype != "all":
+            curr = self.find_one(
+                {"chat_id": chat, "locktype": locktype})
+            return bool(curr)
         else:
-            if locktype != "all":
-                curr = self.find_one(
-                    {"chat_id": chat, "locktype": locktype})
-                return bool(curr)
-            else:
+            if curr := self.find_all({"chat_id": chat}):
                 to_return = {
                     "anti_channel": False,
                     "anti_fwd": {
@@ -79,26 +83,24 @@ class LOCKS(MongoDB):
                     "anti_links": False,
                     "bot": False
                 }
-                curr = self.find_all({"chat_id": chat})
-                if not curr:
-                    return None
-                else:
-                    for i in list(curr):
-                        if i["locktype"] == "anti_c_send":
-                            to_return["anti_channel"] = True
-                        elif i["locktype"] == "anti_fwd":
-                            to_return["anti_fwd"]["user"] = to_return["anti_fwd"]["chat"] = True
-                        elif i["locktype"] == "anti_fwd_u":
-                            to_return["anti_fwd"]["user"] = True
-                        elif i["locktype"] == "anti_fwd_c":
-                            to_return["anti_fwd"]["chat"] = True
-                        elif i["anti_links"] == "anti_links":
-                            to_return["anti_links"] = True
-                        elif i["locktype"] == "bot":
-                            to_return["bot"] = True
-                        else:
-                            continue
-                    return to_return
+                for i in list(curr):
+                    if i["locktype"] == "anti_c_send":
+                        to_return["anti_channel"] = True
+                    elif i["locktype"] == "anti_fwd":
+                        to_return["anti_fwd"]["user"] = to_return["anti_fwd"]["chat"] = True
+                    elif i["locktype"] == "anti_fwd_u":
+                        to_return["anti_fwd"]["user"] = True
+                    elif i["locktype"] == "anti_fwd_c":
+                        to_return["anti_fwd"]["chat"] = True
+                    elif i["anti_links"] == "anti_links":
+                        to_return["anti_links"] = True
+                    elif i["locktype"] == "bot":
+                        to_return["bot"] = True
+                    else:
+                        continue
+                return to_return
+            else:
+                return None
 
     def merge_u_and_c(self, chat: int, locktype: str):
         if locktype == "anti_fwd_u":
@@ -119,8 +121,4 @@ class LOCKS(MongoDB):
         """
         locktypes: anti_c_send, anti_fwd, anti_fwd_u, anti_fwd_c, anti_links
         """
-        curr = self.find_one({"chat_id": chat, "locktype": locktype})
-        if curr:
-            return True
-        else:
-            return False
+        return bool(curr := self.find_one({"chat_id": chat, "locktype": locktype}))

@@ -32,7 +32,7 @@ def get_support_staff(want="all"):
     else:
         wanted = list(set([int(OWNER_ID)] + devs + sudo + whitelist))
 
-    return wanted if wanted else []
+    return wanted or []
 
 async def cache_support():
     dev = get_support_staff("dev")

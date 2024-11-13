@@ -58,12 +58,12 @@ async def get_hours(hour:str):
     tim = hour.strip().split(":")
     txt = ""
     if int(tim[0]):
-        txt += tim[0] + " hours "
+        txt += f"{tim[0]} hours "
     if int(tim[1]):
-        txt += tim[1] + " minutes "
+        txt += f"{tim[1]} minutes "
     if int(round(float(tim[2]))):
-        txt += str(round(float(tim[2]))) + " seconds"
-    
+        txt += f"{str(round(float(tim[2])))} seconds"
+
     return txt
 
 
@@ -74,12 +74,8 @@ async def afk_checker(c: Gojo, m: Message):
     user = m.from_user.id
     chat = m.chat.id
     repl = m.reply_to_message
-    
-    if repl and repl.from_user:
-        rep_user = repl.from_user.id
-    else:
-        rep_user = False
 
+    rep_user = repl.from_user.id if repl and repl.from_user else False
     is_afk = afk.check_afk(chat,user)
     is_rep_afk = False
     if rep_user:
@@ -96,7 +92,7 @@ async def afk_checker(c: Gojo, m: Message):
         if len(tim_) == 1:
             tims = tim
         elif len(tim_) == 2:
-            tims = tim_[0] + " " + tim
+            tims = f"{tim_[0]} {tim}"
         reason = f"{repl.from_user.first_name} is afk since {tims}\n"
         if con['reason'] not in res:
             reason += f"\nDue to: {con['reason'].format(first=repl.from_user.first_name)}"
@@ -119,7 +115,7 @@ async def afk_checker(c: Gojo, m: Message):
                 parse_mode=PM.MARKDOWN,
                 reply_to_message_id=repl.id
             )
-    
+
     if is_afk:
         txt = False
         try:
@@ -138,7 +134,7 @@ async def afk_checker(c: Gojo, m: Message):
             if len(tim_) == 1:
                 tims = tim
             elif len(tim_) == 2:
-                tims = tim_[0] + " " + tim
+                tims = f"{tim_[0]} " + tim
             txt = back_.format(first=m.from_user.mention) + f"\n\nAfk for: {tims}"
             await m.reply_text(txt)
         afk.delete_afk(chat,user)

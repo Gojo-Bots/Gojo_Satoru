@@ -49,22 +49,21 @@ def get_msg_entities(m: Message) -> List[dict]:
     entities = []
 
     if m.entities:
-        for entity in m.entities:
-            entities.append(
-                {
-                    "type": entity.type.name.lower(),
-                    "offset": entity.offset,
-                    "length": entity.length,
-                }
-            )
-
+        entities.extend(
+            {
+                "type": entity.type.name.lower(),
+                "offset": entity.offset,
+                "length": entity.length,
+            }
+            for entity in m.entities
+        )
     return entities
 
 async def get_all_sticker_packs(c: Gojo, user_id: int, offset: int = 1, limit: int = 25):
     packnum = 25 * (offset - 1)
     txt = f"Here is your stickers pack that I have created:\nPage: {offset}\n\nNOTE: I may have kanged more sticker sets for you, but since last update I will no longer add stickers in those packs due to recent telegram update in bot api sorry."
     while True:
-        packname = f"CE{str(user_id)}{packnum}_by_{c.me.username}"
+        packname = f"CE{user_id}{packnum}_by_{c.me.username}"
         sticker_set = await get_sticker_set_by_name(c,packname)
         if not sticker_set and packnum == 0:
             txt, kb = None, None
@@ -85,21 +84,21 @@ async def get_all_sticker_packs(c: Gojo, user_id: int, offset: int = 1, limit: i
                         ikb("Next", f"stickers_{b64_next}")
                     ],
                 ]
-            
-            elif offset >= 2 and (packnum <= (packnum + limit - 1)):
+
+            elif offset >= 2:
                 kb = [
                     [
                         ikb("Previous", f"stickers_{b64_prev}")
                     ],
                 ]
-            
+
             elif packnum > (packnum + limit - 1) and offset == 1:
                 kb = [
                     [
                         ikb("Next", f"stickers_{b64_next}")
                     ],
                 ]
-            
+
             else:
                 kb = [
                     [
@@ -111,7 +110,7 @@ async def get_all_sticker_packs(c: Gojo, user_id: int, offset: int = 1, limit: i
                 ]
             kb = ikm(kb)
             break
-    
+
     return txt, kb
 
 
@@ -235,10 +234,7 @@ async def Vsticker(c: Gojo, file: Message):
         file = file.video
     _width_ = file.width
     _height_ = file.height
-    if _height_ > _width_:
-        _height_, _width_ = (512, -1)
-    else:
-        _height_, _width_ = (-1, 512)
+    _height_, _width_ = (512, -1) if _height_ > _width_ else (-1, 512)
     file = await c.download_media(file)
     await runcmd(
         f"ffmpeg -to 00:00:02.900 -i '{file}' -vf scale={_width_}:{_height_} -c:v libvpx-vp9 -crf 30 -b:v 560k -maxrate 560k -bufsize 256k -an 'VideoSticker.webm'"
@@ -349,7 +345,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
 
 
 def toimage(image, filename=None, is_direc=False):
-    filename = filename if filename else "gojo.png"
+    filename = filename or "gojo.png"
     if is_direc:
         os.rename(image, filename)
         return filename
@@ -362,7 +358,7 @@ def toimage(image, filename=None, is_direc=False):
 
 
 def tosticker(response, filename=None, is_direc=False):
-    filename = filename if filename else "gojo.webp"
+    filename = filename or "gojo.webp"
     if is_direc:
         os.rename(response, filename)
         return filename

@@ -95,8 +95,7 @@ async def add_filter(_, m: Message):
             "Please provide data for this filter reply with!",
         )
 
-    add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
-    if add:
+    if add := db.save_filter(m.chat.id, keyword, teks, msgtype, file_id):
         await m.reply_text(
             f"Saved filter for '<code>{', '.join(keyword.split('|'))}</code>' in <b>{m.chat.title}</b>!",
         )
@@ -137,16 +136,15 @@ async def stop_filter(_, m: Message):
     & owner_filter,
 )
 async def rm_allfilters(_, m: Message):
-    all_bls = db.get_all_filters(m.chat.id)
-    if not all_bls:
+    if all_bls := db.get_all_filters(m.chat.id):
+        return await m.reply_text(
+            "Are you sure you want to clear all filters?",
+            reply_markup=ikb(
+                [[("⚠️ Confirm", "rm_allfilters"), ("❌ Cancel", "close_admin")]],
+            ),
+        )
+    else:
         return await m.reply_text("No filters to stop in this chat.")
-
-    return await m.reply_text(
-        "Are you sure you want to clear all filters?",
-        reply_markup=ikb(
-            [[("⚠️ Confirm", "rm_allfilters"), ("❌ Cancel", "close_admin")]],
-        ),
-    )
 
 
 @Gojo.on_callback_query(filters.regex("^rm_allfilters$"))

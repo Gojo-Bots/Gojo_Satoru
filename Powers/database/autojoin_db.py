@@ -30,21 +30,14 @@ class AUTOJOIN(MongoDB):
 
     def get_autojoin(self, chat):
         curr = self.find_one({"chat_id": chat})
-        if not curr:
-            return False
-        else:
-            return curr["type"]
+        return curr["type"] if curr else False
 
     def update_join_type(self, chat, mode):
-        curr = self.find_one({"chat_id": chat})
-        if curr:
+        if curr := self.find_one({"chat_id": chat}):
             self.update({"chat_id": chat}, {"type": mode})
-            return
-        else:
-            return
+        return
 
     def remove_autojoin(self, chat):
-        curr = self.find_one({"chat_id": chat})
-        if curr:
+        if curr := self.find_one({"chat_id": chat}):
             self.delete_one({"chat_id": chat})
         return

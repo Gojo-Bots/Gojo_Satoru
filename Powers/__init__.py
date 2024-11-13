@@ -18,13 +18,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
-# Make Logs directory if it does not exixts
-if not path.isdir(LOGDIR):
-    mkdir(LOGDIR)
-else:
+if path.isdir(LOGDIR):
     shutil.rmtree(LOGDIR)
-    mkdir(LOGDIR)
-
+mkdir(LOGDIR)
 LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}_log.txt"
 
 file_handler = FileHandler(filename=LOGFILE)
@@ -64,12 +60,9 @@ except Exception as ef:
 TIME_ZONE = pytz.timezone(Config.TIME_ZONE)
 
 Vpath = "./Version"
-version = []
-for i in listdir(Vpath):
-    if i.startswith("version") and i.endswith("md"):
-        version.append(i)
-    else:
-        pass
+version = [
+    i for i in listdir(Vpath) if i.startswith("version") and i.endswith("md")
+]
 VERSION = sorted(version)[-1][8:-3]
 PYTHON_VERSION = python_version()
 PYROGRAM_VERSION = pyrogram.__version__
@@ -96,7 +89,7 @@ if Config.GENIUS_API_TOKEN:
 
     genius_lyrics.verbose = False
     LOGGER.info("Client setup complete")
-elif not Config.GENIUS_API_TOKEN:
+else:
     LOGGER.info("Genius api not found lyrics command will not work")
     is_genius_lyrics = False
     genius_lyrics = False
@@ -119,7 +112,7 @@ API_ID = Config.API_ID
 API_HASH = Config.API_HASH
 
 # General Config
-MESSAGE_DUMP = Config.MESSAGE_DUMP if Config.MESSAGE_DUMP else Config.OWNER_ID
+MESSAGE_DUMP = Config.MESSAGE_DUMP or Config.OWNER_ID
 SUPPORT_GROUP = Config.SUPPORT_GROUP
 SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
 
@@ -145,18 +138,13 @@ UPTIME = time()  # Check bot uptime
 
 #Make dir
 youtube_dir = "./Youtube/"
-if not path.isdir(youtube_dir):
-    mkdir(youtube_dir)
-else:
+if path.isdir(youtube_dir):
     shutil.rmtree(youtube_dir)
-    mkdir(youtube_dir)
-
+mkdir(youtube_dir)
 scrap_dir = "./scrapped/"
-if not path.isdir(scrap_dir):
-    mkdir(scrap_dir)
-else:
+if path.isdir(scrap_dir):
     shutil.rmtree(scrap_dir)
-    mkdir(scrap_dir)
+mkdir(scrap_dir)
 scheduler = AsyncIOScheduler(timezone=TIME_ZONE)
 
 

@@ -59,10 +59,7 @@ class Users(MongoDB):
             else:
                 curr = None
 
-            if curr:
-                return curr
-
-            return {}
+            return curr or {}
 
     def __ensure_in_db(self):
         chat_data = self.find_one({"_id": self.user_id})
