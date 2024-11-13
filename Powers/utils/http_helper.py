@@ -48,7 +48,7 @@ async def multipost(url: str, times: int, *args, **kwargs):
 
 
 def resp_get(url: str, *args, **kwargs):
-        return requests.get(url, *args, **kwargs)
+    return requests.get(url, *args, **kwargs)
 
 
 def resp_post(url: str, *args, **kwargs):

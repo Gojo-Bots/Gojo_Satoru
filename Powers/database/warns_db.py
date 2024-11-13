@@ -49,7 +49,7 @@ class Warns(MongoDB):
 
     def clean_warn(self):
         with INSERTION_LOCK:
-            return self.delete_one({"chat_id":self.chat_id})
+            return self.delete_one({"chat_id": self.chat_id})
 
     def get_warns(self, user_id: int):
         with INSERTION_LOCK:
@@ -93,12 +93,14 @@ class Warns(MongoDB):
                         f"Repairing Approve Database - setting '{key}:{val}' for {data['user_id']} in {data['chat_id']}",
                     )
                     collection.update(
-                        {"chat_id": data["chat_id"], "user_id": data["user_id"]},
+                        {"chat_id": data["chat_id"],
+                            "user_id": data["user_id"]},
                         {key: val},
                     )
 
     def __ensure_in_db(self, user_id: int):
-        chat_data = self.find_one({"chat_id": self.chat_id, "user_id": user_id})
+        chat_data = self.find_one(
+            {"chat_id": self.chat_id, "user_id": user_id})
         if not chat_data:
             new_data = {
                 "chat_id": self.chat_id,
@@ -107,7 +109,6 @@ class Warns(MongoDB):
                 "num_warns": 0,
             }
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Warn Document for {user_id} in {self.chat_id}")
             return new_data
         return chat_data
 
@@ -123,9 +124,9 @@ class WarnSettings(MongoDB):
     def __ensure_in_db(self):
         chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
-            new_data = {"_id": self.chat_id, "warn_mode": "none", "warn_limit": 3}
+            new_data = {"_id": self.chat_id,
+                        "warn_mode": "none", "warn_limit": 3}
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Warn Settings Document for {self.chat_id}")
             return new_data
         return chat_data
 
@@ -140,7 +141,7 @@ class WarnSettings(MongoDB):
 
     def clean_warns(self):
         with INSERTION_LOCK:
-            return self.delete_one({"_id":self.chat_id})
+            return self.delete_one({"_id": self.chat_id})
 
     def get_warnmode(self):
         with INSERTION_LOCK:

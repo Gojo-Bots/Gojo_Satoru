@@ -28,6 +28,7 @@ class GBan(MongoDB):
                 return self.update_gban_reason(user_id, reason)
 
             # If not already gbanned, then add to gban
+            ANTISPAM_BANNED.add(user_id)
             time_rn = datetime.now(TZ)
             return self.insert_one(
                 {
@@ -43,8 +44,8 @@ class GBan(MongoDB):
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
             if self.find_one({"_id": user_id}):
+                ANTISPAM_BANNED.remove(user_id)
                 return self.delete_one({"_id": user_id})
-
             return "User not gbanned!"
 
     def get_gban(self, user_id: int):

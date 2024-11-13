@@ -1,16 +1,118 @@
 import asyncio
+import base64
 import math
 import os
 import shlex
 import textwrap
+from time import time
 from typing import List, Tuple
 
+import requests
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import errors, raw
 from pyrogram.file_id import FileId
+from pyrogram.types import InlineKeyboardButton as ikb
+from pyrogram.types import InlineKeyboardMarkup as ikm
 from pyrogram.types import Message
+from unidecode import unidecode
 
+from Powers import scrap_dir
 from Powers.bot_class import Gojo
+from Powers.utils.string import encode_decode
+
+
+def quotify(msg_info: List[dict]) -> Tuple[bool, str]:
+    json = {
+        "type": "quote",
+        "format": "webp",
+        "backgroundColor": "#000000",
+        "width": 512,
+        "height": 768,
+        "scale": 2,
+        "messages": msg_info,
+    }
+
+    try:
+        response = requests.post("https://bot.lyo.su/quote/generate", json=json).json()
+        image = base64.b64decode(str(response["result"]["image"]).encode("utf-8"))
+
+        file_name = f"Quote_{int(time())}.webp"
+        with open(file_name, "wb") as f:
+            f.write(image)
+
+        return True, file_name
+    except Exception as e:
+        return False, str(e)
+
+
+def get_msg_entities(m: Message) -> List[dict]:
+    entities = []
+
+    if m.entities:
+        for entity in m.entities:
+            entities.append(
+                {
+                    "type": entity.type.name.lower(),
+                    "offset": entity.offset,
+                    "length": entity.length,
+                }
+            )
+
+    return entities
+
+async def get_all_sticker_packs(c: Gojo, user_id: int, offset: int = 1, limit: int = 25):
+    packnum = 25 * (offset - 1)
+    txt = f"Here is your stickers pack that I have created:\nPage: {offset}\n\nNOTE: I may have kanged more sticker sets for you, but since last update I will no longer add stickers in those packs due to recent telegram update in bot api sorry."
+    while True:
+        packname = f"CE{str(user_id)}{packnum}_by_{c.me.username}"
+        sticker_set = await get_sticker_set_by_name(c,packname)
+        if not sticker_set and packnum == 0:
+            txt, kb = None, None
+            break
+        elif sticker_set and packnum <= (packnum + limit - 1):
+            base_ = f"t.me/addstickers/{packname}"
+            txt += f"`{packnum}`. [{sticker_set.set.name}]({base_})\n"
+            packnum += 1
+        else:
+            page = await encode_decode(f"1_{user_id}")
+            b64_next = await encode_decode(f"{offset+1}_{user_id}")
+            b64_prev = await encode_decode(f"{offset-1}_{user_id}")
+
+            if (packnum > (packnum + limit - 1)) and offset >= 2:
+                kb = [
+                    [
+                        ikb("Previous", f"stickers_{b64_prev}"),
+                        ikb("Next", f"stickers_{b64_next}")
+                    ],
+                ]
+            
+            elif offset >= 2 and (packnum <= (packnum + limit - 1)):
+                kb = [
+                    [
+                        ikb("Previous", f"stickers_{b64_prev}")
+                    ],
+                ]
+            
+            elif packnum > (packnum + limit - 1) and offset == 1:
+                kb = [
+                    [
+                        ikb("Next", f"stickers_{b64_next}")
+                    ],
+                ]
+            
+            else:
+                kb = [
+                    [
+                        ikb(
+                            "Close ❌",
+                            callback_data="f_close"
+                        )
+                    ]
+                ]
+            kb = ikm(kb)
+            break
+    
+    return txt, kb
 
 
 async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
@@ -26,6 +128,7 @@ async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
         process.pid,
     )
 
+
 async def get_sticker_set_by_name(
     client: Gojo, name: str
 ) -> raw.base.messages.StickerSet:
@@ -40,24 +143,21 @@ async def get_sticker_set_by_name(
         return None
 
 
-
 async def create_sticker_set(
     client: Gojo,
     owner: int,
     title: str,
     short_name: str,
     stickers: List[raw.base.InputStickerSetItem],
-    animated:bool=False,
-    video:bool=False
+    animated: bool = False,
+    video: bool = False
 ) -> raw.base.messages.StickerSet:
     return await client.invoke(
         raw.functions.stickers.CreateStickerSet(
             user_id=await client.resolve_peer(owner),
             title=title,
             short_name=short_name,
-            stickers=stickers,
-            animated=animated,
-            videos=video
+            stickers=stickers
         )
     )
 
@@ -84,11 +184,9 @@ async def create_sticker(
 
 
 
-STICKER_DIMENSIONS = (512, 512)
-
-
-async def resize_file_to_sticker_size(file_path: str,length:int=512,width:int=512) -> str:
+async def resize_file_to_sticker_size(file_path: str, length: int = 512, width: int = 512) -> str:
     im = Image.open(file_path)
+    STICKER_DIMENSIONS = (length, width)
     if (im.width, im.height) < STICKER_DIMENSIONS:
         size1 = im.width
         size2 = im.height
@@ -107,10 +205,11 @@ async def resize_file_to_sticker_size(file_path: str,length:int=512,width:int=51
     else:
         im.thumbnail(STICKER_DIMENSIONS)
 
-    file_pathh = "./downloads/resized.png"
+    file_pathh = f"{scrap_dir}r{str(time()).replace('.','_')}.png"
     im.save(file_pathh)
     os.remove(file_path)
     return file_pathh
+
 
 async def tgs_to_gif(file, tgs=False, video=False):
     if tgs:
@@ -121,12 +220,14 @@ async def tgs_to_gif(file, tgs=False, video=False):
     os.remove(file)
     return 'gojo_satoru.gif'
 
+
 async def webm_to_gif(file):
     cmd = f"ffmpeg -i '{file}' 'goJo.gif'"
     await runcmd(cmd)
     os.remove(file)
     return "goJo.gif"
-        
+
+
 async def Vsticker(c: Gojo, file: Message):
     if file.animation:
         file = file.animation
@@ -153,7 +254,8 @@ async def upload_document(
         raw.functions.messages.UploadMedia(
             peer=await client.resolve_peer(chat_id),
             media=raw.types.InputMediaUploadedDocument(
-                mime_type=client.guess_mime_type(file_path) or "application/zip",
+                mime_type=client.guess_mime_type(
+                    file_path) or "application/zip",
                 file=await client.save_file(file_path),
                 attributes=[
                     raw.types.DocumentAttributeFilename(
@@ -182,6 +284,11 @@ async def get_document_from_file_id(
     )
 
 
+async def remove_sticker(c: Gojo, stickerid: str) -> raw.base.messages.StickerSet:
+    sticker = await get_document_from_file_id(stickerid)
+    return await c.invoke(raw.functions.stickers.RemoveStickerFromSet(sticker=sticker))
+
+
 async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> list:
     _split = text.split(";", 1)
     if len(_split) == 2:
@@ -194,19 +301,36 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
     image = Image.open(image_path)
     width, height = image.size
 
-    font_size = int(width / 11)
+    font_size = int((30 / 500) * width)
     font = ImageFont.truetype("./extras/comic.ttf", font_size)
 
     draw = ImageDraw.Draw(image)
 
-    upper_text_width, _ = draw.textsize(upper_text, font=font)
-    lower_text_width, lower_text_height = draw.textsize(lower_text, font=font)
+    curr_height, padding = 20, 5
+    for utext in textwrap.wrap(upper_text, 25):
+        upper_width = draw.textlength(utext, font=font)
+        draw.text(
+            ((width - upper_width) / 2, curr_height),
+            unidecode(utext),
+            (255, 255, 255),
+            font,
+            stroke_width=3,
+            stroke_fill=fiill,
+        )
+        curr_height += font_size + padding
 
-    upper_text_position = ((width - upper_text_width) // 2, height // 10)
-    lower_text_position = ((width - lower_text_width) // 2, height - lower_text_height - (height // 10))
-
-    draw.text(upper_text_position, upper_text, font=font, fill=fiill)
-    draw.text(lower_text_position, lower_text, font=font, fill=fiill)
+    curr_height = height - font_size
+    for ltext in reversed(textwrap.wrap(lower_text, 25)):
+        lower_width = draw.textlength(ltext, font=font)
+        draw.text(
+            ((width - lower_width) / 2, curr_height - font_size),
+            ltext,
+            (255, 255, 255),
+            font,
+            stroke_width=3,
+            stroke_fill=fiill,
+        )
+        curr_height -= font_size + padding
 
     if sticker:
         stick_path = image_path
@@ -214,7 +338,7 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
         stick_path = await resize_file_to_sticker_size(image_path)
 
     image1 = image_path
-    image2 = tosticker(stick_path,"@memesofdank_memer_hu_vai.webp")
+    image2 = tosticker(stick_path, f"@GojoSuperbot_{int(time())}.webp")
 
     image.save(image1)
     image.save(image2)
@@ -224,123 +348,15 @@ async def draw_meme(image_path: str, text: str, sticker: bool, fiill: str) -> li
     return [image1, image2]
 
 
-# async def draw_meme(image_path, text:str,stick):
-#     """Hellbot se churaya hai hue hue hue..."""
-#     img = Image.open(image_path)
-#     i_width, i_height = img.size
-#     m_font = ImageFont.truetype(
-#         "./extras/comic.ttf", int(i_width / 11)
-#     )
-#     if ";" in text:
-#         upper_text, lower_text = text.split(";")
-#     else:
-#         upper_text = text
-#         lower_text = ""
-#     draw = ImageDraw.Draw(img)
-#     current_h, pad = 10, 5
-#     if upper_text:
-#         for u_text in textwrap.wrap(upper_text,width=15,subsequent_indent=" "):
-#             u_width, u_height = draw.textsize(u_text, font=m_font)
-#             draw.text(
-#                 xy=(((i_width - u_width) / 2) - 1, int((current_h / 640) * i_width)),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(((i_width - u_width) / 2) + 1, int((current_h / 640) * i_width)),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=((i_width - u_width) / 2, int(((current_h / 640) * i_width)) - 1),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(((i_width - u_width) / 2), int(((current_h / 640) * i_width)) + 1),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=((i_width - u_width) / 2, int((current_h / 640) * i_width)),
-#                 text=u_text,
-#                 font=m_font,
-#                 fill=(255, 255, 255),
-#             )
-#             current_h += u_height + pad
-#     if lower_text:
-#         for l_text in textwrap.wrap(upper_text,width=15,subsequent_indent=" "):
-#             u_width, u_height = draw.textsize(l_text, font=m_font)
-#             draw.text(
-#                 xy=(
-#                     ((i_width - u_width) / 2) - 1,
-#                     i_height - u_height - int((20 / 640) * i_width),
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     ((i_width - u_width) / 2) + 1,
-#                     i_height - u_height - int((20 / 640) * i_width),
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     (i_width - u_width) / 2,
-#                     (i_height - u_height - int((20 / 640) * i_width)) - 1,
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     (i_width - u_width) / 2,
-#                     (i_height - u_height - int((20 / 640) * i_width)) + 1,
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(0, 0, 0),
-#             )
-#             draw.text(
-#                 xy=(
-#                     (i_width - u_width) / 2,
-#                     i_height - u_height - int((20 / 640) * i_width),
-#                 ),
-#                 text=l_text,
-#                 font=m_font,
-#                 fill=(255, 255, 255),
-#             )
-#             current_h += u_height + pad
-
-#     hue = image_path
-#     if stick:
-#         stick_path = image_path
-#     else:
-#         stick_path = await resize_file_to_sticker_size(hue)
-#     mee = tosticker(stick_path,"@memesofdank_memer_hu_vai.webp")
-#     img.save(hue)
-#     img.save(mee)
-#     return hue, mee
-
 def toimage(image, filename=None, is_direc=False):
-    filename = filename if filename else "gojo.jpg"
+    filename = filename if filename else "gojo.png"
     if is_direc:
-        os.rename(image,filename)
+        os.rename(image, filename)
         return filename
     img = Image.open(image)
     if img.mode != "RGB":
         img = img.convert("RGB")
-    img.save(filename, "jpeg")
+    img.save(filename, "png")
     os.remove(image)
     return filename
 
@@ -348,7 +364,7 @@ def toimage(image, filename=None, is_direc=False):
 def tosticker(response, filename=None, is_direc=False):
     filename = filename if filename else "gojo.webp"
     if is_direc:
-        os.rename(response,filename)
+        os.rename(response, filename)
         return filename
     image = Image.open(response)
     if image.mode != "RGB":

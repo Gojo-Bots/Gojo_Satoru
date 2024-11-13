@@ -22,7 +22,8 @@ def ikb(rows=None, back=False, todo="start_back"):
         for row in rows:
             line = []
             for button in row:
-                button = btn(*button)  # Will make the kb which don't have "." in them
+                # Will make the kb which don't have "." in them
+                button = btn(*button)
                 line.append(button)
             lines.append(line)
     except TypeError:
@@ -32,7 +33,7 @@ def ikb(rows=None, back=False, todo="start_back"):
             button = btn(*button)  # InlineKeyboardButton
             line.append(button)
         lines.append(line)
-    if back: 
+    if back:
         back_btn = [(btn("« Back", todo))]
         lines.append(back_btn)
     return InlineKeyboardMarkup(inline_keyboard=lines)

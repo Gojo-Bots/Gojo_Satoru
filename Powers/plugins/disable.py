@@ -24,7 +24,6 @@ async def disableit(_, m: Message):
 
     db = Disabling(m.chat.id)
     disable_list = db.get_disabled()
-    LOGGER.info(f"{m.from_user.id} used disabled cmd in {m.chat.id}")
 
     if str(m.text.split(None, 1)[1]) in disable_list:
         return await m.reply_text("It's already disabled!")
@@ -47,8 +46,6 @@ async def set_dsbl_action(_, m: Message):
     else:
         cur = True
     args = m.text.split(" ", 1)
-
-    LOGGER.info(f"{m.from_user.id} disabledel used in {m.chat.id}")
 
     if len(args) >= 2:
         if args[1].lower() == "on":
@@ -73,7 +70,6 @@ async def enableit(_, m: Message):
     if str(m.text.split(None, 1)[1]) not in disable_list:
         return await m.reply_text("It's not disabled!")
     db.remove_disabled((str(m.text.split(None, 1)[1])).lower())
-    LOGGER.info(f"{m.from_user.id} enabled something in {m.chat.id}")
     return await m.reply_text(f"Enabled {m.text.split(None, 1)[1]}!")
 
 
@@ -86,7 +82,6 @@ async def disabling(_, m: Message):
     )
     tes = "List of commnds that can be disabled:\n"
     tes += "\n".join(f" • <code>{escape(i)}</code>" for i in disable_cmd_keys)
-    LOGGER.info(f"{m.from_user.id} checked disableable {m.chat.id}")
     return await m.reply_text(tes)
 
 
@@ -99,7 +94,6 @@ async def disabled(_, m: Message):
         return
     tex = "Disabled commands:\n"
     tex += "\n".join(f" • <code>{escape(i)}</code>" for i in disable_list)
-    LOGGER.info(f"{m.from_user.id} checked disabled {m.chat.id}")
     return await m.reply_text(tex)
 
 
@@ -145,6 +139,25 @@ async def enablealll(_, q: CallbackQuery):
         return
     db = Disabling(q.message.chat.id)
     db.rm_all_disabled()
-    LOGGER.info(f"{user_id} enabled all in {q.message.chat.id}")
     await q.message.edit_text("Enabled all!", show_alert=True)
     return
+
+
+__PLUGIN__ = "disable able"
+
+__alt_name__ = ["disable commands", "disable"]
+
+
+__HELP__ = """
+**Disable commands**
+
+**Admin commands:**
+• /disable [command]: To disable the given command.
+• /disabledel [on | off]: Will delete the command which is disabled.
+• /enable [command]: To enable the given command.
+• /disableable : Give all disableable commands.
+• /disabled : Give all disabled commands.
+
+**Owner command:**
+• /enableall : Enable all the disabled commands.
+"""
