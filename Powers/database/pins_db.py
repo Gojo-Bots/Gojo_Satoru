@@ -62,13 +62,12 @@ class Pins(MongoDB):
                 "cleanlinked": False,
             }
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Pins Document for chat {self.chat_id}")
             return new_data
         return chat_data
 
     def clean_pins(self):
         with INSERTION_LOCK:
-            return self.delete_one({"_id":self.chat_id})
+            return self.delete_one({"_id": self.chat_id})
 
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):

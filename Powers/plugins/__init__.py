@@ -38,3 +38,4 @@ def till_date(date):
     form = "%Y-%m-%d %H:%M:%S"
     z = datetime.strptime(date,form)
     return z
+

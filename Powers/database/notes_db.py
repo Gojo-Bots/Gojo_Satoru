@@ -57,7 +57,8 @@ class Notes(MongoDB):
     def get_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.find_all({"chat_id": chat_id})
-            note_list = sorted([(note["note_name"], note["hash"]) for note in curr])
+            note_list = sorted([(note["note_name"], note["hash"])
+                               for note in curr])
             return note_list
 
     def rm_note(self, chat_id: int, note_name: str):
@@ -124,9 +125,9 @@ class NotesSettings(MongoDB):
         self.update({"_id": chat_id}, {"privatenotes": False})
         return False
 
-    def clean_notes(self,chat_id):
+    def clean_notes(self, chat_id):
         with INSERTION_LOCK:
-            return self.delete_one({"_id":chat_id})
+            return self.delete_one({"_id": chat_id})
 
     def list_chats(self):
         return self.find_all({"privatenotes": True})

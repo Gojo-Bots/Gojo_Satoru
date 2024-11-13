@@ -1,6 +1,7 @@
 from platform import python_version
 from threading import RLock
-from time import gmtime, strftime, time
+from time import gmtime, strftime
+from time import time as t
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
@@ -24,7 +25,6 @@ if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
     )
 
 
-
 class Gojo(Client):
     """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m Powers'"""
 
@@ -45,10 +45,11 @@ class Gojo(Client):
         await super().start()
         await self.set_bot_commands(
             [
-                BotCommand("start", "To check weather the bot is alive or not"),
+                BotCommand(
+                    "start", "To check weather the bot is alive or not"),
                 BotCommand("help", "To get help menu"),
                 BotCommand("donate", "To buy me a coffee"),
-                BotCommand("bug","To report bugs")
+                BotCommand("bug", "To report bugs")
             ]
         )
         meh = await self.get_me()  # Get bot info from pyrogram client
@@ -67,10 +68,11 @@ class Gojo(Client):
         # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())
         await load_support_users()
+        await cache_support()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
-        scheduler.add_job(clean_my_db,'cron',[self],hour=3,minute=0,second=0)
         if BDB_URI:
-            scheduler.add_job(send_wishish,'cron',[self],hour=0,minute=0,second=0)
+            scheduler.add_job(send_wishish, 'cron', [
+                              self], hour=0, minute=0, second=0)
             scheduler.start()
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
@@ -87,24 +89,22 @@ class Gojo(Client):
 
     async def stop(self):
         """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
-        runtime = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
+        runtime = strftime("%Hh %Mm %Ss", gmtime(t() - UPTIME))
         LOGGER.info("Uploading logs before stopping...!\n")
         # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
+        scheduler.remove_all_jobs()
+        if MESSAGE_DUMP:
+            # LOG_CHANNEL is not necessary
+            target = MESSAGE_DUMP
+        else:
+            target = OWNER_ID
         await self.send_document(
-            MESSAGE_DUMP,
+            target,
             document=LOGFILE,
             caption=(
                 "Bot Stopped!\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
             ),
         )
-        scheduler.remove_all_jobs()
-        if MESSAGE_DUMP:
-            # LOG_CHANNEL is not necessary
-            await self.send_document(
-                MESSAGE_DUMP,
-                document=LOGFILE,
-                caption=f"Uptime: {runtime}",
-            )
         await super().stop()
         MongoDB.close()
         LOGGER.info(
