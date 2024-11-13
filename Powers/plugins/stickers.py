@@ -1,12 +1,13 @@
 import os
-from asyncio import gather
 from random import choice
 from traceback import format_exc
 
+from pyrogram import filters
 from pyrogram.errors import (PeerIdInvalid, ShortnameOccupyFailed,
                              StickerEmojiInvalid, StickerPngDimensions,
                              StickerPngNopng, StickerTgsNotgs,
                              StickerVideoNowebm, UserIsBlocked)
+from pyrogram.types import CallbackQuery
 from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
@@ -15,8 +16,8 @@ from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.utils.custom_filters import command
 from Powers.utils.sticker_help import *
+from Powers.utils.string import encode_decode
 from Powers.utils.web_helpers import get_file_size
-from Powers.vars import Config
 
 
 @Gojo.on_message(command(["stickerinfo","stinfo"]))
@@ -78,10 +79,13 @@ async def kang(c:Gojo, m: Message):
         sticker_emoji = str(args[1])
     elif m.reply_to_message.sticker:
         try:
-          sticker_emoji = m.reply_to_message.sticker.emoji
+            sticker_emoji = m.reply_to_message.sticker.emoji
+            if not sticker_emoji:
+                ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
+                sticker_emoji = choice(ran)
         except Exception:
-          ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
-          sticker_emoji = choice(ran)
+            ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
+            sticker_emoji = choice(ran)
     else:
         edit = await msg.reply_text("No emoji provided choosing a random emoji")
         ran = ["🤣", "😑", "😁", "👍", "🔥", "🙈", "🙏", "😍", "😘", "😱", "☺️", "🙃", "😌", "🤧", "😐", "😬", "🤩", "😀", "🙂", "🥹", "🥺", "🫥", "🙄", "🫡", "🫠", "🤫", "😓", "🥵", "🥶", "😤", "😡", "🤬", "🤯", "🥴", "🤢", "🤮", "💀", "🗿", "💩", "🤡", "🫶", "🙌", "👐", "✊", "👎", "🫰", "🤌", "👌", "👀", "💃", "🕺", "👩‍❤️‍💋‍👩", "👩‍❤️‍💋‍👨","👨‍❤️‍👨", "💑", "👩‍❤️‍👩", "👩‍❤️‍👨", "💏", "👨‍❤️‍💋‍👨", "😪", "😴", "😭", "🥸", "🤓", "🫤", "😮", "😧", "😲", "🥱", "😈", "👿", "🤖", "👾", "🙌", "🥴", "🥰", "😇", "🤣" ,"😂", "😜", "😎"]
@@ -139,66 +143,40 @@ async def kang(c:Gojo, m: Message):
     # Find an available pack & add the sticker to the pack; create a new pack if needed
     # Would be a good idea to cache the number instead of searching it every single time...
     kang_lim = 120
-    st_in = m.reply_to_message.sticker 
-    st_type = "norm"
-    is_anim = is_vid = False
-    if st_in:
-        if st_in.is_animated:
-            st_type = "ani"
-            kang_lim = 50
-            is_anim = True
-        elif st_in.is_video:
-            st_type = "vid"
-            kang_lim = 50
-            is_vid = True
-    elif m.reply_to_message.document:
-        if m.reply_to_message.document.mime_type in ["application/x-bad-tgsticker", "application/x-tgsticker"]:
-            st_type = "ani"
-            kang_lim = 50
-            is_anim = True
-        elif m.reply_to_message.document.mime_type == "video/webm":
-            st_type = "vid"
-            kang_lim = 50
-            is_vid = True
-    elif m.reply_to_message.video or m.reply_to_message.animation or (m.reply_to_message.document and m.reply_to_message.document.mime_type.split("/")[0] == "video"):
-        st_type = "vid"
-        kang_lim = 50
-        is_vid = True
     packnum = 0
     limit = 0
     volume = 0
     packname_found = False
-    
+
     try:
         while not packname_found:
-            packname = f"CE{str(m.from_user.id)}{st_type}{packnum}_by_{Config.BOT_USERNAME}"
-            kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {st_type} {('vOl '+str(volume)) if volume else ''} by @{Config.BOT_USERNAME}"
+            packname = f"CE{m.from_user.id}{packnum}_by_{c.me.username}"
+            kangpack = f"{('@'+m.from_user.username) if m.from_user.username else m.from_user.first_name[:10]} {('vOl '+str(volume)) if volume else ''} by @{c.me.username}"
             if limit >= 50: # To prevent this loop from running forever
                 await m.reply_text("Failed to kang\nMay be you have made more than 50 sticker packs with me try deleting some")
                 return
             sticker_set = await get_sticker_set_by_name(c,packname)
             if not sticker_set:
-                sticker_set = await create_sticker_set(
-                    client=c,
-                    owner=m.from_user.id,
-                    title=kangpack,
-                    short_name=packname,
-                    stickers=[sticker],
-                    animated=is_anim,
-                    video=is_vid
-                )
+                try:
+                    sticker_set = await create_sticker_set(
+                        client=c,
+                        owner=m.from_user.id,
+                        title=kangpack,
+                        short_name=packname,
+                        stickers=[sticker]
+                    )
+                except StickerEmojiInvalid:
+                    return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
             elif sticker_set.set.count >= kang_lim:
                 packnum += 1
                 limit += 1
                 volume += 1
                 continue
-            else:
-                try:
-                    await add_sticker_to_set(c,sticker_set,sticker)
-                except StickerEmojiInvalid:
-                    return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
-            limit += 1
-            packname_found = True
+            try:
+                await add_sticker_to_set(c,sticker_set,sticker)
+                packname_found = True
+            except StickerEmojiInvalid:
+                return await msg.edit("[ERROR]: INVALID_EMOJI_IN_ARGUMENT")
         kb = IKM(
             [
                 [
@@ -213,7 +191,7 @@ async def kang(c:Gojo, m: Message):
         )
     except (PeerIdInvalid, UserIsBlocked):
         keyboard = IKM(
-            [[IKB("Start me first", url=f"t.me/{Config.BOT_USERNAME}")]]
+            [[IKB("Start me first", url=f"t.me/{c.me.username}")]]
         )
         await msg.delete()
         await m.reply_text(
@@ -241,6 +219,32 @@ async def kang(c:Gojo, m: Message):
         LOGGER.error(format_exc())
     return
 
+@Gojo.on_message(command(["rmsticker", "removesticker"]))
+async def remove_sticker_from_pack(c: Gojo, m: Message):
+    if not m.reply_to_message or not m.reply_to_message.sticker:
+        return await m.reply_text(
+            "Reply to a sticker to remove it from the pack."
+        )
+    
+    sticker = m.reply_to_message.sticker
+
+    to_modify = await m.reply_text(f"Removing the sticker from your pack")
+    sticker_set = await get_sticker_set_by_name(c, sticker.set_name)
+
+    if not sticker_set:
+        await to_modify.edit_text("This sticker is not part for your pack")
+        return
+    
+    try:
+        await remove_sticker(c, sticker.file_id)
+        await to_modify.edit_text(f"Successfully removed [sticker]({m.reply_to_message.link}) from {sticker_set.set.title}")
+    except Exception as e:
+        await to_modify.delete()
+        await m.reply_text(f"Failed to remove sticker due to:\n{e}\nPlease report this bug using `/bug`")
+        LOGGER.error(e)
+        LOGGER.error(format_exc())
+    return
+    
 
 @Gojo.on_message(command(["mmfb","mmfw","mmf"]))
 async def memify_it(c: Gojo, m: Message):
@@ -290,7 +294,7 @@ async def memify_it(c: Gojo, m: Message):
 
 @Gojo.on_message(command(["getsticker","getst"]))
 async def get_sticker_from_file(c: Gojo, m: Message):
-    Caption = f"Converted by:\n@{Config.BOT_USERNAME}"
+    Caption = f"Converted by:\n@{c.me.username}"
     repl = m.reply_to_message
     if not repl:
         await m.reply_text("Reply to a sticker or file")
@@ -321,7 +325,7 @@ async def get_sticker_from_file(c: Gojo, m: Message):
             upp = await repl.download()
             up = toimage(upp,is_direc=True)
             await x.delete()
-            await m.reply_photo(up,caption=Caption)
+            await m.reply_document(up, caption=Caption)
             os.remove(up)
             return
     elif repl.photo:
@@ -339,6 +343,121 @@ async def get_sticker_from_file(c: Gojo, m: Message):
         os.remove(up)
         return
 
+@Gojo.on_message(command(["rmsticker", "rmst", "removesticker"]))
+async def remove_from_MY_pack(c: Gojo, m: Message):
+    if not m.reply_to_message or not m.reply_to_message.sticker:
+        await m.reply_text("Please reply to a sticker to remove it from your pack")
+        return
+    
+    sticker = m.reply_to_message.sticker
+    sticker_set = await get_sticker_set_by_name(c, sticker.set_name)
+
+    if not sticker_set:
+        await m.reply_text("This sticker is not part of your pack")
+        return
+
+    try:
+        await remove_sticker(c, sticker.file_id)
+        await m.reply_text(f"Deleted [this]({m.reply_to_message.link}) from pack: {sticker_set.et.title}")
+        return
+    except Exception as e:
+        await m.reply_text(f"Error\n{e}\nReport it using /bug")
+        LOGGER.error(e)
+        LOGGER.error(format_exc(e))
+        return
+
+@Gojo.on_message(command(["getmypacks", "mypacks", "mysets", "stickerset", "stset"]))
+async def get_my_sticker_sets(c: Gojo, m: Message):
+    to_del = await m.reply_text("Please wait while I fetch all the sticker set I have created for you.")
+    
+    txt, kb = await get_all_sticker_packs(c, m.from_user.id)
+
+    await to_del.delete()
+    if not txt:
+        await m.reply_text("Looks like you haven't made any sticker using me...")
+        return
+    await m.reply_text(txt, reply_markup=kb)
+
+@Gojo.on_message(command(["q", "ss"]))
+async def quote_the_msg(_, m: Message):
+    if not m.reply_to_message:
+        await m.reply_text("Reply to a message to quote it")
+        return
+
+    to_edit = await m.reply_text("Genrating quote...")
+
+    msg_data = []
+    if len(m.command) > 1 and m.command[1].lower() == "r":
+        reply_msg = m.reply_to_message.reply_to_message
+        if not reply_msg:
+            reply_message = {}
+        elif reply_msg and not reply_msg.text:
+            reply_message = {}
+        else:
+            to_edit = await to_edit.edit_text("Genrating quote with reply to the message...")
+            replied_name = reply_msg.from_user.first_name
+            if reply_msg.from_user.last_name:
+                replied_name += f" {reply_msg.from_user.last_name}"
+
+            reply_message = {
+                "chatId": reply_msg.from_user.id,
+                "entities": get_msg_entities(reply_msg),
+                "name": replied_name,
+                "text": reply_msg.text,
+            }
+    else:
+        reply_message = {}
+    name = m.reply_to_message.from_user.first_name
+    if m.reply_to_message.from_user.last_name:
+        name += f" {m.reply_to_message.from_user.last_name}"
+
+    emoji_status = None
+    if m.reply_to_message.from_user.emoji_status:
+        emoji_status = str(m.reply_to_message.from_user.emoji_status.custom_emoji_id)
+
+    msg_data.append(
+        {
+            "entities": get_msg_entities(m.reply_to_message),
+            "avatar": True,
+            "from": {
+                "id": m.reply_to_message.from_user.id,
+                "name": name,
+                "emoji_status": emoji_status,
+            },
+            "text": m.reply_to_message.text,
+            "replyMessage": reply_message,
+        }
+    )
+
+    status, path = quotify(msg_data)
+
+    if not status:
+        await to_edit.edit_text(path)
+        return
+
+    await m.reply_sticker(path)
+    await to_edit.delete()
+    os.remove(path)
+
+@Gojo.on_callback_query(filters.regex(r"^stickers_.*"))
+async def sticker_callbacks(c: Gojo, q: CallbackQuery):
+    data = q.data.split("_")
+    decoded = await encode_decode(data[-1], "decode")
+    user = int(decoded.split("_")[-1])
+    offset = int(decoded.split("_")[0])
+
+    if q.from_user.id != user:
+        await q.answer("This is not for you")
+        return
+    else:
+        txt, kb = await get_all_sticker_packs(c, q.from_user.id, offset)
+        if not txt:
+            await q.answer("No sticker pack found....")
+            return
+        else:
+            await q.answer(f"Showing your sticker set")
+            await q.edit_message_text(txt, reply_markup=kb)
+            return
         
 __PLUGIN__ = "sticker"
 __alt_name__ = [
@@ -351,11 +470,11 @@ __HELP__ = """
 • /stickerinfo (/stinfo) : Reply to any sticker to get it's info
 • /getsticker (/getst) : Get sticker as photo, gif or vice versa.
 • /stickerid (/stid) : Reply to any sticker to get it's id
+• /mypacks : Get all of your current sticker pack you have made via me.
+• /q(/ss) <reply to message> : Will quote the replied message
+• /q(/ss) r <reply to message> : Will quote the replied message and message it was replied to.
 • /mmf <your text>: Reply to a normal sticker or a photo or video file to memify it. If you want to right text at bottom use `;right your message`
     ■ For e.g. 
-    ○ /mmf Hello freinds : this will add text to the top
-    ○ /mmf Hello ; freinds : this will add Hello to the top and freinds at the bottom
-    ○ /mmf ; Hello friends : this will add text at the bottom
     ○ /mmfb <text>: To fill text with black colour
     ○ /mmfw or /mmf <text>: To fill it with white colour
 

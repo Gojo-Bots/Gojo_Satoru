@@ -14,7 +14,8 @@ THREAD_LOCK = RLock()
 # admins stay cached for 30 mins
 ADMIN_CACHE = TTLCache(maxsize=512, ttl=(60 * 30), timer=perf_counter)
 # Block from refreshing admin list for 10 mins
-TEMP_ADMIN_CACHE_BLOCK = TTLCache(maxsize=512, ttl=(60 * 10), timer=perf_counter)
+TEMP_ADMIN_CACHE_BLOCK = TTLCache(
+    maxsize=512, ttl=(60 * 10), timer=perf_counter)
 
 
 async def admin_cache_reload(m: Message or CallbackQuery, status=None) -> List[int]:
@@ -44,9 +45,6 @@ async def admin_cache_reload(m: Message or CallbackQuery, status=None) -> List[i
         ]
 
         ADMIN_CACHE[m.chat.id] = admin_list
-        LOGGER.info(
-            f"Loaded admins for chat {m.chat.id} in {round((time() - start), 3)}s due to '{status}'",
-        )
         TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "autoblock"
 
         return admin_list

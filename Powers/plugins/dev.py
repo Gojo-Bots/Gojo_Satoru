@@ -1,6 +1,7 @@
 import subprocess as subp
 import sys
 from asyncio import create_subprocess_shell, sleep, subprocess
+from importlib.metadata import PackageNotFoundError, metadata
 from io import BytesIO, StringIO
 from os import execvp
 from sys import executable
@@ -15,15 +16,14 @@ from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
-from Powers import (BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER, MESSAGE_DUMP,
-                    OWNER_ID, UPTIME)
+from Powers import (BOT_TOKEN, DEV_USERS, LOG_DATETIME, LOGFILE, LOGGER,
+                    MESSAGE_DUMP, OWNER_ID, SUDO_USERS, UPTIME,
+                    WHITELIST_USERS)
 from Powers.bot_class import Gojo
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
 from Powers.database.support_db import SUPPORTS
 from Powers.database.users_db import Users
-from Powers.plugins.scheduled_jobs import clean_my_db
-from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -79,6 +79,12 @@ async def add_support(c: Gojo, m:Message):
                 return
             else:
                 support.insert_support_user(userr,to)
+                if to == "dev":
+                    DEV_USERS.add(userr)
+                elif to == "sudo":
+                    SUDO_USERS.add(userr)
+                else:
+                    WHITELIST_USERS.add(userr)
                 await m.reply_text(f"This user is now a {to} user")
                 return
         can_do = can_change_type(curr_user,to)
@@ -181,10 +187,13 @@ async def rm_support(c: Gojo, m: Message):
             return
     elif len(split) >= 2:
         try:
-            curr,_,_ = extract_user(m)
+            curr = int(split[1])
         except Exception:
-            await m.reply_text("Dunno who u r talking abt")
-            return
+            try:
+                curr,_,_ = extract_user(m)
+            except Exception:
+                await m.reply_text("Dunno who u r talking abt")
+                return
     else:
         await m.reply_text("**USAGE**\n/rmsupport [reply to user | user id | username]")
         return
@@ -192,6 +201,9 @@ async def rm_support(c: Gojo, m: Message):
     can_user = can_change_type(curr_user,to_user)
     if m.from_user.id == int(OWNER_ID) or can_user:
         support.delete_support_user(curr)
+        DEV_USERS.discard(curr)
+        SUDO_USERS.discard(curr)
+        WHITELIST_USERS.discard(curr)
         await m.reply_text("Done! User now no longer belongs to the support staff")
     else:
         await m.reply_text("Sorry you can't do that...")
@@ -199,13 +211,58 @@ async def rm_support(c: Gojo, m: Message):
 
 @Gojo.on_message(command("ping", sudo_cmd=True))
 async def ping(_, m: Message):
-    LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
     start = time()
     replymsg = await m.reply_text(text="Pinging...", quote=True)
     delta_ping = time() - start
     await replymsg.edit_text(f"<b>Pong!</b>\n{delta_ping * 1000:.3f} ms")
     return
 
+"""
+
+['Metadata-Version', 'Name', 'Version', 'Summary', 'Home-page', 'Author', 'Author-email', 'License', 'Download-URL', 'Project-URL', 'Project-URL', 'Project-URL', 'Project-URL', 'Keywords', 'Platform', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Classifier', 'Requires-Python', 'Description-Content-Type', 'License-File', 'License-File', 'License-File', 'Requires-Dist', 'Requires-Dist', 'Description']
+
+"""
+
+@Gojo.on_message(command(["minfo", "moduleinfo"], dev_cmd=True))
+async def check_module_info(_, m: Message):
+    if len(m.command) != 2:
+        await m.reply_text("**USAGE**\n/minfo [module name]")
+        return
+    
+    module = m.command[-1]
+
+    try:
+        minfo = metadata(module)
+    except PackageNotFoundError:
+        await m.reply_text(f"No module found with name {module}")
+        return
+    
+    name = minfo["Name"]
+    version = minfo["Version"]
+    summary = minfo["Summary"]
+    home_page = minfo["Home-Page"]
+    author = minfo["Author"]
+    license = minfo["License"]
+    download = minfo["Download-URL"]
+
+    txt = f"""
+Here are the info about the module **{name}**
+• Version: {version}
+
+• Summary: {summary}
+
+• Home page: {home_page}
+
+• Author: {author}
+
+• License: {license}
+
+• Download: {download}
+"""
+    await m.reply_text(txt, disable_web_page_preview=True)
+    return
+
+    
 
 @Gojo.on_message(command("logs", dev_cmd=True))
 async def send_log(c: Gojo, m: Message):
@@ -336,6 +393,10 @@ async def evaluate_code(c: Gojo, m: Message):
                 MESSAGE_DUMP,
                 f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}",
             )
+            final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
+            await sm.edit(final_output)
+            return
+
     for j in HARMFUL:
         if j in evaluation.split() or j in cmd:
             if m.from_user.id != OWNER_ID:
@@ -343,6 +404,9 @@ async def evaluate_code(c: Gojo, m: Message):
                 await c.send_message(
                     MESSAGE_DUMP,
                     f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}")
+                final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
+                await sm.edit(final_output)
+                return
     for i in evaluation.split():
         for j in i.split("="):
             if j and j[0] in HARMFUL:
@@ -352,10 +416,12 @@ async def evaluate_code(c: Gojo, m: Message):
                         MESSAGE_DUMP,
                         f"@{m.from_user.username} TREID TO FETCH ENV OF BOT \n userid = {m.from_user.id}"
                     )
-      
+                    final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
+                    await sm.edit(final_output)
+                    return
 
     try:
-        final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```python\n{evaluation}```</code> \n"
+        final_output = f"**EVAL**: ```python\n{cmd}```\n\n<b>OUTPUT</b>:\n```powershell\n{evaluation}```</code> \n"
         await sm.edit(final_output)
     except MessageTooLong:
         final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
@@ -486,7 +552,7 @@ async def stop_and_send_logger(c:Gojo,is_update=False):
         )
     return
 
-@Gojo.on_message(command(["restart", "update"], owner_cmd=True),group=-100)
+@Gojo.on_message(command(["restart", "update"], owner_cmd=True))
 async def restart_the_bot(c:Gojo,m:Message):
     try:
         cmds = m.command
@@ -671,23 +737,6 @@ async def forward_type_broadcast(c: Gojo, m: Message):
     return
 
 
-@Gojo.on_message(command(["cleandb","cleandatabase"],sudo_cmd=True))
-async def cleeeen(c:Gojo,m:Message):
-    x = await m.reply_text("Cleaning the database...")
-    try:
-        z = await clean_my_db(c,True,m.from_user.id)
-        try:
-            await x.delete()
-        except Exception:
-            pass
-        await m.reply_text(z)
-        return
-    except Exception as e:
-        await m.reply_text(e)
-        await x.delete()
-        LOGGER.error(e)
-        LOGGER.error(format_exc())
-        return
 
 __PLUGIN__ = "devs"
 
