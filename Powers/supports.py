@@ -1,4 +1,4 @@
-from Powers import OWNER_ID, WHITELIST_USERS
+from Powers import OWNER_ID, WHITELIST_USERS, DEV_USERS, SUDO_USERS
 from Powers.database.support_db import SUPPORTS
 
 
