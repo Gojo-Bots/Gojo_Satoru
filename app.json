@@ -119,7 +119,10 @@
       },
       {
         "url": "heroku/python"
-      }
+      },
+      {
+        "url": "heroku-community/git"
+      },
     ]
   }
   
