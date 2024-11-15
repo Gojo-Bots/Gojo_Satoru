@@ -1,1 +1,1 @@
-worker: make run
+worker: make install && make run
