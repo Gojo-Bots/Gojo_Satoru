@@ -6,11 +6,12 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import DEV_USERS, SUDO_USERS, TIME_ZONE, WHITELIST_USERS
+from Powers import TIME_ZONE
 from Powers.bot_class import Gojo
 from Powers.database.rules_db import Rules
 from Powers.database.users_db import Users
 from Powers.database.warns_db import Warns, WarnSettings
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import admin_filter, command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -37,7 +38,7 @@ async def warn(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -134,7 +135,7 @@ async def reset_warn(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             "They are support users, cannot be restriced, how am I then supposed to unrestrict them?",
@@ -166,7 +167,7 @@ async def list_warns(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user has no warns!")
         return
@@ -211,7 +212,7 @@ async def remove_warn(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I warn myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user has no warns!")
         return

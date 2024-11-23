@@ -6,9 +6,10 @@ from pyrogram.enums import ChatType
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import DEV_USERS, LOGGER, SUDO_USERS, WHITELIST_USERS
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.reporting_db import Reporting
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, command
 from Powers.utils.kbhelpers import ikb
 from Powers.utils.parser import mention_html
@@ -76,7 +77,7 @@ async def report_watcher(c: Gojo, m: Message):
             await m.reply_text("Nice try.")
             return
 
-        SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+        SUPPORT_STAFF = get_support_staff()
         if reported_user.id in SUPPORT_STAFF:
             await m.reply_text("Uh? You reporting my support team?")
             return

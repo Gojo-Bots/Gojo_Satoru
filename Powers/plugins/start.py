@@ -9,11 +9,11 @@ from pyrogram.errors import (MediaCaptionTooLong, MessageNotModified,
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
-from Powers import (DEV_USERS, HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER,
-                    PYROGRAM_VERSION, PYTHON_VERSION, SUDO_USERS, UPTIME,
-                    VERSION, WHITELIST_USERS)
+from Powers import (HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER,
+                    PYROGRAM_VERSION, PYTHON_VERSION, UPTIME, VERSION)
 from Powers.bot_class import Gojo
 from Powers.database.captcha_db import CAPTCHA_DATA
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import StartPic
 from Powers.utils.kbhelpers import ikb
@@ -413,7 +413,7 @@ async def give_bot_staffs(c: Gojo, q: CallbackQuery):
         reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"
     except RPCError:
         pass
-    true_dev = list(set(DEV_USERS) - {OWNER_ID})
+    true_dev = get_support_staff("dev")
     reply += "\n<b>Developers ⚡️:</b>\n"
     if not true_dev:
         reply += "No Dev Users\n"
@@ -425,7 +425,7 @@ async def give_bot_staffs(c: Gojo, q: CallbackQuery):
                 reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
             except RPCError:
                 pass
-    true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
+    true_sudo = get_support_staff("sudo")
     reply += "\n<b>Sudo Users 🐉:</b>\n"
     if not true_sudo:
         reply += "No Sudo Users\n"
@@ -438,10 +438,10 @@ async def give_bot_staffs(c: Gojo, q: CallbackQuery):
             except RPCError:
                 pass
     reply += "\n<b>Whitelisted Users 🐺:</b>\n"
-    if WHITELIST_USERS == []:
+    if not get_support_staff("whitelist"):
         reply += "No additional whitelisted users\n"
     else:
-        for each_user in WHITELIST_USERS:
+        for each_user in get_support_staff("whitelist"):
             user_id = int(each_user)
             try:
                 user = await c.get_users(user_id)

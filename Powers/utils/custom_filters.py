@@ -9,7 +9,7 @@ from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, ChatJoinRequest, Message
 
-from Powers import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
+from Powers import OWNER_ID, PREFIX_HANDLER
 from Powers.bot_class import Gojo
 from Powers.database.afk_db import AFK
 from Powers.database.approve_db import Approve
@@ -17,6 +17,7 @@ from Powers.database.autojoin_db import AUTOJOIN
 from Powers.database.captcha_db import CAPTCHA
 from Powers.database.disable_db import Disabling
 from Powers.database.flood_db import Floods
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 
@@ -50,11 +51,11 @@ def command(
         if owner_cmd and (m.from_user.id != OWNER_ID):
             # Only owner allowed to use this...!
             return False
-        DEV_LEVEL = DEV_USERS
+        DEV_LEVEL = get_support_staff("dev_level")
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
             # Only devs allowed to use this...!
             return False
-        SUDO_LEVEL = SUDO_USERS.union(DEV_USERS)
+        SUDO_LEVEL = get_support_staff("sudo_level")
         if sudo_cmd and (m.from_user.id not in SUDO_LEVEL):
             # Only sudos and above allowed to use it
             return False
@@ -291,7 +292,7 @@ async def can_pin_message_func(_, __, m):
         return True
 
     # Bypass the bot devs, sudos and owner
-    SUDO_LEVEL = DEV_USERS.union(SUDO_USERS)
+    SUDO_LEVEL = get_support_staff("sudo_level")
     if m.from_user.id in SUDO_LEVEL:
         return True
 
@@ -362,7 +363,7 @@ async def flood_check_filter(_, __, m: Message):
             i[0] for i in await admin_cache_reload(m, "custom_filter_update")
         }
     app_users = Approve(m.chat.id).list_approved()
-    SUDO_LEVEL = DEV_USERS.union(SUDO_USERS)
+    SUDO_LEVEL = get_support_staff("sudo_level")
 
     if u_id in SUDO_LEVEL:
         return False

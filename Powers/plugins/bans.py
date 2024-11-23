@@ -9,9 +9,9 @@ from pyrogram.types import (CallbackQuery, ChatPrivileges,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import (DEV_USERS, LOGGER, MESSAGE_DUMP, OWNER_ID, SUDO_USERS,
-                    WHITELIST_USERS)
+from Powers import LOGGER, MESSAGE_DUMP, OWNER_ID
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -38,7 +38,7 @@ async def tban_usr(c: Gojo, m: Message):
         await m.reply_text("WTF??  Why would I ban myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -158,7 +158,7 @@ async def stban_usr(c: Gojo, m: Message):
         await m.reply_text(text="I can't ban nothing!")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     try:
         user_id, _, _ = await extract_user(c, m)
@@ -263,7 +263,7 @@ async def dtban_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="I am not going to ban one of my support staff")
@@ -390,7 +390,7 @@ async def kick_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -478,7 +478,7 @@ async def skick_usr(c: Gojo, m: Message):
         await m.reply_text("Nuh Hu, why would I kick myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -549,7 +549,7 @@ async def dkick_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -697,7 +697,7 @@ async def sban_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -774,7 +774,7 @@ async def dban_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -868,7 +868,7 @@ async def ban_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(

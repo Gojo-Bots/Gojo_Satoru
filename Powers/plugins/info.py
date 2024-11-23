@@ -9,9 +9,10 @@ from pyrogram.raw.functions.channels import GetFullChannel
 from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.types import Message
 
-from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
+from Powers import LOGGER, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 
@@ -81,7 +82,7 @@ async def user_info(c: Gojo, user, already=False):
         about = ll.full_user.about
     except Exception:
         pass
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     username = user.username
     first_name = user.first_name
     last_name = user.last_name
@@ -95,17 +96,17 @@ async def user_info(c: Gojo, user, already=False):
         is_support = "A person is a great support to himself"
     omp = "Hmmm.......Who is that again?"
     if is_support or c.me.id:
-        if user_id in DEV_USERS:
+        if user_id in get_support_staff("dev"):
             omp = "Dev"
-        elif user_id in SUDO_USERS:
+        elif user_id in get_support_staff("sudo"):
             omp = "Sudoer"
-        elif user_id in WHITELIST_USERS:
+        elif user_id in get_support_staff("whitelist"):
             omp = "Whitelist"
         elif user_id == c.me.id:
             omp = "I am the targeted user"
         elif user_id == OWNER_ID:
             omp = "Owner of the bot"
-        if user_id in DEV_USERS and user_id == OWNER_ID:
+        if user_id in get_support_staff("dev") and user_id == OWNER_ID:
             omp = "Dev and Owner"
 
     is_scam = user.is_scam

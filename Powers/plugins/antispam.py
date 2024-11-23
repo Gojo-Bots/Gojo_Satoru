@@ -5,11 +5,11 @@ from traceback import format_exc
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
-from Powers import (DEV_USERS, LOGGER, MESSAGE_DUMP, SUDO_USERS, SUPPORT_GROUP,
-                    WHITELIST_USERS)
+from Powers import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.users_db import Users
+from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -38,7 +38,7 @@ async def gban(c: Gojo, m: Message):
     else:
         gban_reason = m.text.split(None, 2)[2]
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")
@@ -96,7 +96,7 @@ async def ungban(c: Gojo, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(text="This user is part of my Support!, Can't ban our own!")

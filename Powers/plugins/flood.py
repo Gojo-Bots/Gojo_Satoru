@@ -11,9 +11,10 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import DEV_USERS, LOGGER, SUDO_USERS, WHITELIST_USERS
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.flood_db import Floods
+from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import admin_filter, command, flood_filter
 from Powers.utils.extras import BAN_GIFS, KICK_GIFS, MUTE_GIFS
 
@@ -224,7 +225,7 @@ async def flood_set(c: Gojo, m: Message):
 
 @Gojo.on_callback_query(filters.regex("^f_"))
 async def callbacks(c: Gojo, q: CallbackQuery):
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     data = q.data
     if data == "f_close":
         await q.answer("Closed")
@@ -341,7 +342,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     data = q.data.split("_")
     action = data[1]
     user_id = int(q.data.split("=")[1])
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if not q.from_user:
         return q.answer("Looks like you are not an user 👀")
     if action == "ban":

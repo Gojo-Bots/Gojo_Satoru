@@ -7,9 +7,9 @@ from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 from pyrogram.types import BotCommand
 
-from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME,
-                    LOGFILE, LOGGER, MESSAGE_DUMP, NO_LOAD, UPTIME,
-                    WORKERS, load_cmds, scheduler)
+from Powers import (API_HASH, API_ID, BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER,
+                    MESSAGE_DUMP, NO_LOAD, UPTIME, WORKERS, load_cmds,
+                    scheduler)
 from Powers.database import MongoDB
 from Powers.plugins import all_plugins
 from Powers.plugins.scheduled_jobs import *
@@ -69,6 +69,9 @@ class Gojo(Client):
         cmd_list = await load_cmds(await all_plugins())
         await load_support_users()
         await cache_support()
+        LOGGER.info(f"Dev Users: {SUPPORT_USERS['Dev']}")
+        LOGGER.info(f"Sudo Users: {SUPPORT_USERS['Sudo']}")
+        LOGGER.info(f"Whitelist users: {SUPPORT_USERS['White']}")
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         if BDB_URI:
             scheduler.add_job(send_wishish, 'cron', [

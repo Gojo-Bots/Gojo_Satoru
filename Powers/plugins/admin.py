@@ -11,11 +11,12 @@ from pyrogram.errors import (BotChannelsNa, ChatAdminInviteRequired,
                              RPCError, UserAdminInvalid)
 from pyrogram.types import ChatPrivileges, Message
 
-from Powers import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
+from Powers import LOGGER, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
-from Powers.utils.caching import (admin_cache_reload)
+from Powers.supports import get_support_staff
+from Powers.utils.caching import admin_cache_reload
 from Powers.utils.custom_filters import admin_filter, command, promote_filter
 from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
@@ -110,7 +111,7 @@ async def reload_admins(_, m: Message):
         return await m.reply_text(
             "This command is made to be used in groups only!",
         )
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if (
             (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
             and (m.from_user.id not in SUPPORT_STAFF)
@@ -420,7 +421,7 @@ async def demote_usr(c: Gojo, m: Message):
 async def get_invitelink(c: Gojo, m: Message):
     # Bypass the bot devs, sudos and owner
 
-    DEV_LEVEL = DEV_USERS
+    DEV_LEVEL = get_support_staff("dev_level")
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
         if not user.privileges.can_invite_users and user.status != CMS.OWNER:
