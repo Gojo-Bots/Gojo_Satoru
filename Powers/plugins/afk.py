@@ -69,7 +69,7 @@ async def get_hours(hour: str):
     return txt
 
 
-@Gojo.on_message(afk_filter & filters.group, 10000)
+@Gojo.on_message(afk_filter & filters.group)
 async def afk_checker(c: Gojo, m: Message):
     afk = AFK()
     back_ = choice(back)

@@ -332,12 +332,13 @@ async def afk_check_filter(_, __, m: Message):
         if repl_user := m.reply_to_message.from_user:
             repl_user = m.reply_to_message.from_user.id
             is_repl_afk = afk.check_afk(chat, repl_user)
+            return bool(is_repl_afk)
 
     user = m.from_user.id
 
     is_afk = afk.check_afk(chat, user)
 
-    return bool((is_afk or is_repl_afk))
+    return bool(is_afk)
 
 
 async def flood_check_filter(_, __, m: Message):
