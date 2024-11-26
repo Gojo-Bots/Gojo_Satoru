@@ -19,20 +19,25 @@ def get_support_staff(want="all"):
     dev, sudo, whitelist, dev_level, sudo_level, all
     """
     support = SUPPORTS()
-    devs = SUPPORT_USERS["Dev"] or support.get_particular_support("dev")
-    sudo = SUPPORT_USERS["Sudo"] or support.get_particular_support("sudo")
-    whitelist = SUPPORT_USERS["White"] or support.get_particular_support("whitelist")
     if want in ["dev", "dev_level"]:
+        devs = SUPPORT_USERS["Dev"] or support.get_particular_support("dev")
         wanted = list(devs) 
         if want == "dev_level":
             wanted.append(OWNER_ID)
     elif want == "sudo":
+        sudo = SUPPORT_USERS["Sudo"] or support.get_particular_support("sudo")
         wanted = list(sudo)
     elif want == "whitelist":
+        whitelist = SUPPORT_USERS["White"] or support.get_particular_support("whitelist")
         wanted = list(whitelist)
     elif want == "sudo_level":
+        devs = SUPPORT_USERS["Dev"] or support.get_particular_support("dev")
+        sudo = SUPPORT_USERS["Sudo"] or support.get_particular_support("sudo")
         wanted = list(sudo) + list(devs) + [OWNER_ID]
     else:
+        devs = SUPPORT_USERS["Dev"] or support.get_particular_support("dev")
+        sudo = SUPPORT_USERS["Sudo"] or support.get_particular_support("sudo")
+        whitelist = SUPPORT_USERS["White"] or support.get_particular_support("whitelist")
         wanted = list(set([int(OWNER_ID)] + list(devs) + list(sudo) + list(whitelist)))
 
     return wanted or []
