@@ -68,13 +68,8 @@ VERSION = sorted(version)[-1][8:-3]
 PYTHON_VERSION = python_version()
 PYROGRAM_VERSION = pyrogram.__version__
 
-LOGGER.info("------------------------")
-LOGGER.info("|      Gojo_Satoru      |")
-LOGGER.info("------------------------")
+LOGGER.info("Trying to start bot...")
 LOGGER.info(f"Version: {VERSION}")
-LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
-LOGGER.info(f"Time zone set to {Config.TIME_ZONE}")
-LOGGER.info("Source Code: https://github.com/Gojo-Bots/Gojo_Satoru\n")
 LOGGER.info("Checking lyrics genius api...")
 
 # API based clients
@@ -94,13 +89,6 @@ else:
     LOGGER.info("Genius api not found lyrics command will not work")
     is_genius_lyrics = False
     genius_lyrics = False
-
-# is_audd = False
-# Audd = None
-# if Config.AuDD_API:
-#     is_audd = True
-#     Audd = Config.AuDD_API
-#     LOGGER.info("Found Audd api")
 
 is_rmbg = False
 RMBG = None
@@ -127,7 +115,6 @@ DB_URI = Config.DB_URI
 DB_NAME = Config.DB_NAME
 NO_LOAD = Config.NO_LOAD
 WORKERS = Config.WORKERS
-BDB_URI = Config.BDB_URI
 
 # Prefixes
 PREFIX_HANDLER = Config.PREFIX_HANDLER
