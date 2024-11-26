@@ -8,10 +8,11 @@ from pyrogram.enums import MessageServiceType as MST
 from pyrogram.errors import ChatAdminRequired, ChatNotModified, RPCError
 from pyrogram.types import CallbackQuery, ChatPermissions, Message
 
-from Powers import DEV_USERS, LOGGER, SUDO_USERS
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.locks_db import LOCKS
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.kbhelpers import ikb
@@ -449,7 +450,7 @@ async def is_approved_user(c: Gojo, m: Message):
     except KeyError:
         admins_group = await admin_cache_reload(m, "lock")
 
-    SUDO_LEVEL = DEV_USERS.union(SUDO_USERS)
+    SUDO_LEVEL = get_support_staff("sudo_level")
 
     if m.forward_from:
         return bool(

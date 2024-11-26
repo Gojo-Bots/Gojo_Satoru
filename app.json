@@ -1,131 +1,126 @@
 {
-    "name": "Gojo_Satoru",
-    "description": "Gojo is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
-    "logo" : "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg",
-    "keywords": [
-      "telegram bot",
-      "group bot",
-      "group",
-      "manager",
-      "Gojo",
-      "Anime"
-    ],
-    "repository": "https://github.com/Gojo-Bots/Gojo_Satoru",
-    "success_url": "https://t.me/GojoSuperbot",
-    "env": {
-      "BOT_TOKEN": {
-        "description": "Your telegram bot token, get from @Botfather in telegram.",
-        "required": true,
-        "value": ""
-      },
-      "API_ID": {
-        "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
-        "required": true,
-        "value": ""
-      },
-      "API_HASH": {
-        "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
-        "required": true,
-        "value": ""
-      },
-      "DB_URI": {
-        "description": "Your MongoDB connection string.",
-        "required": true,
-        "value": ""
-      },
-      "DB_NAME": {
-        "description": "Your MongoDB database name.",
-        "required": false,
-        "value": ""
-      },
-      "OWNER_ID": {
-        "description": "Your user ID as an integer.",
-        "required": false,
-        "value": "1344569458"
-      },
-      "SUPPORT_GROUP": {
-        "description": "Your Telegram support group chat username where users can contact in case of a problem..",
-        "required": false,
-        "value": "gojo_bots_network"
-      },
-      "MESSAGE_DUMP": {
-        "description": "Event logs channel where bot will send updates.",
-        "required": true,
-        "value": ""
-      },
-      "PREFIX_HANDLER": {
-        "description": "Something like '/' to execute commands...Don't give a comma or anything after 1 handler just give and space then enter second hand;ler",
-        "required": false,
-        "value": "/ ! $"
-      },
-      "DEV_USERS": {
-        "description": "ID of users who are Devs of your bot. Use space to separate values",
-        "required": false,
-        "value": ""
-      },
-      "SUPPORT_CHANNEL": {
-        "description": "Channel where bot updates will be posted!",
-        "required": false,
-        "value": "gojo_bots_network"
-      },
-      "SUDO_USERS": {
-        "description": "A space-separated list of user IDs who you want to assign as sudo users.",
-        "required": false,
-        "value": ""
-      },
-      "WHITELIST_USERS": {
-        "description": "A space-separated list of user IDs whitelisted, cannot be restricted.",
-        "required": false,
-        "value": ""
-      },
-      "GENIUS_API" : {
-        "description": "Your Lyrics Genius Api Token. To fetch lyrics of songs",
-        "required": false,
-        "value": ""
-      },
-      
-      "BDB_URI": {
-        "description": "Your Mongodb uri different from the previous one to store more info",
-        "required": false,
-        "value": ""
-      },
-      "TIME_ZONE": {
-        "description": "Your time zone",
-        "required": false,
-        "value": "Asia/Kolkata"
-      },
-      "RMBG_API" : {
-        "description": "Your removebackground api to remove the background",
-        "required": false,
-        "value": ""
-      },
-      "WORKERS": {
-        "description": "Number of workers to run the bot.",
-        "required": false,
-        "value": "8"
-      },
-      "ENV": {
-        "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
-        "required": true,
-        "value": "ANYTHING"
-      }
+  "name": "Gojo_Satoru",
+  "description": "Gojo is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
+  "logo": "https://te.legra.ph/file/633bd27c1607fe98920b6.jpg",
+  "keywords": [
+    "telegram bot",
+    "group bot",
+    "group",
+    "manager",
+    "Gojo",
+    "Anime"
+  ],
+  "repository": "https://github.com/Gojo-Bots/Gojo_Satoru",
+  "success_url": "https://t.me/GojoSuperbot",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Your Telegram bot token, obtained from @BotFather.",
+      "required": true,
+      "value": ""
     },
-    "buildpacks": [
-      {
-        "url":"https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
-      },
-      {
-        "url": "https://github.com/chrismytton/heroku-buildpack-jq"
-      },
-      {
-        "url":"https://github.com/heroku/heroku-buildpack-google-chrome"
-      },
-      {
-        "url":"https://github.com/heroku/heroku-buildpack-chromedriver"
-      },
-      {
-        "url": "heroku/python"
-      }
-    ]
-  }
-  
+    "API_ID": {
+      "description": "Your API_ID from my.telegram.org, required for Pyrogram.",
+      "required": true,
+      "value": ""
+    },
+    "API_HASH": {
+      "description": "Your API_HASH from my.telegram.org, required for Pyrogram.",
+      "required": true,
+      "value": ""
+    },
+    "DB_URI": {
+      "description": "Your MongoDB connection string.",
+      "required": true,
+      "value": ""
+    },
+    "DB_NAME": {
+      "description": "Your MongoDB database name.",
+      "required": false,
+      "value": ""
+    },
+    "OWNER_ID": {
+      "description": "Your Telegram user ID as an integer.",
+      "required": false,
+      "value": "1344569458"
+    },
+    "SUPPORT_GROUP": {
+      "description": "Your Telegram support group username for user assistance.",
+      "required": false,
+      "value": "gojo_bots_network"
+    },
+    "MESSAGE_DUMP": {
+      "description": "Channel where bot will send logs and updates.",
+      "required": true,
+      "value": ""
+    },
+    "PREFIX_HANDLER": {
+      "description": "Prefix(es) for bot commands, separated by space (e.g., '/ ! $').",
+      "required": false,
+      "value": "/ ! $"
+    },
+    "DEV_USERS": {
+      "description": "Space-separated list of user IDs for bot developers.",
+      "required": false,
+      "value": ""
+    },
+    "SUPPORT_CHANNEL": {
+      "description": "Channel where bot updates will be posted.",
+      "required": false,
+      "value": "gojo_bots_network"
+    },
+    "SUDO_USERS": {
+      "description": "Space-separated list of user IDs to assign as sudo users.",
+      "required": false,
+      "value": ""
+    },
+    "WHITELIST_USERS": {
+      "description": "Space-separated list of user IDs who are whitelisted.",
+      "required": false,
+      "value": ""
+    },
+    "GENIUS_API": {
+      "description": "Your Genius API token to fetch song lyrics.",
+      "required": false,
+      "value": ""
+    },
+    "BDB_URI": {
+      "description": "Additional MongoDB URI to store extra information.",
+      "required": false,
+      "value": ""
+    },
+    "TIME_ZONE": {
+      "description": "Your time zone (e.g., 'Asia/Kolkata').",
+      "required": false,
+      "value": "Asia/Kolkata"
+    },
+    "RMBG_API": {
+      "description": "Your Remove.bg API key to remove image backgrounds.",
+      "required": false,
+      "value": ""
+    },
+    "WORKERS": {
+      "description": "Number of workers to run the bot.",
+      "required": false,
+      "value": "8"
+    },
+    "ENV": {
+      "description": "Set this to any non-empty value to enable environment variables.",
+      "required": true,
+      "value": "ANYTHING"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+    },
+    {
+      "url": "https://github.com/chrismytton/heroku-buildpack-jq"
+    },
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "heroku-community/git"
+    }
+  ]
+}

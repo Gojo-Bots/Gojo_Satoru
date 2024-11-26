@@ -5,8 +5,8 @@ from pyrogram import enums
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
 
-from Powers import DEV_USERS
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils import extras
 from Powers.utils.custom_filters import command
 from Powers.utils.extras import NOWYES as NO
@@ -98,7 +98,7 @@ async def insult(c: Gojo, m: Message):
         return
     user_id = m.reply_to_message.from_user.id
     user_first_name = m.reply_to_message.from_user.first_name
-    if user_id in DEV_USERS:
+    if user_id in get_support_staff("dev_level"):
         await m.reply_text("Sorry! I can't insult my devs....")
     else:
         Insult_omp = choice(extras.INSULT_STRINGS)

@@ -14,6 +14,7 @@ from wikipedia.exceptions import DisambiguationError, PageError
 from Powers import *
 from Powers.bot_class import Gojo
 from Powers.database.users_db import Users
+from Powers.supports import get_support_staff
 from Powers.utils.clean_file import remove_markdown_and_html
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
@@ -61,7 +62,7 @@ async def wiki(_, m: Message):
 
 @Gojo.on_message(command("gdpr"))
 async def gdpr_remove(_, m: Message):
-    supports = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    supports = get_support_staff()
     if m.from_user.id in supports:
         await m.reply_text(
             "You're in my support staff, I cannot do that unless you are no longer a part of it!",
@@ -423,7 +424,7 @@ async def botstaff(c: Gojo, m: Message):
         reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"
     except RPCError:
         pass
-    true_dev = list(set(DEV_USERS) - {OWNER_ID})
+    true_dev = get_support_staff("dev")
     reply += "\n<b>Developers ⚡️:</b>\n"
     if not true_dev:
         reply += "No Dev Users\n"
@@ -435,7 +436,7 @@ async def botstaff(c: Gojo, m: Message):
                 reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
             except RPCError:
                 pass
-    true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
+    true_sudo = get_support_staff("sudo")
     reply += "\n<b>Sudo Users 🐉:</b>\n"
     if not true_sudo:
         reply += "No Sudo Users\n"
@@ -448,10 +449,10 @@ async def botstaff(c: Gojo, m: Message):
             except RPCError:
                 pass
     reply += "\n<b>Whitelisted Users 🐺:</b>\n"
-    if WHITELIST_USERS == []:
+    if not get_support_staff("whitelist"):
         reply += "No additional whitelisted users\n"
     else:
-        for each_user in WHITELIST_USERS:
+        for each_user in get_support_staff("whitelist"):
             user_id = int(each_user)
             try:
                 user = await c.get_users(user_id)

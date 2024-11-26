@@ -7,10 +7,11 @@ from pyrogram import emoji, enums, filters
 from pyrogram.errors import ChannelPrivate, ChatAdminRequired, RPCError
 from pyrogram.types import Message, User
 
-from Powers import DEV_USERS, LOGGER
+from Powers import LOGGER
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.greetings_db import Greetings
+from Powers.supports import get_support_staff
 from Powers.utils.cmd_senders import send_cmd
 from Powers.utils.custom_filters import (admin_filter, bot_admin_filter,
                                          captcha_filter, command)
@@ -242,7 +243,7 @@ async def member_has_joined(c: Gojo, m: Message):
         try:
             if user.id == c.me.id:
                 continue
-            if user.id in DEV_USERS:
+            if user.id in get_support_staff("dev"):
                 await c.send_animation(
                     chat_id=m.chat.id,
                     animation="./extras/william.gif",
@@ -365,7 +366,7 @@ async def member_has_left(c: Gojo, m: Message):
             await c.delete_messages(m.chat.id, int(ifff))
         except RPCError:
             pass
-    if user.id in DEV_USERS:
+    if user.id in get_support_staff("dev"):
         await c.send_message(
             m.chat.id,
             f"Will miss you my master {user.mention} :(",

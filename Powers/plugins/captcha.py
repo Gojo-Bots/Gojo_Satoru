@@ -11,9 +11,10 @@ from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as ikm
 from pyrogram.types import Message, User
 
-from Powers import DEV_USERS, LOGGER, MESSAGE_DUMP, SUDO_USERS, WHITELIST_USERS
+from Powers import LOGGER, MESSAGE_DUMP
 from Powers.bot_class import Gojo
 from Powers.database.captcha_db import CAPTCHA, CAPTCHA_DATA
+from Powers.supports import get_support_staff
 from Powers.utils.captcha_helper import (genrator, get_image_captcha,
                                          get_qr_captcha)
 from Powers.utils.custom_filters import admin_filter, captcha_filter, command
@@ -157,7 +158,7 @@ async def on_chat_members_updatess(c: Gojo, m: Message):
 
         if user.is_bot:
             continue
-        SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+        SUPPORT_STAFF = get_support_staff()
 
         try:
             status = (await m.chat.get_member(user)).status

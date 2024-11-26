@@ -119,9 +119,8 @@ SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
 
 # Users Config 
 OWNER_ID = Config.OWNER_ID
-DEV_USERS = set(Config.DEV_USERS)
-SUDO_USERS = set(Config.SUDO_USERS)
-WHITELIST_USERS = set(Config.WHITELIST_USERS)
+SUPPORT_USERS = {"Owner": [Config.OWNER_ID], "Dev": set(Config.DEV_USERS), "Sudo": set(Config.SUDO_USERS), "White": set(Config.WHITELIST_USERS)}
+
 
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI

@@ -15,9 +15,8 @@ from pyrogram.types import InlineKeyboardButton as IKB
 from pyrogram.types import InlineKeyboardMarkup as IKM
 from pyrogram.types import Message
 
-from Powers import (BOT_TOKEN, DEV_USERS, LOG_DATETIME, LOGFILE, LOGGER,
-                    MESSAGE_DUMP, OWNER_ID, SUDO_USERS, UPTIME,
-                    WHITELIST_USERS)
+from Powers import (BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER, MESSAGE_DUMP,
+                    OWNER_ID, SUPPORT_USERS, UPTIME)
 from Powers.bot_class import Gojo
 from Powers.database import MongoDB
 from Powers.database.chats_db import Chats
@@ -78,11 +77,11 @@ async def add_support(c: Gojo, m: Message):
             else:
                 support.insert_support_user(userr, to)
                 if to == "dev":
-                    DEV_USERS.add(userr)
+                    SUPPORT_USERS["Dev"].add(userr)
                 elif to == "sudo":
-                    SUDO_USERS.add(userr)
+                    SUPPORT_USERS["Sudo"].add(userr)
                 else:
-                    WHITELIST_USERS.add(userr)
+                    SUPPORT_USERS["White"].add(userr)
                 await m.reply_text(f"This user is now a {to} user")
             return
         if can_do := can_change_type(curr_user, to):
@@ -192,9 +191,9 @@ async def rm_support(c: Gojo, m: Message):
     can_user = can_change_type(curr_user, to_user)
     if m.from_user.id == int(OWNER_ID) or can_user:
         support.delete_support_user(curr)
-        DEV_USERS.discard(curr)
-        SUDO_USERS.discard(curr)
-        WHITELIST_USERS.discard(curr)
+        SUPPORT_USERS["Dev"].discard(curr)
+        SUPPORT_USERS["Sudo"].discard(curr)
+        SUPPORT_USERS["White"].discard(curr)
         await m.reply_text("Done! User now no longer belongs to the support staff")
     else:
         await m.reply_text("Sorry you can't do that...")

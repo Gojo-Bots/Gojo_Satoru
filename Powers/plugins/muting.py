@@ -9,8 +9,9 @@ from pyrogram.types import (CallbackQuery, ChatPermissions,
                             InlineKeyboardButton, InlineKeyboardMarkup,
                             Message)
 
-from Powers import DEV_USERS, LOGGER, MESSAGE_DUMP, SUDO_USERS, WHITELIST_USERS
+from Powers import LOGGER, MESSAGE_DUMP
 from Powers.bot_class import Gojo
+from Powers.supports import get_support_staff
 from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import command, restrict_filter
 from Powers.utils.extract_user import extract_user
@@ -37,7 +38,7 @@ async def tmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -147,7 +148,7 @@ async def dtmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -252,7 +253,7 @@ async def stmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -342,7 +343,7 @@ async def mute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
@@ -424,7 +425,7 @@ async def smute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -487,7 +488,7 @@ async def dmute_usr(c: Gojo, m: Message):
         await m.reply_text("Huh, why would I mute myself?")
         return
 
-    SUPPORT_STAFF = DEV_USERS.union(SUDO_USERS).union(WHITELIST_USERS)
+    SUPPORT_STAFF = get_support_staff()
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
             text="This user is in my support staff, cannot restrict them."
