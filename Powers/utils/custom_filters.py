@@ -11,7 +11,6 @@ from pyrogram.types import CallbackQuery, ChatJoinRequest, Message
 
 from Powers import OWNER_ID, PREFIX_HANDLER
 from Powers.bot_class import Gojo
-from Powers.database.afk_db import AFK
 from Powers.database.approve_db import Approve
 from Powers.database.autojoin_db import AUTOJOIN
 from Powers.database.captcha_db import CAPTCHA
@@ -313,33 +312,6 @@ async def auto_join_check_filter(_, __, j: ChatJoinRequest):
     join_type = aj.get_autojoin(chat)
 
     return bool(join_type)
-
-
-async def afk_check_filter(_, __, m: Message):
-    if not m.from_user:
-        return False
-
-    if m.from_user.is_bot:
-        return False
-
-    if m.chat.type == ChatType.PRIVATE:
-        return False
-
-    afk = AFK()
-    chat = m.chat.id
-    is_repl_afk = None
-    if m.reply_to_message:
-        if repl_user := m.reply_to_message.from_user:
-            repl_user = m.reply_to_message.from_user.id
-            is_repl_afk = afk.check_afk(chat, repl_user)
-            return bool(is_repl_afk)
-
-    user = m.from_user.id
-
-    is_afk = afk.check_afk(chat, user)
-
-    return bool(is_afk)
-
 
 async def flood_check_filter(_, __, m: Message):
     Flood = Floods()
