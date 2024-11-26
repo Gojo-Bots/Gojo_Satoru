@@ -5,7 +5,7 @@ from traceback import format_exc
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from Powers import HELP_COMMANDS, LOGGER, OWNER_ID, SUPPORT_CHANNEL
+from Powers import HELP_COMMANDS, LOGGER, OWNER_ID, SUPPORT_GROUP
 from Powers.bot_class import Gojo
 from Powers.database.chats_db import Chats
 from Powers.database.notes_db import Notes
@@ -39,43 +39,26 @@ async def gen_start_kb(q: Message or CallbackQuery):
         [
             [
                 (
-                    "➕ Add me to a chat!",
+                    "ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ",
                     f"https://t.me/{Config.BOT_USERNAME}?startgroup=new",
                     "url",
                 ),
-                ("Bot Staffs 🚔", "give_bot_staffs"),
             ],
-            [
-                ("📚 Commands & Help", "commands"),
-                ("Bot info 👾", "bot_curr_info"),
-            ],
+            [("ʜᴇʟᴘ & ᴄᴏᴍᴍᴀɴᴅs", "commands")],
             [
                 (
-                    "🗃️ Source Code",
-                    "https://github.com/Gojo-Bots/Gojo_Satoru",
-                    "url",
-                ),
-                (
-                    "Owner ❤️",
+                    "🥀 ᴅᴇᴠᴇʟᴏᴘᴇʀ 🥀",
                     OWNER_ID,
                     "user_id",
                 ),
-            ],
-            [
                 (
-                    "❗️ Essential",
-                    "https://t.me/+PcVYvdzNt4E1YjM1",
-                    "url",
-                ),
-                (
-                    "Powered by ⚡️",
-                    f"https://{SUPPORT_CHANNEL}.t.me",
+                    "✨ sᴜᴘᴘᴏʀᴛ ✨",
+                    f"https://t.me/{SUPPORT_GROUP}",
                     "url",
                 ),
             ],
-        ]
-    )
-
+        ],
+  )
 
 async def get_private_note(c: Gojo, m: Message, help_option: str):
     """Get the note in pm of user, with parsing enabled."""
