@@ -1,3 +1,0 @@
-icon: https://raw.githubusercontent.com/Gojo-Bots/Gojo_Satoru/main/extras/photo_2022-08-19_13-54-45.jpg
-deploy:
-    - okteto deploy --build -f docker-compose.yml
