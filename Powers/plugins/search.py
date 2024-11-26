@@ -273,16 +273,3 @@ __alt_name__ = [
     "anime",
     "stack",
 ]
-
-__HELP__ = """
-**Search**
-
-**Available commands:**
-• /google `<query>` : Search the google for the given query.
-• /anime `<query>`  : Search myanimelist for the given query.
-• /stack `<query>`  : Search stackoverflow for the given query.
-• /images (/imgs) `<query>` : Get the images regarding to your query
-
-**Example:**
-`/google pyrogram`: return top 5 reuslts.
-"""
