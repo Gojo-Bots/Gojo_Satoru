@@ -34,7 +34,7 @@ soupsieve==2.4
 tgcrypto==1.2.5
 tswift==0.7.0
 typing-extensions
-ujson==5.8.0
+ujson==5.10.0
 Unidecode
 wikipedia==1.4.0
 youtube-search-python==1.6.6
