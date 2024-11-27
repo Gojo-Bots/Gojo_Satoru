@@ -1,4 +1,4 @@
-aiofiles==23.2.1
+aiofiles==24.1.0
 apscheduler==3.10.4
 asyncio==3.4.3
 beautifulsoup4==4.12.3
