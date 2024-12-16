@@ -4,7 +4,7 @@ asyncio==3.4.3
 beautifulsoup4==4.12.3
 cachetools==5.2.0
 captcha==0.6.0
-certifi==2024.7.4
+certifi==2024.12.14
 charset-normalizer==3.4.0
 dnspython==2.6.1
 google==3.0.0
