@@ -276,7 +276,7 @@ async def memify_it(c: Gojo, m: Message):
     kb = IKM(
         [
             [
-                IKB("Join for memes", url="https://t.me/memesofdank")
+                IKB("You might like", url="https://t.me/me_and_ghost")
             ]
         ]
     )
