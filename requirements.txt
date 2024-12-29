@@ -12,6 +12,7 @@ gpytranslate==1.5.1
 httpx
 lyricsgenius==3.0.1
 pillow == 10.3.0
+lottie==0.7.1
 lxml==4.9.1
 pillow == 10.3.0
 prettyconf==2.2.1
