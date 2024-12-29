@@ -241,12 +241,11 @@ async def info_func(c: Gojo, message: Message):
         return
     try:
         user, _, user_name = await extract_user(c, message)
-    except Exception:
-        await message.reply_text("Got Some errors failed to fetch user info")
+    except Exception as e:
+        await message.reply_text(f"Got Some errors failed to fetch user info\n{e}")
         LOGGER.error(e)
-        LOGGER.error(format_exc)
-    if not user:
-        await message.reply_text("Can't find user to fetch info!")
+        LOGGER.error(format_exc())
+        return
 
     m = await message.reply_text(
         f"Fetching {f'@{user_name}' if user_name else 'user'} info from telegram's database..."
