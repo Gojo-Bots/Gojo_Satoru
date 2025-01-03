@@ -92,7 +92,7 @@ class LOCKS(MongoDB):
                     to_return["anti_fwd"]["user"] = True
                 elif i["locktype"] == "anti_fwd_c":
                     to_return["anti_fwd"]["chat"] = True
-                elif i["anti_links"] == "anti_links":
+                elif i["locktype"] == "anti_links":
                     to_return["anti_links"] = True
                 elif i["locktype"] == "bot":
                     to_return["bot"] = True
