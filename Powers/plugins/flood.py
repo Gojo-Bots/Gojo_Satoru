@@ -346,7 +346,7 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     if not q.from_user:
         return q.answer("Looks like you are not an user 👀")
     user = await q.message.chat.get_member(q.from_user.id)
-    if not user.privileges and q.from_user.id not in SUPPORT_STAFF:
+    if (user and not user.privileges) and (q.from_user.id not in SUPPORT_STAFF):
         return await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,
