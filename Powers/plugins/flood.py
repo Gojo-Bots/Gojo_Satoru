@@ -345,14 +345,14 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
     SUPPORT_STAFF = get_support_staff()
     if not q.from_user:
         return q.answer("Looks like you are not an user 👀")
-    if action == "ban":
-        user = await q.message.chat.get_member(q.from_user.id)
-        if user.privileges and not user.privileges.can_restrict_members and q.from_user.id not in SUPPORT_STAFF:
+     user = await q.message.chat.get_member(q.from_user.id)
+        if not user.privileges and q.from_user.id not in SUPPORT_STAFF:
             await q.answer(
                 "You don't have enough permission to do this!\nStay in your limits!",
                 show_alert=True,
             )
             return
+    if action == "ban":
         whoo = await c.get_chat(user_id)
         doneto = whoo.first_name or whoo.title
         try:
@@ -364,14 +364,6 @@ async def reverse_callbacks(c: Gojo, q: CallbackQuery):
         return
 
     if action == "mute":
-        user = await q.message.chat.get_member(q.from_user.id)
-
-        if not user.privileges.can_restrict_members and q.from_user.id in SUPPORT_STAFF:
-            await q.answer(
-                "You don't have enough permission to do this!\nStay in your limits!",
-                show_alert=True,
-            )
-            return
         whoo = await c.get_users(user_id)
         try:
             await q.message.chat.unban_member(user_id)
@@ -399,7 +391,7 @@ async def flood_watcher(c: Gojo, m: Message):
     limit = int(is_flood[0])
     within = int(is_flood[1])
 
-    if not len(dic):
+    if not (dic):
         z = {c_id: {u_id: [[], []]}}
         dic.update(z)
 
