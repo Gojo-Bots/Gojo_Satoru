@@ -140,7 +140,7 @@ async def song_search(query, max_results=1):
     except Exception as e:
         LOGGER.error(e)
         LOGGER.error(format_exc())
-        return yt_dict
+        return {0: e}
     nums = 1
     for i in results["result"]:
         durr = i['duration'].split(":")
@@ -169,7 +169,7 @@ async def song_search(query, max_results=1):
                 thumb = {"thumbnail": i["thumbnails"][0]["url"]}
             except Exception:
                 thumb = {"thumbnail": None}
-            dict_form |= thumb
+            dict_form.update(thumb)
             yt_dict[nums] = dict_form
             nums += 1
     return yt_dict
@@ -226,6 +226,9 @@ async def youtube_downloader(c: Gojo, m: Message, query: str, type_: str):
         ext = "mp4"
     # ydl = yt_dlp.YoutubeDL(opts)
     dicti = await song_search(query, 1)
+    if err := dicti.get(0, None):
+        await m.reply_text(err)
+        return
     if not dicti and type(dicti) != str:
         await m.reply_text("File with duration less than or equals to 10 minutes is allowed only")
     elif type(dicti) == str:
