@@ -254,6 +254,7 @@ async def view_locks(_, m: Message):
       <b>Can send links:</b> {vantil}
       <b>Can bot send messages:</b> {vantibot}
       """
+            await chkmsg.edit_text(permission_view_str)
         except RPCError as e_f:
             await chkmsg.edit_text(text="Something went wrong!")
             await m.reply_text(e_f)

@@ -276,7 +276,7 @@ async def memify_it(c: Gojo, m: Message):
     kb = IKM(
         [
             [
-                IKB("Join for memes", url="https://t.me/memesofdank")
+                IKB("You might like", url="https://t.me/me_and_ghost")
             ]
         ]
     )
@@ -331,7 +331,7 @@ async def get_sticker_from_file(c: Gojo, m: Message):
     if repl.sticker:
         if repl.sticker.is_animated:
             upp = await repl.download()
-            up = tgs_to_gif(upp, True)
+            up = await tgs_to_gif(upp, True)
             await x.delete()
             await m.reply_animation(up, caption=Caption)
         elif repl.sticker.is_video:
