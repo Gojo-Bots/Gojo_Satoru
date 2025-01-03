@@ -1,25 +1,26 @@
-aiofiles==23.2.1
+aiofiles==24.1.0
 apscheduler==3.10.4
 asyncio==3.4.3
 beautifulsoup4==4.12.3
 cachetools==5.2.0
 captcha==0.6.0
-certifi==2024.7.4
+certifi==2024.12.14
 charset-normalizer==3.4.0
 dnspython==2.6.1
 google==3.0.0
 gpytranslate==1.5.1
-httpx
+httpx==0.27.2
 lyricsgenius==3.0.1
 pillow == 10.3.0
+lottie==0.7.1
 lxml==4.9.1
 pillow == 10.3.0
 prettyconf==2.2.1
 pyaes==1.6.1
 pymongo==4.6.3
-git+https://github.com/KurimuzonAkuma/pyrogram.git@v2.1.32
+git+https://github.com/KurimuzonAkuma/pyrogram.git@v2.1.34
 pysocks==1.7.1
-python-dateutil==2.8.2
+python-dateutil==2.9.0.post0
 pytube==15.0.0
 pytz==2024.1
 pyyaml==6.0.2
@@ -34,7 +35,7 @@ soupsieve==2.4
 tgcrypto==1.2.5
 tswift==0.7.0
 typing-extensions
-ujson==5.8.0
+ujson==5.10.0
 Unidecode
 wikipedia==1.4.0
 youtube-search-python==1.6.6

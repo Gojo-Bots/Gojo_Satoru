@@ -304,6 +304,7 @@ async def download_instareels(c: Gojo, m: Message):
     content = insta.get_media()
 
     if content["code"] == 69 or content["message"] != "success":
+        await to_edit.delete()
         return await m.reply_text(content["message"])
 
     try:

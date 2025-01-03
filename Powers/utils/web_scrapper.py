@@ -6,7 +6,6 @@ import httpx
 
 from Powers import *
 
-
 # import requests
 # from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
@@ -210,7 +209,8 @@ class SCRAP_DATA:
 
 #         else:
 #             return {}
-
+curr_timeout = 20
+timeout = httpx.Timeout(curr_timeout)
 
 class INSTAGRAM:
     def __init__(self, url):
@@ -220,10 +220,27 @@ class INSTAGRAM:
         return bool((re.compile(r"^https?://(?:www\.)?instagram\.com/")).match(self.url))
 
     def get_media(self):
+        global curr_timeout
         try:
             return httpx.post(
-                f"https://api.qewertyy.dev/downloaders/instagram?url={self.url}"
+                f"https://api.qewertyy.dev/downloaders/instagram?url={self.url}",
+                timeout=timeout
             ).json()
+        except httpx.ReadTimeout:
+            try:
+                curr_timeout += 10
+                timeout = httpx.Timeout(curr_timeout)
+                return httpx.post(
+                            f"https://api.qewertyy.dev/downloaders/instagram?url={self.url}",
+                            timeout=timeout
+                        ).json()
+            except httpx.ReadTimeout:
+                return {"code": 69, "message": "Please retry after few seconds"}
+            except Exception as e:
+                LOGGER.error(e)
+                LOGGER.error(format_exc())
+                return {"code": 69, "message": e}
+
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error(format_exc())

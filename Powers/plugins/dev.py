@@ -720,6 +720,7 @@ __HELP__ = """
 • /neofetch : Fetch neo.
 • /eval : Evaluate the given python code.
 • /exec : Execute the given code.
+• /minfo [module name]: Give info about module
 • /chatlist : Return the list of chats present in database
 • /uptime : Return the uptime of the bot.
 • /leavechat : Bot will leave the provided chat.
