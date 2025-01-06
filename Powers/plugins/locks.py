@@ -5,7 +5,8 @@ from traceback import format_exc
 from pyrogram import filters
 from pyrogram.enums import MessageEntityType as MET
 from pyrogram.enums import MessageServiceType as MST
-from pyrogram.errors import ChatAdminRequired, ChatNotModified, RPCError
+from pyrogram.errors import (ChatAdminRequired, ChatNotModified, RPCError,
+                             UserAdminInvalid)
 from pyrogram.types import CallbackQuery, ChatPermissions, Message
 
 from Powers import LOGGER
@@ -495,6 +496,8 @@ async def servicess(c: Gojo, m: Message):
                 timee = datetime.now() + timedelta(minutes=5)
                 await m.chat.ban_member(i.id, until_date=timee)
                 sleep(1)
+            except UserAdminInvalid:
+                continue
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
@@ -551,6 +554,23 @@ async def prevent_approved(m: Message):
     return
 
 
+@Gojo.on_callback_query(filters.regex("^LOCK_TYPES"))
+async def lock_types_callback(c: Gojo, q: CallbackQuery):
+    data = q.data
+
+    if data == "LOCK_TYPES":
+        kb = ikb([[("Back", "LOCK_TYPES_back")]])
+        await q.edit_message_caption(
+            l_t,
+            reply_markup=kb
+        )
+    else:
+        kb = ikb([[("Lock Types", "LOCK_TYPES")]])
+        await q.edit_message_caption(
+            __HELP__,
+            reply_markup=kb
+        )
+
 __PLUGIN__ = "locks"
 
 __alt_name__ = ["grouplock", "lock", "grouplocks"]
@@ -574,21 +594,3 @@ Allows you to lock and unlock permission types in the chat.
 
 **Example:**
 `/lock media`: this locks all the media messages in the chat."""
-
-
-@Gojo.on_callback_query(filters.regex("^LOCK_TYPES"))
-async def lock_types_callback(c: Gojo, q: CallbackQuery):
-    data = q.data
-
-    if data == "LOCK_TYPES":
-        kb = ikb([[("Back", "LOCK_TYPES_back")]])
-        await q.edit_message_caption(
-            l_t,
-            reply_markup=kb
-        )
-    else:
-        kb = ikb([[("Lock Types", "LOCK_TYPES")]])
-        await q.edit_message_caption(
-            __HELP__,
-            reply_markup=kb
-        )

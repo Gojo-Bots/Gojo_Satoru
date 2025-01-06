@@ -47,6 +47,9 @@ async def send_wishish(JJK: Client):
                             suffix.get((agee % 10), "th")
                         agee = f"{agee}{suf}"
                     U = await JJK.get_chat_member(chat_id=j, user_id=i["user_id"])
+                    if U.user.is_deleted:
+                        bday_info.delete_one({"user_id": i["user_id"]})
+                        continue
                     wish = choice(birthday_wish)
                     if U.status in [ChatMemberStatus.MEMBER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
                         xXx = await JJK.send_message(j, f"Happy {agee} birthday {U.user.mention}🥳\n{wish}")

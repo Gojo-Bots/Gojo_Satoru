@@ -16,7 +16,7 @@ from Powers.bot_class import Gojo
 from Powers.database.approve_db import Approve
 from Powers.database.reporting_db import Reporting
 from Powers.supports import get_support_staff
-from Powers.utils.caching import admin_cache_reload
+from Powers.utils.caching import ADMIN_CACHE, admin_cache_reload
 from Powers.utils.custom_filters import admin_filter, command, promote_filter
 from Powers.utils.extract_user import extract_user
 from Powers.utils.parser import mention_html
