@@ -14,13 +14,14 @@ from Powers import BDB_URI, LOGGER, OWNER_ID
 from Powers.bot_class import Gojo
 from Powers.database.antispam_db import GBan
 from Powers.database.approve_db import Approve
-from Powers.plugins import bday_info
 from Powers.supports import get_support_staff
 from Powers.utils.custom_filters import command
 from Powers.utils.extract_user import extract_user
 
 gban_db = GBan()
 
+if BDB_URI:
+    from Powers.plugins import bday_info
 
 async def count(c: Gojo, chat):
     try:
