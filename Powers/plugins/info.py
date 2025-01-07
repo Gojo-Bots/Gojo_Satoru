@@ -166,8 +166,7 @@ async def user_info(c: Gojo, user, already=False):
 
     if gban:
         caption += f"<b>☠️ Gban reason</b>: <code>{reason}</code>"
-    caption += f"""
-<b>🌐 DC ID</b>: {dc_id}
+    caption += f"""<b>🌐 DC ID</b>: {dc_id}
 <b>✋ RESTRICTED</b>: {is_restricted}
 <b>✅ VERIFIED</b>: {is_verified}
 <b>❌ FAKE</b> : {is_fake}
@@ -286,7 +285,7 @@ async def info_func(c: Gojo, message: Message):
         if not status or status == "Member":
             approved_users = Approve(m.chat.id).list_approved()
             if user in approved_users:
-                status = "Approved"
+                status = "Member, Approved"
 
     if status:
         info_caption += f"<b>👥 Status </b>: {status}"
