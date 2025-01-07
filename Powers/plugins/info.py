@@ -277,13 +277,13 @@ async def info_func(c: Gojo, message: Message):
     
 
     status = False
-    if m.chat.id != m.from_user.id:
+    if m.from_user and (m.chat.id != m.from_user.id):
         try:
             if status:= await m.chat.get_member(user):
                 status = str(status.status.value).capitalize()
         except:
             pass
-        if not status:
+        if not status or status == "Member":
             approved_users = Approve(m.chat.id).list_approved()
             if user in approved_users:
                 status = "Approved"
