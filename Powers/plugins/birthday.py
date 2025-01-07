@@ -30,11 +30,11 @@ async def remember_me(c: Gojo, m: Message):
     splited = m.text.split()
     if len(splited) == 1:
         await m.reply_text(
-            "**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
+            "**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it\nIf not replied to user then register the birthday of the one who have given the command")
         return
     if len(splited) != 2 and m.reply_to_message:
         await m.reply_text(
-            "**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it")
+            "**USAGE**:\n/remember [username or user id or reply to user] [DOB]\nDOB should be in format of dd/mm/yyyy\nYear is optional it is not necessary to pass it\nIf not replied to user then register the birthday of the one who have given the command")
         return
     DOB = splited[1] if len(splited) == 2 else splited[2]
     if len(splited) == 2 and m.reply_to_message:
@@ -65,7 +65,7 @@ async def remember_me(c: Gojo, m: Message):
 
     data = {"user_id": user, "dob": DOB, "is_year": is_year}
     try:
-        if result := bday_info.find_one({"user_id": user}):
+        if bday_info.find_one({"user_id": user}):
             await m.reply_text("User is already in my database")
             return
     except Exception as e:
@@ -90,7 +90,7 @@ async def who_are_you_again(c: Gojo, m: Message):
         return
     user = m.from_user.id
     try:
-        if result := bday_info.find_one({"user_id": user}):
+        if bday_info.find_one({"user_id": user}):
             bday_info.delete_one({"user_id": user})
             await m.reply_text("Removed your birthday")
         else:
@@ -128,10 +128,18 @@ async def who_is_next(c: Gojo, m: Message):
         return
     txt = "🎊 Upcomming Birthdays Are 🎊\n"
     for i in users:
+        try:
+            user = await c.get_users(i["user_id"])
+            if user.is_deleted:
+                bday_info.delete_one({"user_id": i["user_id"]})
+                continue
+            name = user.full_name
+        except:
+            name = i["user_id"]
         DOB = give_date(i["dob"])
         dete = date(curr.year, DOB.month, DOB.day)
         leff = (dete - curr).days
-        txt += f"`{i['user_id']}` : {leff} days left\n"
+        txt += f"{name} : {leff} days left\n"
     txt += "\n\nYou can use /info [user id] to get info about the user"
     await xx.delete()
     await m.reply_text(txt)
@@ -151,6 +159,8 @@ async def cant_recall_it(c: Gojo, m: Message):
     try:
         result = bday_info.find_one({"user_id": user})
         if not result:
+            if not m.reply_to_message:
+                await m.reply_text("You are not registered in my database\nUse `/remember` to register your birth day so I can wish you")
             await m.reply_text("User is not in my database")
             return
     except Exception as e:

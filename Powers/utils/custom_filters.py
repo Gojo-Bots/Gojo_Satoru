@@ -42,7 +42,7 @@ def command(
         if m and not m.from_user and not m.chat.is_admin:
             return False
 
-        if m.from_user.is_bot:
+        if m.from_user and m.from_user.is_bot:
             return False
 
         if any([m.forward_from_chat, m.forward_from]):
