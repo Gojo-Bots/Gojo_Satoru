@@ -283,8 +283,8 @@ async def info_func(c: Gojo, message: Message):
         except:
             pass
         if not status or status == "Member":
-            approved_users = Approve(m.chat.id).list_approved()
-            if user in approved_users:
+            approved_users = Approve(m.chat.id).check_approve(user)
+            if Approve(m.chat.id).check_approve(user):
                 status = "Member, Approved"
 
     if status:
