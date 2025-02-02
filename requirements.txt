@@ -8,7 +8,7 @@ certifi==2024.12.14
 charset-normalizer==3.4.0
 dnspython==2.6.1
 google==3.0.0
-gpytranslate==1.5.1
+gpytranslate==2.0.0
 httpx==0.27.2
 lyricsgenius==3.0.1
 pillow == 10.3.0
