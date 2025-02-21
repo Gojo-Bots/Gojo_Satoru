@@ -10,6 +10,7 @@ dnspython==2.6.1
 google==3.0.0
 gpytranslate==1.5.1
 httpx==0.27.2
+kurigram==v2.1.39
 lyricsgenius==3.0.1
 pillow == 10.3.0
 lottie==0.7.1
@@ -18,7 +19,6 @@ pillow == 10.3.0
 prettyconf==2.2.1
 pyaes==1.6.1
 pymongo==4.6.3
-git+https://github.com/KurimuzonAkuma/pyrogram.git@v2.1.32
 pysocks==1.7.1
 python-dateutil==2.9.0.post0
 pytube==15.0.0
