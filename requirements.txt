@@ -18,7 +18,7 @@ pillow == 10.3.0
 prettyconf==2.2.1
 pyaes==1.6.1
 pymongo==4.6.3
-git+https://github.com/KurimuzonAkuma/pyrogram.git@v2.1.34
+git+https://github.com/KurimuzonAkuma/pyrogram.git@v2.1.32
 pysocks==1.7.1
 python-dateutil==2.9.0.post0
 pytube==15.0.0
