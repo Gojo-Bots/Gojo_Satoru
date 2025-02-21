@@ -10,7 +10,7 @@ if __name__ == "__main__":
     else:
         LOGGER.info("Attempting to install uvloop")
         try:
-            os.system("pip3 install uvloop==0.19.0")
+            os.system("pip3 install uvloop")
             import uvloop
             uvloop.install()
             LOGGER.info("Installed uvloop continuing the process")
