@@ -37,7 +37,7 @@ class Gojo(Client):
 
     async def start(self):
         """Start the bot."""
-        await super().start()
+        await super().start(use_qr=False, except_ids=[])
         await self.set_bot_commands(
             [
                 BotCommand(
