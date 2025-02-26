@@ -42,23 +42,26 @@ def command(
         if m and not m.from_user and not m.chat.is_admin:
             return False
 
-        if m.from_user and m.from_user.is_bot:
-            return False
-
         if any([m.forward_from_chat, m.forward_from]):
             return False
 
-        if owner_cmd and (m.from_user.id != OWNER_ID):
-            # Only owner allowed to use this...!
-            return False
-        DEV_LEVEL = get_support_staff("dev_level")
-        if dev_cmd and (m.from_user.id not in DEV_LEVEL):
-            # Only devs allowed to use this...!
-            return False
-        SUDO_LEVEL = get_support_staff("sudo_level")
-        if sudo_cmd and (m.from_user.id not in SUDO_LEVEL):
-            # Only sudos and above allowed to use it
-            return False
+        if m.from_user:
+            if m.from_user.is_bot:
+                return False
+
+            if owner_cmd and (m.from_user.id != OWNER_ID):
+                # Only owner allowed to use this...!
+                return False
+                    
+            DEV_LEVEL = get_support_staff("dev_level")
+            if dev_cmd and (m.from_user.id not in DEV_LEVEL):
+                # Only devs allowed to use this...!
+                return False
+                    
+            SUDO_LEVEL = get_support_staff("sudo_level")
+            if sudo_cmd and (m.from_user.id not in SUDO_LEVEL):
+                # Only sudos and above allowed to use it
+                return False
 
         text: str = m.text or m.caption
         if not text:
@@ -74,7 +77,10 @@ def command(
                 return False
             if bool(m.chat and m.chat.type in {ChatType.SUPERGROUP, ChatType.GROUP}):
                 try:
-                    user_status = (await m.chat.get_member(m.from_user.id)).status
+                    if m.chat.is_admin:
+                        user_status = CMS.ADMINISTRATOR
+                    else:
+                        user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
                     # i.e anon admin
                     user_status = CMS.ADMINISTRATOR
